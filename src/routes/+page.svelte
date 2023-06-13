@@ -1,2 +1,45 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+    import { browser } from '$app/environment';
+
+    /* Configuration */
+    const lineWidth = 5;
+
+    if (browser) {    
+        const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
+        const context = canvas.getContext('2d')!;
+        
+        const canvasOffsetX = canvas.offsetLeft;
+        const canvasOffsetY = canvas.offsetTop;
+        
+        canvas.width = window.innerWidth - canvasOffsetX;
+        canvas.height = window.innerHeight - canvasOffsetY;
+        
+        let isDrawing = false;
+        
+        const draw = (e) => {
+            if(!isDrawing) {
+                return;
+            }
+            
+            context.lineWidth = lineWidth;
+            context.lineCap = 'round';
+            
+            context.lineTo(e.clientX - canvasOffsetX, e.clientY);
+            context.stroke();
+        }
+        
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+        });
+        
+        canvas.addEventListener('mouseup', e => {
+            isDrawing = false;
+            context.stroke();
+            context.beginPath();
+        });
+        
+        canvas.addEventListener('mousemove', draw);
+    }
+</script>
+
+<canvas style="border: 1px solid red" id="choodle-board" />
