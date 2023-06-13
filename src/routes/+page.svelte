@@ -46,15 +46,38 @@
                 const context = canvas.getContext('2d')!;
                 
                 context.clearRect(0, 0, canvas.width, canvas.height);
+            } else if (e.target.id === 'save-board') {
+                save()
+            } else if (e.target.id === 'load-board') {
+                load()
             }
         });
     }
     
     const clear = () => {
         const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-        const context = canvas.getContext('2d')!;
         
-        context.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.getContext('2d')!.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    const save = () => {
+        const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
+        
+        window.localStorage.setItem("choodle", canvas.toDataURL())
+    }
+
+    const load = () => {
+        const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
+
+        const dataURL = window.localStorage.getItem("choodle")
+
+        if (dataURL) {
+            var image = new Image;
+            image.addEventListener('load', () => {
+                canvas.getContext('2d')!.drawImage(image, 0, 0);
+            });
+            image.src = dataURL;
+        }
     }
     
 </script>
@@ -62,3 +85,5 @@
 <canvas style="border: 1px solid red" id="choodle-board" />
 
 <button id="clear-board">Clear</button>
+<button id="save-board">Save</button>
+<button id="load-board">Load</button>
