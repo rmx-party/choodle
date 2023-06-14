@@ -42,10 +42,7 @@
         
         document.addEventListener('click', e => {
             if (e.target.id === 'clear-board') {
-                const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-                const context = canvas.getContext('2d')!;
-                
-                context.clearRect(0, 0, canvas.width, canvas.height);
+                clear()
             } else if (e.target.id === 'save-board') {
                 save()
             } else if (e.target.id === 'load-board') {
