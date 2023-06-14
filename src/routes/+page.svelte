@@ -29,6 +29,7 @@
         }
         
         canvas.addEventListener('mousedown', e => {
+            save()
             isDrawing = true;
         });
         
@@ -47,6 +48,8 @@
                 save()
             } else if (e.target.id === 'load-board') {
                 load()
+            } else if (e.target.id === 'undo') {
+                load()
             }
         });
     }
@@ -59,14 +62,15 @@
 
     const save = () => {
         const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-        
+
         window.localStorage.setItem("choodle", canvas.toDataURL())
     }
 
     const load = () => {
         const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-
         const dataURL = window.localStorage.getItem("choodle")
+
+        clear()
 
         if (dataURL) {
             var image = new Image;
@@ -81,5 +85,6 @@
 <canvas style="border: 1px solid red" id="choodle-board"></canvas>
 
 <button id="clear-board">Clear</button>
+<button id="undo">Undo</button>
 <button id="save-board">Save</button>
 <button id="load-board">Load</button>
