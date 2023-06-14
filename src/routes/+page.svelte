@@ -76,10 +76,9 @@
             image.src = dataURL;
         }
     }
-    
 </script>
 
-<canvas style="border: 1px solid red" id="choodle-board" />
+<canvas style="border: 1px solid red" id="choodle-board"></canvas>
 
 <button id="clear-board">Clear</button>
 <button id="save-board">Save</button>
