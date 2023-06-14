@@ -1,5 +1,6 @@
 <script lang="ts">
     import { browser } from '$app/environment';
+    import localforage from 'localforage';
     
     /* Configuration */
     const lineWidth = 5;
@@ -63,12 +64,12 @@
     const save = () => {
         const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
-        window.localStorage.setItem("choodle", canvas.toDataURL())
+        localforage.setItem("choodle", canvas.toDataURL())
     }
 
-    const load = () => {
+    const load = async () => {
         const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-        const dataURL = window.localStorage.getItem("choodle")
+        const dataURL = await localforage.getItem("choodle").catch((e) => {})
 
         clear()
 
