@@ -30,7 +30,6 @@
         }
         
         canvas.addEventListener('mousedown', e => {
-            save()
             isDrawing = true;
         });
         
@@ -38,6 +37,7 @@
             isDrawing = false;
             context.stroke();
             context.beginPath();
+            push()
         });
         
         canvas.addEventListener('mousemove', draw);
@@ -50,15 +50,31 @@
             } else if (e.target.id === 'load-board') {
                 load()
             } else if (e.target.id === 'undo') {
-                load()
+                undo()
+            } else if (e.target.id === 'log-storage') {
+                localforage.getItem('choodle-undo').then(item => {
+                    console.log(item)})
             }
         });
     }
-    
-    const clear = () => {
+
+    function clearStorage() {
+        localforage.keys().then((keys) => {
+            keys.map((key) => {
+                localforage.removeItem(key)
+            })
+        })
+    }
+
+    function clearDisplay() {
         const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-        
+
         canvas.getContext('2d')!.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    const clear = () => {
+        clearDisplay();
+        clearStorage();
     }
 
     const save = () => {
@@ -81,6 +97,39 @@
             image.src = dataURL;
         }
     }
+
+    const push = async () => {
+        const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
+
+        let undoStack: [] = await localforage.getItem('choodle-undo') || []
+        undoStack.push(canvas.toDataURL())
+        localforage.setItem(`choodle-undo`, undoStack)
+    }
+
+    const pop = async () => {
+        let undoStack: [string] = await localforage.getItem('choodle-undo') || []
+        localforage.setItem('choodle-undo', undoStack.slice(0, -1))
+    }
+
+    const undo = async () => {
+        const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
+
+        await pop()
+
+        let undoStack: [] = await localforage.getItem('choodle-undo') || []
+
+        let dataURL = undoStack[undoStack.length - 1]
+
+        if (dataURL) {
+            clearDisplay()
+
+            var image = new Image;
+            image.addEventListener('load', () => {
+                canvas.getContext('2d')!.drawImage(image, 0, 0);
+            });
+            image.src = dataURL;
+        }
+    }
 </script>
 
 <canvas style="border: 1px solid red" id="choodle-board"></canvas>
@@ -89,3 +138,5 @@
 <button id="undo">Undo</button>
 <button id="save-board">Save</button>
 <button id="load-board">Load</button>
+
+<button id="log-storage">Storage</button>
