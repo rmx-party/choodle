@@ -176,11 +176,41 @@
     }
 </script>
 
-<canvas style="border: 1px solid red" id="choodle-board"></canvas>
+<style>
+    * {
+        box-sizing: border-box;
+    }
 
-<button id="clear-board">Clear</button>
-<button id="undo">Undo</button>
-<button id="save-board">Save</button>
-<button id="load-board">Load</button>
+    body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Avoid scrollbars */
+        height: 100%; /* Make sure html and body cover full height */
+        width: 100%; /* Make sure html and body cover full width */
+    }
 
-<button id="log-storage">Storage</button>
+    #choodle-board {
+        position: absolute; /* Absolute positioning removes any default margins/padding */
+        top: 0;
+        left: 0;
+        z-index: -1000;
+    }
+
+    #buttons {
+        z-index: 10000;
+    }
+</style>
+
+<div id="container">
+    <div id="drawing-area">
+        <canvas id="choodle-board"></canvas>
+    </div>
+    <div id="buttons">
+        <button id="clear-board">Clear</button>
+        <button id="undo">Undo</button>
+        <button id="save-board">Save</button>
+        <button id="load-board">Load</button>
+
+        <button id="log-storage">Storage</button>
+    </div>
+</div>
