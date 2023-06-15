@@ -116,7 +116,7 @@ if (browser) {
     canvas.height = window.innerHeight - canvasOffsetY;
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
-        return (e: MouseEvent) => {
+        return (e: MouseEvent | TouchEvent) => {
             e.preventDefault()
             if (!isDrawing) {
                 return;
@@ -125,22 +125,11 @@ if (browser) {
             context.lineWidth = lineWidth;
             context.lineCap = 'round';
 
-            context.lineTo(e.clientX - canvasOffsetX, e.clientY);
-            context.stroke();
-        }
-    }
-
-    const touchDraw = (context: CanvasRenderingContext2D) => {
-        return (e: TouchEvent) => {
-            e.preventDefault()
-            if (!isDrawing) {
-                return;
+            if (e.clientX) {
+                context.lineTo(e.clientX - canvasOffsetX, e.clientY);
+            } else {
+                context.lineTo(e.touches[0].clientX - canvasOffsetX, e.touches[0].clientY);
             }
-
-            context.lineWidth = lineWidth;
-            context.lineCap = 'round';
-
-            context.lineTo(e.touches[0].clientX - canvasOffsetX, e.touches[0].clientY);
             context.stroke();
         }
     }
@@ -152,7 +141,7 @@ if (browser) {
     canvas.addEventListener('touchend', endDrawing(context));
 
     canvas.addEventListener('mousemove', mouseDraw(context));
-    canvas.addEventListener('touchmove', touchDraw(context));
+    canvas.addEventListener('touchmove', mouseDraw(context));
 
     document.addEventListener('click', e => {
         if (e.target.id === 'clear-board') {
