@@ -109,11 +109,8 @@ if (browser) {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
     const context = canvas.getContext('2d')!;
 
-    const canvasOffsetX = canvas.offsetLeft;
-    const canvasOffsetY = canvas.offsetTop;
-
-    canvas.width = window.innerWidth - canvasOffsetX;
-    canvas.height = window.innerHeight - canvasOffsetY;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
         return (e: MouseEvent | TouchEvent) => {
@@ -126,9 +123,9 @@ if (browser) {
             context.lineCap = 'round';
 
             if (e.clientX) {
-                context.lineTo(e.clientX - canvasOffsetX, e.clientY);
+                context.lineTo(e.clientX, e.clientY);
             } else {
-                context.lineTo(e.touches[0].clientX - canvasOffsetX, e.touches[0].clientY);
+                context.lineTo(e.touches[0].clientX, e.touches[0].clientY);
             }
             context.stroke();
         }
