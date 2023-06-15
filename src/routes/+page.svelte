@@ -1,20 +1,20 @@
 <script lang="ts">
-    import { browser } from '$app/environment';
+    import {browser} from '$app/environment';
     import localforage from 'localforage';
-    
+
     /* Configuration */
     const lineWidth = 5;
 
     let isDrawing = false;
 
     function startDrawing(e: Event) {
-
-            isDrawing = true;
-
+        isDrawing = true;
+        e.preventDefault()
     }
 
     function endDrawing(context: CanvasRenderingContext2D) {
-        return _e => {
+        return e => {
+            e.preventDefault()
             isDrawing = false;
             context.stroke();
             context.beginPath();
@@ -33,7 +33,8 @@
         canvas.height = window.innerHeight - canvasOffsetY;
 
         const mouseDraw = (e: MouseEvent) => {
-            if(!isDrawing) {
+            e.preventDefault()
+            if (!isDrawing) {
                 return;
             }
 
@@ -45,7 +46,8 @@
         }
 
         const touchDraw = (e: TouchEvent) => {
-            if(!isDrawing) {
+            e.preventDefault()
+            if (!isDrawing) {
                 return;
             }
 
@@ -76,7 +78,8 @@
                 undo()
             } else if (e.target.id === 'log-storage') {
                 localforage.getItem('choodle-undo').then(item => {
-                    console.log(item)})
+                    console.log(item)
+                })
             }
         });
     }
@@ -108,7 +111,8 @@
 
     const load = async () => {
         const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-        const dataURL = await localforage.getItem("choodle").catch((e) => {})
+        const dataURL = await localforage.getItem("choodle").catch((e) => {
+        })
 
         clear()
 
