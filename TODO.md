@@ -1,0 +1,3 @@
+ - cleanups
+ - implement redo
+ - multi touch
