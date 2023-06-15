@@ -1,4 +1,5 @@
  - cleanups
+ - fix undo from first draw
  - implement redo
  - multi touch
  - connect to a wallet
