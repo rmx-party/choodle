@@ -115,30 +115,34 @@ if (browser) {
     canvas.width = window.innerWidth - canvasOffsetX;
     canvas.height = window.innerHeight - canvasOffsetY;
 
-    const mouseDraw = (e: MouseEvent) => {
-        e.preventDefault()
-        if (!isDrawing) {
-            return;
+    const mouseDraw = (context: CanvasRenderingContext2D) => {
+        return (e: MouseEvent) => {
+            e.preventDefault()
+            if (!isDrawing) {
+                return;
+            }
+
+            context.lineWidth = lineWidth;
+            context.lineCap = 'round';
+
+            context.lineTo(e.clientX - canvasOffsetX, e.clientY);
+            context.stroke();
         }
-
-        context.lineWidth = lineWidth;
-        context.lineCap = 'round';
-
-        context.lineTo(e.clientX - canvasOffsetX, e.clientY);
-        context.stroke();
     }
 
-    const touchDraw = (e: TouchEvent) => {
-        e.preventDefault()
-        if (!isDrawing) {
-            return;
+    const touchDraw = (context: CanvasRenderingContext2D) => {
+        return (e: TouchEvent) => {
+            e.preventDefault()
+            if (!isDrawing) {
+                return;
+            }
+
+            context.lineWidth = lineWidth;
+            context.lineCap = 'round';
+
+            context.lineTo(e.touches[0].clientX - canvasOffsetX, e.touches[0].clientY);
+            context.stroke();
         }
-
-        context.lineWidth = lineWidth;
-        context.lineCap = 'round';
-
-        context.lineTo(e.touches[0].clientX - canvasOffsetX, e.touches[0].clientY);
-        context.stroke();
     }
 
     canvas.addEventListener('mousedown', startDrawing);
@@ -147,8 +151,8 @@ if (browser) {
     canvas.addEventListener('mouseup', endDrawing(context));
     canvas.addEventListener('touchend', endDrawing(context));
 
-    canvas.addEventListener('mousemove', mouseDraw);
-    canvas.addEventListener('touchmove', touchDraw);
+    canvas.addEventListener('mousemove', mouseDraw(context));
+    canvas.addEventListener('touchmove', touchDraw(context));
 
     document.addEventListener('click', e => {
         if (e.target.id === 'clear-board') {
@@ -168,8 +172,6 @@ if (browser) {
 
     window.addEventListener('resize', resizeCanvas(canvas), false);
     window.addEventListener('DOMContentLoaded', resizeCanvas(canvas), false);
-}
 
-if (browser) {
     resizeCanvas(document.getElementById('choodle-board') as HTMLCanvasElement)
 }
