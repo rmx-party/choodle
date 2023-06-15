@@ -54,7 +54,7 @@ const load = async () => {
     clear()
 
     if (dataURL) {
-        var image = new Image;
+        const image = new Image;
         image.addEventListener('load', () => {
             canvas.getContext('2d')!.drawImage(image, 0, 0);
         });
@@ -65,14 +65,14 @@ const load = async () => {
 const push = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
-    let undoStack: [] = await localforage.getItem('choodle-undo') || []
+    const undoStack: [] = await localforage.getItem('choodle-undo') || []
     undoStack.push(canvas.toDataURL())
     localforage.setItem(`choodle-undo`, undoStack)
 }
 
 const pop = async () => {
-    let undoStack: [string] = await localforage.getItem('choodle-undo') || []
-    localforage.setItem('choodle-undo', undoStack.slice(0, -1))
+    const undoStack: [] = await localforage.getItem('choodle-undo') || []
+    await localforage.setItem('choodle-undo', undoStack.slice(0, -1))
 }
 
 const undo = async () => {
@@ -80,14 +80,14 @@ const undo = async () => {
 
     await pop()
 
-    let undoStack: [] = await localforage.getItem('choodle-undo') || []
+    const undoStack: [] = await localforage.getItem('choodle-undo') || []
 
-    let dataURL = undoStack[undoStack.length - 1]
+    const dataURL = undoStack[undoStack.length - 1]
 
     if (dataURL) {
         clearDisplay()
 
-        var image = new Image;
+        const image = new Image;
         image.addEventListener('load', () => {
             canvas.getContext('2d')!.drawImage(image, 0, 0);
         });
