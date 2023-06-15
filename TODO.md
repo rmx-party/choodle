@@ -7,3 +7,4 @@
  - fix styling
  - add licenses
  - get hardhat setup to do contracts
+ - figure out testing strategy
