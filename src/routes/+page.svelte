@@ -166,8 +166,8 @@
 
     const resizeCanvas = (canvas: HTMLCanvasElement) => {
         return e => {
-            canvas.width = window.innerWidth - 200; // FIXME: this bad
-            canvas.height = window.innerHeight - 200; // FIXME: also bad
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
         }
     }
 
