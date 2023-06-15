@@ -129,7 +129,9 @@ if (browser) {
             if (e.clientX) {
                 context.lineTo(e.clientX * ratio, e.clientY * ratio);
             } else {
-                context.lineTo(e.touches[0].clientX * ratio, e.touches[0].clientY * ratio);
+                e.touches.forEach(touch => {
+                    context.lineTo(touch.clientX * ratio, touch.clientY * ratio);
+                })
             }
             context.stroke();
         }
