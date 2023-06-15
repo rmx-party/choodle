@@ -1,3 +1,6 @@
  - cleanups
  - implement redo
  - multi touch
+ - connect to a wallet
+ - add buttons
+ - fix styling
