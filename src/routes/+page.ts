@@ -116,6 +116,7 @@ if (browser) {
     resizeCanvas(canvas)(null)
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
+        const ratio   = window.devicePixelRatio || 1;
         return (e: MouseEvent | TouchEvent) => {
             e.preventDefault()
             if (!isDrawing) {
@@ -126,9 +127,9 @@ if (browser) {
             context.lineCap = 'round';
 
             if (e.clientX) {
-                context.lineTo(e.clientX, e.clientY);
+                context.lineTo(e.clientX * ratio, e.clientY * ratio);
             } else {
-                context.lineTo(e.touches[0].clientX, e.touches[0].clientY);
+                context.lineTo(e.touches[0].clientX * ratio, e.touches[0].clientY * ratio);
             }
             context.stroke();
         }
