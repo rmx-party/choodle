@@ -4,44 +4,67 @@
     
     /* Configuration */
     const lineWidth = 5;
-    
-    if (browser) {    
-        const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-        const context = canvas.getContext('2d')!;
-        
-        const canvasOffsetX = canvas.offsetLeft;
-        const canvasOffsetY = canvas.offsetTop;
-        
-        canvas.width = window.innerWidth - canvasOffsetX;
-        canvas.height = window.innerHeight - canvasOffsetY;
-        
-        let isDrawing = false;
-        
-        const draw = (e: MouseEvent) => {
-            if(!isDrawing) {
-                return;
-            }
-            
-            context.lineWidth = lineWidth;
-            context.lineCap = 'round';
-            
-            context.lineTo(e.clientX - canvasOffsetX, e.clientY);
-            context.stroke();
-        }
-        
-        canvas.addEventListener('mousedown', e => {
+
+    let isDrawing = false;
+
+    function startDrawing(e: Event) {
+
             isDrawing = true;
-        });
-        
-        canvas.addEventListener('mouseup', e => {
+
+    }
+
+    function endDrawing(context: CanvasRenderingContext2D) {
+        return _e => {
             isDrawing = false;
             context.stroke();
             context.beginPath();
             push()
-        });
-        
-        canvas.addEventListener('mousemove', draw);
-        
+        };
+    }
+
+    if (browser) {
+        const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
+        const context = canvas.getContext('2d')!;
+
+        const canvasOffsetX = canvas.offsetLeft;
+        const canvasOffsetY = canvas.offsetTop;
+
+        canvas.width = window.innerWidth - canvasOffsetX;
+        canvas.height = window.innerHeight - canvasOffsetY;
+
+        const mouseDraw = (e: MouseEvent) => {
+            if(!isDrawing) {
+                return;
+            }
+
+            context.lineWidth = lineWidth;
+            context.lineCap = 'round';
+
+            context.lineTo(e.clientX - canvasOffsetX, e.clientY);
+            context.stroke();
+        }
+
+        const touchDraw = (e: TouchEvent) => {
+            if(!isDrawing) {
+                return;
+            }
+
+            context.lineWidth = lineWidth;
+            context.lineCap = 'round';
+
+            context.lineTo(e.touches[0].clientX - canvasOffsetX, e.touches[0].clientY);
+            context.stroke();
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('touchstart', startDrawing);
+
+        canvas.addEventListener('mouseup', endDrawing(context));
+        canvas.addEventListener('touchend', endDrawing(context));
+
+        canvas.addEventListener('mousemove', mouseDraw);
+        canvas.addEventListener('touchmove', touchDraw);
+
         document.addEventListener('click', e => {
             if (e.target.id === 'clear-board') {
                 clear()
