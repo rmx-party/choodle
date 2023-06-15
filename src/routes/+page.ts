@@ -97,8 +97,12 @@ const undo = async () => {
 
 const resizeCanvas = (canvas: HTMLCanvasElement) => {
     return e => {
-        canvas.width = window.innerWidth
-        canvas.height = window.innerHeight
+        const ratio   = window.devicePixelRatio || 1;
+        canvas.style.width  = window.innerWidth + "px";
+        canvas.style.height = window.innerHeight + "px";
+
+        canvas.width = window.innerWidth * ratio
+        canvas.height = window.innerHeight * ratio
     }
 }
 
@@ -110,8 +114,11 @@ if (browser) {
     const context = canvas.getContext('2d')!;
     const ratio   = window.devicePixelRatio || 1;
 
-    canvas.style.width  = canvas.width + "px";
-    canvas.style.height = canvas.height + "px";
+    canvas.style.width  = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
     canvas.width  *= ratio;
     canvas.height *= ratio;
 
