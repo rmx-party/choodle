@@ -108,9 +108,14 @@ if (browser) {
 
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
     const context = canvas.getContext('2d')!;
+    const ratio   = window.devicePixelRatio || 1;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.style.width  = canvas.width + "px";
+    canvas.style.height = canvas.height + "px";
+    canvas.width  *= ratio;
+    canvas.height *= ratio;
+
+    context.scale(ratio, ratio)
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
         return (e: MouseEvent | TouchEvent) => {
