@@ -112,17 +112,8 @@ if (browser) {
 
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
     const context = canvas.getContext('2d')!;
-    const ratio   = window.devicePixelRatio || 1;
 
-    canvas.style.width  = window.innerWidth + "px";
-    canvas.style.height = window.innerHeight + "px";
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-
-    canvas.width  *= ratio;
-    canvas.height *= ratio;
-
-    context.scale(ratio, ratio)
+    resizeCanvas(canvas)(null)
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
         return (e: MouseEvent | TouchEvent) => {
@@ -171,5 +162,5 @@ if (browser) {
     window.addEventListener('resize', resizeCanvas(canvas), false);
     window.addEventListener('DOMContentLoaded', resizeCanvas(canvas), false);
 
-    resizeCanvas(document.getElementById('choodle-board') as HTMLCanvasElement)
+    setTimeout(resizeCanvas(canvas), 5) // FIXME: this sucks.
 }
