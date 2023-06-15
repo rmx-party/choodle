@@ -23,6 +23,8 @@
     }
 
     if (browser) {
+        document.documentElement.style.overflow = 'hidden';
+
         const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
         const context = canvas.getContext('2d')!;
 
@@ -82,6 +84,10 @@
                 })
             }
         });
+
+        // resize the canvas to fill browser window dynamically
+        window.addEventListener('resize', resizeCanvas(canvas), false);
+        window.addEventListener('DOMContentLoaded', resizeCanvas(canvas), false);
     }
 
     function clearStorage() {
@@ -156,6 +162,17 @@
             });
             image.src = dataURL;
         }
+    }
+
+    const resizeCanvas = (canvas: HTMLCanvasElement) => {
+        return e => {
+            canvas.width = window.innerWidth - 200; // FIXME: this bad
+            canvas.height = window.innerHeight - 200; // FIXME: also bad
+        }
+    }
+
+    if (browser) {
+        resizeCanvas(document.getElementById('choodle-board') as HTMLCanvasElement)
     }
 </script>
 
