@@ -98,7 +98,25 @@ const undo = async () => {
 const redo = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
-    console.log('redo!')
+    const undoStack: [] = await localforage.getItem('choodle-undo-stack') || []
+
+    let undoStackCursor: number = await localforage.getItem('choodle-undo-stack-cursor') || 0
+
+    if (undoStackCursor < undoStack.length - 1) {
+        undoStackCursor += 1
+        await localforage.setItem('choodle-undo-stack-cursor', undoStackCursor)
+
+        const dataURL = undoStack[undoStackCursor]
+        if (dataURL) {
+            clearDisplay()
+
+            const image = new Image;
+            image.addEventListener('load', () => {
+                canvas.getContext('2d')!.drawImage(image, 0, 0);
+            });
+            image.src = dataURL;
+        }
+    }
 }
 
 const resizeCanvas = (canvas: HTMLCanvasElement) => {
