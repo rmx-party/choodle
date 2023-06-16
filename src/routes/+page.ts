@@ -40,12 +40,6 @@ const clear = () => {
     clearStorage();
 }
 
-const save = () => {
-    const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-
-    localforage.setItem("choodle", canvas.toDataURL())
-}
-
 const load = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
@@ -57,6 +51,8 @@ const load = async () => {
         const image = new Image;
         image.addEventListener('load', () => {
             canvas.getContext('2d')!.drawImage(image, 0, 0);
+            canvas.getContext('2d')!.stroke();
+            console.log('image loaded', image)
         });
         image.src = dataURL;
     }
@@ -151,16 +147,8 @@ if (browser) {
     document.addEventListener('click', e => {
         if (e.target.id === 'clear-board') {
             clear()
-        } else if (e.target.id === 'save-board') {
-            save()
-        } else if (e.target.id === 'load-board') {
-            load()
         } else if (e.target.id === 'undo') {
             undo()
-        } else if (e.target.id === 'log-storage') {
-            localforage.getItem('choodle-undo').then(item => {
-                console.log(item)
-            })
         }
     });
 
@@ -169,5 +157,5 @@ if (browser) {
 
 
     setTimeout(resizeCanvas(canvas), 5) // FIXME: this sucks.
-    await load();
+    setTimeout(() => load(), 10) // FIXME: me too, even worse
 }
