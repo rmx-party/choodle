@@ -108,8 +108,6 @@ const resizeCanvas = (canvas: HTMLCanvasElement) => {
 
 
 if (browser) {
-    document.documentElement.style.overflow = 'hidden';
-
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
     const context = canvas.getContext('2d')!;
 
