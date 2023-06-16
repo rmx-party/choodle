@@ -88,6 +88,10 @@ const undo = async () => {
             canvas.getContext('2d')!.drawImage(image, 0, 0);
         });
         image.src = dataURL;
+    } else {
+        clear()
+
+        return;
     }
 }
 
