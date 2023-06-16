@@ -33,7 +33,5 @@
         <button id="undo">Undo</button>
         <button id="save-board">Save</button>
         <button id="load-board">Load</button>
-
-        <button id="log-storage">Storage</button>
     </div>
 </div>
