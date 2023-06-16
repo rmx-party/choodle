@@ -98,11 +98,10 @@ const undo = async () => {
 const resizeCanvas = (canvas: HTMLCanvasElement) => {
     return e => {
         const ratio   = window.devicePixelRatio || 1;
-        canvas.style.width  = window.innerWidth + "px";
-        canvas.style.height = window.innerHeight + "px";
 
-        canvas.width = window.innerWidth * ratio
-        canvas.height = window.innerHeight * ratio
+        const rect = canvas.parentNode.getBoundingClientRect();
+        canvas.width = rect.width * ratio;
+        canvas.height = rect.height * ratio;
     }
 }
 
@@ -115,20 +114,27 @@ if (browser) {
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
         const ratio   = window.devicePixelRatio || 1;
-        return (e: MouseEvent | TouchEvent) => {
+        context.lineWidth = lineWidth;
+        context.lineCap = 'round';
+
+        return (e: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
             e.preventDefault()
+            console.log(`drawing`, e)
+            const bounds = canvas.getBoundingClientRect();
+
             if (!isDrawing) {
                 return;
             }
 
-            context.lineWidth = lineWidth;
-            context.lineCap = 'round';
-
+            let newX, newY: number;
             if (e.clientX) {
-                context.lineTo(e.clientX * ratio, e.clientY * ratio);
+                newX = e.clientX * ratio - bounds.left * ratio;
+                newY = e.clientY * ratio - bounds.top * ratio;
             } else {
-                context.lineTo(e.touches[0].clientX * ratio, e.touches[0].clientY * ratio);
+                newX = e.touches[0].clientX * ratio - bounds.left * ratio;
+                newY = e.touches[0].clientY * ratio - bounds.top * ratio;
             }
+            context.lineTo(newX, newY);
             context.stroke();
         }
     }
