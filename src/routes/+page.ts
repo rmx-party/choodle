@@ -48,11 +48,11 @@ const save = () => {
 
 const load = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-    const dataURL = await localforage.getItem("choodle").catch((e) => {
-    })
 
-    clear()
+    const undoStack: [] = await localforage.getItem('choodle-undo') || []
+    if (undoStack.length === 0) return;
 
+    const dataURL = undoStack.findLast(item => item)
     if (dataURL) {
         const image = new Image;
         image.addEventListener('load', () => {
@@ -60,6 +60,7 @@ const load = async () => {
         });
         image.src = dataURL;
     }
+    console.log(`loaded`, undoStack)
 }
 
 const push = async () => {
@@ -84,9 +85,8 @@ const undo = async () => {
 
     const dataURL = undoStack[undoStack.length - 1]
 
+    clearDisplay()
     if (dataURL) {
-        clearDisplay()
-
         const image = new Image;
         image.addEventListener('load', () => {
             canvas.getContext('2d')!.drawImage(image, 0, 0);
@@ -167,5 +167,7 @@ if (browser) {
     window.addEventListener('resize', resizeCanvas(canvas), false);
     window.addEventListener('DOMContentLoaded', resizeCanvas(canvas), false);
 
+
     setTimeout(resizeCanvas(canvas), 5) // FIXME: this sucks.
+    await load();
 }
