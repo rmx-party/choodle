@@ -95,6 +95,12 @@ const undo = async () => {
     }
 }
 
+const redo = async () => {
+    const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
+
+    console.log('redo!')
+}
+
 const resizeCanvas = (canvas: HTMLCanvasElement) => {
     return e => {
         const ratio   = window.devicePixelRatio || 1;
@@ -153,6 +159,8 @@ if (browser) {
             clear()
         } else if (e.target.id === 'undo') {
             undo()
+        } else if (e.target.id === 'redo') {
+            redo()
         }
     });
 
