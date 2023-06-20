@@ -8,6 +8,12 @@ describe('UndoStack', () => {
         expect(undoStack.current).toBe('')
     });
 
+    it('a new populated UndoStack sets current to the last item', () => {
+        const undoStack = new UndoStack(['bar', 'baz', 'qux'])
+
+        expect(undoStack.current).toBe('qux')
+    });
+
     it('current is the only item item when there is one item on the stack', () => {
         const undoStack = new UndoStack()
 
