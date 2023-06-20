@@ -41,6 +41,16 @@ const clear = () => {
     clearStorage();
 }
 
+function drawImageFromDataURL(dataURL: string, canvas: HTMLCanvasElement) {
+    const image = new Image;
+    image.addEventListener('load', () => {
+        canvas.getContext('2d')!.drawImage(image, 0, 0);
+        canvas.getContext('2d')!.stroke();
+        console.log('image loaded', image)
+    });
+    image.src = dataURL;
+}
+
 const load = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
@@ -48,15 +58,7 @@ const load = async () => {
     if (undoStack.length === 0) return;
 
     const dataURL = undoStack.findLast(item => item)
-    if (dataURL) {
-        const image = new Image;
-        image.addEventListener('load', () => {
-            canvas.getContext('2d')!.drawImage(image, 0, 0);
-            canvas.getContext('2d')!.stroke();
-            console.log('image loaded', image)
-        });
-        image.src = dataURL;
-    }
+    drawImageFromDataURL(dataURL, canvas);
     console.log(`loaded`, undoStack)
 }
 
@@ -84,13 +86,8 @@ const undo = async () => {
     const dataURL = undoStack.current
 
     clearDisplay()
-    if (dataURL) {
-        const image = new Image;
-        image.addEventListener('load', () => {
-            canvas.getContext('2d')!.drawImage(image, 0, 0);
-        });
-        image.src = dataURL;
-    }
+
+    drawImageFromDataURL(dataURL, canvas)
 }
 
 const redo = async () => {
@@ -102,16 +99,8 @@ const redo = async () => {
 
     await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
 
-    const dataURL = undoStack.current
     clearDisplay()
-    if (dataURL) {
-
-        const image = new Image;
-        image.addEventListener('load', () => {
-            canvas.getContext('2d')!.drawImage(image, 0, 0);
-        });
-        image.src = dataURL;
-    }
+    drawImageFromDataURL(undoStack.current, canvas)
 }
 
 const resizeCanvas = (canvas: HTMLCanvasElement) => {
