@@ -14,6 +14,12 @@ describe('UndoStack', () => {
         expect(undoStack.current).toBe('qux')
     });
 
+    it('a new UndoStack which was passed in undefined, gets an empty undo stack', () => {
+        const undoStack = new UndoStack(undefined)
+
+        expect(undoStack.current).toBe('')
+    });
+
     it('current is the only item item when there is one item on the stack', () => {
         const undoStack = new UndoStack()
 
