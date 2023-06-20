@@ -43,6 +43,7 @@ const clear = () => {
 
 function drawImageFromDataURL(dataURL: string, canvas: HTMLCanvasElement) {
     const image = new Image;
+    clearDisplay()
     image.addEventListener('load', () => {
         canvas.getContext('2d')!.drawImage(image, 0, 0);
         canvas.getContext('2d')!.stroke();
@@ -83,8 +84,6 @@ const undo = async () => {
 
     const dataURL = undoStack.current
 
-    clearDisplay()
-
     drawImageFromDataURL(dataURL, canvas)
 }
 
@@ -97,7 +96,6 @@ const redo = async () => {
 
     await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
 
-    clearDisplay()
     drawImageFromDataURL(undoStack.current, canvas)
 }
 
