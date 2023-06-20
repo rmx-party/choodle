@@ -143,13 +143,12 @@ if (browser) {
         context.lineCap = 'round';
 
         return (e: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
+            if (!isDrawing) return;
+
             e.preventDefault()
-            console.log(`drawing`, e)
             const bounds = canvas.getBoundingClientRect();
 
-            if (!isDrawing) {
-                return;
-            }
+            console.log(`drawing`, e)
 
             let newX, newY: number;
             if (e.clientX) {
