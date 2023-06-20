@@ -40,4 +40,9 @@ export class UndoStack {
 
         return this
     }
+
+    get last() {
+        this.cursor = this.stack.length - 1
+        return this.current
+    }
 }

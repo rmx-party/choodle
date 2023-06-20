@@ -150,4 +150,15 @@ describe('UndoStack', () => {
             expect(undoStack.current).toBe('bar')
         });
     });
+
+    describe('last', () => {
+        it('sets the cursor to the end and returns current', () => {
+            const undoStack = new UndoStack(['foo', 'bar', 'baz'])
+            undoStack.cursor = 1
+
+            undoStack.last
+
+            expect(undoStack.current).toBe('baz')
+        });
+    });
 });
