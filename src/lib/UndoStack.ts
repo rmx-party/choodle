@@ -1,5 +1,5 @@
 export class UndoStack {
-    private stack: [] | string[]
+    public readonly stack: [] | string[]
     cursor: number
 
     constructor(initialStack: string[] | undefined | null = ['']) {

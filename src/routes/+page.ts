@@ -63,12 +63,13 @@ const load = async () => {
 const push = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
-    const undoStack: [] = await localforage.getItem('choodle-undo') || []
-    let undoStackCursor: number = await localforage.getItem('choodle-undo-cursor') || undoStack.length - 1
+    const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
+    undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
+
     undoStack.push(canvas.toDataURL())
-    undoStackCursor += 1
-    await localforage.setItem('choodle-undo', undoStack)
-    await localforage.setItem('choodle-undo-cursor', undoStackCursor)
+
+    await localforage.setItem('choodle-undo', undoStack.stack)
+    await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
 }
 
 const undo = async () => {
