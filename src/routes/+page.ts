@@ -31,7 +31,7 @@ function clearStorage() {
 }
 
 function clearDisplay() {
-    canvas().getContext('2d')!.clearRect(0, 0, canvas().width, canvas().height);
+    canvasContext().clearRect(0, 0, canvas().width, canvas().height);
 }
 
 const clear = () => {
