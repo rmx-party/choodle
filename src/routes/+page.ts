@@ -62,8 +62,8 @@ const load = async () => {
 const push = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
-    const undoStack: [] = await localforage.getItem('choodle-undo-stack') || []
-    let undoStackCursor: number = await localforage.getItem('choodle-undo-stack-cursor') || undoStack.length - 1
+    const undoStack: [] = await localforage.getItem('choodle-undo') || []
+    let undoStackCursor: number = await localforage.getItem('choodle-undo-cursor') || undoStack.length - 1
     undoStack.push(canvas.toDataURL())
     undoStackCursor += 1
     await localforage.setItem('choodle-undo', undoStack)
@@ -73,9 +73,9 @@ const push = async () => {
 const undo = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
-    let undoStackCursor: number = await localforage.getItem('choodle-undo-stack-cursor') || 0
+    let undoStackCursor: number = await localforage.getItem('choodle-undo-cursor') || 0
     undoStackCursor -= 1
-    await localforage.setItem('choodle-undo-stack-cursor', undoStackCursor)
+    await localforage.setItem('choodle-undo-cursor', undoStackCursor)
 
     const undoStack: [] = await localforage.getItem('choodle-undo') || []
 
@@ -98,13 +98,13 @@ const undo = async () => {
 const redo = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
-    const undoStack: [] = await localforage.getItem('choodle-undo-stack') || []
+    const undoStack: [] = await localforage.getItem('choodle-undo') || []
 
-    let undoStackCursor: number = await localforage.getItem('choodle-undo-stack-cursor') || 0
+    let undoStackCursor: number = await localforage.getItem('choodle-undo-cursor') || 0
 
     if (undoStackCursor < undoStack.length - 1) {
         undoStackCursor += 1
-        await localforage.setItem('choodle-undo-stack-cursor', undoStackCursor)
+        await localforage.setItem('choodle-undo-cursor', undoStackCursor)
 
         const dataURL = undoStack[undoStackCursor]
         if (dataURL) {
