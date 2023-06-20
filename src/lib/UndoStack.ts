@@ -1,6 +1,6 @@
 export class UndoStack {
     private stack: [] | string[]
-    private cursor: number
+    cursor: number
 
     constructor(initialStack: string[] | undefined | null = ['']) {
         this.stack = initialStack || ['']

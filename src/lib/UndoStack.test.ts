@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {UndoStack} from "$lib/UndoStack";
+import {regex_device_pixel_content_box_size} from "svelte/types/compiler/utils/patterns";
 
 describe('UndoStack', () => {
     it('a new UndoStack has an empty current', () => {
@@ -126,6 +127,16 @@ describe('UndoStack', () => {
                 .clear()
 
             expect(undoStack.current).toBe('')
+        });
+    });
+
+    describe('cursor', () => {
+        it('sets the cursor', () => {
+            const undoStack = new UndoStack(['foo', 'bar', 'baz'])
+
+            undoStack.cursor = 1
+
+            expect(undoStack.current).toBe('bar')
         });
     });
 });
