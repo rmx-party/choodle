@@ -99,30 +99,27 @@ const undo = async () => {
 const redo = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
-    const undoStack: [] = await localforage.getItem('choodle-undo') || []
+    const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
+    undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
+    undoStack.redo()
 
-    let undoStackCursor: number = await localforage.getItem('choodle-undo-cursor') || 0
+    await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
 
-    if (undoStackCursor < undoStack.length - 1) {
-        undoStackCursor += 1
-        await localforage.setItem('choodle-undo-cursor', undoStackCursor)
+    const dataURL = undoStack.current
+    if (dataURL) {
+        clearDisplay()
 
-        const dataURL = undoStack[undoStackCursor]
-        if (dataURL) {
-            clearDisplay()
-
-            const image = new Image;
-            image.addEventListener('load', () => {
-                canvas.getContext('2d')!.drawImage(image, 0, 0);
-            });
-            image.src = dataURL;
-        }
+        const image = new Image;
+        image.addEventListener('load', () => {
+            canvas.getContext('2d')!.drawImage(image, 0, 0);
+        });
+        image.src = dataURL;
     }
 }
 
 const resizeCanvas = (canvas: HTMLCanvasElement) => {
     return e => {
-        const ratio   = window.devicePixelRatio || 1;
+        const ratio = window.devicePixelRatio || 1;
 
         const rect = canvas.parentNode.getBoundingClientRect();
         canvas.width = rect.width * ratio;
@@ -138,7 +135,7 @@ if (browser) {
     resizeCanvas(canvas)(null)
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
-        const ratio   = window.devicePixelRatio || 1;
+        const ratio = window.devicePixelRatio || 1;
         context.lineWidth = lineWidth;
         context.lineCap = 'round';
 
