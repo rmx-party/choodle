@@ -11,25 +11,33 @@ export class UndoStack {
         return this.stack[this.cursor]
     }
 
-    public push = (item: string) => {
+    public push = (item: string): UndoStack => {
         this.stack.push(item)
         this.cursor += 1
+
+        return this
     }
 
-    public undo = () => {
+    public undo = (): UndoStack => {
         if (this.cursor !== 0) {
             this.cursor -= 1
         }
+
+        return this
     }
 
-    public clear() {
+    public clear(): UndoStack {
         this.stack = ['']
         this.cursor = 0
+
+        return this
     }
 
-    public redo() {
+    public redo(): UndoStack {
         if (this.cursor < this.stack.length - 1) {
             this.cursor += 1
         }
+
+        return this
     }
 }

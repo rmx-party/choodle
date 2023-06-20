@@ -20,8 +20,8 @@ describe('UndoStack', () => {
         const undoStack = new UndoStack()
 
         undoStack.push('foo')
-        undoStack.push('bar')
-        undoStack.push('baz')
+            .push('bar')
+            .push('baz')
 
         expect(undoStack.current).toBe('baz')
     });
@@ -31,8 +31,8 @@ describe('UndoStack', () => {
             const undoStack = new UndoStack()
 
             undoStack.push('foo')
-            undoStack.push('bar')
-            undoStack.push('baz')
+                .push('bar')
+                .push('baz')
 
             undoStack.undo()
 
@@ -43,11 +43,10 @@ describe('UndoStack', () => {
             const undoStack = new UndoStack()
 
             undoStack.push('foo')
-            undoStack.push('bar')
-            undoStack.push('baz')
-
-            undoStack.undo()
-            undoStack.undo()
+                .push('bar')
+                .push('baz')
+                .undo()
+                .undo()
 
             expect(undoStack.current).toBe('foo')
         });
@@ -56,9 +55,8 @@ describe('UndoStack', () => {
             const undoStack = new UndoStack()
 
             undoStack.push('foo')
-
-            undoStack.undo()
-            undoStack.undo()
+                .undo()
+                .undo()
 
             expect(undoStack.current).toBe('')
         });
@@ -69,12 +67,11 @@ describe('UndoStack', () => {
             const undoStack = new UndoStack()
 
             undoStack.push('foo')
-            undoStack.push('bar')
-            undoStack.push('baz')
-
-            undoStack.undo()
-            undoStack.undo()
-            undoStack.redo()
+                .push('bar')
+                .push('baz')
+                .undo()
+                .undo()
+                .redo()
 
             expect(undoStack.current).toBe('bar')
         });
@@ -83,21 +80,22 @@ describe('UndoStack', () => {
             const undoStack = new UndoStack()
 
             undoStack.push('foo')
-            undoStack.push('bar')
-            undoStack.push('baz')
-
-            undoStack.redo()
+                .push('bar')
+                .push('baz')
+                .redo()
 
             expect(undoStack.current).toBe('baz')
         });
     });
 
     describe('truncate', () => {
-        it('truncates the undostack from current to end', () => {});
+        it('truncates the undo stack from current to end', () => {
+        });
     });
 
     describe('push', () => {
-        it('when a new item is pushed in the middle of the stack, truncate the stack', () => {});
+        it('when a new item is pushed in the middle of the stack, truncate the stack', () => {
+        });
     });
 
     describe('clear', () => {
@@ -105,10 +103,9 @@ describe('UndoStack', () => {
             const undoStack = new UndoStack()
 
             undoStack.push('foo')
-            undoStack.push('bar')
-            undoStack.push('baz')
-
-            undoStack.clear()
+                .push('bar')
+                .push('baz')
+                .clear()
 
             expect(undoStack.current).toBe('')
         });
