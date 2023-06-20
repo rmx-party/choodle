@@ -1,5 +1,6 @@
 import {browser} from '$app/environment';
 import localforage from 'localforage';
+import {UndoStack} from "$lib/UndoStack";
 
 /* Configuration */
 const lineWidth = 5;
@@ -73,13 +74,13 @@ const push = async () => {
 const undo = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
-    let undoStackCursor: number = await localforage.getItem('choodle-undo-cursor') || 0
-    undoStackCursor -= 1
-    await localforage.setItem('choodle-undo-cursor', undoStackCursor)
+    const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
+    undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
+    undoStack.undo()
 
-    const undoStack: [] = await localforage.getItem('choodle-undo') || []
+    await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
 
-    const dataURL = undoStack[undoStackCursor]
+    const dataURL = undoStack.current
 
     clearDisplay()
     if (dataURL) {
