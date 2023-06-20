@@ -1,6 +1,5 @@
 import {describe, expect, it} from 'vitest';
 import {UndoStack} from "$lib/UndoStack";
-import {regex_device_pixel_content_box_size} from "svelte/types/compiler/utils/patterns";
 
 describe('UndoStack', () => {
     it('a new UndoStack has an empty current', () => {
