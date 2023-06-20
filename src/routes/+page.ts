@@ -90,10 +90,6 @@ const undo = async () => {
             canvas.getContext('2d')!.drawImage(image, 0, 0);
         });
         image.src = dataURL;
-    } else {
-        clear()
-
-        return;
     }
 }
 
@@ -107,8 +103,8 @@ const redo = async () => {
     await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
 
     const dataURL = undoStack.current
+    clearDisplay()
     if (dataURL) {
-        clearDisplay()
 
         const image = new Image;
         image.addEventListener('load', () => {

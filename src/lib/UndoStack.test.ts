@@ -104,6 +104,18 @@ describe('UndoStack', () => {
 
             expect(undoStack.current).toBe('baz')
         });
+
+        it('redoes the first when we undo to the beginning of the list', () => {
+            const undoStack = new UndoStack()
+
+            undoStack.push('foo')
+                .push('baz')
+                .undo()
+                .undo()
+                .redo()
+
+            expect(undoStack.current).toBe('foo')
+        });
     });
 
     describe('truncate', () => {
