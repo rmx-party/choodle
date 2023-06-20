@@ -39,12 +39,12 @@ const clear = () => {
     clearStorage();
 }
 
-function drawImageFromDataURL(dataURL: string, canvas: HTMLCanvasElement) {
+function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
     const image = new Image;
     clearDisplay()
     image.addEventListener('load', () => {
-        canvas.getContext('2d')!.drawImage(image, 0, 0);
-        canvas.getContext('2d')!.stroke();
+        context.drawImage(image, 0, 0);
+        context.stroke();
         console.log('image loaded', image)
     });
     image.src = dataURL;
@@ -53,12 +53,16 @@ function drawImageFromDataURL(dataURL: string, canvas: HTMLCanvasElement) {
 const load = async () => {
     const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
 
-    drawImageFromDataURL(undoStack.last, canvas());
+    drawImageFromDataURL(undoStack.last, canvasContext());
     console.log(`loaded`, undoStack)
 }
 
 function canvas() {
     return document.getElementById('choodle-board')! as HTMLCanvasElement;
+}
+
+function canvasContext() {
+    return canvas().getContext('2d')!
 }
 
 const push = async () => {
@@ -80,7 +84,7 @@ const undo = async () => {
 
     const dataURL = undoStack.current
 
-    drawImageFromDataURL(dataURL, canvas())
+    drawImageFromDataURL(dataURL, canvasContext())
 }
 
 const redo = async () => {
@@ -90,7 +94,7 @@ const redo = async () => {
 
     await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
 
-    drawImageFromDataURL(undoStack.current, canvas())
+    drawImageFromDataURL(undoStack.current, canvasContext())
 }
 
 const resizeCanvas = (canvas: HTMLCanvasElement) => {
@@ -105,8 +109,6 @@ const resizeCanvas = (canvas: HTMLCanvasElement) => {
 
 
 if (browser) {
-    const context = canvas().getContext('2d')!;
-
     resizeCanvas(canvas())(null)
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
@@ -138,11 +140,11 @@ if (browser) {
     canvas().addEventListener('mousedown', startDrawing);
     canvas().addEventListener('touchstart', startDrawing);
 
-    canvas().addEventListener('mouseup', endDrawing(context));
-    canvas().addEventListener('touchend', endDrawing(context));
+    canvas().addEventListener('mouseup', endDrawing(canvasContext()));
+    canvas().addEventListener('touchend', endDrawing(canvasContext()));
 
-    canvas().addEventListener('mousemove', mouseDraw(context));
-    canvas().addEventListener('touchmove', mouseDraw(context));
+    canvas().addEventListener('mousemove', mouseDraw(canvasContext()));
+    canvas().addEventListener('touchmove', mouseDraw(canvasContext()));
 
     document.addEventListener('click', e => {
         if (e.target.id === 'clear-board') {
