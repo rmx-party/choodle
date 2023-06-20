@@ -110,8 +110,4 @@ describe('UndoStack', () => {
             expect(undoStack.current).toBe('')
         });
     });
-
-    describe('storage', () => {
-        // pass in the storage to the constructor
-    });
 });
