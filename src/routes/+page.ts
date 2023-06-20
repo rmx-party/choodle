@@ -54,11 +54,9 @@ function drawImageFromDataURL(dataURL: string, canvas: HTMLCanvasElement) {
 const load = async () => {
     const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
 
-    const undoStack: [] = await localforage.getItem('choodle-undo') || []
-    if (undoStack.length === 0) return;
+    const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
 
-    const dataURL = undoStack.findLast(item => item)
-    drawImageFromDataURL(dataURL, canvas);
+    drawImageFromDataURL(undoStack.last, canvas);
     console.log(`loaded`, undoStack)
 }
 
