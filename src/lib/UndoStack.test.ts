@@ -20,6 +20,12 @@ describe('UndoStack', () => {
         expect(undoStack.current).toBe('')
     });
 
+    it('a new UndoStack which was passed in null, gets an empty undo stack', () => {
+        const undoStack = new UndoStack(null)
+
+        expect(undoStack.current).toBe('')
+    });
+
     it('current is the only item item when there is one item on the stack', () => {
         const undoStack = new UndoStack()
 
