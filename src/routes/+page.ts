@@ -31,9 +31,7 @@ function clearStorage() {
 }
 
 function clearDisplay() {
-    const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-
-    canvas.getContext('2d')!.clearRect(0, 0, canvas.width, canvas.height);
+    canvas().getContext('2d')!.clearRect(0, 0, canvas().width, canvas().height);
 }
 
 const clear = () => {
@@ -53,29 +51,27 @@ function drawImageFromDataURL(dataURL: string, canvas: HTMLCanvasElement) {
 }
 
 const load = async () => {
-    const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-
     const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
 
-    drawImageFromDataURL(undoStack.last, canvas);
+    drawImageFromDataURL(undoStack.last, canvas());
     console.log(`loaded`, undoStack)
 }
 
-const push = async () => {
-    const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
+function canvas() {
+    return document.getElementById('choodle-board')! as HTMLCanvasElement;
+}
 
+const push = async () => {
     const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
     undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
 
-    undoStack.push(canvas.toDataURL())
+    undoStack.push(canvas().toDataURL())
 
     await localforage.setItem('choodle-undo', undoStack.stack)
     await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
 }
 
 const undo = async () => {
-    const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-
     const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
     undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
     undoStack.undo()
@@ -84,19 +80,17 @@ const undo = async () => {
 
     const dataURL = undoStack.current
 
-    drawImageFromDataURL(dataURL, canvas)
+    drawImageFromDataURL(dataURL, canvas())
 }
 
 const redo = async () => {
-    const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-
     const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
     undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
     undoStack.redo()
 
     await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
 
-    drawImageFromDataURL(undoStack.current, canvas)
+    drawImageFromDataURL(undoStack.current, canvas())
 }
 
 const resizeCanvas = (canvas: HTMLCanvasElement) => {
@@ -111,10 +105,9 @@ const resizeCanvas = (canvas: HTMLCanvasElement) => {
 
 
 if (browser) {
-    const canvas: HTMLCanvasElement = document.getElementById('choodle-board')! as HTMLCanvasElement;
-    const context = canvas.getContext('2d')!;
+    const context = canvas().getContext('2d')!;
 
-    resizeCanvas(canvas)(null)
+    resizeCanvas(canvas())(null)
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
         const ratio = window.devicePixelRatio || 1;
@@ -125,7 +118,7 @@ if (browser) {
             if (!isDrawing) return;
 
             e.preventDefault()
-            const bounds = canvas.getBoundingClientRect();
+            const bounds = canvas().getBoundingClientRect();
 
             console.log(`drawing`, e)
 
@@ -142,14 +135,14 @@ if (browser) {
         }
     }
 
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('touchstart', startDrawing);
+    canvas().addEventListener('mousedown', startDrawing);
+    canvas().addEventListener('touchstart', startDrawing);
 
-    canvas.addEventListener('mouseup', endDrawing(context));
-    canvas.addEventListener('touchend', endDrawing(context));
+    canvas().addEventListener('mouseup', endDrawing(context));
+    canvas().addEventListener('touchend', endDrawing(context));
 
-    canvas.addEventListener('mousemove', mouseDraw(context));
-    canvas.addEventListener('touchmove', mouseDraw(context));
+    canvas().addEventListener('mousemove', mouseDraw(context));
+    canvas().addEventListener('touchmove', mouseDraw(context));
 
     document.addEventListener('click', e => {
         if (e.target.id === 'clear-board') {
@@ -161,10 +154,9 @@ if (browser) {
         }
     });
 
-    window.addEventListener('resize', resizeCanvas(canvas), false);
-    window.addEventListener('DOMContentLoaded', resizeCanvas(canvas), false);
+    window.addEventListener('resize', resizeCanvas(canvas()), false);
+    window.addEventListener('DOMContentLoaded', resizeCanvas(canvas()), false);
 
-
-    setTimeout(resizeCanvas(canvas), 5) // FIXME: this sucks.
+    setTimeout(resizeCanvas(canvas()), 5) // FIXME: this sucks.
     setTimeout(() => load(), 10) // FIXME: me too, even worse
 }
