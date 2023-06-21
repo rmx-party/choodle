@@ -11,6 +11,7 @@ let isDrawing = false;
 function startDrawing(e: Event) {
     isDrawing = true;
     e.preventDefault()
+    console.groupCollapsed('drawing')
 }
 
 function endDrawing(context: CanvasRenderingContext2D) {
@@ -20,6 +21,7 @@ function endDrawing(context: CanvasRenderingContext2D) {
         context.stroke();
         context.beginPath();
         push()
+        console.groupEnd()
     };
 }
 
@@ -136,7 +138,6 @@ if (browser) {
             e.preventDefault()
             const bounds = canvas().getBoundingClientRect();
 
-            console.log(`drawing`, e)
 
             let newX, newY: number;
             if (e.clientX) {
@@ -148,6 +149,7 @@ if (browser) {
             }
             context.lineTo(newX, newY);
             context.stroke();
+            console.log(e)
         }
     }
 
