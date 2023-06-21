@@ -125,64 +125,65 @@ export const download = () => {
 }
 
 export const initialize = () => {
-    if (browser) {
-        resizeCanvas(canvas())(null)
+    if (!browser) return;
 
-        const mouseDraw = (context: CanvasRenderingContext2D) => {
-            const ratio = window.devicePixelRatio || 1;
-            context.lineWidth = lineWidth;
-            context.lineCap = 'round';
+    resizeCanvas(canvas())(null)
 
-            return (e: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
-                if (!isDrawing) return;
+    const mouseDraw = (context: CanvasRenderingContext2D) => {
+        const ratio = window.devicePixelRatio || 1;
+        context.lineWidth = lineWidth;
+        context.lineCap = 'round';
 
-                e.preventDefault()
-                const bounds = canvas().getBoundingClientRect();
+        return (e: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
+            if (!isDrawing) return;
 
-
-                let newX, newY: number;
-                if (e.clientX) {
-                    newX = e.clientX * ratio - bounds.left * ratio;
-                    newY = e.clientY * ratio - bounds.top * ratio;
-                } else {
-                    newX = e.touches[0].clientX * ratio - bounds.left * ratio;
-                    newY = e.touches[0].clientY * ratio - bounds.top * ratio;
-                }
-                context.lineTo(newX, newY);
-                context.stroke();
-                console.log(e)
-            }
-        }
-
-        canvas().addEventListener('mousedown', startDrawing);
-        canvas().addEventListener('touchstart', startDrawing);
-
-        canvas().addEventListener('mouseup', endDrawing(canvasContext()));
-        canvas().addEventListener('touchend', endDrawing(canvasContext()));
-
-        canvas().addEventListener('mousemove', mouseDraw(canvasContext()));
-        canvas().addEventListener('touchmove', mouseDraw(canvasContext()));
-
-        document.addEventListener('click', e => {
             e.preventDefault()
+            const bounds = canvas().getBoundingClientRect();
 
-            if (e.target.id === 'clear-board') {
-                clear()
-            } else if (e.target.id === 'undo') {
-                undo()
-            } else if (e.target.id === 'redo') {
-                redo()
-            } else if (e.target.id === 'mint') {
-                mint()
-            } else if (e.target.id === 'download') {
-                download()
+
+            let newX, newY: number;
+            if (e.clientX) {
+                newX = e.clientX * ratio - bounds.left * ratio;
+                newY = e.clientY * ratio - bounds.top * ratio;
+            } else {
+                newX = e.touches[0].clientX * ratio - bounds.left * ratio;
+                newY = e.touches[0].clientY * ratio - bounds.top * ratio;
             }
-        });
-
-        window.addEventListener('resize', resizeCanvas(canvas()), false);
-        window.addEventListener('DOMContentLoaded', resizeCanvas(canvas()), false);
-
-        setTimeout(resizeCanvas(canvas()), 5) // FIXME: this sucks.
-        setTimeout(() => load(), 10) // FIXME: me too, even worse
+            context.lineTo(newX, newY);
+            context.stroke();
+            console.log(e)
+        }
     }
+
+    canvas().addEventListener('mousedown', startDrawing);
+    canvas().addEventListener('touchstart', startDrawing);
+
+    canvas().addEventListener('mouseup', endDrawing(canvasContext()));
+    canvas().addEventListener('touchend', endDrawing(canvasContext()));
+
+    canvas().addEventListener('mousemove', mouseDraw(canvasContext()));
+    canvas().addEventListener('touchmove', mouseDraw(canvasContext()));
+
+    document.addEventListener('click', e => {
+        e.preventDefault()
+
+        if (e.target.id === 'clear-board') {
+            clear()
+        } else if (e.target.id === 'undo') {
+            undo()
+        } else if (e.target.id === 'redo') {
+            redo()
+        } else if (e.target.id === 'mint') {
+            mint()
+        } else if (e.target.id === 'download') {
+            download()
+        }
+    });
+
+    window.addEventListener('resize', resizeCanvas(canvas()), false);
+    window.addEventListener('DOMContentLoaded', resizeCanvas(canvas()), false);
+
+    setTimeout(resizeCanvas(canvas()), 5) // FIXME: this sucks.
+    setTimeout(() => load(), 10) // FIXME: me too, even worse
+
 }

@@ -8,7 +8,7 @@
 <canvas id="choodle-board"></canvas>
 
 <script lang="ts">
-import {initialize} from "$lib/CanvasStuff.ts";
+    import {initialize} from "$lib/CanvasStuff.ts";
 
-initialize()
+    initialize()
 </script>
