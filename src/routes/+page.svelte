@@ -3,12 +3,13 @@
     <button id="redo" on:click={redo}>Redo</button>
     <button id="clear-board" on:click={clear}>Clear</button>
     <button id="download" on:click={download}>Download</button>
-    <button id="mint" on:click={mint}>Mint</button>
+    <!-- <button id="mint" on:click={mint}>Mint</button> -->
+    <button id="share" on:click={share}>Share</button>
 </div>
 <canvas id="choodle-board"></canvas>
 
 <script lang="ts">
-    import {clear, download, initialize, mint, redo, undo} from "$lib/CanvasStuff.ts";
+    import {clear, download, initialize, mint, redo, share, undo} from "$lib/CanvasStuff.ts";
 
     initialize()
 </script>

@@ -116,7 +116,6 @@ export const resizeCanvas = (canvas: HTMLCanvasElement) => {
     }
 }
 
-
 export const mint = (e) => {
     e.preventDefault()
 
@@ -124,7 +123,24 @@ export const mint = (e) => {
     goto('/login')
 }
 
-export const download = (e) => {
+export const share = (e: Event) => {
+    e.preventDefault()
+
+    if (navigator.canShare()) {
+        navigator.share({
+            title: 'Choodle',
+            files: [
+                new File([canvas().toDataURL()], 'choodle.png', {type: 'image/png'})
+            ]
+        }).then(() => {
+            console.log('Thanks for sharing!');
+        }).catch(console.error);
+    } else {
+        console.error('Web Share API not supported')
+    }
+};
+
+export const download = (e: Event) => {
     e.preventDefault()
 
     const image = canvas().toDataURL("image/png", 1.0).replace("image/png", "image/octet-stream");
