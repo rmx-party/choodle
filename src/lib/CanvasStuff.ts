@@ -126,7 +126,7 @@ export const mint = (e) => {
 export const share = (e: Event) => {
     e.preventDefault()
 
-    if (navigator.canShare()) {
+    if (navigator.share) {
         navigator.share({
             title: 'Choodle',
             files: [
