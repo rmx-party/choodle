@@ -114,6 +114,14 @@ const mint = () => {
     goto('/login')
 }
 
+const download = () => {
+  const image = canvas().toDataURL("image/png", 1.0).replace("image/png", "image/octet-stream");
+  const link = document.createElement('a');
+  link.download = "choodle.png";
+  link.href = image;
+  link.click();
+}
+
 if (browser) {
     resizeCanvas(canvas())(null)
 
@@ -163,6 +171,8 @@ if (browser) {
             redo()
         } else if (e.target.id === 'mint') {
             mint()
+        } else if (e.target.id === 'download') {
+            download()
         }
     });
 
