@@ -147,6 +147,8 @@ if (browser) {
     canvas().addEventListener('touchmove', mouseDraw(canvasContext()));
 
     document.addEventListener('click', e => {
+        e.preventDefault()
+
         if (e.target.id === 'clear-board') {
             clear()
         } else if (e.target.id === 'undo') {
