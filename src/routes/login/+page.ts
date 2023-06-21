@@ -3,7 +3,7 @@ import {browser} from "$app/environment";
 import {ethers} from "ethers";
 import {PUBLIC_MAGIC_API_KEY} from "$env/static/public";
 
-if (browser) {
+async function setUpMagic() {
     const magic = new Magic(PUBLIC_MAGIC_API_KEY, {
         network: {
             rpcUrl: 'https://matic-mumbai.chainstacklabs.com',
@@ -17,4 +17,8 @@ if (browser) {
 
     const walletInfo = await magic.user.getInfo();
     console.log(walletInfo);
+}
+
+if (browser) {
+    setUpMagic();
 }
