@@ -33,6 +33,7 @@
 	"dependencies": {
 		"@vercel/analytics": "^1.0.1",
 		"localforage": "^1.10.0",
-		"magic-sdk": "^18.0.0"
+		"magic-sdk": "^18.0.0",
+		"web3": "^4.0.1"
 	}
 }
