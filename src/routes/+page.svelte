@@ -6,3 +6,9 @@
     <button id="mint">Mint</button>
 </div>
 <canvas id="choodle-board"></canvas>
+
+<script lang="ts">
+import {initialize} from "$lib/CanvasStuff.ts";
+
+initialize()
+</script>
