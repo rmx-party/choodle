@@ -35,6 +35,8 @@ export function clearStorage() {
 
 export function clearDisplay() {
     canvasContext().clearRect(0, 0, canvas().width, canvas().height);
+    canvasContext().fillStyle = 'white';
+    canvasContext().fillRect(0, 0, canvas().width, canvas().height);
 }
 
 export const clear = (e) => {
@@ -126,12 +128,12 @@ export const mint = (e) => {
 export const share = (e: Event) => {
     e.preventDefault()
 
+    const files = [
+        new File([canvas().toDataURL()], 'choodle.png', {type: 'image/png'})
+    ]
     if (navigator.share) {
         navigator.share({
-            title: 'Choodle',
-            files: [
-                new File([canvas().toDataURL()], 'choodle.png', {type: 'image/png'})
-            ]
+            title: 'Choodle', files
         }).then(() => {
             console.log('Thanks for sharing!');
         }).catch(console.error);
