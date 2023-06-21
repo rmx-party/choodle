@@ -1,6 +1,7 @@
 import {browser} from '$app/environment';
 import localforage from 'localforage';
 import {UndoStack} from "$lib/UndoStack";
+import {goto} from "$app/navigation";
 
 /* Configuration */
 const lineWidth = 5;
@@ -108,6 +109,11 @@ const resizeCanvas = (canvas: HTMLCanvasElement) => {
 }
 
 
+const mint = () => {
+    // FIXME: only if not logged in
+    goto('/login')
+}
+
 if (browser) {
     resizeCanvas(canvas())(null)
 
@@ -155,6 +161,8 @@ if (browser) {
             undo()
         } else if (e.target.id === 'redo') {
             redo()
+        } else if (e.target.id === 'mint') {
+            mint()
         }
     });
 
