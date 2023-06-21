@@ -37,7 +37,9 @@ export function clearDisplay() {
     canvasContext().clearRect(0, 0, canvas().width, canvas().height);
 }
 
-export const clear = () => {
+export const clear = (e) => {
+    e.preventDefault()
+
     clearDisplay();
     clearStorage();
 }
@@ -78,7 +80,9 @@ export const push = async () => {
     await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
 }
 
-export const undo = async () => {
+export const undo = async (e) => {
+    e.preventDefault()
+
     const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
     undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
     undoStack.undo()
@@ -90,7 +94,9 @@ export const undo = async () => {
     drawImageFromDataURL(dataURL, canvasContext())
 }
 
-export const redo = async () => {
+export const redo = async (e) => {
+    e.preventDefault()
+
     const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
     undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
     undoStack.redo()
@@ -111,12 +117,16 @@ export const resizeCanvas = (canvas: HTMLCanvasElement) => {
 }
 
 
-export const mint = () => {
+export const mint = (e) => {
+    e.preventDefault()
+
     // FIXME: only if not logged in
     goto('/login')
 }
 
-export const download = () => {
+export const download = (e) => {
+    e.preventDefault()
+
     const image = canvas().toDataURL("image/png", 1.0).replace("image/png", "image/octet-stream");
     const link = document.createElement('a');
     link.download = "choodle.png";
@@ -166,18 +176,6 @@ export const initialize = () => {
 
     document.addEventListener('click', e => {
         e.preventDefault()
-
-        if (e.target.id === 'clear-board') {
-            clear()
-        } else if (e.target.id === 'undo') {
-            undo()
-        } else if (e.target.id === 'redo') {
-            redo()
-        } else if (e.target.id === 'mint') {
-            mint()
-        } else if (e.target.id === 'download') {
-            download()
-        }
     });
 
     window.addEventListener('resize', resizeCanvas(canvas()), false);
