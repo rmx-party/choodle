@@ -118,13 +118,19 @@ describe('UndoStack', () => {
         });
     });
 
-    describe('truncate', () => {
-        it('truncates the undo stack from current to end', () => {
-        });
-    });
-
     describe('push', () => {
         it('when a new item is pushed in the middle of the stack, truncate the stack', () => {
+            const undoStack = new UndoStack()
+
+            undoStack.push('foo')
+                .push('bar')
+                .push('baz')
+                .undo()
+                .push('qux')
+                .undo()
+                .redo()
+
+            expect(undoStack.current).toBe('qux')
         });
     });
 

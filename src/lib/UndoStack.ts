@@ -1,5 +1,5 @@
 export class UndoStack {
-    public readonly stack: [] | string[]
+    public stack: [] | string[]
     cursor: number
 
     constructor(initialStack: string[] | undefined | null = ['']) {
@@ -12,6 +12,7 @@ export class UndoStack {
     }
 
     public push = (item: string): UndoStack => {
+        this.stack = this.stack.slice(0, this.cursor + 1)
         this.stack.push(item)
         this.cursor += 1
 
