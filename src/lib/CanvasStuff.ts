@@ -125,12 +125,20 @@ export const mint = (e) => {
     goto('/login')
 }
 
-export const share = (e: Event) => {
+export const share = async (e: Event) => {
     e.preventDefault()
 
+    const imgBlob = await (await fetch(canvas().toDataURL("image/png", 1.0))).blob();
     const files = [
-        new File([canvas().toDataURL()], 'choodle.png', {type: 'image/png'})
-    ]
+        new File(
+            [imgBlob], 
+            'choodle.png', 
+            {
+                type: 'image/png', 
+                lastModified: Date.now()
+            }
+        )
+    ];
     if (navigator.share) {
         navigator.share({
             title: 'Choodle', files
