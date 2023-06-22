@@ -118,10 +118,11 @@ export const redo = async (e) => {
 export const resizeCanvas = (canvas: HTMLCanvasElement) => {
     return e => {
         const ratio = window.devicePixelRatio || 1;
+        const buttons = document.getElementById('buttons')
 
         const rect = canvas.parentNode.getBoundingClientRect();
-        canvas.width = rect.width * ratio;
-        canvas.height = rect.height * ratio;
+        canvas.width = (rect.width * ratio) - buttons.clientWidth;
+        canvas.height = (rect.height * ratio) - buttons.clientHeight - 15;
     }
 }
 
