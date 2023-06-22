@@ -138,10 +138,10 @@ export const share = async (e: Event) => {
     const imgBlob = await (await fetch(canvas().toDataURL("image/png", 1.0))).blob();
     const files = [
         new File(
-            [imgBlob], 
-            'choodle.png', 
+            [imgBlob],
+            'choodle.png',
             {
-                type: 'image/png', 
+                type: 'image/png',
                 lastModified: Date.now()
             }
         )
@@ -156,16 +156,6 @@ export const share = async (e: Event) => {
         console.error('Web Share API not supported')
     }
 };
-
-export const download = (e: Event) => {
-    e.preventDefault()
-
-    const image = canvas().toDataURL("image/png", 1.0).replace("image/png", "image/octet-stream");
-    const link = document.createElement('a');
-    link.download = "choodle.png";
-    link.href = image;
-    link.click();
-}
 
 export const initialize = () => {
     if (!browser) return;
