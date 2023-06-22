@@ -207,6 +207,4 @@ export const initialize = async () => {
 
     setTimeout(resizeCanvas(canvas()), 5) // FIXME: this sucks.
     setTimeout(() => load(), 10) // FIXME: me too, even worse
-
-    await document.documentElement.requestFullscreen()
 }
