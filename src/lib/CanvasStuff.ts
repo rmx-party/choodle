@@ -141,7 +141,7 @@ export const share = async (e: Event) => {
     ];
     if (navigator.share) {
         navigator.share({
-            title: 'Choodle', files
+            files
         }).then(() => {
             console.log('Thanks for sharing!');
         }).catch(console.error);
