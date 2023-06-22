@@ -122,7 +122,7 @@ export const resizeCanvas = (canvas: HTMLCanvasElement) => {
 
         const rect = canvas.parentNode.getBoundingClientRect();
         canvas.width = (rect.width * ratio) - buttons.clientWidth;
-        canvas.height = (rect.height * ratio) - buttons.clientHeight - 15;
+        canvas.height = (rect.height * ratio) - buttons.clientHeight - 15; // FIXME: magic numbers suck
     }
 }
 
