@@ -117,6 +117,13 @@ export const redo = async (e) => {
 
 export const resizeCanvas = (canvas: HTMLCanvasElement) => {
     return e => {
+        window.onload = function () {
+            const iPhone = (navigator.userAgent.match(/(iPhone|iPod)/i) ? true : false);
+            if (iPhone) {
+                window.scrollTo(0, 1);
+            }
+        }
+
         const ratio = window.devicePixelRatio || 1;
 
         const rect = canvas.parentNode.getBoundingClientRect();
