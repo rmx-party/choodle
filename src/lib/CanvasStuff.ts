@@ -8,10 +8,8 @@ const lineWidth = 5;
 
 let isDrawing = false;
 
-export function canShare() {
-    if (browser) {
-        return navigator.share
-    }
+export function canShare() : boolean {
+    if (browser) return !!navigator.share
     return false
 }
 
@@ -19,6 +17,8 @@ export function startDrawing(e: Event) {
     isDrawing = true;
     e.preventDefault()
     console.groupCollapsed('drawing')
+    const [newX, newY] = calculateCoordinatesFromEvent(e, canvas().getBoundingClientRect()).map(coord => coord + 1)
+    drawTo(newX, newY);
 }
 
 export function endDrawing(context: CanvasRenderingContext2D) {
@@ -186,7 +186,6 @@ export const initialize = () => {
     resizeCanvas(canvas())(null)
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
-
         return (e: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
             if (!isDrawing) return;
 
