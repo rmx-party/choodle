@@ -4,7 +4,7 @@ import {UndoStack} from "$lib/UndoStack";
 import {goto} from "$app/navigation";
 
 /* Configuration */
-const lineWidth = 10;
+const lineWidth = 5;
 
 let isDrawing = false;
 
@@ -157,7 +157,8 @@ export const share = async (e: Event) => {
     }
 };
 
-function calculateCoordinatesFromEvent(e: MouseEvent | TouchEvent, ratio: number, bounds: DOMRect): [number, number] {
+function calculateCoordinatesFromEvent(e: MouseEvent | TouchEvent, bounds: DOMRect): [number, number] {
+    const ratio = window.devicePixelRatio || 1;
     let newX, newY: number
 
     const oldX = e.clientX || e.touches[0].clientX
@@ -169,22 +170,28 @@ function calculateCoordinatesFromEvent(e: MouseEvent | TouchEvent, ratio: number
     return [newX, newY];
 }
 
+const drawTo = (x: number, y: number): void => {
+    const context = canvasContext()
+
+    context.lineWidth = lineWidth;
+    context.lineCap = 'round';
+
+    context.lineTo(x, y)
+    context.stroke();
+}
+
 export const initialize = () => {
     if (!browser) return;
 
     resizeCanvas(canvas())(null)
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
-        const ratio = window.devicePixelRatio || 1;
-        context.lineWidth = lineWidth;
-        context.lineCap = 'round';
 
         return (e: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
             if (!isDrawing) return;
 
             e.preventDefault()
-            context.lineTo(...calculateCoordinatesFromEvent(e, ratio, canvas().getBoundingClientRect()));
-            context.stroke();
+            drawTo(...calculateCoordinatesFromEvent(e, canvas().getBoundingClientRect()));
             console.log(e)
         }
     }
