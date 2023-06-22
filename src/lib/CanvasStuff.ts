@@ -157,7 +157,7 @@ export const share = async (e: Event) => {
     }
 };
 
-function calculateCoordinates(e: MouseEvent | TouchEvent, ratio: number, bounds: DOMRect): [number, number] {
+function calculateCoordinatesFromEvent(e: MouseEvent | TouchEvent, ratio: number, bounds: DOMRect): [number, number] {
     let newX, newY: number
 
     const oldX = e.clientX || e.touches[0].clientX
@@ -183,9 +183,7 @@ export const initialize = () => {
             if (!isDrawing) return;
 
             e.preventDefault()
-            const bounds = canvas().getBoundingClientRect();
-
-            context.lineTo(...calculateCoordinates(e, ratio, bounds));
+            context.lineTo(...calculateCoordinatesFromEvent(e, ratio, canvas().getBoundingClientRect()));
             context.stroke();
             console.log(e)
         }
