@@ -58,12 +58,12 @@ canvas#choodle-board {
   flex-wrap: wrap;
   flex-direction: row;
   align-content: center;
-  gap: 3mm;
-  padding: 3mm;
+  gap: 2mm;
+  padding: 2mm;
 }
 
 #buttons button {
-  font-size: 1.5rem;
+  font-size: 1rem;
   padding: 0.2em;
   flex-grow: 1;
   min-height: 42px;
