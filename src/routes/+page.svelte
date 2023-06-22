@@ -12,6 +12,16 @@
 
 <script lang="ts">
     import {clear, initialize, redo, share, undo, canShare} from "$lib/CanvasStuff.ts";
+    import {browser} from "$app/environment";
 
     initialize()
+
+    if (browser) {
+        window.onload = function () {
+            var iPhone = (navigator.userAgent.match(/(iPhone|iPod)/i) ? true : false);
+            if (iPhone) {
+                window.scrollTo(0, 1);
+            }
+        }
+    }
 </script>
