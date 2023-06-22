@@ -158,7 +158,7 @@ export const share = async (e: Event) => {
     }
 };
 
-export const initialize = () => {
+export const initialize = async () => {
     if (!browser) return;
 
     resizeCanvas(canvas())(null)
@@ -208,4 +208,5 @@ export const initialize = () => {
     setTimeout(resizeCanvas(canvas()), 5) // FIXME: this sucks.
     setTimeout(() => load(), 10) // FIXME: me too, even worse
 
+    await document.documentElement.requestFullscreen()
 }
