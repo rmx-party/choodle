@@ -4,12 +4,14 @@
     <button id="clear-board" on:click={clear}>Clear</button>
     <button id="download" on:click={download}>Download</button>
     <!-- <button id="mint" on:click={mint}>Mint</button> -->
-    <button id="share" on:click={share}>Share</button>
+    {#if canShare()}
+        <button id="share" on:click={share}>Share</button>
+    {/if}
 </div>
 <canvas id="choodle-board"></canvas>
 
 <script lang="ts">
-    import {clear, download, initialize, mint, redo, share, undo} from "$lib/CanvasStuff.ts";
+    import {clear, download, initialize, mint, redo, share, undo, canShare} from "$lib/CanvasStuff.ts";
 
     initialize()
 </script>

@@ -8,6 +8,13 @@ const lineWidth = 5;
 
 let isDrawing = false;
 
+export function canShare() {
+    if (browser) {
+        return navigator.share
+    }
+    return false
+}
+
 export function startDrawing(e: Event) {
     isDrawing = true;
     e.preventDefault()
