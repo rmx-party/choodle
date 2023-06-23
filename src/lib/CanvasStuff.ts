@@ -26,6 +26,7 @@ export function startDrawing(e: MouseEvent | TouchEvent) {
     canvasContext().ellipse(newX, newY, lineWidth / 2, lineWidth / 2, 0, 0, 360)
     canvasContext().fillStyle = "black";
     canvasContext().fill()
+    canvasContext().closePath()
     canvasContext().beginPath()
 }
 
@@ -43,8 +44,7 @@ export function endDrawing(context: CanvasRenderingContext2D) {
     return e => {
         e.preventDefault()
         isDrawing = false;
-        context.stroke();
-        context.beginPath();
+        context.closePath()
         push()
         console.groupEnd()
     };
