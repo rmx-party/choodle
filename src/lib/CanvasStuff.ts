@@ -50,6 +50,19 @@ export function endDrawing(context: CanvasRenderingContext2D) {
     };
 }
 
+const drawTo = (x: number, y: number): void => {
+    const context = canvasContext()
+
+    console.log(`drawing a line to ${x} ${y}`)
+
+    context.strokeStyle = 'black'
+    context.lineWidth = lineWidth;
+    context.lineCap = 'round';
+
+    context.lineTo(x, y)
+    context.stroke();
+}
+
 export function clearStorage() {
     localforage.keys().then((keys) => {
         keys.map((key) => {
@@ -195,18 +208,6 @@ function calculateCoordinatesFromEvent(e: MouseEvent | TouchEvent, bounds: DOMRe
     newY = oldY * ratio - bounds.top * ratio;
 
     return [newX, newY];
-}
-
-const drawTo = (x: number, y: number): void => {
-    const context = canvasContext()
-
-    console.log(`drawing a line to ${x} ${y}`)
-
-    context.lineWidth = lineWidth;
-    context.lineCap = 'round';
-
-    context.lineTo(x, y)
-    context.stroke();
 }
 
 export const initialize = () => {
