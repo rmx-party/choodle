@@ -20,7 +20,7 @@ export function startDrawing(e: Event) {
     isDrawing = true;
     e.preventDefault()
     console.groupCollapsed('drawing')
-    const [newX, newY] = calculateCoordinatesFromEvent(e, canvas().getBoundingClientRect()).map(coord => coord + (1*ratio))
+    const [newX, newY] = calculateCoordinatesFromEvent(e, canvas().getBoundingClientRect())
 
     canvasContext().beginPath()
     canvasContext().ellipse(newX, newY, lineWidth / 2, lineWidth / 2, 0, 0, 360)
