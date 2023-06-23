@@ -13,6 +13,7 @@ export function canShare() : boolean {
     return false
 }
 
+/* Drawing */
 export function startDrawing(e: Event) {
     const ratio = window.devicePixelRatio || 1;
 
@@ -26,6 +27,16 @@ export function startDrawing(e: Event) {
     canvasContext().fillStyle = "black";
     canvasContext().fill()
     canvasContext().beginPath()
+}
+
+const doDraw = (context: CanvasRenderingContext2D) => {
+    return (e: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
+        if (!isDrawing) return;
+
+        e.preventDefault()
+        drawTo(...calculateCoordinatesFromEvent(e, canvas().getBoundingClientRect()));
+        console.log(e)
+    }
 }
 
 export function endDrawing(context: CanvasRenderingContext2D) {
@@ -202,16 +213,6 @@ export const initialize = () => {
     if (!browser) return;
 
     resizeCanvas()(null)
-
-    const doDraw = (context: CanvasRenderingContext2D) => {
-        return (e: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
-            if (!isDrawing) return;
-
-            e.preventDefault()
-            drawTo(...calculateCoordinatesFromEvent(e, canvas().getBoundingClientRect()));
-            console.log(e)
-        }
-    }
 
     canvas().addEventListener('mousedown', startDrawing);
     canvas().addEventListener('touchstart', startDrawing);
