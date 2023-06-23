@@ -14,7 +14,7 @@ export function canShare() : boolean {
 }
 
 /* Drawing */
-export function startDrawing(e: Event) {
+export function startDrawing(e: MouseEvent | TouchEvent) {
     const ratio = window.devicePixelRatio || 1;
 
     isDrawing = true;
