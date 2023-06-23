@@ -224,9 +224,8 @@ export const initialize = () => {
     canvas().addEventListener('mousemove', doDraw(canvasContext()));
     canvas().addEventListener('touchmove', doDraw(canvasContext()));
 
-    document.addEventListener('click', e => {
-        e.preventDefault()
-    });
+    document.addEventListener('click', e => { e.preventDefault() });
+    document.addEventListener('drag', e => { e.preventDefault() });
 
     window.addEventListener('resize', resizeCanvas(), false);
     window.addEventListener('DOMContentLoaded', resizeCanvas(), false);
