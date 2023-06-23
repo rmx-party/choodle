@@ -203,7 +203,7 @@ export const initialize = () => {
 
     resizeCanvas()(null)
 
-    const mouseDraw = (context: CanvasRenderingContext2D) => {
+    const doDraw = (context: CanvasRenderingContext2D) => {
         return (e: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
             if (!isDrawing) return;
 
@@ -219,8 +219,8 @@ export const initialize = () => {
     canvas().addEventListener('mouseup', endDrawing(canvasContext()));
     canvas().addEventListener('touchend', endDrawing(canvasContext()));
 
-    canvas().addEventListener('mousemove', mouseDraw(canvasContext()));
-    canvas().addEventListener('touchmove', mouseDraw(canvasContext()));
+    canvas().addEventListener('mousemove', doDraw(canvasContext()));
+    canvas().addEventListener('touchmove', doDraw(canvasContext()));
 
     document.addEventListener('click', e => {
         e.preventDefault()
