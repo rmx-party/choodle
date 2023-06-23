@@ -14,11 +14,18 @@ export function canShare() : boolean {
 }
 
 export function startDrawing(e: Event) {
+    const ratio = window.devicePixelRatio || 1;
+
     isDrawing = true;
     e.preventDefault()
     console.groupCollapsed('drawing')
-    const [newX, newY] = calculateCoordinatesFromEvent(e, canvas().getBoundingClientRect()).map(coord => coord + 1)
-    drawTo(newX, newY);
+    const [newX, newY] = calculateCoordinatesFromEvent(e, canvas().getBoundingClientRect()).map(coord => coord + (1*ratio))
+
+    canvasContext().beginPath()
+    canvasContext().ellipse(newX, newY, lineWidth / 2, lineWidth / 2, 0, 0, 360)
+    canvasContext().fillStyle = "black";
+    canvasContext().fill()
+    canvasContext().beginPath()
 }
 
 export function endDrawing(context: CanvasRenderingContext2D) {
@@ -181,6 +188,8 @@ function calculateCoordinatesFromEvent(e: MouseEvent | TouchEvent, bounds: DOMRe
 
 const drawTo = (x: number, y: number): void => {
     const context = canvasContext()
+
+    console.log(`drawing a line to ${x} ${y}`)
 
     context.lineWidth = lineWidth;
     context.lineCap = 'round';
