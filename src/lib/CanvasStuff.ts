@@ -121,9 +121,15 @@ export const resizeCanvas = () => {
     return e => {
         const ratio = window.devicePixelRatio || 1;
 
-        const rect = canvas().parentNode.getBoundingClientRect();
-        canvas().width = rect.width * ratio;
-        canvas().height = rect.height * ratio;
+        const rootElement = document.querySelector("html") as HTMLElement
+        const windowHeight = rootElement.clientHeight
+        const windowWidth = rootElement.clientWidth
+
+        const buttonsElement = document.getElementById('buttons')!
+        const buttonsHeight = buttonsElement.clientHeight
+
+        canvas().width = windowWidth * ratio;
+        canvas().height = (windowHeight - buttonsHeight) * ratio;
         load()
     }
 }
