@@ -25,7 +25,6 @@ export function startDrawing(e: Event) {
     canvasContext().ellipse(newX, newY, lineWidth / 2, lineWidth / 2, 0, 0, 360)
     canvasContext().fillStyle = "black";
     canvasContext().fill()
-    canvasContext().moveTo(newX, newY)
     canvasContext().beginPath()
 }
 
