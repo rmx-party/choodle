@@ -14,13 +14,13 @@ export function canShare() : boolean {
 }
 
 /* Drawing */
-export function startDrawing(e: MouseEvent | TouchEvent) {
+export function startDrawing(event: MouseEvent | TouchEvent) {
     const ratio = window.devicePixelRatio || 1;
 
     isDrawing = true;
-    e.preventDefault()
+    event.preventDefault()
     console.groupCollapsed('drawing')
-    const [newX, newY] = calculateCoordinatesFromEvent(e, canvas().getBoundingClientRect())
+    const [newX, newY] = calculateCoordinatesFromEvent(event, canvas().getBoundingClientRect())
 
     canvasContext().beginPath()
     canvasContext().ellipse(newX, newY, lineWidth / 2, lineWidth / 2, 0, 0, 360)
@@ -31,18 +31,18 @@ export function startDrawing(e: MouseEvent | TouchEvent) {
 }
 
 const doDraw = (context: CanvasRenderingContext2D) => {
-    return (e: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
+    return (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
         if (!isDrawing) return;
 
-        e.preventDefault()
-        drawTo(...calculateCoordinatesFromEvent(e, canvas().getBoundingClientRect()));
-        console.log(e)
+        event.preventDefault()
+        drawTo(...calculateCoordinatesFromEvent(event, canvas().getBoundingClientRect()));
+        console.log(event)
     }
 }
 
 export function endDrawing(context: CanvasRenderingContext2D) {
-    return e => {
-        e.preventDefault()
+    return event => {
+        event.preventDefault()
         isDrawing = false;
         context.closePath()
         push()
@@ -77,8 +77,8 @@ export function clearDisplay() {
     canvasContext().fillRect(0, 0, canvas().width, canvas().height);
 }
 
-export const clear = (e) => {
-    e.preventDefault()
+export const clear = (event) => {
+    event.preventDefault()
 
     clearDisplay();
     clearStorage();
@@ -122,8 +122,8 @@ export const push = async () => {
     await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
 }
 
-export const undo = async (e) => {
-    e.preventDefault()
+export const undo = async (event) => {
+    event.preventDefault()
 
     const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
     undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
@@ -136,8 +136,8 @@ export const undo = async (e) => {
     drawImageFromDataURL(dataURL, canvasContext())
 }
 
-export const redo = async (e) => {
-    e.preventDefault()
+export const redo = async (event) => {
+    event.preventDefault()
 
     const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
     undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
@@ -149,7 +149,7 @@ export const redo = async (e) => {
 }
 
 export const resizeCanvas = () => {
-    return e => {
+    return event => {
         const ratio = window.devicePixelRatio || 1;
 
         const rootElement = document.querySelector("html") as HTMLElement
@@ -165,15 +165,15 @@ export const resizeCanvas = () => {
     }
 }
 
-export const mint = (e) => {
-    e.preventDefault()
+export const mint = (event) => {
+    event.preventDefault()
 
     // FIXME: only if not logged in
     goto('/login')
 }
 
-export const share = async (e: Event) => {
-    e.preventDefault()
+export const share = async (event: Event) => {
+    event.preventDefault()
 
     const imgBlob = await (await fetch(canvas().toDataURL("image/png", 1.0))).blob();
     const files = [
@@ -197,12 +197,12 @@ export const share = async (e: Event) => {
     }
 };
 
-function calculateCoordinatesFromEvent(e: MouseEvent | TouchEvent, bounds: DOMRect): [number, number] {
+function calculateCoordinatesFromEvent(event: MouseEvent | TouchEvent, bounds: DOMRect): [number, number] {
     const ratio = window.devicePixelRatio || 1;
     let newX, newY: number
 
-    const oldX = e.clientX || e.touches[0].clientX
-    const oldY = e.clientY || e.touches[0].clientY
+    const oldX = event.clientX || event.touches[0].clientX
+    const oldY = event.clientY || event.touches[0].clientY
 
     newX = oldX * ratio - bounds.left * ratio;
     newY = oldY * ratio - bounds.top * ratio;
@@ -224,8 +224,8 @@ export const initialize = () => {
     canvas().addEventListener('mousemove', doDraw(canvasContext()));
     canvas().addEventListener('touchmove', doDraw(canvasContext()));
 
-    document.addEventListener('click', e => { e.preventDefault() });
-    document.addEventListener('drag', e => { e.preventDefault() });
+    document.addEventListener('click', event => { event.preventDefault() });
+    document.addEventListener('drag', event => { event.preventDefault() });
 
     window.addEventListener('resize', resizeCanvas(), false);
     window.addEventListener('DOMContentLoaded', resizeCanvas(), false);
