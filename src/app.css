@@ -45,7 +45,7 @@ canvas#choodle-board {
   align-self: stretch;
   justify-self: stretch;
 
-  border: 8px solid hsla(200, 50%, 50%, 0.2);
+  background-color: hsla(200, 50%, 50%, 0.2);
 }
 
 #buttons {

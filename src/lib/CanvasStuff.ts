@@ -42,7 +42,7 @@ export function clearStorage() {
 
 export function clearDisplay() {
     canvasContext().clearRect(0, 0, canvas().width, canvas().height);
-    canvasContext().fillStyle = 'white';
+    canvasContext().fillStyle = "#fafafa";
     canvasContext().fillRect(0, 0, canvas().width, canvas().height);
 }
 
@@ -72,7 +72,9 @@ export const load = async () => {
 }
 
 export function canvas() {
-    return document.getElementById('choodle-board')! as HTMLCanvasElement;
+    let instance = null;
+    instance ||= document.getElementById('choodle-board')! as HTMLCanvasElement;
+    return instance
 }
 
 export function canvasContext() {
@@ -115,13 +117,14 @@ export const redo = async (e) => {
     drawImageFromDataURL(undoStack.current, canvasContext())
 }
 
-export const resizeCanvas = (canvas: HTMLCanvasElement) => {
+export const resizeCanvas = () => {
     return e => {
         const ratio = window.devicePixelRatio || 1;
 
-        const rect = canvas.parentNode.getBoundingClientRect();
-        canvas.width = rect.width * ratio;
-        canvas.height = rect.height * ratio;
+        const rect = canvas().parentNode.getBoundingClientRect();
+        canvas().width = rect.width * ratio;
+        canvas().height = rect.height * ratio;
+        load()
     }
 }
 
@@ -183,7 +186,7 @@ const drawTo = (x: number, y: number): void => {
 export const initialize = () => {
     if (!browser) return;
 
-    resizeCanvas(canvas())(null)
+    resizeCanvas()(null)
 
     const mouseDraw = (context: CanvasRenderingContext2D) => {
         return (e: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
@@ -208,10 +211,10 @@ export const initialize = () => {
         e.preventDefault()
     });
 
-    window.addEventListener('resize', resizeCanvas(canvas()), false);
-    window.addEventListener('DOMContentLoaded', resizeCanvas(canvas()), false);
+    window.addEventListener('resize', resizeCanvas(), false);
+    window.addEventListener('DOMContentLoaded', resizeCanvas(), false);
 
-    setTimeout(resizeCanvas(canvas()), 5) // FIXME: this sucks.
+    setTimeout(resizeCanvas(), 5) // FIXME: this sucks.
     setTimeout(() => load(), 10) // FIXME: me too, even worse
 
 }
