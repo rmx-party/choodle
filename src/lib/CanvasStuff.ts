@@ -10,7 +10,7 @@ let isDrawing = false;
 
 const choodleUndoKey = 'choodle-undo'
 
-export function canShare() : boolean {
+export function canShare(): boolean {
     if (browser) return !!navigator.share
     return false
 }
@@ -152,7 +152,7 @@ export const redo = async (event) => {
 }
 
 export const resizeCanvas = () => {
-    return event => {
+    return async event => {
         const ratio = window.devicePixelRatio || 1;
 
         const rootElement = document.querySelector("html") as HTMLElement
@@ -164,7 +164,7 @@ export const resizeCanvas = () => {
 
         canvas().width = windowWidth * ratio;
         canvas().height = (windowHeight - buttonsHeight) * ratio;
-        load()
+        await load()
     }
 }
 
@@ -227,13 +227,16 @@ export const initialize = () => {
     canvas().addEventListener('mousemove', doDraw(canvasContext()));
     canvas().addEventListener('touchmove', doDraw(canvasContext()));
 
-    document.addEventListener('click', event => { event.preventDefault() });
-    document.addEventListener('drag', event => { event.preventDefault() });
+    document.addEventListener('click', event => {
+        event.preventDefault()
+    });
+    document.addEventListener('drag', event => {
+        event.preventDefault()
+    });
 
     window.addEventListener('resize', resizeCanvas(), false);
     window.addEventListener('DOMContentLoaded', resizeCanvas(), false);
 
     setTimeout(resizeCanvas(), 5) // FIXME: this sucks.
     setTimeout(() => load(), 10) // FIXME: me too, even worse
-
 }
