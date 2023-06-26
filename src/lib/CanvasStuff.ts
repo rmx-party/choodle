@@ -27,7 +27,6 @@ export function startDrawing(event: MouseEvent | TouchEvent) {
     canvasContext().fillStyle = "black";
     canvasContext().fill()
     canvasContext().closePath()
-    canvasContext().beginPath()
 }
 
 const doDraw = (context: CanvasRenderingContext2D) => {
@@ -44,8 +43,8 @@ export function endDrawing(context: CanvasRenderingContext2D) {
     return event => {
         event.preventDefault()
         isDrawing = false;
-        context.closePath()
         push()
+        context.beginPath()
         console.groupEnd()
     };
 }
