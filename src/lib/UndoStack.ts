@@ -11,6 +11,10 @@ export class UndoStack {
         return this.stack[this.cursor]
     }
 
+    get storable(): { cursor: number, stack: string[] } {
+        return { cursor: this.cursor, stack: this.stack }
+    }
+
     public push = (item: string): UndoStack => {
         this.stack = this.stack.slice(0, this.cursor + 1)
         this.stack.push(item)

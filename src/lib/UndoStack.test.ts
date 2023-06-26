@@ -167,4 +167,12 @@ describe('UndoStack', () => {
             expect(undoStack.current).toBe('baz')
         });
     });
+
+    describe('storable', () => {
+        it('gives an object with the stack and the cursor for storage', () => {
+            const undoStack = new UndoStack(['foo', 'bar', 'baz'])
+
+            expect(undoStack.storable).toEqual({cursor: undoStack.cursor, stack: undoStack.stack})
+        });
+    });
 });
