@@ -8,6 +8,9 @@ const lineWidth = 5;
 
 let isDrawing = false;
 
+const choodleUndoStackKey = 'choodle-undo';
+const choodleCursorKey = 'choodle-undo-cursor'
+
 export function canShare() : boolean {
     if (browser) return !!navigator.share
     return false
@@ -95,7 +98,7 @@ export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingCo
 }
 
 export const load = async () => {
-    const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
+    const undoStack = new UndoStack(await localforage.getItem(choodleUndoStackKey))
 
     drawImageFromDataURL(undoStack.last, canvasContext());
     console.log(`loaded`, undoStack)
@@ -112,23 +115,23 @@ export function canvasContext() {
 }
 
 export const push = async () => {
-    const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
-    undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
+    const undoStack = new UndoStack(await localforage.getItem(choodleUndoStackKey))
+    undoStack.cursor = await localforage.getItem(choodleCursorKey) || 0
 
     undoStack.push(canvas().toDataURL())
 
-    await localforage.setItem('choodle-undo', undoStack.stack)
-    await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
+    await localforage.setItem(choodleUndoStackKey, undoStack.stack)
+    await localforage.setItem(choodleCursorKey, undoStack.cursor)
 }
 
 export const undo = async (event) => {
     event.preventDefault()
 
-    const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
-    undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
+    const undoStack = new UndoStack(await localforage.getItem(choodleUndoStackKey))
+    undoStack.cursor = await localforage.getItem(choodleCursorKey) || 0
     undoStack.undo()
 
-    await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
+    await localforage.setItem(choodleCursorKey, undoStack.cursor)
 
     const dataURL = undoStack.current
 
@@ -138,11 +141,11 @@ export const undo = async (event) => {
 export const redo = async (event) => {
     event.preventDefault()
 
-    const undoStack = new UndoStack(await localforage.getItem('choodle-undo'))
-    undoStack.cursor = await localforage.getItem('choodle-undo-cursor') || 0
+    const undoStack = new UndoStack(await localforage.getItem(choodleUndoStackKey))
+    undoStack.cursor = await localforage.getItem(choodleCursorKey) || 0
     undoStack.redo()
 
-    await localforage.setItem('choodle-undo-cursor', undoStack.cursor)
+    await localforage.setItem(choodleCursorKey, undoStack.cursor)
 
     drawImageFromDataURL(undoStack.current, canvasContext())
 }
