@@ -51,7 +51,9 @@ export class UndoStack {
         return this.current
     }
 
-    static fromStorable(storable: {cursor: number; stack: string[]}) {
+    static fromStorable(storable: { cursor: number; stack: string[] } | null) {
+        if (!storable) return new UndoStack()
+
         const undoStack = new UndoStack(storable.stack)
         undoStack.cursor = storable.cursor
         return undoStack
