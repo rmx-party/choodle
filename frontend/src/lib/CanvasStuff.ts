@@ -23,9 +23,9 @@ export function startDrawing(event: MouseEvent | TouchEvent) {
     const [newX, newY] = calculateCoordinatesFromEvent(event, canvas().getBoundingClientRect())
 
     canvasContext().beginPath()
-    canvasContext().ellipse(newX, newY, lineWidth / 2, lineWidth / 2, 0, 0, 360)
     canvasContext().fillStyle = "black";
     canvasContext().fill()
+    drawTo(newX + 0.1, newY + 0.1)
     canvasContext().closePath()
 }
 
@@ -149,7 +149,7 @@ export const redo = async (event: Event) => {
     drawImageFromDataURL(undoStack.current, canvasContext())
 }
 
-export const resizeCanvas = async (event?: Event) => {
+export const resizeCanvas = async (_event?: Event) => {
     const ratio = window.devicePixelRatio || 1;
 
     const rootElement = document.querySelector("html") as HTMLElement
