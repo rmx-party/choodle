@@ -152,7 +152,7 @@ export const redo = async (event: Event) => {
 }
 
 export const resizeCanvas = () => {
-    return async (event: Event) => {
+    return async (event: Event | null) => {
         const ratio = window.devicePixelRatio || 1;
 
         const rootElement = document.querySelector("html") as HTMLElement
@@ -200,15 +200,23 @@ export const share = async (event: Event) => {
     }
 };
 
+function oldCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
+    switch (event.constructor) {
+        case MouseEvent:
+            return [(event as MouseEvent).clientX,
+                (event as MouseEvent).clientY]
+        case TouchEvent:
+            return [(event as TouchEvent).touches[0].clientX,
+                (event as TouchEvent).touches[0].clientY]
+    }
+    return [-1, -1] // FIXME: this is terrible
+}
+
 function calculateCoordinatesFromEvent(event: MouseEvent | TouchEvent, bounds: DOMRect): [number, number] {
     const ratio = window.devicePixelRatio || 1;
-    let newX, newY: number
-
-    const oldX = event.clientX || event.touches[0].clientX
-    const oldY = event.clientY || event.touches[0].clientY
-
-    newX = oldX * ratio - bounds.left * ratio;
-    newY = oldY * ratio - bounds.top * ratio;
+    const [oldX, oldY] = [...oldCoordsFromEvent(event)]
+    const newX = oldX * ratio - bounds.left * ratio;
+    const newY = oldY * ratio - bounds.top * ratio;
 
     return [newX, newY];
 }
