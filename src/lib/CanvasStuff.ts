@@ -17,8 +17,6 @@ export function canShare() : boolean {
 
 /* Drawing */
 export function startDrawing(event: MouseEvent | TouchEvent) {
-    const ratio = window.devicePixelRatio || 1;
-
     isDrawing = true;
     event.preventDefault()
     console.groupCollapsed('drawing')
