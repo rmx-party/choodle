@@ -1,6 +1,6 @@
 export class UndoStack {
     public stack: [] | string[]
-    cursor: number
+    public cursor: number
 
     constructor(initialStack: string[] | undefined | null = ['']) {
         this.stack = initialStack || ['']
@@ -49,5 +49,11 @@ export class UndoStack {
     get last() {
         this.cursor = this.stack.length - 1
         return this.current
+    }
+
+    static fromStorable(storable: {cursor: number; stack: string[]}) {
+        const undoStack = new UndoStack(storable.stack)
+        undoStack.cursor = storable.cursor
+        return undoStack
     }
 }

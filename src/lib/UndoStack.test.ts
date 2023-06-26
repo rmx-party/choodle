@@ -174,5 +174,10 @@ describe('UndoStack', () => {
 
             expect(undoStack.storable).toEqual({cursor: undoStack.cursor, stack: undoStack.stack})
         });
+
+        it('can create an UndoStack from a storable', () => {
+            const undoStack = UndoStack.fromStorable({cursor: 1, stack: ['foo', 'bar', 'baz']})
+            expect(undoStack.current).toEqual('bar')
+        })
     });
 });
