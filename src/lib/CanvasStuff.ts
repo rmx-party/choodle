@@ -94,10 +94,6 @@ export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingCo
     image.src = dataURL;
 }
 
-async function getUndoStack() {
-    return UndoStack.fromStorable(await localforage.getItem(choodleUndoKey));
-}
-
 export const load = async () => {
     const undoStack = await getUndoStack()
 
@@ -115,12 +111,20 @@ export function canvasContext() {
     return canvas().getContext('2d')!
 }
 
+async function setUndoStack(undoStack: UndoStack) {
+    await localforage.setItem(choodleUndoKey, undoStack.storable)
+}
+
+async function getUndoStack() {
+    return UndoStack.fromStorable(await localforage.getItem(choodleUndoKey));
+}
+
 export const push = async () => {
     const undoStack = await getUndoStack()
 
     undoStack.push(canvas().toDataURL())
 
-    await localforage.setItem(choodleUndoKey, undoStack.storable)
+    await setUndoStack(undoStack);
 }
 
 export const undo = async (event) => {
@@ -129,7 +133,7 @@ export const undo = async (event) => {
     const undoStack = await getUndoStack()
     undoStack.undo()
 
-    await localforage.setItem(choodleUndoKey, undoStack.storable)
+    await setUndoStack(undoStack);
 
     const dataURL = undoStack.current
 
@@ -142,7 +146,7 @@ export const redo = async (event) => {
     const undoStack = await getUndoStack()
     undoStack.redo()
 
-    await localforage.setItem(choodleUndoKey, undoStack.storable)
+    await setUndoStack(undoStack);
 
     drawImageFromDataURL(undoStack.current, canvasContext())
 }
