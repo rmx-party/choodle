@@ -40,10 +40,10 @@ const doDraw = (context: CanvasRenderingContext2D) => {
 }
 
 export function endDrawing(context: CanvasRenderingContext2D) {
-    return event => {
+    return async event => {
         event.preventDefault()
         isDrawing = false;
-        push()
+        await push()
         context.beginPath()
         console.groupEnd()
     };
