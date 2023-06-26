@@ -8,7 +8,7 @@ const lineWidth = 5;
 
 let isDrawing = false;
 
-const choodleUndoKey = 'new-choodle-undo'
+const choodleUndoKey = 'choodle-undo'
 
 export function canShare() : boolean {
     if (browser) return !!navigator.share
