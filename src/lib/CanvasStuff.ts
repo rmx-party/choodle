@@ -101,7 +101,7 @@ export const load = async () => {
 
 export function canvas() {
     let instance = null;
-    instance ||= document.getElementById('choodle-board')! as HTMLCanvasElement;
+    instance ||= document.getElementById('choodle-board') as HTMLCanvasElement;
     return instance
 }
 
@@ -149,21 +149,22 @@ export const redo = async (event: Event) => {
     drawImageFromDataURL(undoStack.current, canvasContext())
 }
 
-export const resizeCanvas = () => {
-    return async (event: Event | null) => {
-        const ratio = window.devicePixelRatio || 1;
+export const resizeCanvas = async (event?: Event) => {
+    const ratio = window.devicePixelRatio || 1;
 
-        const rootElement = document.querySelector("html") as HTMLElement
-        const windowHeight = rootElement.clientHeight
-        const windowWidth = rootElement.clientWidth
+    const rootElement = document.querySelector("html") as HTMLElement
+    const windowHeight = rootElement.clientHeight
+    const windowWidth = rootElement.clientWidth
 
-        const buttonsElement = document.getElementById('buttons')!
-        const buttonsHeight = buttonsElement.clientHeight
-
-        canvas().width = windowWidth * ratio;
-        canvas().height = (windowHeight - buttonsHeight) * ratio;
-        await load()
+    let buttonsHeight = 0;
+    const buttonsElement = document.getElementById('buttons')
+    if (buttonsElement) {
+        buttonsHeight = buttonsElement.clientHeight;
     }
+
+    canvas().width = windowWidth * ratio;
+    canvas().height = (windowHeight - buttonsHeight) * ratio;
+    await load()
 }
 
 export const mint = (event: Event) => {
@@ -219,10 +220,10 @@ function calculateCoordinatesFromEvent(event: MouseEvent | TouchEvent, bounds: D
     return [newX, newY];
 }
 
-export const initialize = () => {
+export const initialize = async () => {
     if (!browser) return;
 
-    resizeCanvas()(null)
+    await resizeCanvas()
 
     canvas().addEventListener('mousedown', startDrawing);
     canvas().addEventListener('touchstart', startDrawing);
@@ -240,9 +241,9 @@ export const initialize = () => {
         event.preventDefault()
     });
 
-    window.addEventListener('resize', resizeCanvas(), false);
-    window.addEventListener('DOMContentLoaded', resizeCanvas(), false);
+    window.addEventListener('resize', resizeCanvas, false);
+    window.addEventListener('DOMContentLoaded', resizeCanvas, false);
 
-    setTimeout(resizeCanvas(), 5) // FIXME: this sucks.
+    setTimeout(resizeCanvas, 5) // FIXME: this sucks.
     setTimeout(() => load(), 10) // FIXME: me too, even worse
 }
