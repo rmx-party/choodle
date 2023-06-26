@@ -40,7 +40,7 @@ const doDraw = (context: CanvasRenderingContext2D) => {
 }
 
 export function endDrawing(context: CanvasRenderingContext2D) {
-    return async event => {
+    return async (event: Event) => {
         event.preventDefault()
         isDrawing = false;
         await push()
@@ -64,8 +64,8 @@ const drawTo = (x: number, y: number): void => {
 
 export function clearStorage() {
     localforage.keys().then((keys) => {
-        keys.map((key) => {
-            localforage.removeItem(key)
+        keys.map(async (key) => {
+            await localforage.removeItem(key)
         })
     })
 }
@@ -76,11 +76,11 @@ export function clearDisplay() {
     canvasContext().fillRect(0, 0, canvas().width, canvas().height);
 }
 
-export const clear = (event) => {
+export const clear = async (event: Event) => {
     event.preventDefault()
 
     clearDisplay();
-    clearStorage();
+    await clearStorage();
 }
 
 export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
@@ -127,7 +127,7 @@ export const push = async () => {
     await setUndoStack(undoStack);
 }
 
-export const undo = async (event) => {
+export const undo = async (event: Event) => {
     event.preventDefault()
 
     const undoStack = await getUndoStack()
@@ -140,7 +140,7 @@ export const undo = async (event) => {
     drawImageFromDataURL(dataURL, canvasContext())
 }
 
-export const redo = async (event) => {
+export const redo = async (event: Event) => {
     event.preventDefault()
 
     const undoStack = await getUndoStack()
@@ -152,7 +152,7 @@ export const redo = async (event) => {
 }
 
 export const resizeCanvas = () => {
-    return async event => {
+    return async (event: Event) => {
         const ratio = window.devicePixelRatio || 1;
 
         const rootElement = document.querySelector("html") as HTMLElement
@@ -168,7 +168,7 @@ export const resizeCanvas = () => {
     }
 }
 
-export const mint = (event) => {
+export const mint = (event: Event) => {
     event.preventDefault()
 
     // FIXME: only if not logged in
