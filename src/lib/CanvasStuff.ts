@@ -29,14 +29,12 @@ export function startDrawing(event: MouseEvent | TouchEvent) {
     canvasContext().closePath()
 }
 
-const doDraw = (context: CanvasRenderingContext2D) => {
-    return (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
-        if (!isDrawing) return;
+const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
+    if (!isDrawing) return;
 
-        event.preventDefault()
-        drawTo(...calculateCoordinatesFromEvent(event, canvas().getBoundingClientRect()));
-        console.log(event)
-    }
+    event.preventDefault()
+    drawTo(...calculateCoordinatesFromEvent(event, canvas().getBoundingClientRect()));
+    console.log(event)
 }
 
 export function endDrawing(context: CanvasRenderingContext2D) {
@@ -232,8 +230,8 @@ export const initialize = () => {
     canvas().addEventListener('mouseup', endDrawing(canvasContext()));
     canvas().addEventListener('touchend', endDrawing(canvasContext()));
 
-    canvas().addEventListener('mousemove', doDraw(canvasContext()));
-    canvas().addEventListener('touchmove', doDraw(canvasContext()));
+    canvas().addEventListener('mousemove', doDraw);
+    canvas().addEventListener('touchmove', doDraw);
 
     document.addEventListener('click', event => {
         event.preventDefault()
