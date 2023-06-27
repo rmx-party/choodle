@@ -1,12 +1,10 @@
-import hre from "hardhat";
+import hre, {ethers} from "hardhat";
 
 async function main() {
-    const NFT = await hre.ethers.getContractFactory("MyToken");
-    const nft = await NFT.deploy();
+    const myToken = await ethers.deployContract("MyToken")
+    await myToken.waitForDeployment()
 
-    nft.deploymentTransaction();
-
-    console.log("deployed to:", await nft.getAddress());
+    console.log("deployed to:", await myToken.target);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
