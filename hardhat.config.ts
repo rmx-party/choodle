@@ -20,6 +20,13 @@ const config: HardhatUserConfig = {
         token: 'MATIC',
         gasPriceApi: 'https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice'
     },
+    networks: {
+        hardhat: {
+            accounts: {
+                accountsBalance: "1000000000000000000000000000",
+            }
+        }
+    }
 };
 
 export default config;
