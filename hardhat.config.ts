@@ -16,7 +16,9 @@ const config: HardhatUserConfig = {
     gasReporter: {
         enabled: (process.env.REPORT_GAS) ? true : false,
         currency: 'USD',
-        coinmarketcap: process.env.COINMARKETCAP_API_KEY
+        coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+        token: 'MATIC',
+        gasPriceApi: 'https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice'
     },
 };
 
