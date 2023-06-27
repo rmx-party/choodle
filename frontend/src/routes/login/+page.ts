@@ -12,8 +12,10 @@ async function setUpMagic() {
         }
     });
 
-    const provider = await magic.wallet.getProvider();
-    const web3Provider = new ethers.BrowserProvider(window.ethereum)
+    const {ethereum} = window as any;
+    const magicProvider = await magic.wallet.getProvider();
+    const browserProvider = new ethers.BrowserProvider(magicProvider)
+
     const accounts = await magic.wallet.connectWithUI();
 
     const walletInfo = await magic.user.getInfo();
@@ -23,16 +25,18 @@ async function setUpMagic() {
     // funds check
     // redirect to the minting modal
 
-    const web3 = new ethers.JsonRpcProvider('https://matic-mumbai.chainstacklabs.com')
     const contractAddress = PUBLIC_CONTRACT_ADDRESS
     console.log(`contract:`, contractAddress)
     if (!(contractAddress?.length > 0)) {
         throw new Error(`ENV var VITE_CONTRACT_ADDRESS not set`)
     }
-    const contract = new ethers.Contract(accounts[0], abi, web3Provider)
-    const gasEstimation = await
-        contract.safeMint.estimateGas(accounts[0], 'foooobar')
-    console.log('estimated gas: ', gasEstimation)
+
+    const signer = await browserProvider.getSigner();
+    const contract = new ethers.Contract(accounts[0], abi, signer)
+
+
+    const receipt = await contract.safeMint.send(accounts[0], 'fooooooooooooooo')
+    console.log(receipt)
 }
 
 if (browser) {
