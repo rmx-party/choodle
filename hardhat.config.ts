@@ -17,7 +17,7 @@ const config: HardhatUserConfig = {
         enabled: true,
         currency: 'USD',
         gasPrice: 28,
-        coinmarketcap: 'API HERE'
+        coinmarketcap: process.env.COINMARKETCAP_API_KEY
     },
 };
 
