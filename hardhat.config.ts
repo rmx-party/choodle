@@ -36,6 +36,11 @@ const config: HardhatUserConfig = {
         spacing: 2,
         format: 'json'
     },
+    etherscan: {
+        apiKey: {
+            polygonMumbai: `${process.env.POLYGONSCAN_API_KEY}`,
+        }
+    }
 };
 
 export default config;
