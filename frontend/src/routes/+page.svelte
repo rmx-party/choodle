@@ -3,7 +3,7 @@
     <button id="redo" on:click={redo}>Redo</button>
     <button id="clear-board" on:click={clear}>Clear</button>
     <!-- <a id="download" href="/api/download">Download</a> -->
-    <!-- <button id="mint" on:click={mint}>Mint</button> -->
+    <button id="mint" on:click={mint}>Mint</button>
     {#if canShare()}
         <button id="share" on:click={share}>Share</button>
     {/if}
@@ -11,8 +11,7 @@
 <canvas id="choodle-board"></canvas>
 
 <script lang="ts">
-    import {clear, initialize, redo, share, undo, canShare} from "$lib/CanvasStuff.ts";
-    import {browser} from "$app/environment";
+    import {canShare, clear, initialize, mint, redo, share, undo} from "$lib/CanvasStuff.ts";
 
     initialize()
 </script>

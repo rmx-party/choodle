@@ -173,11 +173,11 @@ export const resizeCanvas = async (_event?: Event) => {
     await load()
 }
 
-export const mint = (event: Event) => {
+export const mint = async (event: Event) => {
     event.preventDefault()
 
     // FIXME: only if not logged in
-    goto('/login')
+    await goto('/login')
 }
 
 export const share = async (event: Event) => {

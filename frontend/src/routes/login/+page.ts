@@ -20,5 +20,5 @@ async function setUpMagic() {
 }
 
 if (browser) {
-    setUpMagic();
+    await setUpMagic();
 }
