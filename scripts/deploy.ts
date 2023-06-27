@@ -6,7 +6,7 @@ async function main() {
 
     nft.deploymentTransaction();
 
-    console.log("deployed to:", nft.getAddress());
+    console.log("deployed to:", await nft.getAddress());
 }
 
 // We recommend this pattern to be able to use async/await everywhere
