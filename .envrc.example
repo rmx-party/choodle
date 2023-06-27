@@ -1,2 +1,3 @@
 export COINMARKETCAP_API_KEY=''
 export REPORT_GAS=true
+export RMXHACKS_PRIVATE_KEY=''
