@@ -25,10 +25,10 @@ describe("MyToken", function () {
         expect(await myToken.safeMint(recipient2, mintMePlease)).not.Throw
     });
 
-    it("doesn't fail when saving a huge image", async function () {
+    it("doesn't fail when saving an image at 0.75 pixel ratio", async function () {
         const [owner, recipient1, recipient2] = await ethers.getSigners();
 
-        const mintMePlease = fs.readFileSync(path.join(__dirname, './sample-choodle.png.base64'), {encoding: 'ascii'})
+        const mintMePlease = fs.readFileSync(path.join(__dirname, './75pc-ratio-choodle-sample.png.base64'), {encoding: 'ascii'})
 
         const myToken = await ethers.deployContract("MyToken");
 
