@@ -88,6 +88,8 @@ export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingCo
         context.drawImage(image, 0, 0);
         context.stroke();
         console.log('image loaded', image)
+        console.log('size in KB', dataURL.length / 1024)
+        console.log('pixelRatio', pixelRatio())
     });
     image.src = dataURL;
 }
@@ -103,6 +105,10 @@ export function canvas() {
     let instance = null;
     instance ||= document.getElementById('choodle-board') as HTMLCanvasElement;
     return instance
+}
+
+export function pixelRatio(): number {
+    return 0.75
 }
 
 export function canvasContext() {
@@ -150,7 +156,7 @@ export const redo = async (event: Event) => {
 }
 
 export const resizeCanvas = async (_event?: Event) => {
-    const ratio = window.devicePixelRatio || 1;
+    const ratio = pixelRatio()
 
     const rootElement = document.querySelector("html") as HTMLElement
     const windowHeight = rootElement.clientHeight
@@ -212,7 +218,7 @@ function oldCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
 }
 
 function calculateCoordinatesFromEvent(event: MouseEvent | TouchEvent, bounds: DOMRect): [number, number] {
-    const ratio = window.devicePixelRatio || 1;
+    const ratio = pixelRatio()
     const [oldX, oldY] = [...oldCoordsFromEvent(event)]
     const newX = oldX * ratio - bounds.left * ratio;
     const newY = oldY * ratio - bounds.top * ratio;
