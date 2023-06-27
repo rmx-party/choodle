@@ -17,6 +17,10 @@ async function setUpMagic() {
 
     const walletInfo = await magic.user.getInfo();
     console.log(walletInfo);
+
+    await magic.wallet.showUI();
+    // funds check
+    // redirect to the minting modal
 }
 
 if (browser) {
