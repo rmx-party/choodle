@@ -14,4 +14,14 @@ describe("MyToken", function () {
 
         expect(await myToken.safeMint(recipient2, mintMePlease)).not.Throw
     });
+
+    it("doesn't fail when saving a large image", async function () {
+        const [owner, recipient1, recipient2] = await ethers.getSigners();
+
+        const mintMePlease = fs.readFileSync(path.join(__dirname, './sample-choodle.png.base64'), {encoding: 'ascii'})
+
+        const myToken = await ethers.deployContract("MyToken");
+
+        expect(await myToken.safeMint(recipient2, mintMePlease)).not.Throw
+    });
 });
