@@ -2,6 +2,7 @@ import {HardhatUserConfig} from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 
 import "hardhat-gas-reporter"
+import "hardhat-abi-exporter"
 
 const config: HardhatUserConfig = {
     solidity: {
@@ -21,12 +22,20 @@ const config: HardhatUserConfig = {
         gasPriceApi: 'https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice'
     },
     networks: {
-        hardhat: {
-            accounts: {
-                accountsBalance: "1000000000000000000000000000",
-            }
+        hardhat: {},
+        mumbai: {
+            url: "https://endpoints.omniatech.io/v1/matic/mumbai/public	",
+            accounts: [`0x${process.env.RMXHACKS_PRIVATE_KEY}`],
         }
-    }
+    },
+    abiExporter: {
+        path: './frontend/src/abi',
+        clear: true,
+        runOnCompile: true,
+        flat: true,
+        spacing: 2,
+        format: 'json'
+    },
 };
 
 export default config;

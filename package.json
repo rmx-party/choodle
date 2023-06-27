@@ -1,7 +1,8 @@
 {
 	"dependencies": {
 		"@openzeppelin/contracts": "^4.9.2",
-		"hardhat": "^2.16.0"
+		"hardhat": "^2.16.0",
+		"hardhat-abi-exporter": "^2.10.1"
 	},
 	"devDependencies": {
 		"@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
