@@ -37,6 +37,7 @@ async function setUpMagic() {
 
     const receipt = await contract.safeMint.send(accounts[0], 'fooooooooooooooo')
     console.log(receipt)
+    console.log(await receipt.isMined())
 }
 
 if (browser) {
