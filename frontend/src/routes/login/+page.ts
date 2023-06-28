@@ -46,5 +46,5 @@ async function connectAndMint() {
 }
 
 if (browser) {
-    await connectAndMint();
+    connectAndMint();
 }
