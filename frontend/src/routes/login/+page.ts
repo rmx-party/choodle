@@ -42,7 +42,11 @@ async function connectAndMint() {
     const undoStack = await getUndoStack()
     console.log(undoStack.current)
     const imageData = undoStack.current
-    await mint(accounts, provider, imageData);
+    if (imageData) {
+        await mint(accounts, provider, imageData);
+    } else {
+        console.error(`image data missing, please fix teh code`)
+    }
 }
 
 if (browser) {
