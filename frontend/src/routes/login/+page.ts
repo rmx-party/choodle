@@ -3,7 +3,6 @@ import {browser} from "$app/environment";
 import {ethers} from "ethers";
 import {PUBLIC_CONTRACT_ADDRESS, PUBLIC_MAGIC_API_KEY} from "$env/static/public";
 import abi from '../../abi/MyToken.json'
-import {Web3Provider} from "ethers/providers";
 
 async function connectMagic() {
     const magic = new Magic(PUBLIC_MAGIC_API_KEY, {
@@ -19,7 +18,7 @@ async function connectMagic() {
     return {provider, accounts};
 }
 
-async function mint(accounts: string[], provider: Web3Provider, imageData: string) {
+async function mint(accounts: string[], provider: ethers.providers.Web3Provider, imageData: string) {
     const contractAddress = PUBLIC_CONTRACT_ADDRESS
     if (!(contractAddress?.length > 0)) {
         throw new Error(`ENV var PUBLIC_CONTRACT_ADDRESS not set`)
