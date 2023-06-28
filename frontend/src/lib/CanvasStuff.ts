@@ -108,7 +108,7 @@ export function canvas() {
 }
 
 export function pixelRatio(): number {
-    return 0.75
+    return 0.25
 }
 
 export function canvasContext() {
