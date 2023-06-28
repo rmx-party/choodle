@@ -12,32 +12,20 @@ async function setUpMagic() {
         }
     });
 
-    const {ethereum} = window as any;
-    const magicProvider = await magic.wallet.getProvider();
-    const browserProvider = new ethers.BrowserProvider(magicProvider)
-
+    const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
     const accounts = await magic.wallet.connectWithUI();
 
-    const walletInfo = await magic.user.getInfo();
-    console.log(walletInfo);
-
-    await magic.wallet.showUI();
-    // funds check
-    // redirect to the minting modal
+    //// funds check
+    //// redirect to the minting modal
 
     const contractAddress = PUBLIC_CONTRACT_ADDRESS
-    console.log(`contract:`, contractAddress)
     if (!(contractAddress?.length > 0)) {
-        throw new Error(`ENV var VITE_CONTRACT_ADDRESS not set`)
+        throw new Error(`ENV var PUBLIC_CONTRACT_ADDRESS not set`)
     }
 
-    const signer = await browserProvider.getSigner();
-    const contract = new ethers.Contract(accounts[0], abi, signer)
-
-
-    const receipt = await contract.safeMint.send(accounts[0], 'fooooooooooooooo')
-    console.log(receipt)
-    console.log(await receipt.isMined())
+    const contract = new ethers.Contract(contractAddress, abi, provider.getSigner())
+    const receipt = await contract.safeMint(accounts[0], 'foooooooooooo')
+    console.log('receipt', receipt)
 }
 
 if (browser) {
