@@ -119,7 +119,7 @@ async function setUndoStack(undoStack: UndoStack) {
     await localforage.setItem(choodleUndoKey, undoStack.storable)
 }
 
-async function getUndoStack() {
+export async function getUndoStack() {
     return UndoStack.fromStorable(await localforage.getItem(choodleUndoKey));
 }
 
