@@ -3,6 +3,8 @@ import {ethers} from "ethers";
 import {PUBLIC_CONTRACT_ADDRESS, PUBLIC_MAGIC_API_KEY, PUBLIC_ALCHEMY_RPC_URL} from "$env/static/public";
 import abi from '../abi/MyToken.json'
 import {getUndoStack} from "$lib/CanvasStuff";
+import fp from 'lodash/fp'
+import {BigNumber} from "ethers/utils";
 
 async function connectMagic() {
     const magic = new Magic(PUBLIC_MAGIC_API_KEY, {
@@ -53,5 +55,6 @@ export async function connectAndMint() {
     const receipt = await preReceipt.wait();
     console.log(receipt)
 
-    console.log('events', receipt.events.map(e => Number(e.args?.tokenId)))
+    const tokenId = fp.first(fp.compact(fp.map(bigNumber => bigNumber?.toNumber())(fp.map(event => event.args?.tokenId)(receipt.events))))
+    console.log(generateOpenSeaURL(tokenId))
 }
