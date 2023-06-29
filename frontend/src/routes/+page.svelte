@@ -1,16 +1,12 @@
-<div id="buttons">
-    <button id="undo" on:click={undo}>Undo</button>
-    <button id="redo" on:click={redo}>Redo</button>
-    <button id="clear-board" on:click={clear}>Clear</button>
-    <!-- <a id="download" href="/api/download">Download</a> -->
-    <button id="mint" on:click={mint}>Mint</button>
-    {#if canShare()}
-        <button id="share" on:click={share}>Share</button>
-    {/if}
-</div>
-<canvas id="choodle-board"></canvas>
-
 <script lang="ts">
+    import {tokenId} from "$lib/store";
+
+    let tokenIdValue;
+
+    tokenId.subscribe(value => {
+        tokenIdValue = value
+    })
+
     import {
         canShare, canvas, canvasContext,
         clearDisplay, clearStorage,
@@ -19,7 +15,7 @@
         initialize,
         setUndoStack
     } from "$lib/CanvasStuff.ts";
-    import {connectAndMint} from "$lib/MagicStuff";
+    import {connectAndMint, generateOpenSeaURL} from "$lib/MagicStuff";
 
     const undo = async (event: Event) => {
         event.preventDefault()
@@ -55,7 +51,12 @@
     export const mint = async (event: Event) => {
         event.preventDefault()
 
-        await connectAndMint()
+        tokenIdValue = await connectAndMint()
+    }
+
+    const choodleAgain = async (event: Event) => {
+        tokenId.set(null)
+        window.location.reload()
     }
 
     const share = async (event: Event) => {
@@ -85,3 +86,23 @@
 
     initialize()
 </script>
+
+<div id="buttons">
+    <button id="undo" on:click={undo}>Undo</button>
+    <button id="redo" on:click={redo}>Redo</button>
+    <button id="clear-board" on:click={clear}>Clear</button>
+    <!-- <a id="download" href="/api/download">Download</a> -->
+    <button id="mint" on:click={mint}>Mint</button>
+    {#if canShare()}
+        <button id="share" on:click={share}>Share</button>
+    {/if}
+</div>
+{#if !tokenIdValue}
+    <canvas id="choodle-board"></canvas>
+{:else}
+    <div id="openSeaLink" style="z-index: 999">
+        <p>You can view your minted choodle on <a href="{generateOpenSeaURL(tokenIdValue)}" target="_blank">OpenSea</a>.
+        </p>
+        <p><a href="#" on:click={choodleAgain}>Choodle again.</a></p>
+    </div>
+{/if}

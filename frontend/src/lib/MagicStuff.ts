@@ -60,5 +60,5 @@ export async function connectAndMint() {
     console.log(receipt)
 
     const tokenId = fp.first(fp.compact(fp.map(bigNumber => bigNumber?.toNumber())(fp.map(event => event.args?.tokenId)(receipt.events))))
-    console.log(generateOpenSeaURL(tokenId))
+    return tokenId
 }
