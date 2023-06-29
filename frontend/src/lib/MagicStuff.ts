@@ -36,7 +36,7 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
     console.log('receipt', receipt)
 }
 
-async function connectAndMint() {
+export async function connectAndMint() {
     const {provider, accounts} = await connectMagic();
     const undoStack = await getUndoStack()
     console.log(undoStack.current)
@@ -47,7 +47,3 @@ async function connectAndMint() {
         console.error(`image data missing, please fix teh code`)
     }
 }
-
-// if (browser) {
-//     connectAndMint();
-// }

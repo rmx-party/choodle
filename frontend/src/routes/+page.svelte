@@ -19,6 +19,7 @@
         initialize,
         setUndoStack
     } from "$lib/CanvasStuff.ts";
+    import {connectAndMint} from "$lib/MagicStuff";
 
     const undo = async (event: Event) => {
         event.preventDefault()
@@ -53,6 +54,8 @@
 
     export const mint = async (event: Event) => {
         event.preventDefault()
+
+        await connectAndMint()
     }
 
     const share = async (event: Event) => {
