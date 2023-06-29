@@ -74,13 +74,6 @@ export function clearDisplay() {
     canvasContext().fillRect(0, 0, canvas().width, canvas().height);
 }
 
-export const clear = async (event: Event) => {
-    event.preventDefault()
-
-    clearDisplay();
-    await clearStorage();
-}
-
 export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
     const image = new Image;
     clearDisplay()
@@ -115,7 +108,7 @@ export function canvasContext() {
     return canvas().getContext('2d')!
 }
 
-async function setUndoStack(undoStack: UndoStack) {
+export async function setUndoStack(undoStack: UndoStack) {
     await localforage.setItem(choodleUndoKey, undoStack.storable)
 }
 
@@ -129,30 +122,6 @@ export const push = async () => {
     undoStack.push(canvas().toDataURL())
 
     await setUndoStack(undoStack);
-}
-
-export const undo = async (event: Event) => {
-    event.preventDefault()
-
-    const undoStack = await getUndoStack()
-    undoStack.undo()
-
-    await setUndoStack(undoStack);
-
-    const dataURL = undoStack.current
-
-    drawImageFromDataURL(dataURL, canvasContext())
-}
-
-export const redo = async (event: Event) => {
-    event.preventDefault()
-
-    const undoStack = await getUndoStack()
-    undoStack.redo()
-
-    await setUndoStack(undoStack);
-
-    drawImageFromDataURL(undoStack.current, canvasContext())
 }
 
 export const resizeCanvas = async (_event?: Event) => {
@@ -172,35 +141,6 @@ export const resizeCanvas = async (_event?: Event) => {
     canvas().height = (windowHeight - buttonsHeight) * ratio;
     await load()
 }
-
-export const mint = async (event: Event) => {
-    event.preventDefault()
-}
-
-export const share = async (event: Event) => {
-    event.preventDefault()
-
-    const imgBlob = await (await fetch(canvas().toDataURL("image/png", 1.0))).blob();
-    const files = [
-        new File(
-            [imgBlob],
-            'choodle.png',
-            {
-                type: 'image/png',
-                lastModified: Date.now()
-            }
-        )
-    ];
-    if (navigator.share) {
-        navigator.share({
-            files
-        }).then(() => {
-            console.log('Thanks for sharing!');
-        }).catch(console.error);
-    } else {
-        console.error('Web Share API not supported')
-    }
-};
 
 function oldCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
     switch (event.constructor) {
