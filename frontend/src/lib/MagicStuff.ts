@@ -42,7 +42,6 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
 }
 
 export function generateOpenSeaURL(tokenId: number) {
-    const openSeaPrefix = "https://testnets.opensea.io/assets/mumbai"
     return `${PUBLIC_OPENSEA_PREFIX}/${PUBLIC_CONTRACT_ADDRESS}/${tokenId}`
 }
 
