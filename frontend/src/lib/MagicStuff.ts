@@ -32,18 +32,29 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
 
     const contract = new ethers.Contract(contractAddress, abi, provider.getSigner())
 
-    const receipt = await contract.safeMint(accounts[0], data)
-    console.log('receipt', receipt)
+    return await contract.safeMint(accounts[0], data)
+}
+
+export function generateOpenSeaURL(tokenId: number) {
+    const openSeaPrefix = "https://testnets.opensea.io/assets/mumbai"
+    return `${openSeaPrefix}/${PUBLIC_CONTRACT_ADDRESS}/${tokenId}`
 }
 
 export async function connectAndMint() {
-    const {provider, accounts} = await connectMagic();
     const undoStack = await getUndoStack()
-    console.log(undoStack.current)
     const imageData = undoStack.current
-    if (imageData) {
-        await mint(accounts, provider, imageData);
-    } else {
-        console.error(`image data missing, please fix teh code`)
-    }
+    if (!imageData) console.error(`image data missing, please fix teh code`)
+
+    const {provider, accounts} = await connectMagic();
+
+    const preReceipt = await mint(accounts, provider, imageData);
+    console.log(preReceipt)
+
+    const receipt = await preReceipt.wait();
+    console.log(receipt)
+
+    const eventsWithTokenId = receipt.events.findFirst((event: any) => {
+        return event.args.tokenId !== undefined
+    })
+    console.log(eventsWithTokenId)
 }
