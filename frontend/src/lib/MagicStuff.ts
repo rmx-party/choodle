@@ -9,7 +9,6 @@ import {
 import abi from '../abi/MyToken.json'
 import {getUndoStack} from "$lib/CanvasStuff";
 import fp from 'lodash/fp'
-import {BigNumber} from "ethers/utils";
 
 async function connectMagic() {
     const magic = new Magic(PUBLIC_MAGIC_API_KEY, {
