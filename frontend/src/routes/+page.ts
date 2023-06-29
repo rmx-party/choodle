@@ -2,7 +2,7 @@ import {Magic} from "magic-sdk";
 import {browser} from "$app/environment";
 import {ethers} from "ethers";
 import {PUBLIC_CONTRACT_ADDRESS, PUBLIC_MAGIC_API_KEY} from "$env/static/public";
-import abi from '../../abi/MyToken.json'
+import abi from '../abi/MyToken.json'
 import {getUndoStack} from "$lib/CanvasStuff";
 
 async function connectMagic() {
@@ -49,6 +49,6 @@ async function connectAndMint() {
     }
 }
 
-if (browser) {
-    connectAndMint();
-}
+// if (browser) {
+//     connectAndMint();
+// }
