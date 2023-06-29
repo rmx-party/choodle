@@ -53,5 +53,5 @@ export async function connectAndMint() {
     const receipt = await preReceipt.wait();
     console.log(receipt)
 
-    console.log('events', receipt.events)
+    console.log('events', receipt.events.map(e => Number(e.args?.tokenId)))
 }
