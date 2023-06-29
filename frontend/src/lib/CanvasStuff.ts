@@ -177,10 +177,10 @@ export const initialize = async () => {
     canvas().addEventListener('mousemove', doDraw);
     canvas().addEventListener('touchmove', doDraw);
 
-    document.addEventListener('click', event => {
+    canvas().addEventListener('click', event => {
         event.preventDefault()
     });
-    document.addEventListener('drag', event => {
+    canvas().addEventListener('drag', event => {
         event.preventDefault()
     });
 
