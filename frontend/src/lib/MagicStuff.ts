@@ -1,6 +1,11 @@
 import {Magic} from "magic-sdk";
 import {ethers} from "ethers";
-import {PUBLIC_CONTRACT_ADDRESS, PUBLIC_MAGIC_API_KEY, PUBLIC_ALCHEMY_RPC_URL} from "$env/static/public";
+import {
+    PUBLIC_CONTRACT_ADDRESS,
+    PUBLIC_MAGIC_API_KEY,
+    PUBLIC_ALCHEMY_RPC_URL,
+    PUBLIC_OPENSEA_PREFIX
+} from "$env/static/public";
 import abi from '../abi/MyToken.json'
 import {getUndoStack} from "$lib/CanvasStuff";
 import fp from 'lodash/fp'
@@ -39,7 +44,7 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
 
 export function generateOpenSeaURL(tokenId: number) {
     const openSeaPrefix = "https://testnets.opensea.io/assets/mumbai"
-    return `${openSeaPrefix}/${PUBLIC_CONTRACT_ADDRESS}/${tokenId}`
+    return `${PUBLIC_OPENSEA_PREFIX}/${PUBLIC_CONTRACT_ADDRESS}/${tokenId}`
 }
 
 export async function connectAndMint() {
