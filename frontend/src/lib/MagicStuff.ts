@@ -1,13 +1,13 @@
 import {Magic} from "magic-sdk";
 import {ethers} from "ethers";
-import {PUBLIC_CONTRACT_ADDRESS, PUBLIC_MAGIC_API_KEY} from "$env/static/public";
+import {PUBLIC_CONTRACT_ADDRESS, PUBLIC_MAGIC_API_KEY, PUBLIC_ALCHEMY_RPC_URL} from "$env/static/public";
 import abi from '../abi/MyToken.json'
 import {getUndoStack} from "$lib/CanvasStuff";
 
 async function connectMagic() {
     const magic = new Magic(PUBLIC_MAGIC_API_KEY, {
         network: {
-            rpcUrl: 'https://matic-mumbai.chainstacklabs.com',
+            rpcUrl: PUBLIC_ALCHEMY_RPC_URL,
             chainId: 80001
         }
     });
@@ -53,8 +53,5 @@ export async function connectAndMint() {
     const receipt = await preReceipt.wait();
     console.log(receipt)
 
-    const eventsWithTokenId = receipt.events.findFirst((event: any) => {
-        return event.args.tokenId !== undefined
-    })
-    console.log(eventsWithTokenId)
+    console.log('events', receipt.events)
 }
