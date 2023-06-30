@@ -35,11 +35,11 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
         throw new Error(`ENV var PUBLIC_CONTRACT_ADDRESS not set`)
     }
 
-    // FIXME: this should be done by the contract
+    // FIXME: this should be done by the contract, and use the real ID
     const data = 'data:application/json;base64,' + btoa(JSON.stringify({
         "description": `Drawing by ${accounts[0]}`,
         "image": `${imageData}`,
-        "name": "TBA"
+        "name": `Choodle #${'TBD'}`
     }))
 
     const contract = new ethers.Contract(contractAddress, abi, provider.getSigner())
