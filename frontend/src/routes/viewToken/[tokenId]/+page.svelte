@@ -1,6 +1,6 @@
 <script lang="ts">
     import {page} from "$app/stores";
-    import {generateOpenSeaURL} from "$lib/MagicStuff.js";
+    import {generateOpenSeaURL, magicFactory} from "$lib/MagicStuff.js";
     import {imageData, tokenId} from "$lib/store.js";
     import {clearStorage} from "$lib/CanvasStuff.js";
     import {goto} from "$app/navigation";
@@ -43,6 +43,12 @@
         }
     }
 
+    const showWallet = async () => {
+        const magic = magicFactory()
+
+        magic.wallet.showUI()
+    }
+
     getNftMetaData(tokenIdValue)
 </script>
 
@@ -55,4 +61,6 @@
     <p><a href="#" on:click={choodleAgain}>Choodle again.</a></p>
 
     <img src="{imageDataValue}"/>
+
+    <p><a href="#" on:click={showWallet}>Show Wallet</a></p>
 </div>

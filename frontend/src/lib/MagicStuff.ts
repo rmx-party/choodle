@@ -10,13 +10,18 @@ import abi from '../abi/MyToken.json'
 import {getUndoStack} from "$lib/CanvasStuff";
 import fp from 'lodash/fp'
 
-async function connectMagic() {
+export function magicFactory() {
     const magic = new Magic(PUBLIC_MAGIC_API_KEY, {
         network: {
             rpcUrl: PUBLIC_ALCHEMY_RPC_URL,
             chainId: 80001
         }
     });
+    return magic;
+}
+
+async function connectMagic() {
+    const magic = magicFactory();
 
     const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
     const accounts = await magic.wallet.connectWithUI();
