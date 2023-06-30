@@ -30,6 +30,7 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
         throw new Error(`ENV var PUBLIC_CONTRACT_ADDRESS not set`)
     }
 
+    // FIXME: this should be done by the contract
     const data = 'data:application/json;base64,' + btoa(JSON.stringify({
         "description": `Drawing by ${accounts[0]}`,
         "image": `${imageData}`,
