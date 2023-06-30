@@ -53,13 +53,7 @@
 
         tokenIdValue = await connectAndMint()
     }
-
-    const choodleAgain = async (event: Event) => {
-        tokenId.set(null)
-        await clearStorage()
-        window.location.reload()
-    }
-
+    
     const share = async (event: Event) => {
         event.preventDefault()
 
