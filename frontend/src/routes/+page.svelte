@@ -16,6 +16,7 @@
         setUndoStack
     } from "$lib/CanvasStuff.ts";
     import {connectAndMint, generateOpenSeaURL} from "$lib/MagicStuff";
+    import {goto} from "$app/navigation";
 
     const undo = async (event: Event) => {
         event.preventDefault()
@@ -52,8 +53,9 @@
         event.preventDefault()
 
         tokenIdValue = await connectAndMint()
+        await goto(`/viewToken/${tokenIdValue}`)
     }
-    
+
     const share = async (event: Event) => {
         event.preventDefault()
 
@@ -92,12 +94,4 @@
         <button id="share" on:click={share}>Share</button>
     {/if}
 </div>
-{#if !tokenIdValue}
-    <canvas id="choodle-board"></canvas>
-{:else}
-    <div id="openSeaLink" style="z-index: 999">
-        <p>You can view your minted choodle on <a href="{generateOpenSeaURL(tokenIdValue)}" target="_blank">OpenSea</a>.
-        </p>
-        <p><a href="#" on:click={choodleAgain}>Choodle again.</a></p>
-    </div>
-{/if}
+<canvas id="choodle-board"></canvas>
