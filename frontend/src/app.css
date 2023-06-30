@@ -1,73 +1,75 @@
 :root {
-  --app-main-font-family: monospace;
-  --font-size-base: 16px;
-  --debug: 0;
+    --app-main-font-family: monospace;
+    --font-size-base: 16px;
+    --debug: 0;
 }
 
 html, button, input, label {
-  font-family: var(--app-main-font-family);
-  font-size: var(--font-size-base);
-  overflow: hidden;
+    font-family: var(--app-main-font-family);
+    font-size: var(--font-size-base);
+    overflow: hidden;
 }
 
 * {
-  /* background-color: hsla(20, 70%, 50%, 0.1); */ /* debug layer coloring */
-  box-sizing: border-box;
+    /* background-color: hsla(20, 70%, 50%, 0.1); */ /* debug layer coloring */
+    box-sizing: border-box;
 }
 
 html {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  position: absolute;
-  overflow: hidden; /* Avoid scrollbars */
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-  padding: 0;
+    position: absolute;
+    overflow: hidden; /* Avoid scrollbars */
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
 }
 
 #main {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: nowrap;
 }
 
 canvas#choodle-board {
-  position: relative;
-  z-index: 100;
-  align-self: stretch;
-  justify-self: stretch;
+    position: relative;
+    z-index: 100;
+    align-self: stretch;
+    justify-self: stretch;
 
-  background-color: hsla(200, 50%, 50%, 0.2);
+    background-color: hsla(200, 50%, 50%, 0.2);
 }
 
 #buttons {
-  z-index: 10000;
-  width: 100%;
+    z-index: 10000;
+    width: 100%;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-content: center;
-  gap: 2mm;
-  padding: 2mm;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: center;
+    gap: 2mm;
+    padding: 2mm;
 }
 
 #buttons button {
-  font-size: 1rem;
-  padding: 0.2em;
-  flex-grow: 1;
-  min-height: 42px;
-  min-width: 42px;
+    font-size: 1rem;
+    padding: 0.2em;
+    flex-grow: 1;
+    min-height: 42px;
+    min-width: 42px;
 }
-
