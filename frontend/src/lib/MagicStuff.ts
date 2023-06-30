@@ -47,7 +47,7 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
     return await contract.safeMint(accounts[0], data)
 }
 
-export function generateOpenSeaURL(tokenId: number) {
+export function generateOpenSeaURL(tokenId: number | string) {
     return `${PUBLIC_OPENSEA_PREFIX}/${PUBLIC_CONTRACT_ADDRESS}/${tokenId}`
 }
 

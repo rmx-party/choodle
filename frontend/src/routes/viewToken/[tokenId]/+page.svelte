@@ -25,7 +25,36 @@
         window.location.reload()
     }
 
-    const getNftMetaData = async (tokenId: number) => {
+    const share = async (event: Event) => {
+        event.preventDefault()
+
+        const img: unknown = imageData;
+        const imgBlob = await (await fetch(img as URL)).blob();
+        // TODO: maybe remove files from this share once opengraph metadata is
+        // hooked up
+        const files = [
+            new File(
+                [imgBlob],
+                'choodle.png',
+                {
+                    type: 'image/png',
+                    lastModified: Date.now()
+                }
+            )
+        ];
+        if (navigator.share) {
+            navigator.share({
+                files,
+                url: location.toString()
+            }).then(() => {
+                console.log('Thanks for sharing!');
+            }).catch(console.error);
+        } else {
+            console.error('Web Share API not supported')
+        }
+    };
+
+    const getNftMetaData = async (tokenId: number | string) => {
         const settings = {
             apiKey: "L2vtx4tW7tXeREsqVqRUs-OjaSilNFWn",
             network: Network.MATIC_MUMBAI
@@ -49,18 +78,20 @@
         magic.wallet.showUI()
     }
 
-    getNftMetaData(tokenIdValue)
+    getNftMetaData($page.params.tokenId)
 </script>
 
 <h1>Viewing {$page.params.tokenId}</h1>
 
-<div id="openSeaLink" style="z-index: 999">
-    <p>You can view your minted choodle on <a href="{generateOpenSeaURL($page.params.tokenId)}"
-                                              target="_blank">OpenSea</a>.
-    </p>
-    <p><a href="#" on:click={choodleAgain}>Choodle again.</a></p>
+<div style="z-index: 999; text-align: center;">
+    <img alt="FIXME: ALT ATTRIBUTE!" src="{imageDataValue}"/>
 
-    <img src="{imageDataValue}"/>
-
-    <p><a href="#" on:click={showWallet}>Show Wallet</a></p>
+    <ul style="text-align: left;">
+    <li>You can <a
+        href="{generateOpenSeaURL($page.params.tokenId)}"
+            target="_blank">view your choodle on OpenSea</a></li>
+    <li><a href="#" on:click={share}>Share</a></li>
+    <li><a href="#" on:click={choodleAgain}>Choodle again</a></li>
+    <li><a href="#" on:click={showWallet}>Show Wallet</a></li>
+    </ul>
 </div>
