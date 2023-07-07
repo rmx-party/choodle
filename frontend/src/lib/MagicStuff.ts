@@ -9,6 +9,7 @@ import {
 import abi from '../abi/MyToken.json'
 import {getUndoStack} from "$lib/CanvasStuff";
 import fp from 'lodash/fp'
+import {shrinkImage} from "$lib/ImageUtils";
 
 export function magicFactory() {
     const magic = new Magic(PUBLIC_MAGIC_API_KEY, {
@@ -34,6 +35,8 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
     if (!(contractAddress?.length > 0)) {
         throw new Error(`ENV var PUBLIC_CONTRACT_ADDRESS not set`)
     }
+
+    console.log('shrunk image: ', await shrinkImage(imageData))
 
     // FIXME: this should be done by the contract, and use the real ID
     const data = 'data:application/json;base64,' + btoa(JSON.stringify({
