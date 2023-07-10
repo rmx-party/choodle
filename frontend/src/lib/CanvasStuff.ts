@@ -20,12 +20,10 @@ export function startDrawing(event: MouseEvent | TouchEvent) {
     isDrawing = true;
     event.preventDefault()
     console.groupCollapsed('drawing')
-    const [newX, newY] = calculateCoordinatesFromEvent(event, canvas().getBoundingClientRect())
+    const [newX, newY] = calculateCoordinatesFromEvent(event)
 
     canvasContext().beginPath()
-    canvasContext().fillStyle = "black";
-    canvasContext().fill()
-    drawTo(newX + 0.1, newY + 0.1)
+    drawTo(Math.floor(newX + 1), Math.floor(newY + 1))
     canvasContext().closePath()
 }
 
@@ -33,7 +31,7 @@ const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
     if (!isDrawing) return;
 
     event.preventDefault()
-    drawTo(...calculateCoordinatesFromEvent(event, canvas().getBoundingClientRect()));
+    drawTo(...calculateCoordinatesFromEvent(event));
     console.log(event)
 }
 
@@ -52,12 +50,10 @@ const drawTo = (x: number, y: number): void => {
 
     console.log(`drawing a line to ${x} ${y}`)
 
-    context.strokeStyle = 'black'
-    context.lineWidth = lineWidth;
-    context.lineCap = 'round';
-
-    context.lineTo(x, y)
-    context.stroke();
+    window.requestAnimationFrame(() => {
+        context.lineTo(x, y)
+        context.stroke();
+    })
 }
 
 export function clearStorage() {
@@ -72,6 +68,16 @@ export function clearDisplay() {
     canvasContext().clearRect(0, 0, canvas().width, canvas().height);
     canvasContext().fillStyle = "#fafafa";
     canvasContext().fillRect(0, 0, canvas().width, canvas().height);
+    canvasContext().imageSmoothingEnabled = false;
+}
+
+export async function logState() {
+    const undoStack = await getUndoStack()
+    const dataURL = undoStack.last
+    console.log('image loaded', dataURL)
+    console.log('size in KB', dataURL.length / 1024)
+    console.log('pixelRatio', pixelRatio())
+    console.log('canvas', canvas().width, canvas().height)
 }
 
 export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
@@ -100,10 +106,6 @@ export function canvas() {
     return instance
 }
 
-export function pixelRatio(): number {
-    return 0.25
-}
-
 export function canvasContext() {
     return canvas().getContext('2d')!
 }
@@ -122,6 +124,12 @@ export const push = async () => {
     undoStack.push(canvas().toDataURL())
 
     await setUndoStack(undoStack);
+    logState()
+}
+
+export function pixelRatio(): number {
+    // return window.devicePixelRatio;
+    return 1/4;
 }
 
 export const resizeCanvas = async (_event?: Event) => {
@@ -154,17 +162,25 @@ function oldCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
     return [-1, -1] // FIXME: this is terrible
 }
 
-function calculateCoordinatesFromEvent(event: MouseEvent | TouchEvent, bounds: DOMRect): [number, number] {
+function calculateCoordinatesFromEvent(event: MouseEvent | TouchEvent): [number, number] {
+    const bounds = canvas().getBoundingClientRect();
     const ratio = pixelRatio()
+    // const ratio = 0.5
     const [oldX, oldY] = [...oldCoordsFromEvent(event)]
-    const newX = oldX * ratio - bounds.left * ratio;
-    const newY = oldY * ratio - bounds.top * ratio;
+    const newX = (oldX * ratio) - (bounds.left * ratio);
+    const newY = (oldY * ratio) - (bounds.top * ratio);
 
     return [newX, newY];
 }
 
 export const initialize = async () => {
     if (!browser) return;
+
+    const context = canvasContext()
+    context.strokeStyle = 'black'
+    context.lineWidth = lineWidth;
+    context.lineCap = 'square';
+    context.imageSmoothingEnabled = false;
 
     await resizeCanvas()
 
@@ -187,6 +203,6 @@ export const initialize = async () => {
     window.addEventListener('resize', resizeCanvas, false);
     window.addEventListener('DOMContentLoaded', resizeCanvas, false);
 
-    setTimeout(resizeCanvas, 5) // FIXME: this sucks.
-    setTimeout(() => load(), 10) // FIXME: me too, even worse
+    setTimeout(resizeCanvas, 15) // FIXME: this sucks.
+    setTimeout(() => load(), 25) // FIXME: me too, even worse
 }
