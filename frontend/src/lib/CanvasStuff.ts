@@ -122,9 +122,9 @@ export async function getUndoStack() {
 export const push = async () => {
     const undoStack = await getUndoStack()
 
-    // undoStack.push(canvas().toDataURL())
+    undoStack.push(canvas().toDataURL('image/png'))
     // undoStack.push(canvas().toDataURL('image/jpeg', 0.7))
-    undoStack.push(canvas().toDataURL('image/webp', 0.01))
+    // undoStack.push(canvas().toDataURL('image/webp', 0.01))
 
     await setUndoStack(undoStack);
     logState()
