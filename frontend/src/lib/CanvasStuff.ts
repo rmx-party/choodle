@@ -4,7 +4,7 @@ import {UndoStack} from "$lib/UndoStack";
 import {goto} from "$app/navigation";
 
 /* Configuration */
-const lineWidth = 5;
+const lineWidth = 1;
 
 let isDrawing = false;
 
