@@ -10,7 +10,8 @@ export const shrinkImage = async (dataURI: string) => {
         filterType: 0,
     };
 
-    const ab = await fetch(dataURI).then((response) => response.arrayBuffer())
+    // const ab = await fetch(dataURI).then((response) => response.arrayBuffer())
+    const ab = await (await fetch(dataURI)).arrayBuffer()
     console.log(ab.byteLength)
 
     const png = await new PNG(options).parse(ab)
