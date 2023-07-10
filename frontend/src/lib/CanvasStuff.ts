@@ -139,14 +139,14 @@ export const resizeCanvas = async (_event?: Event) => {
     const windowHeight = rootElement.clientHeight
     const windowWidth = rootElement.clientWidth
 
-    let buttonsHeight = 0;
-    const buttonsElement = document.getElementById('buttons')
-    if (buttonsElement) {
-        buttonsHeight = buttonsElement.clientHeight;
-    }
+    const bounds = canvas().getBoundingClientRect();
 
-    canvas().width = windowWidth * ratio;
-    canvas().height = (windowHeight - buttonsHeight) * ratio;
+    // const targetMaxSize = {x: 215, y: 466}
+    const targetMaxSize = {x: 430, y: 932}
+    // const targetMaxSize = {x: 860, y: 1864}
+    // const targetMaxSize = {x: 1290, y: 2796}
+    canvas().width = (Math.min(windowWidth, targetMaxSize.x) - bounds.x) * ratio;
+    canvas().height = (Math.min(windowHeight, targetMaxSize.y) - bounds.y) * ratio;
     await load()
 }
 
