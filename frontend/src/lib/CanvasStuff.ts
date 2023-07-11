@@ -5,6 +5,7 @@ import {crunchCanvas} from "$lib/ImageUtils";
 
 /* Configuration */
 const lineWidth = 5;
+const targetMaxSize: Dimensiony = {x: 430, y: 932}
 
 let isDrawing = false;
 
@@ -133,6 +134,18 @@ export function pixelRatio(): number {
     return 0.35;
 }
 
+type Dimensiony = {
+    x: number;
+    y: number;
+}
+
+export function maximumSize(desiredSize: Dimensiony, maxSize: Dimensiony): Dimensiony {
+    return {
+        x: Math.min(desiredSize.x, maxSize.x),
+        y: Math.min(desiredSize.y, maxSize.y)
+    }
+}
+
 export const resizeCanvas = async (_event?: Event) => {
     const ratio = pixelRatio()
 
@@ -142,9 +155,9 @@ export const resizeCanvas = async (_event?: Event) => {
 
     const bounds = canvas().getBoundingClientRect();
 
-    const targetMaxSize = {x: 430, y: 932}
-    canvas().width = (Math.min(windowWidth, targetMaxSize.x) - bounds.x) * ratio;
-    canvas().height = (Math.min(windowHeight, targetMaxSize.y) - bounds.y) * ratio;
+    const canvasDimensions = maximumSize({x: windowWidth, y: windowHeight}, targetMaxSize)
+    canvas().width = (canvasDimensions.x - bounds.x) * ratio;
+    canvas().height = (canvasDimensions.y - bounds.y) * ratio;
     await load()
 }
 

@@ -1,16 +1,5 @@
 import {describe, expect, it, test} from 'vitest';
-
-type Dimensiony = {
-    x: number;
-    y: number;
-}
-
-function maximumSize(desiredSize: Dimensiony, maxSize: Dimensiony): Dimensiony {
-    return {
-        x: Math.min(desiredSize.x, maxSize.x),
-        y: Math.min(desiredSize.y, maxSize.y)
-    }
-}
+import {maximumSize} from "$lib/CanvasStuff";
 
 describe('maximumSize', () => {
     test.each([
