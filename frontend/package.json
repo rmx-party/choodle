@@ -32,11 +32,13 @@
   },
   "type": "module",
   "dependencies": {
+    "@types/pngjs": "^6.0.1",
     "@vercel/analytics": "^1.0.1",
     "alchemy-sdk": "^2.9.1",
     "ethers": "^4.0.49",
     "localforage": "^1.10.0",
     "magic-sdk": "^18.0.0",
+    "pngjs": "^7.0.0",
     "web3": "^4.0.1"
   }
 }
