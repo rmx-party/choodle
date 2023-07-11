@@ -24,7 +24,7 @@ export function startDrawing(event: MouseEvent | TouchEvent) {
     const [newX, newY] = calculateCoordinatesFromEvent(event)
 
     canvasContext().beginPath()
-    drawTo(Math.floor(newX + 1), Math.floor(newY + 1))
+    drawTo(newX + 1, newY + 1)
     canvasContext().closePath()
 }
 
@@ -160,8 +160,8 @@ export const resizeCanvas = async (_event?: Event) => {
     // const targetMaxSize = {x: 1290, y: 2796}
     // canvas().width = (Math.min(windowWidth, targetMaxSize.x) - bounds.x) * ratio;
     // canvas().height = (Math.min(windowHeight, targetMaxSize.y) - bounds.y) * ratio;
-    canvas().width = Math.floor(targetMaxSize.x * ratio)
-    canvas().height = Math.floor(targetMaxSize.y * ratio)
+    canvas().width = targetMaxSize.x * ratio
+    canvas().height = targetMaxSize.y * ratio
     await load()
 }
 
