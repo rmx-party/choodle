@@ -125,23 +125,13 @@ export async function push() {
 
     const imageDataUrl = await crunchCanvas(canvas(), canvasContext())
     undoStack.push(imageDataUrl)
-    // undoStack.push(canvas().toDataURL())
-    // undoStack.push(canvas().toDataURL('image/png'))
-    // undoStack.push(canvas().toDataURL('image/jpeg', 0.7))
-    // undoStack.push(canvas().toDataURL('image/webp', 0.01))
 
     await setUndoStack(undoStack);
     logState()
 }
 
 export function pixelRatio(): number {
-    // return window.devicePixelRatio;
-    // return 1/4;
-    // return 1/3;
     return 0.35;
-    // return 1/2;
-    // return 2/3;
-    // return 1;
 }
 
 export const resizeCanvas = async (_event?: Event) => {
