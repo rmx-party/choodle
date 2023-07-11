@@ -146,6 +146,10 @@ export function maximumSize(desiredSize: Dimensiony, maxSize: Dimensiony): Dimen
     }
 }
 
+export function applyRatio(dimensions: Dimensiony, ratio: number) {
+    return {x: dimensions.x * ratio, y: dimensions.y * ratio}
+}
+
 export function removeOffset(dimensions: Dimensiony, offsetToRemove: Dimensiony): Dimensiony {
     return {x: dimensions.x - offsetToRemove.x, y: dimensions.y - offsetToRemove.y}
 }
@@ -161,8 +165,9 @@ export const resizeCanvas = async (_event?: Event) => {
 
     const canvasDimensions = maximumSize({x: windowWidth, y: windowHeight}, targetMaxSize)
     const offsetCanvasDimensions = removeOffset(canvasDimensions, {x: bounds.x, y: bounds.y})
-    canvas().width = offsetCanvasDimensions.x * ratio;
-    canvas().height = offsetCanvasDimensions.y * ratio;
+    const ratioedCanvasDimensions = applyRatio(offsetCanvasDimensions, pixelRatio())
+    canvas().width = ratioedCanvasDimensions.x;
+    canvas().height = ratioedCanvasDimensions.y;
     await load()
 }
 

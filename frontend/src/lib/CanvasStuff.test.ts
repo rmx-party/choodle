@@ -1,5 +1,5 @@
 import {describe, expect, it, test} from 'vitest';
-import {maximumSize, removeOffset} from "$lib/CanvasStuff";
+import {applyRatio, Dimensiony, maximumSize, removeOffset} from "$lib/CanvasStuff";
 
 describe('CanvasStuff', () => {
     describe('maximumSize', () => {
@@ -37,4 +37,20 @@ describe('CanvasStuff', () => {
             expect(removeOffset(dimensions, offsetToRemove)).toEqual(expected)
         })
     });
+
+    describe('applyRatio', () => {
+        test.each([
+            {dimensions: {x: 0, y: 0}, ratio: 0.0, expected: {x: 0, y: 0}},
+            {dimensions: {x: 20, y: 20}, ratio: 2.0, expected: {x: 40, y: 40}},
+            {dimensions: {x: 20, y: 20}, ratio: 0.5, expected: {x: 10, y: 10}},
+            {dimensions: {x: -50, y: -50}, ratio: 0.1, expected: {x: -5, y: -5}},
+        ])('applyRatio($dimensions, $ratio) -> $expected', ({
+                                                                dimensions,
+                                                                ratio,
+                                                                expected
+                                                            }) => {
+            expect(applyRatio(dimensions, ratio)).toEqual(expected)
+        })
+    });
 });
+
