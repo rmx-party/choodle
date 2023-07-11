@@ -2,6 +2,7 @@ import {browser} from '$app/environment';
 import localforage from 'localforage';
 import {UndoStack} from "$lib/UndoStack";
 import {goto} from "$app/navigation";
+import {crunchCanvas} from "$lib/ImageUtils";
 
 /* Configuration */
 const lineWidth = 5;
@@ -119,10 +120,13 @@ export async function getUndoStack() {
     return UndoStack.fromStorable(await localforage.getItem(choodleUndoKey));
 }
 
-export const push = async () => {
+export async function push() {
     const undoStack = await getUndoStack()
 
-    undoStack.push(canvas().toDataURL('image/png'))
+    const imageDataUrl = await crunchCanvas(canvas(), canvasContext())
+    undoStack.push(imageDataUrl)
+    // undoStack.push(canvas().toDataURL())
+    // undoStack.push(canvas().toDataURL('image/png'))
     // undoStack.push(canvas().toDataURL('image/jpeg', 0.7))
     // undoStack.push(canvas().toDataURL('image/webp', 0.01))
 
@@ -175,7 +179,6 @@ function oldCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
 function calculateCoordinatesFromEvent(event: MouseEvent | TouchEvent): [number, number] {
     const bounds = canvas().getBoundingClientRect();
     const ratio = pixelRatio()
-    // const ratio = 0.5
     const [oldX, oldY] = [...oldCoordsFromEvent(event)]
     const newX = (oldX * ratio) - (bounds.left * ratio);
     const newY = (oldY * ratio) - (bounds.top * ratio);
