@@ -28,6 +28,7 @@ export const crunchCanvas = async (canvas, ctx) => {
         width: imageData.width,
         height: imageData.height,
         filterType: -1, // no filtering
+        colorTYpe: 0,
         bgColor: { red: 255, green: 255, blue: 255}
     });
 

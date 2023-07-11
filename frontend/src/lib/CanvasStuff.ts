@@ -68,7 +68,7 @@ export function clearStorage() {
 
 export function clearDisplay() {
     canvasContext().clearRect(0, 0, canvas().width, canvas().height);
-    canvasContext().fillStyle = "#fafafa";
+    canvasContext().fillStyle = "#ffffff";
     canvasContext().fillRect(0, 0, canvas().width, canvas().height);
     canvasContext().imageSmoothingEnabled = false;
 }
@@ -136,8 +136,9 @@ export async function push() {
 
 export function pixelRatio(): number {
     // return window.devicePixelRatio;
-    return 1/4;
+    // return 1/4;
     // return 1/3;
+    return 0.35;
     // return 1/2;
     // return 2/3;
     // return 1;
