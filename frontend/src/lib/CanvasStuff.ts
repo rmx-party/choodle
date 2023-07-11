@@ -1,7 +1,6 @@
 import {browser} from '$app/environment';
 import localforage from 'localforage';
 import {UndoStack} from "$lib/UndoStack";
-import {goto} from "$app/navigation";
 import {crunchCanvas} from "$lib/ImageUtils";
 
 /* Configuration */
