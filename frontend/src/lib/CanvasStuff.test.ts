@@ -52,5 +52,9 @@ describe('CanvasStuff', () => {
             expect(applyRatio(dimensions, ratio)).toEqual(expected)
         })
     });
+
+    describe("tuplizeDimensiony", () => {
+        expect(tuplizeDimensiony({x: 100, y: 150})).toEqual([100, 150])
+    })
 });
 
