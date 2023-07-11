@@ -1,4 +1,4 @@
-import {describe, expect, it} from 'vitest';
+import {describe, expect, it, test} from 'vitest';
 
 type Dimensiony = {
     x: number;
@@ -13,19 +13,17 @@ function maximumSize(desiredSize: Dimensiony, maxSize: Dimensiony): Dimensiony {
 }
 
 describe('maximumSize', () => {
-    it('gives desired x when desired x is less than max x', () => {
-        expect(maximumSize({x: 100, y: 100}, {x: 150, y: 150})).toEqual({x: 100, y: 100})
-    });
-
-    it('gives maximum x, and desired y, when x is more than max x, and y is less', () => {
-        expect(maximumSize({x: 200, y: 100}, {x: 150, y: 150})).toEqual({x: 150, y: 100})
-    })
-
-    it('gives desired y when desired y is less than max y', () => {
-        expect(maximumSize({x: 500, y: 500}, {x: 550, y: 550})).toEqual({x: 500, y: 500})
-    });
-
-    it('gives desired x, and maximum y, when y is more than max y, and x is less', () => {
-        expect(maximumSize({x: 550, y: 500}, {x: 500, y: 550})).toEqual({x: 500, y: 500})
+    test.each([
+        {desired: {x: 0, y: 0}, maximum: {x: 0, y: 0}, expected: {x: 0, y: 0}},
+        {desired: {x: 10, y: 10}, maximum: {x: 0, y: 0}, expected: {x: 0, y: 0}},
+        {desired: {x: 10, y: 10}, maximum: {x: 20, y: 20}, expected: {x: 10, y: 10}},
+        {desired: {x: 30, y: 10}, maximum: {x: 20, y: 20}, expected: {x: 20, y: 10}},
+        {desired: {x: 10, y: 30}, maximum: {x: 20, y: 20}, expected: {x: 10, y: 20}},
+    ])('maximumSize($desired, $maximum) -> $expected', ({
+                                                            desired,
+                                                            maximum,
+                                                            expected
+                                                        }) => {
+        expect(maximumSize(desired, maximum)).toEqual(expected)
     })
 });
