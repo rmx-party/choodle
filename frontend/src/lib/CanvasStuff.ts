@@ -153,15 +153,9 @@ export const resizeCanvas = async (_event?: Event) => {
 
     const bounds = canvas().getBoundingClientRect();
 
-    // const targetMaxSize = {x: 100, y: 200}
-    // const targetMaxSize = {x: 215, y: 466}
     const targetMaxSize = {x: 430, y: 932}
-    // const targetMaxSize = {x: 860, y: 1864}
-    // const targetMaxSize = {x: 1290, y: 2796}
-    // canvas().width = (Math.min(windowWidth, targetMaxSize.x) - bounds.x) * ratio;
-    // canvas().height = (Math.min(windowHeight, targetMaxSize.y) - bounds.y) * ratio;
-    canvas().width = targetMaxSize.x * ratio
-    canvas().height = targetMaxSize.y * ratio
+    canvas().width = (Math.min(windowWidth, targetMaxSize.x) - bounds.x) * ratio;
+    canvas().height = (Math.min(windowHeight, targetMaxSize.y) - bounds.y) * ratio;
     await load()
 }
 
