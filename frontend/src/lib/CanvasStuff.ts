@@ -134,7 +134,7 @@ export function pixelRatio(): number {
     return 0.35;
 }
 
-type Dimensiony = {
+export type Dimensiony = {
     x: number;
     y: number;
 }
