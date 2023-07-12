@@ -10,7 +10,6 @@
     import {get} from "svelte/store";
 
     tokenId.set(parseInt($page.params.tokenId))
-    loading.set(true)
 
     const choodleAgain = async (event: Event) => {
         tokenId.set(null)
@@ -50,11 +49,12 @@
     };
 
     const getNftMetaData = async (tokenId: number) => {
+        loading.set(true)
+
         const settings = {
             apiKey: "L2vtx4tW7tXeREsqVqRUs-OjaSilNFWn", // FIXME: ENV
             network: Network.MATIC_MUMBAI // FIXME: ENV controlled network
         };
-
         const alchemy = new Alchemy(settings);
 
         const response = await alchemy.nft.getNftMetadata(
@@ -88,29 +88,29 @@
     <meta property="og:type" content='website' />
     <meta property="og:url" content={$page.url}/>
     <meta property="og:site_name" content="Choodle"/>
-    <meta property="og:title" content="{$nftTitle}"/>
+    <meta property="og:title" content="choodle title test"/>
     <meta property="og:image" content="{$imageData}"/>
     <meta property="og:image:secure_url" content="{$imageData}"/>
     <meta property="og:image:width" content="430" />
     <meta property="og:image:height" content="932" />
     <meta property="og:image:alt" content="{$nftAlt}"/>
-    <meta property="og:description" content="{$nftDescription}"/>
+    <meta property="og:description" content="choodle description test"/>
 </svelte:head>
 
 {#if !$loading}
 <h1>{$nftTitle}</h1>
 
 <div style="z-index: 999; text-align: center;">
-    <img alt="FIXME: ALT ATTRIBUTE!" src="{$imageData}"/>
+    <img alt="{$nftAlt}" src="{$imageData}"/>
 
     <ul style="text-align: left;">
         <li>You can <a
             href="{generateOpenSeaURL($tokenId)}"
             target="_blank">view your choodle on OpenSea</a>
         </li>
-    <li><button on:click={share}>Share</button></li>
-    <li><button on:click={choodleAgain}>Choodle again</button></li>
-    <li><button on:click={showWallet}>Show Wallet</button></li>
+        <li><button on:click={share}>Share</button></li>
+        <li><button on:click={choodleAgain}>Choodle again</button></li>
+        <li><button on:click={showWallet}>Show Wallet</button></li>
     </ul>
 </div>
 {:else}
