@@ -36,6 +36,7 @@
                 }
             )
         ];
+        console.log('page url: ', $page.url)
         if (navigator.share) {
             navigator.share({
                 files,
