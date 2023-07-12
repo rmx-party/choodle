@@ -85,9 +85,14 @@
 
 <svelte:head>
     <!-- TODO: set canonical URL (decide trailing slash etc) -->
+    <meta property="og:type" content='website' />
     <meta property="og:url" content={$page.url}/>
+    <meta property="og:site_name" content="Choodle"/>
     <meta property="og:title" content="{$nftTitle}"/>
-    <meta property="og:image" content="{$imageData}"/>
+    <meta property="og:image:url" content="{$imageData}"/>
+    <meta property="og:image:secure_url" content="{$imageData}"/>
+    <meta property="og:image:width" content="430" />
+    <meta property="og:image:height" content="932" />
     <meta property="og:image:alt" content="{$nftAlt}"/>
     <meta property="og:description" content="{$nftDescription}"/>
 </svelte:head>
