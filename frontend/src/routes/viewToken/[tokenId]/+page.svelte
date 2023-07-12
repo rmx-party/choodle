@@ -1,11 +1,11 @@
 <script lang="ts">
     import {page} from "$app/stores";
     import {generateOpenSeaURL, magicFactory} from "$lib/MagicStuff.js";
-    import {imageData, tokenId, nftTitle, nftAlt, nftDescription} from "$lib/store.js";
+    import {imageData, nftAlt, nftDescription, nftTitle, tokenId} from "$lib/store.js";
     import {clearStorage} from "$lib/CanvasStuff.js";
     import {goto} from "$app/navigation";
     import {PUBLIC_CONTRACT_ADDRESS} from "$env/static/public";
-    import {Alchemy, BigNumber, Network} from "alchemy-sdk";
+    import {Alchemy, Network} from "alchemy-sdk";
 
     let tokenIdValue;
     tokenId.subscribe(value => tokenIdValue = value)
@@ -47,7 +47,7 @@
         }
     };
 
-    const getNftMetaData = async (tokenId: number | string) => {
+    const getNftMetaData = async (tokenId: number) => {
         const settings = {
             apiKey: "L2vtx4tW7tXeREsqVqRUs-OjaSilNFWn", // FIXME: ENV
             network: Network.MATIC_MUMBAI // FIXME: ENV controlled network
@@ -76,7 +76,7 @@
         magic.wallet.showUI()
     }
 
-    getNftMetaData($page.params.tokenId)
+    getNftMetaData(parseInt($page.params.tokenId))
     console.log($page)
 </script>
 
