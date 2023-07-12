@@ -87,7 +87,7 @@
     <!-- TODO: set canonical URL (decide trailing slash etc) -->
     <meta property="og:url" content={$page.url}/>
     <meta property="og:title" content="{$nftTitle}"/>
-    <!--    <meta property="og:image" content="{$imageData}"/>-->
+    <meta property="og:image" content="{$imageData}"/>
     <meta property="og:image:alt" content="{$nftAlt}"/>
     <meta property="og:description" content="{$nftDescription}"/>
 </svelte:head>
