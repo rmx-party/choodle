@@ -6,6 +6,7 @@
     import {goto} from "$app/navigation";
     import {PUBLIC_CONTRACT_ADDRESS} from "$env/static/public";
     import {Alchemy, Network} from "alchemy-sdk";
+    import {get} from "svelte/store";
 
     let tokenIdValue;
     tokenId.subscribe(value => tokenIdValue = value)
@@ -21,7 +22,7 @@
     const share = async (event: Event) => {
         event.preventDefault()
 
-        const img: unknown = imageData;
+        const img: unknown = get(imageData);
         const imgBlob = await (await fetch(img as URL)).blob();
         // TODO: maybe remove files from this share once opengraph metadata is
         // hooked up
