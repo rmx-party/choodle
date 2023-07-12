@@ -41,6 +41,8 @@ body {
     justify-content: flex-start;
     flex-direction: column;
     flex-wrap: nowrap;
+
+    background: hsla(148, 30%,80%, 0.5);
 }
 
 canvas#choodle-board {
