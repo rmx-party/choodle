@@ -17,6 +17,7 @@ export function magicFactory() {
             chainId: 80001
         }
     });
+    magic.preload; // start fetching the iframe junk ahead of time
     return magic;
 }
 
