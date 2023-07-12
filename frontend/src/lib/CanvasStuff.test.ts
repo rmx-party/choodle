@@ -1,5 +1,5 @@
 import {describe, expect, it, test} from 'vitest';
-import {applyRatio, Dimensiony, maximumSize, removeOffset} from "$lib/CanvasStuff";
+import {applyRatio, Dimensiony, maximumSize, removeOffset, tuplizeDimensiony} from "$lib/CanvasStuff";
 
 describe('CanvasStuff', () => {
     describe('maximumSize', () => {
@@ -54,7 +54,9 @@ describe('CanvasStuff', () => {
     });
 
     describe("tuplizeDimensiony", () => {
-        expect(tuplizeDimensiony({x: 100, y: 150})).toEqual([100, 150])
+        it('turns an order-insensitivbe dimensiony object into an ordered tuple of dimensions', () => {
+            expect(tuplizeDimensiony({x: 100, y: 150})).toEqual([100, 150])
+        })
     })
 });
 
