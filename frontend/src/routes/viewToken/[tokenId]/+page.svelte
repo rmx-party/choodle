@@ -1,16 +1,16 @@
 <script lang="ts">
+    import LoadingIndicator from "../../../LoadingIndicator.svelte";
     import {page} from "$app/stores";
     import {generateOpenSeaURL, magicFactory} from "$lib/MagicStuff.js";
-    import {imageData, nftAlt, nftDescription, nftTitle, tokenId} from "$lib/store.js";
+    import {imageData, tokenId, nftTitle, nftAlt, nftDescription, loading} from "$lib/store.js";
     import {clearStorage} from "$lib/CanvasStuff.js";
     import {goto} from "$app/navigation";
     import {PUBLIC_CONTRACT_ADDRESS} from "$env/static/public";
     import {Alchemy, Network} from "alchemy-sdk";
     import {get} from "svelte/store";
 
-    let tokenIdValue;
-    tokenId.subscribe(value => tokenIdValue = value)
-    tokenId.set($page.params.tokenId)
+    tokenId.set(parseInt($page.params.tokenId))
+    loading.set(true)
 
     const choodleAgain = async (event: Event) => {
         tokenId.set(null)
@@ -69,6 +69,7 @@
             nftTitle.set(response.title)
             nftDescription.set(response.description)
             nftAlt.set('FIXME: ALT TEXT')
+            loading.set(false)
         }
     }
 
@@ -78,7 +79,7 @@
         magic.wallet.showUI()
     }
 
-    getNftMetaData(parseInt($page.params.tokenId))
+    getNftMetaData($tokenId)
     console.log($page)
 </script>
 
@@ -91,6 +92,7 @@
     <meta property="og:description" content="{$nftDescription}"/>
 </svelte:head>
 
+{#if !$loading}
 <h1>{$nftTitle}</h1>
 
 <div style="z-index: 999; text-align: center;">
@@ -98,10 +100,15 @@
 
     <ul style="text-align: left;">
         <li>You can <a
-                href="{generateOpenSeaURL($page.params.tokenId)}"
-                target="_blank">view your choodle on OpenSea</a></li>
-        <li><a href="#" on:click={share}>Share</a></li>
-        <li><a href="#" on:click={choodleAgain}>Choodle again</a></li>
-        <li><a href="#" on:click={showWallet}>Show Wallet</a></li>
+            href="{generateOpenSeaURL($tokenId)}"
+            target="_blank">view your choodle on OpenSea</a>
+        </li>
+    <li><button on:click={share}>Share</button></li>
+    <li><button on:click={choodleAgain}>Choodle again</button></li>
+    <li><button on:click={showWallet}>Show Wallet</button></li>
     </ul>
 </div>
+{:else}
+    <LoadingIndicator />
+{/if}
+
