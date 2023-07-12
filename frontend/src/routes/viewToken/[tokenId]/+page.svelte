@@ -82,11 +82,11 @@
 
 <svelte:head>
     <!-- TODO: set canonical URL (decide trailing slash etc) -->
-    <meta property="og:url" content={$page.url} />
-    <meta property="og:title" content="{$nftTitle}" />
-    <meta property="og:image" content="{$imageData}" />
-    <meta property="og:image:alt" content="{$nftAlt}" />
-    <meta property="og:description" content="{$nftDescription}" />
+    <meta property="og:url" content={$page.url}/>
+    <meta property="og:title" content="{$nftTitle}"/>
+    <meta property="og:image" content="{$imageData}"/>
+    <meta property="og:image:alt" content="{$nftAlt}"/>
+    <meta property="og:description" content="{$nftDescription}"/>
 </svelte:head>
 
 <h1>{$nftTitle}</h1>
@@ -95,11 +95,11 @@
     <img alt="FIXME: ALT ATTRIBUTE!" src="{$imageData}"/>
 
     <ul style="text-align: left;">
-    <li>You can <a
-        href="{generateOpenSeaURL($page.params.tokenId)}"
-            target="_blank">view your choodle on OpenSea</a></li>
-    <li><a href="#" on:click={share}>Share</a></li>
-    <li><a href="#" on:click={choodleAgain}>Choodle again</a></li>
-    <li><a href="#" on:click={showWallet}>Show Wallet</a></li>
+        <li>You can <a
+                href="{generateOpenSeaURL($page.params.tokenId)}"
+                target="_blank">view your choodle on OpenSea</a></li>
+        <li><a href="#" on:click={share}>Share</a></li>
+        <li><a href="#" on:click={choodleAgain}>Choodle again</a></li>
+        <li><a href="#" on:click={showWallet}>Show Wallet</a></li>
     </ul>
 </div>
