@@ -59,8 +59,6 @@ const drawTo = (x: number, y: number): void => {
 }
 
 export const resizeCanvas = async (_event?: Event) => {
-    const ratio = pixelRatio()
-
     const rootElement = document.querySelector("html") as HTMLElement
     const windowHeight = rootElement.clientHeight
     const windowWidth = rootElement.clientWidth
