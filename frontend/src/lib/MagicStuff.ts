@@ -8,6 +8,7 @@ import {
 } from "$env/static/public";
 import abi from '../abi/MyToken.json'
 import {getUndoStack} from "$lib/CanvasStuff";
+import {loading} from "$lib/store";
 import fp from 'lodash/fp'
 
 export function magicFactory() {
@@ -46,6 +47,10 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
     const contract = new ethers.Contract(contractAddress, abi, provider.getSigner())
 
     return await contract.safeMint(accounts[0], data)
+        .catch((error) => {
+            loading.set(false)
+            console.error(error)
+        });
 }
 
 export function generateOpenSeaURL(tokenId: number | string) {
@@ -57,13 +62,24 @@ export async function connectAndMint() {
     const imageData = undoStack.current
     if (!imageData) console.error(`image data missing, please fix teh code`)
 
-    const {provider, accounts} = await connectMagic();
+    loading.set(true)
+    const {provider, accounts} = await connectMagic()
+        .catch((error) => {
+            loading.set(false)
+            console.error(error)
+        });
 
     const preReceipt = await mint(accounts, provider, imageData);
     console.log(preReceipt)
 
-    const receipt = await preReceipt.wait();
+    const receipt = await preReceipt.wait()
+        .catch((error) => {
+            loading.set(false)
+            console.error(error)
+        });
+
     console.log(receipt)
+    loading.set(false)
 
     const tokenId = fp.first(fp.compact(fp.map(bigNumber => bigNumber?.toNumber())(fp.map(event => event.args?.tokenId)(receipt.events))))
     return tokenId
