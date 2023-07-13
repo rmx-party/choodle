@@ -90,8 +90,7 @@
         {#if canShare()}
             <button id="share" on:click={share}>Share</button>
         {/if}
-        <button id="toggleDebugging" on:click={() => {debugEnabled.update(val =>
-            !val)}}>D</button>
+        <button id="toggleDebugging" on:click={() => {debugEnabled.set(true)}}>D</button>
     </div>
     <canvas id="choodle-board" style="border: 10px solid lawngreen"/>
     <DebugInfo></DebugInfo>
