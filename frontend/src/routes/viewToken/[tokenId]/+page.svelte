@@ -79,7 +79,7 @@
         magic.wallet.showUI()
     }
 
-    getNftMetaData($tokenId)
+    await getNftMetaData($tokenId) // blocking here to ensure OG meta is rendered server side
     console.log($page)
 </script>
 
