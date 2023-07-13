@@ -48,6 +48,7 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
 
     return await contract.safeMint(accounts[0], data)
         .catch((error) => {
+            // TODO: run a reboot callback to reload canvas etc
             loading.set(false)
             console.error(error)
         });
@@ -65,6 +66,7 @@ export async function connectAndMint() {
     loading.set(true)
     const {provider, accounts} = await connectMagic()
         .catch((error) => {
+            // TODO: run a reboot callback to reload canvas etc
             loading.set(false)
             console.error(error)
         });
@@ -74,6 +76,7 @@ export async function connectAndMint() {
 
     const receipt = await preReceipt.wait()
         .catch((error) => {
+            // TODO: run a reboot callback to reload canvas etc
             loading.set(false)
             console.error(error)
         });
