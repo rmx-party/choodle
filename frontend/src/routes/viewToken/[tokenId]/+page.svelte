@@ -48,7 +48,7 @@
         }
     };
 
-    const getNftMetaData = async (tokenId: number) => {
+    const getNftMetaData = (tokenId: number) => {
         loading.set(true)
 
         const settings = {
@@ -57,13 +57,16 @@
         };
         const alchemy = new Alchemy(settings);
 
-        const response = await alchemy.nft.getNftMetadata(
+        alchemy.nft.getNftMetadata(
             PUBLIC_CONTRACT_ADDRESS,
             tokenId.toString()
-        );
+        ).then((response) => {
+            setNftMetaData(response)
+            console.log(`getNftMetaData response`, response)
+        });
+    }
 
-        console.log(`getNftMetaData response`, response)
-
+    const setNftMetaData = (response) => {
         if (response?.media?.length > 0) {
             imageData.set(response.media[0].raw)
             nftTitle.set(response.title)
@@ -79,7 +82,7 @@
         magic.wallet.showUI()
     }
 
-    await getNftMetaData($tokenId) // blocking here to ensure OG meta is rendered server side
+    getNftMetaData($tokenId)
     console.log($page)
 </script>
 
