@@ -2,6 +2,7 @@ import {browser} from '$app/environment';
 import localforage from 'localforage';
 import {UndoStack} from "$lib/UndoStack";
 import {crunchCanvas} from "$lib/ImageUtils";
+import {debugInfo} from "$lib/store";
 
 /* Configuration */
 const lineWidth = 5;
@@ -172,6 +173,7 @@ export const resizeCanvas = async (_event?: Event) => {
     const ratioedCanvasDimensions = applyRatio(offsetCanvasDimensions, pixelRatio())
     canvas().width = ratioedCanvasDimensions.x;
     canvas().height = ratioedCanvasDimensions.y;
+    debugInfo.update(val => `${val}\nratio: ${ratio}\nwindow: ${windowWidth} x ${windowHeight}\nbounds: ${JSON.stringify(bounds)}`)
     await load()
 }
 
