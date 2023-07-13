@@ -58,6 +58,24 @@ const drawTo = (x: number, y: number): void => {
     })
 }
 
+export const resizeCanvas = async (_event?: Event) => {
+    const ratio = pixelRatio()
+
+    const rootElement = document.querySelector("html") as HTMLElement
+    const windowHeight = rootElement.clientHeight
+    const windowWidth = rootElement.clientWidth
+
+    const bounds = canvas().getBoundingClientRect();
+
+    const canvasDimensions = maximumSize({x: windowWidth, y: windowHeight}, targetMaxSize)
+    const offsetCanvasDimensions = removeOffset(canvasDimensions, {x: bounds.x, y: bounds.y})
+    const ratioedCanvasDimensions = applyRatio(offsetCanvasDimensions, pixelRatio())
+    canvas().width = ratioedCanvasDimensions.x;
+    canvas().height = ratioedCanvasDimensions.y;
+
+    await load()
+}
+
 export function clearStorage() {
     localforage.keys().then((keys) => {
         keys.map(async (key) => {
@@ -156,23 +174,6 @@ export function removeOffset(dimensions: Dimensiony, offsetToRemove: Dimensiony)
 
 export function tuplizeDimensiony(dimensions: Dimensiony) {
     return [dimensions.x, dimensions.y]
-}
-
-export const resizeCanvas = async (_event?: Event) => {
-    const ratio = pixelRatio()
-
-    const rootElement = document.querySelector("html") as HTMLElement
-    const windowHeight = rootElement.clientHeight
-    const windowWidth = rootElement.clientWidth
-
-    const bounds = canvas().getBoundingClientRect();
-
-    const canvasDimensions = maximumSize({x: windowWidth, y: windowHeight}, targetMaxSize)
-    const offsetCanvasDimensions = removeOffset(canvasDimensions, {x: bounds.x, y: bounds.y})
-    const ratioedCanvasDimensions = applyRatio(offsetCanvasDimensions, pixelRatio())
-    canvas().width = ratioedCanvasDimensions.x;
-    canvas().height = ratioedCanvasDimensions.y;
-    await load()
 }
 
 function oldCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
