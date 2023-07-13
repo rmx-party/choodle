@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {debugEnabled, loading, tokenId} from "$lib/store";
+    import {loading, tokenId} from "$lib/store";
     import LoadingIndicator from "../LoadingIndicator.svelte";
 
     import {
@@ -12,7 +12,6 @@
     } from "$lib/CanvasStuff.ts";
     import {connectAndMint, generateOpenSeaURL} from "$lib/MagicStuff";
     import {goto} from "$app/navigation";
-    import DebugInfo from "../DebugInfo.svelte";
 
     const undo = async (event: Event) => {
         event.preventDefault()
@@ -90,10 +89,8 @@
         {#if canShare()}
             <button id="share" on:click={share}>Share</button>
         {/if}
-        <button id="toggleDebugging" on:click={() => {debugEnabled.set(true)}}>D</button>
     </div>
-    <canvas id="choodle-board" style="border: 10px solid lawngreen"/>
-    <DebugInfo></DebugInfo>
+    <canvas id="choodle-board" style="border: 1px solid lawngreen"></canvas>
 {:else}
     <LoadingIndicator></LoadingIndicator>
 {/if}
