@@ -59,13 +59,11 @@ const drawTo = (x: number, y: number): void => {
 }
 
 export const resizeCanvas = async (_event?: Event) => {
-    const rootElement = document.querySelector("html") as HTMLElement
-    const windowHeight = rootElement.clientHeight
-    const windowWidth = rootElement.clientWidth
-
     const bounds = canvas().getBoundingClientRect();
+    const viewportHeight = canvas().parentElement?.clientHeight - bounds.y
+    const viewportWidth = canvas().parentElement?.clientWidth - bounds.x
 
-    const canvasDimensions = maximumSize({x: windowWidth, y: windowHeight}, targetMaxSize)
+    const canvasDimensions = maximumSize({x: viewportWidth, y: viewportHeight}, targetMaxSize)
     const offsetCanvasDimensions = removeOffset(canvasDimensions, {x: bounds.x, y: bounds.y})
     const ratioedCanvasDimensions = applyRatio(offsetCanvasDimensions, pixelRatio())
 
