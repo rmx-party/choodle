@@ -21,7 +21,7 @@ export function startDrawing(event: MouseEvent | TouchEvent) {
     isDrawing = true;
     event.preventDefault()
     console.groupCollapsed('drawing')
-    const [newX, newY] = calculateCoordinatesFromEvent(event)
+    const [newX, newY] = canvasCoordsFromEvent(event)
 
     canvasContext().beginPath()
     drawTo(newX + 1, newY + 1)
@@ -32,7 +32,7 @@ const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
     if (!isDrawing) return;
 
     event.preventDefault()
-    drawTo(...calculateCoordinatesFromEvent(event));
+    drawTo(...canvasCoordsFromEvent(event));
     console.log(event)
 }
 
@@ -174,7 +174,7 @@ export function tuplizeDimensiony(dimensions: Dimensiony) {
     return [dimensions.x, dimensions.y]
 }
 
-function oldCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
+function viewportCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
     switch (event.constructor) {
         case MouseEvent:
             return [(event as MouseEvent).clientX,
@@ -186,12 +186,17 @@ function oldCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
     return [-1, -1] // FIXME: this is terrible
 }
 
-function calculateCoordinatesFromEvent(event: MouseEvent | TouchEvent): [number, number] {
-    const bounds = canvas().getBoundingClientRect();
-    const ratio = pixelRatio()
-    const [oldX, oldY] = [...oldCoordsFromEvent(event)]
-    const newX = (oldX * ratio) - (bounds.left * ratio);
-    const newY = (oldY * ratio) - (bounds.top * ratio);
+function canvasCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
+    const box = canvas().getBoundingClientRect();
+    const [viewportX, viewportY] = [...viewportCoordsFromEvent(event)]
+    const offsetX = (viewportX - box.left);
+    const offsetY = (viewportY - box.top);
+
+    // Normalize the screen coordinates to a 0..1 range relative to the canvas
+    // box area then re-scale by the canvas dimensions
+    const newX = (offsetX / box.width) * canvas().width
+    const newY = (offsetY / box.height) * canvas().height
+
 
     return [newX, newY];
 }
