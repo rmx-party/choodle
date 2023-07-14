@@ -5,7 +5,7 @@ import {crunchCanvas} from "$lib/ImageUtils";
 
 /* Configuration */
 const lineWidth = 5;
-const targetMaxSize: Dimensiony = {x: 430, y: 932}
+const targetMaxSize: Dimensiony = {x: 420, y: 746}
 
 let isDrawing = false;
 
