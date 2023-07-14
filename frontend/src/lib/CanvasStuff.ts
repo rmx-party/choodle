@@ -68,8 +68,11 @@ export const resizeCanvas = async (_event?: Event) => {
     const canvasDimensions = maximumSize({x: windowWidth, y: windowHeight}, targetMaxSize)
     const offsetCanvasDimensions = removeOffset(canvasDimensions, {x: bounds.x, y: bounds.y})
     const ratioedCanvasDimensions = applyRatio(offsetCanvasDimensions, pixelRatio())
-    canvas().width = ratioedCanvasDimensions.x;
-    canvas().height = ratioedCanvasDimensions.y;
+
+    canvas().width = ratioedCanvasDimensions.x
+    canvas().height = ratioedCanvasDimensions.y
+    canvas().style.width = `${canvasDimensions.x}px`
+    canvas().style.height = `${canvasDimensions.y}px`
 
     await load()
 }
