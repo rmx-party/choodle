@@ -1,12 +1,12 @@
 import {getUndoStack} from "$lib/StorageStuff";
-import {pixelRatio} from "$lib/Configuration";
+import {backgroundColour, pixelRatio} from "$lib/Configuration";
 
 export function clearCanvas(id: string) {
     const canvas = document.getElementById(id) as HTMLCanvasElement;
     const ctx = canvas.getContext('2d')!
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = backgroundColour;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.imageSmoothingEnabled = false;
 }
