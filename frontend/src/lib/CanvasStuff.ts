@@ -171,7 +171,7 @@ function getHeight(length, ratio) {
     return Math.floor(height);
 }
 
-function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
+function calculateAspectRatioFit(srcWidth: number, srcHeight: number, maxWidth: number, maxHeight: number) {
     const targetRatio = maxWidth / maxHeight
     const srcRatio = srcWidth / srcHeight
 
