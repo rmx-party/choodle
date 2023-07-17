@@ -35,8 +35,11 @@
         console.groupCollapsed('drawing')
         const [newX, newY] = canvasCoordsFromEvent(event)
 
-        ctx.fillStyle = "#000000"
-        ctx.fillRect(newX - 1, newY - 1, lineWidth / 2, lineWidth / 2)
+        window.requestAnimationFrame(() => {
+            ctx.beginPath()
+            ctx.fillStyle = "#000000"
+            ctx.fillRect(newX - 1, newY - 1, lineWidth / 2, lineWidth / 2)
+        })
     }
 
     const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
@@ -56,11 +59,10 @@
     }
 
     const drawTo = (x: number, y: number): void => {
-        ctx.imageSmoothingEnabled = false;
-
         console.log(`drawing a line to ${x} ${y}`)
 
         window.requestAnimationFrame(() => {
+            ctx.beginPath()
             ctx.lineTo(x, y)
             ctx.stroke();
         })
