@@ -1,9 +1,9 @@
 <script lang="ts">
     import {browser} from "$app/environment";
     import {load, push} from "$lib/StorageStuff";
-    import {canvasCoordsFromEvent, pixelRatio} from "$lib/CanvasStuff";
+    import {canvasCoordsFromEvent} from "$lib/CanvasStuff";
     import {onMount} from "svelte";
-    import {lineWidth, targetMaxSize} from "$lib/Configuration";
+    import {lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
     import ChoodleBoardButtons from "./ChoodleBoardButtons.svelte";
 
@@ -20,7 +20,7 @@
 
         const canvasDimensions = maximumSize({x: viewportWidth, y: viewportHeight}, targetMaxSize)
         const offsetCanvasDimensions = removeOffset(canvasDimensions, {x: bounds.x, y: bounds.y})
-        const ratioedCanvasDimensions = applyRatio(offsetCanvasDimensions, pixelRatio())
+        const ratioedCanvasDimensions = applyRatio(offsetCanvasDimensions, pixelRatio)
 
         canvas.width = ratioedCanvasDimensions.x
         canvas.height = ratioedCanvasDimensions.y

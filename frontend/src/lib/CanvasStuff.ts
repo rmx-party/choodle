@@ -1,4 +1,5 @@
 import {getUndoStack} from "$lib/StorageStuff";
+import {pixelRatio} from "$lib/Configuration";
 
 export function clearCanvas(id: string) {
     const canvas = document.getElementById(id) as HTMLCanvasElement;
@@ -13,7 +14,7 @@ export function clearCanvas(id: string) {
 function logStateOfImage(dataURL: string) {
     console.log('image loaded', dataURL)
     console.log('size in KB', dataURL.length / 1024)
-    console.log('pixelRatio', pixelRatio())
+    console.log('pixelRatio', pixelRatio)
     console.log('canvas', canvas().width, canvas().height)
 }
 
@@ -38,10 +39,6 @@ export function canvas() {
     let instance = null;
     instance ||= document.getElementById('choodle-board') as HTMLCanvasElement;
     return instance
-}
-
-export function pixelRatio(): number {
-    return 0.35;
 }
 
 function viewportCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
