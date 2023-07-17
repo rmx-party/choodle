@@ -34,12 +34,8 @@
   "type": "module",
   "dependencies": {
     "@vercel/analytics": "^1.0.1",
-    "alchemy-sdk": "^2.9.2",
-    "ethers": "^4.0.49",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
-    "magic-sdk": "^18.4.1",
-    "pngjs": "^7.0.0",
-    "web3": "^4.0.3"
+    "pngjs": "^7.0.0"
   }
 }

@@ -5,9 +5,6 @@
     import {backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
     import {crunchCanvas} from "$lib/ImageUtils";
-    import {loading, tokenId} from "$lib/store";
-    import {connectAndMint} from "$lib/MagicStuff";
-    import {goto} from "$app/navigation";
 
     export let id;
 
@@ -149,13 +146,6 @@
         await clearStorage();
     }
 
-    const mint = async (event: Event) => {
-        event.preventDefault()
-        loading.set(true)
-        tokenId.set(await connectAndMint())
-        await goto(`/viewToken/${$tokenId}`)
-    }
-
     const share = async (event: Event) => {
         event.preventDefault()
 
@@ -222,8 +212,6 @@
     <button id="undo" on:click={undo}>Undo</button>
     <button id="redo" on:click={redo}>Redo</button>
     <button id="clear-board" on:click={clear}>Clear</button>
-    <!-- <a id="download" href="/api/download">Download</a> -->
-    <button id="mint" on:click={mint}>Mint</button>
     {#if canShare()}
         <button id="share" on:click={share}>Share</button>
     {/if}

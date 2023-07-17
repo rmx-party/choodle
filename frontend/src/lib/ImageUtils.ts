@@ -1,7 +1,6 @@
 import {PNG} from 'pngjs/browser';
-import {browser} from '$app/environment';
 
-export const crunchCanvas = async (canvas, ctx) => {
+export const crunchCanvas = async (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     const png = await new PNG({
