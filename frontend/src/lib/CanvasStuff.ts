@@ -2,6 +2,7 @@ import {browser} from '$app/environment';
 import localforage from 'localforage';
 import {UndoStack} from "$lib/UndoStack";
 import {crunchCanvas} from "$lib/ImageUtils";
+import {floor} from "lodash";
 
 /* Configuration */
 const lineWidth = 5;
@@ -156,6 +157,10 @@ export type Dimensiony = {
     y: number;
 }
 
+function floorCoordinates(dimensions: Dimensiony) {
+    return {x: Math.floor(dimensions.x), y: Math.floor(dimensions.y)}
+}
+
 function getWidth(length, ratio) {
     const width = length / (1 / ratio);
     return Math.floor(width);
@@ -172,18 +177,17 @@ function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
 
     if (srcRatio === targetRatio) {
         console.log('srcR == targetR')
-        return {x: Math.floor(srcWidth), y: Math.floor(srcHeight)}
+        return floorCoordinates({x: srcWidth, y: srcHeight})
     }
+
     if (srcRatio > targetRatio) {
         console.log("srcR > targetR")
         // scale down width
-        return {x: getWidth(srcHeight, targetRatio), y: Math.floor(srcHeight)}
+        return floorCoordinates({x: getWidth(srcHeight, targetRatio), y: srcHeight})
     } else {
         console.log("srcR !> targetR")
-        return {x: Math.floor(srcWidth), y: getHeight(srcWidth, targetRatio)}
+        return floorCoordinates({x: srcWidth, y: getHeight(srcWidth, targetRatio)})
     }
-
-    return {x: Math.floor(srcWidth), y: Math.floor(srcHeight * (srcWidth * targetRatio))};
 }
 
 
