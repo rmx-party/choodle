@@ -13,8 +13,6 @@
         context.lineCap = 'square';
         context.imageSmoothingEnabled = false;
 
-        await resizeCanvas()
-
         canvas().addEventListener('mousedown', startDrawing);
         canvas().addEventListener('touchstart', startDrawing);
 
@@ -32,10 +30,10 @@
         });
 
         window.addEventListener('resize', resizeCanvas, false);
-        window.addEventListener('DOMContentLoaded', resizeCanvas, false);
 
-        setTimeout(resizeCanvas, 15) // FIXME: this sucks.
-        setTimeout(() => load(), 25) // FIXME: me too, even worse
+        await resizeCanvas()
+
+        await load()
     });
 </script>
 
