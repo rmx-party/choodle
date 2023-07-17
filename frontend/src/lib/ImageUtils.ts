@@ -1,6 +1,7 @@
 import {PNG} from 'pngjs/browser';
+import {blackWhiteThreshold} from "$lib/Configuration";
 
-export const crunchCanvas = async (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
+export const crunchCanvasToBuffer = async (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     const png = await new PNG({
@@ -11,8 +12,7 @@ export const crunchCanvas = async (canvas: HTMLCanvasElement, ctx: CanvasRenderi
         bgColor: {red: 255, green: 255, blue: 255}
     });
 
-    const [threshold, redCoefficient, greenCoefficient, blueCoefficient] = [
-        128,
+    const [redCoefficient, greenCoefficient, blueCoefficient] = [
         0.299,
         0.587,
         0.114
@@ -23,7 +23,7 @@ export const crunchCanvas = async (canvas: HTMLCanvasElement, ctx: CanvasRenderi
 
             // Optimize the PNG by reducing color space to black and white
             let grayscale = redCoefficient * imageData.data[idx] + greenCoefficient * imageData.data[idx + 1] + blueCoefficient * imageData.data[idx + 2];
-            grayscale = (grayscale > threshold) ? 255 : 0; // threshold, could be adjusted
+            grayscale = (grayscale > blackWhiteThreshold) ? 255 : 0; // threshold, could be adjusted
 
             png.data[idx] = grayscale;   // red
             png.data[idx + 1] = grayscale; // green
@@ -32,19 +32,26 @@ export const crunchCanvas = async (canvas: HTMLCanvasElement, ctx: CanvasRenderi
         }
     }
 
-    const buffer = PNG.sync.write(await png.pack());
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
-    const dataUrlResult = `data:image/png;base64,${base64}`;
-
-    const bufferSize = buffer.length;
-    const dataUrlSize = dataUrlResult.length;
     const imageDataSize = imageData.data.length;
-    console.log(`crunched: `, {
+    console.log(`crunched canvas: `, {
         canvas,
         ctx,
         imageData,
         imageDataSize,
         png,
+    });
+
+    return PNG.sync.write(await png.pack());
+}
+
+export const crunchCanvasToUrl = async (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
+    const buffer = await crunchCanvasToBuffer(canvas, ctx);
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    const dataUrlResult = `data:image/png;base64,${base64}`;
+
+    const bufferSize = buffer.length;
+    const dataUrlSize = dataUrlResult.length;
+    console.log(`crunched to url: `, {
         buffer,
         bufferSize,
         dataUrlResult,

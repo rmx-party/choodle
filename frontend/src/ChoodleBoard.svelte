@@ -4,7 +4,7 @@
     import {onMount} from "svelte";
     import {backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
-    import {crunchCanvas} from "$lib/ImageUtils";
+    import {crunchCanvasToUrl} from "$lib/ImageUtils";
 
     export let id;
 
@@ -108,7 +108,7 @@
     async function push() {
         const undoStack = await getUndoStack()
 
-        const imageDataUrl = await crunchCanvas(canvas, ctx)
+        const imageDataUrl = await crunchCanvasToUrl(canvas, ctx)
         undoStack.push(imageDataUrl)
 
         await setUndoStack(undoStack);
