@@ -2,48 +2,6 @@ import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
 import {getUndoStack, load, push} from "$lib/StorageStuff";
 import {targetMaxSize} from "$lib/Configuration";
 
-let isDrawing = false;
-
-/* Drawing */
-export function startDrawing(event: MouseEvent | TouchEvent) {
-    isDrawing = true;
-    event.preventDefault()
-    console.groupCollapsed('drawing')
-    const [newX, newY] = canvasCoordsFromEvent(event)
-
-    canvasContext().beginPath()
-    drawTo(newX + 1, newY + 1)
-    canvasContext().closePath()
-}
-
-export const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
-    if (!isDrawing) return;
-
-    event.preventDefault()
-    drawTo(...canvasCoordsFromEvent(event));
-    console.log(event)
-}
-
-export async function endDrawing(event: MouseEvent | TouchEvent) {
-    const context = canvasContext()
-    event.preventDefault()
-    isDrawing = false;
-    await push()
-    context.beginPath()
-    console.groupEnd()
-}
-
-const drawTo = (x: number, y: number): void => {
-    const context = canvasContext()
-    context.imageSmoothingEnabled = false;
-
-    console.log(`drawing a line to ${x} ${y}`)
-
-    window.requestAnimationFrame(() => {
-        context.lineTo(x, y)
-        context.stroke();
-    })
-}
 
 export const resizeCanvas = async (_event?: Event) => {
     const bounds = canvas().getBoundingClientRect();
@@ -119,7 +77,7 @@ function viewportCoordsFromEvent(event: MouseEvent | TouchEvent): [number, numbe
     return [-1, -1] // FIXME: this is terrible
 }
 
-function canvasCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
+export function canvasCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
     const box = canvas().getBoundingClientRect();
     const [viewportX, viewportY] = [...viewportCoordsFromEvent(event)]
     const offsetX = (viewportX - box.left);
