@@ -38,7 +38,10 @@
         window.requestAnimationFrame(() => {
             ctx.beginPath()
             ctx.fillStyle = "#000000"
-            ctx.fillRect(newX - 1, newY - 1, lineWidth / 2, lineWidth / 2)
+            ctx.fillRect(
+                (newX - lineWidth / 2), (newY - lineWidth / 2), 
+                (lineWidth / 2) , (lineWidth / 2)
+            )
         })
     }
 
