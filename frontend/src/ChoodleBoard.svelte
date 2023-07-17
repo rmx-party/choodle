@@ -9,10 +9,10 @@
     export let id;
 
     let isDrawing = false;
+    let canvas: HTMLCanvasElement;
+    let ctx: CanvasRenderingContext2D;
 
     const resizeCanvas = async (_event?: Event) => {
-        const canvas = document.getElementById(id) as HTMLCanvasElement;
-
         const bounds = canvas.getBoundingClientRect();
         const viewportHeight = canvas.parentElement?.clientHeight - bounds.y
         const viewportWidth = canvas.parentElement?.clientWidth - bounds.x
@@ -30,9 +30,6 @@
 
     /* Drawing */
     function startDrawing(event: MouseEvent | TouchEvent) {
-        const canvas = document.getElementById(id) as HTMLCanvasElement;
-        const ctx = canvas.getContext('2d')!
-
         isDrawing = true;
         event.preventDefault()
         console.groupCollapsed('drawing')
@@ -52,9 +49,6 @@
     }
 
     async function endDrawing(event: MouseEvent | TouchEvent) {
-        const canvas = document.getElementById(id) as HTMLCanvasElement;
-        const ctx = canvas.getContext('2d')!
-
         event.preventDefault()
         isDrawing = false;
         await push()
@@ -63,9 +57,6 @@
     }
 
     const drawTo = (x: number, y: number): void => {
-        const canvas = document.getElementById(id) as HTMLCanvasElement;
-        const ctx = canvas.getContext('2d')!
-
         ctx.imageSmoothingEnabled = false;
 
         console.log(`drawing a line to ${x} ${y}`)
@@ -79,8 +70,8 @@
     onMount(async () => {
         if (!browser) return;
 
-        const canvas = document.getElementById(id) as HTMLCanvasElement;
-        const ctx = canvas.getContext('2d')!
+        canvas = document.getElementById(id) as HTMLCanvasElement;
+        ctx = canvas.getContext('2d')
 
         ctx.strokeStyle = 'black'
         ctx.lineWidth = lineWidth;
