@@ -171,25 +171,24 @@ function getHeight(length: number, ratio: number) {
     return Math.floor(height);
 }
 
-function calculateAspectRatioFit(srcWidth: number, srcHeight: number, maxWidth: number, maxHeight: number) {
-    const targetRatio = maxWidth / maxHeight
-    const srcRatio = srcWidth / srcHeight
+function calculateAspectRatioFit(src: Dimensiony, max: Dimensiony) {
+    const targetRatio = max.x / max.y
+    const srcRatio = src.x / src.y
 
     if (srcRatio === targetRatio) {
-        return floorCoordinates({x: srcWidth, y: srcHeight})
+        return floorCoordinates(src)
     }
 
     if (srcRatio > targetRatio) {
-        return floorCoordinates({x: getWidth(srcHeight, targetRatio), y: srcHeight})
+        return floorCoordinates({x: getWidth(src.y, targetRatio), y: src.y})
     }
 
-    return floorCoordinates({x: srcWidth, y: getHeight(srcWidth, targetRatio)})
+    return floorCoordinates({x: src.x, y: getHeight(src.x, targetRatio)})
 }
-
 
 export function maximumSize(desiredSize: Dimensiony, maxSize: Dimensiony): Dimensiony {
     if (desiredSize.x < maxSize.x || desiredSize.y < maxSize.y) {
-        return calculateAspectRatioFit(desiredSize.x, desiredSize.y, maxSize.x, maxSize.y)
+        return calculateAspectRatioFit(desiredSize, maxSize)
     }
     return maxSize
 }
