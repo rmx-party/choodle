@@ -1,6 +1,16 @@
 import {PNG} from 'pngjs/browser';
 import {blackWhiteThreshold} from "$lib/Configuration";
 
+export const applyCrunchToCanvas = async (canvas, ctx) => {
+    const buffer = await crunchCanvasToBuffer(canvas, ctx)
+    const blackWhiteData = new Uint8ClampedArray(...buffer)
+
+    if (blackWhiteData.length % 4 === 0) {
+        const imgData = new ImageData(blackWhiteData, canvas.width)
+        ctx.putImageData(imgData, 0, 0)
+    }
+}
+
 export const crunchCanvasToBuffer = async (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 

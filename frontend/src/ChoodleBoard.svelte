@@ -4,7 +4,7 @@
     import {onMount} from "svelte";
     import {backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
-    import {crunchCanvasToUrl} from "$lib/ImageUtils";
+    import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
 
     export let id;
 
@@ -57,17 +57,20 @@
     async function endDrawing(event: MouseEvent | TouchEvent) {
         event.preventDefault()
         isDrawing = false;
-        await push()
         ctx.beginPath()
+        applyCrunchToCanvas(canvas, ctx)
         console.groupEnd()
+        await push()
     }
 
-    const drawTo = (x: number, y: number): void => {
-        console.log(`drawing a line to ${x} ${y}`)
+    function drawTo(x: number, y: number) {
+        const [roundedX, roundedY] = [Math.round(x), Math.round(y)]
+        console.log(`drawing a line to ${roundedX} ${roundedY}`)
 
         window.requestAnimationFrame(() => {
             ctx.lineTo(x, y)
             ctx.stroke();
+            applyCrunchToCanvas(canvas, ctx)
         })
     }
 
