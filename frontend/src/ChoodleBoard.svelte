@@ -1,7 +1,7 @@
 <script lang="ts">
     import {browser} from "$app/environment";
     import {load} from "$lib/StorageStuff";
-    import {canvas, canvasContext, doDraw, endDrawing, resizeCanvas, startDrawing} from "$lib/CanvasStuff";
+    import {canvasContext, doDraw, endDrawing, resizeCanvas, startDrawing} from "$lib/CanvasStuff";
     import {onMount} from "svelte";
     import {lineWidth} from "$lib/Configuration";
 
