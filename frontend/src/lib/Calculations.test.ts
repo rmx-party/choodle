@@ -2,7 +2,7 @@ import {describe, expect, it, test} from 'vitest';
 
 import {applyRatio, maximumSize, removeOffset, tuplizeDimensiony} from "./Calculations";
 
-describe('CanvasStuff', () => {
+describe('Calculations', () => {
     describe('maximumSize gives a box that fits within desired and maximum preserving the aspect ratio of maximum', () => {
         test.each([
             {desired: {x: 0, y: 0}, maximum: {x: 0, y: 0}, expected: {x: 0, y: 0}},
