@@ -40,30 +40,3 @@ export function canvas() {
     instance ||= document.getElementById('choodle-board') as HTMLCanvasElement;
     return instance
 }
-
-function viewportCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
-    switch (event.constructor) {
-        case MouseEvent:
-            return [(event as MouseEvent).clientX,
-                (event as MouseEvent).clientY]
-        case TouchEvent:
-            return [(event as TouchEvent).touches[0].clientX,
-                (event as TouchEvent).touches[0].clientY]
-    }
-    return [-1, -1] // FIXME: this is terrible
-}
-
-export function canvasCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
-    const box = canvas().getBoundingClientRect();
-    const [viewportX, viewportY] = [...viewportCoordsFromEvent(event)]
-    const offsetX = (viewportX - box.left);
-    const offsetY = (viewportY - box.top);
-
-    // Normalize the screen coordinates to a 0..1 range relative to the canvas
-    // box area then re-scale by the canvas dimensions
-    const newX = (offsetX / box.width) * canvas().width
-    const newY = (offsetY / box.height) * canvas().height
-
-
-    return [newX, newY];
-}
