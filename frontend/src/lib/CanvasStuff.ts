@@ -2,10 +2,9 @@ import {browser} from '$app/environment';
 import localforage from 'localforage';
 import {UndoStack} from "$lib/UndoStack";
 import {crunchCanvas} from "$lib/ImageUtils";
-import {floor} from "lodash";
 
 /* Configuration */
-const lineWidth = 5;
+const lineWidth = 4;
 const targetMaxSize: Dimensiony = {x: 420, y: 746}
 
 let isDrawing = false;
