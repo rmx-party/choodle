@@ -2,8 +2,9 @@
     import {browser} from "$app/environment";
     import {load} from "$lib/StorageStuff";
     import {canvas, canvasContext, doDraw, endDrawing, lineWidth, resizeCanvas, startDrawing} from "$lib/CanvasStuff";
+    import {onMount} from "svelte";
 
-    export const initialize = async () => {
+    onMount(async () => {
         if (!browser) return;
 
         const context = canvasContext()
@@ -35,14 +36,7 @@
 
         setTimeout(resizeCanvas, 15) // FIXME: this sucks.
         setTimeout(() => load(), 25) // FIXME: me too, even worse
-    }
-
-    import {onMount} from "svelte";
-
-    onMount(() => {
-        initialize()
     });
-
 </script>
 
 <canvas id="choodle-board" style="border: 1px solid lawngreen"></canvas>
