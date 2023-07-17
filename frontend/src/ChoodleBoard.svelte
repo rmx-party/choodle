@@ -1,0 +1,1 @@
+<canvas id="choodle-board" style="border: 1px solid lawngreen"></canvas>

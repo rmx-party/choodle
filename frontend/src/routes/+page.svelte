@@ -10,6 +10,7 @@
     import {connectAndMint, generateOpenSeaURL} from "$lib/MagicStuff";
     import {goto} from "$app/navigation";
     import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff";
+    import ChoodleBoard from "../ChoodleBoard.svelte";
 
     const undo = async (event: Event) => {
         event.preventDefault()
@@ -88,7 +89,7 @@
             <button id="share" on:click={share}>Share</button>
         {/if}
     </div>
-    <canvas id="choodle-board" style="border: 1px solid lawngreen"></canvas>
+    <ChoodleBoard></ChoodleBoard>
 {:else}
     <LoadingIndicator></LoadingIndicator>
 {/if}
