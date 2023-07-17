@@ -1,11 +1,12 @@
 <script lang="ts">
     import {browser} from "$app/environment";
-    import {getUndoStack, push} from "$lib/StorageStuff";
+    import {getUndoStack, setUndoStack} from "$lib/StorageStuff";
     import {onMount} from "svelte";
     import {lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
     import ChoodleBoardButtons from "./ChoodleBoardButtons.svelte";
     import {drawImageFromDataURL} from "$lib/CanvasStuff";
+    import {crunchCanvas} from "$lib/ImageUtils";
 
     export let id;
 
@@ -100,6 +101,15 @@
 
         drawImageFromDataURL(undoStack.last, ctx);
         console.log(`loaded`, undoStack)
+    }
+
+    async function push() {
+        const undoStack = await getUndoStack()
+
+        const imageDataUrl = await crunchCanvas(canvas, ctx)
+        undoStack.push(imageDataUrl)
+
+        await setUndoStack(undoStack);
     }
 
     onMount(async () => {
