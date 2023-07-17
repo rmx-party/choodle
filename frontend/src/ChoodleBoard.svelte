@@ -1,10 +1,11 @@
 <script lang="ts">
     import {browser} from "$app/environment";
-    import {load, push} from "$lib/StorageStuff";
+    import {getUndoStack, push} from "$lib/StorageStuff";
     import {onMount} from "svelte";
     import {lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
     import ChoodleBoardButtons from "./ChoodleBoardButtons.svelte";
+    import {drawImageFromDataURL} from "$lib/CanvasStuff";
 
     export let id;
 
@@ -92,6 +93,13 @@
 
 
         return [newX, newY];
+    }
+
+    const load = async () => {
+        const undoStack = await getUndoStack()
+
+        drawImageFromDataURL(undoStack.last, ctx);
+        console.log(`loaded`, undoStack)
     }
 
     onMount(async () => {
