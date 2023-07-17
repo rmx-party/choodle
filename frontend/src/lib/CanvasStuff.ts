@@ -4,7 +4,7 @@ import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
 import {getUndoStack, load, push} from "$lib/StorageStuff";
 
 /* Configuration */
-const lineWidth = 4;
+export const lineWidth = 4;
 const targetMaxSize: Dimensiony = {x: 420, y: 746}
 
 let isDrawing = false;
@@ -22,7 +22,7 @@ export function startDrawing(event: MouseEvent | TouchEvent) {
     canvasContext().closePath()
 }
 
-const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
+export const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
     if (!isDrawing) return;
 
     event.preventDefault()
@@ -139,38 +139,4 @@ function canvasCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number]
 
 
     return [newX, newY];
-}
-
-export const initialize = async () => {
-    if (!browser) return;
-
-    const context = canvasContext()
-    context.strokeStyle = 'black'
-    context.lineWidth = lineWidth;
-    context.lineCap = 'square';
-    context.imageSmoothingEnabled = false;
-
-    await resizeCanvas()
-
-    canvas().addEventListener('mousedown', startDrawing);
-    canvas().addEventListener('touchstart', startDrawing);
-
-    canvas().addEventListener('mouseup', endDrawing(canvasContext()));
-    canvas().addEventListener('touchend', endDrawing(canvasContext()));
-
-    canvas().addEventListener('mousemove', doDraw);
-    canvas().addEventListener('touchmove', doDraw);
-
-    canvas().addEventListener('click', event => {
-        event.preventDefault()
-    });
-    canvas().addEventListener('drag', event => {
-        event.preventDefault()
-    });
-
-    window.addEventListener('resize', resizeCanvas, false);
-    window.addEventListener('DOMContentLoaded', resizeCanvas, false);
-
-    setTimeout(resizeCanvas, 15) // FIXME: this sucks.
-    setTimeout(() => load(), 25) // FIXME: me too, even worse
 }
