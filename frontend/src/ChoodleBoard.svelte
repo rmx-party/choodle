@@ -1,8 +1,9 @@
 <script lang="ts">
     import {browser} from "$app/environment";
     import {load} from "$lib/StorageStuff";
-    import {canvas, canvasContext, doDraw, endDrawing, lineWidth, resizeCanvas, startDrawing} from "$lib/CanvasStuff";
+    import {canvas, canvasContext, doDraw, endDrawing, resizeCanvas, startDrawing} from "$lib/CanvasStuff";
     import {onMount} from "svelte";
+    import {lineWidth} from "$lib/Configuration";
 
     onMount(async () => {
         if (!browser) return;

@@ -1,14 +1,8 @@
-import {browser} from '$app/environment';
-import type {Dimensiony} from "$lib/Calculations";
 import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
 import {getUndoStack, load, push} from "$lib/StorageStuff";
-
-/* Configuration */
-export const lineWidth = 4;
-const targetMaxSize: Dimensiony = {x: 420, y: 746}
+import {targetMaxSize} from "$lib/Configuration";
 
 let isDrawing = false;
-
 
 /* Drawing */
 export function startDrawing(event: MouseEvent | TouchEvent) {
