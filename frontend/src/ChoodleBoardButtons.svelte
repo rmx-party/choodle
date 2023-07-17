@@ -1,10 +1,17 @@
 <script lang="ts">
-    import {canvas, clearCanvas, drawImageFromDataURL} from "$lib/CanvasStuff.ts";
+    import {clearCanvas, drawImageFromDataURL} from "$lib/CanvasStuff.ts";
     import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff.js";
     import {loading, tokenId} from "$lib/store.js";
     import {connectAndMint} from "$lib/MagicStuff.js";
     import {goto} from "$app/navigation";
     import {browser} from "$app/environment";
+    import {onMount} from "svelte";
+
+    export let choodleBoardId
+
+    let canvas: HTMLCanvasElement;
+    let ctx: CanvasRenderingContext2D;
+
 
     function canShare(): boolean {
         if (browser) return !!navigator.share
@@ -21,7 +28,7 @@
 
         const dataURL = undoStack.current
 
-        drawImageFromDataURL(dataURL, canvas().getContext('2d')!)
+        drawImageFromDataURL(dataURL, ctx)
     }
 
     const redo = async (event: Event) => {
@@ -32,7 +39,7 @@
 
         await setUndoStack(undoStack);
 
-        drawImageFromDataURL(undoStack.current, canvas().getContext('2d')!)
+        drawImageFromDataURL(undoStack.current, ctx)
     }
 
     const clear = async (event: Event) => {
@@ -52,7 +59,7 @@
     const share = async (event: Event) => {
         event.preventDefault()
 
-        const imgBlob = await (await fetch(canvas().toDataURL("image/png", 1.0))).blob();
+        const imgBlob = await (await fetch(canvas.toDataURL("image/png", 1.0))).blob();
         const files = [
             new File(
                 [imgBlob],
@@ -73,6 +80,13 @@
             console.error('Web Share API not supported')
         }
     };
+
+    onMount(async () => {
+        if (!browser) return;
+
+        canvas = document.getElementById(choodleBoardId) as HTMLCanvasElement;
+        ctx = canvas.getContext('2d')
+    });
 </script>
 
 <div id="buttons">

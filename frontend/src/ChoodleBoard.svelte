@@ -129,7 +129,7 @@
     });
 </script>
 
-<ChoodleBoardButtons></ChoodleBoardButtons>
+<ChoodleBoardButtons choodleBoardId={id}></ChoodleBoardButtons>
 <canvas id={id} style="border: 1px solid lawngreen"
         on:mousedown={startDrawing}
         on:touchstart={startDrawing}

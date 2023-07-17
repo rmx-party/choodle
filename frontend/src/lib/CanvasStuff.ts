@@ -19,9 +19,3 @@ export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingCo
     });
     image.src = dataURL;
 }
-
-export function canvas() {
-    let instance = null;
-    instance ||= document.getElementById('choodle-board') as HTMLCanvasElement;
-    return instance
-}
