@@ -156,11 +156,42 @@ export type Dimensiony = {
     y: number;
 }
 
-export function maximumSize(desiredSize: Dimensiony, maxSize: Dimensiony): Dimensiony {
-    return {
-        x: Math.min(desiredSize.x, maxSize.x),
-        y: Math.min(desiredSize.y, maxSize.y)
+function getWidth(length, ratio) {
+    const width = length / (1 / ratio);
+    return Math.floor(width);
+}
+
+function getHeight(length, ratio) {
+    const height = length * (1 / ratio);
+    return Math.floor(height);
+}
+
+function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
+    const targetRatio = maxWidth / maxHeight
+    const srcRatio = srcWidth / srcHeight
+
+    if (srcRatio === targetRatio) {
+        console.log('srcR == targetR')
+        return {x: Math.floor(srcWidth), y: Math.floor(srcHeight)}
     }
+    if (srcRatio > targetRatio) {
+        console.log("srcR > targetR")
+        // scale down width
+        return {x: getWidth(srcHeight, targetRatio), y: Math.floor(srcHeight)}
+    } else {
+        console.log("srcR !> targetR")
+        return {x: Math.floor(srcWidth), y: getHeight(srcWidth, targetRatio)}
+    }
+
+    return {x: Math.floor(srcWidth), y: Math.floor(srcHeight * (srcWidth * targetRatio))};
+}
+
+
+export function maximumSize(desiredSize: Dimensiony, maxSize: Dimensiony): Dimensiony {
+    if (desiredSize.x < maxSize.x || desiredSize.y < maxSize.y) {
+        return calculateAspectRatioFit(desiredSize.x, desiredSize.y, maxSize.x, maxSize.y)
+    }
+    return maxSize
 }
 
 export function applyRatio(dimensions: Dimensiony, ratio: number) {
