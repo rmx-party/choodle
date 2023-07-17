@@ -161,12 +161,12 @@ function floorCoordinates(dimensions: Dimensiony) {
     return {x: Math.floor(dimensions.x), y: Math.floor(dimensions.y)}
 }
 
-function getWidth(length, ratio) {
+function getWidth(length: number, ratio: number) {
     const width = length / (1 / ratio);
     return Math.floor(width);
 }
 
-function getHeight(length, ratio) {
+function getHeight(length: number, ratio: number) {
     const height = length * (1 / ratio);
     return Math.floor(height);
 }
