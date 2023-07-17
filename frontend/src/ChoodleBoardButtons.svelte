@@ -1,6 +1,5 @@
 <script lang="ts">
     import {
-        canShare,
         drawImageFromDataURL,
         canvasContext,
         clearDisplay, canvas
@@ -9,6 +8,12 @@
     import {loading, tokenId} from "$lib/store.js";
     import {connectAndMint} from "$lib/MagicStuff.js";
     import {goto} from "$app/navigation";
+    import {browser} from "$app/environment";
+
+    function canShare(): boolean {
+        if (browser) return !!navigator.share
+        return false
+    }
 
     const undo = async (event: Event) => {
         event.preventDefault()
@@ -41,7 +46,7 @@
         await clearStorage();
     }
 
-    export const mint = async (event: Event) => {
+    const mint = async (event: Event) => {
         event.preventDefault()
         loading.set(true)
         tokenId.set(await connectAndMint())

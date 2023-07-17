@@ -9,10 +9,6 @@ const targetMaxSize: Dimensiony = {x: 420, y: 746}
 
 let isDrawing = false;
 
-export function canShare(): boolean {
-    if (browser) return !!navigator.share
-    return false
-}
 
 /* Drawing */
 export function startDrawing(event: MouseEvent | TouchEvent) {
