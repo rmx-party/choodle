@@ -1,7 +1,7 @@
 import localforage from "localforage";
 import {UndoStack} from "$lib/UndoStack";
 import {crunchCanvas} from "$lib/ImageUtils";
-import {canvas, canvasContext, drawImageFromDataURL, logCurrentState} from "$lib/CanvasStuff";
+import {canvas, drawImageFromDataURL, logCurrentState} from "$lib/CanvasStuff";
 
 const choodleUndoKey = 'choodle-undo'
 
@@ -16,7 +16,7 @@ export function clearStorage() {
 export const load = async () => {
     const undoStack = await getUndoStack()
 
-    drawImageFromDataURL(undoStack.last, canvasContext());
+    drawImageFromDataURL(undoStack.last, canvas().getContext('2d')!);
     console.log(`loaded`, undoStack)
 }
 
@@ -31,7 +31,7 @@ export async function getUndoStack() {
 export async function push() {
     const undoStack = await getUndoStack()
 
-    const imageDataUrl = await crunchCanvas(canvas(), canvasContext())
+    const imageDataUrl = await crunchCanvas(canvas(), canvas().getContext('2d')!)
     undoStack.push(imageDataUrl)
 
     await setUndoStack(undoStack);

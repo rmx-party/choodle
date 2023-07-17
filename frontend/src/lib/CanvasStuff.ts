@@ -1,10 +1,13 @@
 import {getUndoStack} from "$lib/StorageStuff";
 
-export function clearDisplay() {
-    canvasContext().clearRect(0, 0, canvas().width, canvas().height);
-    canvasContext().fillStyle = "#ffffff";
-    canvasContext().fillRect(0, 0, canvas().width, canvas().height);
-    canvasContext().imageSmoothingEnabled = false;
+export function clearCanvas(id: string) {
+    const canvas = document.getElementById(id) as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.imageSmoothingEnabled = false;
 }
 
 function logStateOfImage(dataURL: string) {
@@ -22,7 +25,7 @@ export async function logCurrentState() {
 
 export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
     const image = new Image;
-    clearDisplay()
+    clearCanvas('choodle-board') // FIXME: this should not be hard-coded
     image.addEventListener('load', () => {
         context.drawImage(image, 0, 0);
         context.stroke();
@@ -35,10 +38,6 @@ export function canvas() {
     let instance = null;
     instance ||= document.getElementById('choodle-board') as HTMLCanvasElement;
     return instance
-}
-
-export function canvasContext() {
-    return canvas().getContext('2d')!
 }
 
 export function pixelRatio(): number {

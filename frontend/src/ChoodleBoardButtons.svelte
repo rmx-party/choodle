@@ -1,9 +1,5 @@
 <script lang="ts">
-    import {
-        drawImageFromDataURL,
-        canvasContext,
-        clearDisplay, canvas
-    } from "$lib/CanvasStuff.ts";
+    import {canvas, clearCanvas, drawImageFromDataURL} from "$lib/CanvasStuff.ts";
     import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff.js";
     import {loading, tokenId} from "$lib/store.js";
     import {connectAndMint} from "$lib/MagicStuff.js";
@@ -25,7 +21,7 @@
 
         const dataURL = undoStack.current
 
-        drawImageFromDataURL(dataURL, canvasContext())
+        drawImageFromDataURL(dataURL, canvas().getContext('2d')!)
     }
 
     const redo = async (event: Event) => {
@@ -36,13 +32,13 @@
 
         await setUndoStack(undoStack);
 
-        drawImageFromDataURL(undoStack.current, canvasContext())
+        drawImageFromDataURL(undoStack.current, canvas().getContext('2d')!)
     }
 
     const clear = async (event: Event) => {
         event.preventDefault()
 
-        clearDisplay();
+        clearCanvas('choodle-board');  // FIXME: this should not be hard-coded
         await clearStorage();
     }
 
