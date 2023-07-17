@@ -12,7 +12,7 @@
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
 
-    const resizeCanvas = async (_event?: Event) => {
+    const resizeCanvas = async () => {
         const bounds = canvas.getBoundingClientRect();
         const viewportHeight = canvas.parentElement?.clientHeight - bounds.y
         const viewportWidth = canvas.parentElement?.clientWidth - bounds.x
