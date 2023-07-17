@@ -19,6 +19,8 @@ export const crunchCanvasToBuffer = async (canvas: HTMLCanvasElement, ctx: Canva
         height: imageData.height,
         filterType: -1, // no filtering
         colorTYpe: 0,
+        deflateLevel: 9,
+        bitDepth: 8,
         bgColor: {red: 255, green: 255, blue: 255}
     });
 
