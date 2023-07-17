@@ -91,13 +91,17 @@ export function clearDisplay() {
     canvasContext().imageSmoothingEnabled = false;
 }
 
-export async function logState() {
-    const undoStack = await getUndoStack()
-    const dataURL = undoStack.last
+function logStateOfImage(dataURL: string) {
     console.log('image loaded', dataURL)
     console.log('size in KB', dataURL.length / 1024)
     console.log('pixelRatio', pixelRatio())
     console.log('canvas', canvas().width, canvas().height)
+}
+
+export async function logCurrentState() {
+    const undoStack = await getUndoStack()
+    const dataURL = undoStack.last
+    logStateOfImage(dataURL);
 }
 
 export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
@@ -106,9 +110,7 @@ export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingCo
     image.addEventListener('load', () => {
         context.drawImage(image, 0, 0);
         context.stroke();
-        console.log('image loaded', image)
-        console.log('size in KB', dataURL.length / 1024)
-        console.log('pixelRatio', pixelRatio())
+        logStateOfImage(dataURL)
     });
     image.src = dataURL;
 }
@@ -145,7 +147,7 @@ export async function push() {
     undoStack.push(imageDataUrl)
 
     await setUndoStack(undoStack);
-    logState()
+    await logCurrentState()
 }
 
 export function pixelRatio(): number {
