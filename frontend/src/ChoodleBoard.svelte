@@ -5,6 +5,7 @@
     import {onMount} from "svelte";
     import {lineWidth, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
+    import ChoodleBoardButtons from "./ChoodleBoardButtons.svelte";
 
     export let id;
 
@@ -84,6 +85,7 @@
     });
 </script>
 
+<ChoodleBoardButtons></ChoodleBoardButtons>
 <canvas id={id} style="border: 1px solid lawngreen"
         on:mousedown={startDrawing}
         on:touchstart={startDrawing}
