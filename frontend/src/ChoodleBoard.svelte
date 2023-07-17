@@ -182,18 +182,18 @@
         const canvas = document.getElementById(id) as HTMLCanvasElement;
         const ctx = canvas.getContext('2d')!
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = backgroundColour;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.imageSmoothingEnabled = false;
     }
 
     function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
         const image = new Image;
-        clearCanvas(id)
         image.addEventListener('load', () => {
-            context.drawImage(image, 0, 0);
-            context.stroke();
+            window.requestAnimationFrame(() => {
+                clearCanvas(id)
+                context.drawImage(image, 0, 0);
+                context.stroke();
+            })
         });
         image.src = dataURL;
     }
