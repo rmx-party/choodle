@@ -8,7 +8,7 @@
 
 {#if !$loading}
     <ChoodleBoardButtons></ChoodleBoardButtons>
-    <ChoodleBoard></ChoodleBoard>
+    <ChoodleBoard id="choodle-board"></ChoodleBoard>
 {:else}
     <LoadingIndicator></LoadingIndicator>
 {/if}

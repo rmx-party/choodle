@@ -6,6 +6,8 @@
     import {lineWidth, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
 
+    export let id;
+
     let isDrawing = false;
 
     const resizeCanvas = async (_event?: Event) => {
@@ -81,7 +83,7 @@
     });
 </script>
 
-<canvas id="choodle-board" style="border: 1px solid lawngreen"
+<canvas id={id} style="border: 1px solid lawngreen"
         on:mousedown={startDrawing}
         on:touchstart={startDrawing}
         on:mouseup={endDrawing}
