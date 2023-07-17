@@ -1,4 +1,4 @@
-import {backgroundColour, pixelRatio} from "$lib/Configuration";
+import {backgroundColour} from "$lib/Configuration";
 
 export function clearCanvas(id: string) {
     const canvas = document.getElementById(id) as HTMLCanvasElement;
