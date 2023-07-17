@@ -176,17 +176,13 @@ function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
     const srcRatio = srcWidth / srcHeight
 
     if (srcRatio === targetRatio) {
-        console.log('srcR == targetR')
         return floorCoordinates({x: srcWidth, y: srcHeight})
     }
 
     if (srcRatio > targetRatio) {
-        console.log("srcR > targetR")
-        // scale down width
         return floorCoordinates({x: getWidth(srcHeight, targetRatio), y: srcHeight})
     }
 
-    console.log("srcR !> targetR")
     return floorCoordinates({x: srcWidth, y: getHeight(srcWidth, targetRatio)})
 }
 
