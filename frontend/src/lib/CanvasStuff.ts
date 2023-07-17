@@ -1,4 +1,3 @@
-import {getUndoStack} from "$lib/StorageStuff";
 import {backgroundColour, pixelRatio} from "$lib/Configuration";
 
 export function clearCanvas(id: string) {
@@ -11,26 +10,12 @@ export function clearCanvas(id: string) {
     ctx.imageSmoothingEnabled = false;
 }
 
-function logStateOfImage(dataURL: string) {
-    console.log('image loaded', dataURL)
-    console.log('size in KB', dataURL.length / 1024)
-    console.log('pixelRatio', pixelRatio)
-    console.log('canvas', canvas().width, canvas().height)
-}
-
-export async function logCurrentState() {
-    const undoStack = await getUndoStack()
-    const dataURL = undoStack.last
-    logStateOfImage(dataURL);
-}
-
 export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
     const image = new Image;
     clearCanvas('choodle-board') // FIXME: this should not be hard-coded
     image.addEventListener('load', () => {
         context.drawImage(image, 0, 0);
         context.stroke();
-        logStateOfImage(dataURL)
     });
     image.src = dataURL;
 }
