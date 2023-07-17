@@ -51,11 +51,10 @@ canvas#choodle-board {
     align-self: stretch;
     justify-self: center;
     margin: 0 auto;
+    width: 100%;
+    height: 100%;
 
     background-color: hsla(200, 50%, 50%, 0.2);
-
-    max-width: 100%;
-    max-height: 100%;
 
     /* minimize the amount of antialiasing effects in the canvas */
     image-rendering: optimizeSpeed; /* Older versions of FF          */

@@ -13,19 +13,20 @@
     let ctx: CanvasRenderingContext2D;
 
     const resizeCanvas = async () => {
+        canvas.style.width = `100%`
+        canvas.style.height = `100%`
         const bounds = canvas.getBoundingClientRect();
-        const viewportHeight = canvas.parentElement?.clientHeight - bounds.y
-        const viewportWidth = canvas.parentElement?.clientWidth - bounds.x
 
-        const canvasDimensions = maximumSize({x: viewportWidth, y: viewportHeight}, targetMaxSize)
-        const offsetCanvasDimensions = removeOffset(canvasDimensions, {x: bounds.x, y: bounds.y})
-        const ratioedCanvasDimensions = applyRatio(offsetCanvasDimensions, pixelRatio)
+        const canvasDimensions = maximumSize({x: bounds.width, y: bounds.height}, targetMaxSize)
+        const ratioedCanvasDimensions = applyRatio(canvasDimensions, pixelRatio)
 
-        canvas.width = ratioedCanvasDimensions.x
-        canvas.height = ratioedCanvasDimensions.y
-        canvas.style.width = `${canvasDimensions.x}px`
-        canvas.style.height = `${canvasDimensions.y}px`
-        await load()
+        window.requestAnimationFrame(async () => {
+            canvas.width = ratioedCanvasDimensions.x
+            canvas.height = ratioedCanvasDimensions.y
+            canvas.style.width = `${canvasDimensions.x}px`
+            canvas.style.height = `${canvasDimensions.y}px`
+            await load()
+        })
     }
 
     /* Drawing */
@@ -65,7 +66,6 @@
         console.log(`drawing a line to ${x} ${y}`)
 
         window.requestAnimationFrame(() => {
-            ctx.beginPath()
             ctx.lineTo(x, y)
             ctx.stroke();
         })
@@ -206,10 +206,11 @@
         ctx.lineCap = 'square';
         ctx.imageSmoothingEnabled = false;
 
+        window.addEventListener('resize', resizeCanvas)
         await resizeCanvas()
-
         await load()
     });
+
 </script>
 
 <div id="buttons">
@@ -221,13 +222,12 @@
     {/if}
 </div>
 <canvas id={id} style="border: 1px solid lawngreen"
-        on:mousedown={startDrawing}
-        on:touchstart={startDrawing}
-        on:mouseup={endDrawing}
-        on:touchend={endDrawing}
-        on:mousemove={doDraw}
-        on:touchmove={doDraw}
-        on:click={(event) => {event.preventDefault()}}
-        on:drag={(event) => {event.preventDefault()}}
-        on:resize={resizeCanvas}>
+    on:mousedown={startDrawing}
+    on:touchstart={startDrawing}
+    on:mouseup={endDrawing}
+    on:touchend={endDrawing}
+    on:mousemove={doDraw}
+    on:touchmove={doDraw}
+    on:click={(event) => {event.preventDefault()}}
+    on:drag={(event) => {event.preventDefault()}}>
 </canvas>
