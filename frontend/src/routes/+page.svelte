@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {loading, tokenId} from "$lib/store";
+    import {loading} from "$lib/store";
     import LoadingIndicator from "../LoadingIndicator.svelte";
 
     import ChoodleBoard from "../ChoodleBoard.svelte";
