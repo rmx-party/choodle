@@ -35,9 +35,8 @@
         console.groupCollapsed('drawing')
         const [newX, newY] = canvasCoordsFromEvent(event)
 
-        ctx.beginPath()
-        drawTo(newX + 1, newY + 1)
-        ctx.closePath()
+        ctx.fillStyle = "#000000"
+        ctx.fillRect(newX - 1, newY - 1, lineWidth / 2, lineWidth / 2)
     }
 
     const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
