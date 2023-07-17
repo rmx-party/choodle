@@ -145,7 +145,7 @@
     const clear = async (event: Event) => {
         event.preventDefault()
 
-        clearCanvas('choodle-board');  // FIXME: this should not be hard-coded
+        clearCanvas(id);
         await clearStorage();
     }
 
@@ -193,7 +193,7 @@
 
     function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
         const image = new Image;
-        clearCanvas('choodle-board') // FIXME: this should not be hard-coded
+        clearCanvas(id)
         image.addEventListener('load', () => {
             context.drawImage(image, 0, 0);
             context.stroke();
