@@ -1,5 +1,6 @@
 import {describe, expect, it, test} from 'vitest';
-import {applyRatio, Dimensiony, maximumSize, removeOffset, tuplizeDimensiony} from "$lib/CanvasStuff";
+
+import {applyRatio, maximumSize, removeOffset, tuplizeDimensiony} from "./Calculations";
 
 describe('CanvasStuff', () => {
     describe('maximumSize gives a box that fits within desired and maximum preserving the aspect ratio of maximum', () => {
