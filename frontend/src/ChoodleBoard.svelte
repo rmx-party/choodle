@@ -1,7 +1,7 @@
 <script lang="ts">
     import {browser} from "$app/environment";
     import {load, push} from "$lib/StorageStuff";
-    import {canvasContext, canvasCoordsFromEvent, pixelRatio} from "$lib/CanvasStuff";
+    import {canvasCoordsFromEvent, pixelRatio} from "$lib/CanvasStuff";
     import {onMount} from "svelte";
     import {lineWidth, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
@@ -30,14 +30,17 @@
 
     /* Drawing */
     function startDrawing(event: MouseEvent | TouchEvent) {
+        const canvas = document.getElementById(id) as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d')!
+
         isDrawing = true;
         event.preventDefault()
         console.groupCollapsed('drawing')
         const [newX, newY] = canvasCoordsFromEvent(event)
 
-        canvasContext().beginPath()
+        ctx.beginPath()
         drawTo(newX + 1, newY + 1)
-        canvasContext().closePath()
+        ctx.closePath()
     }
 
     const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
@@ -49,34 +52,40 @@
     }
 
     async function endDrawing(event: MouseEvent | TouchEvent) {
-        const context = canvasContext()
+        const canvas = document.getElementById(id) as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d')!
+
         event.preventDefault()
         isDrawing = false;
         await push()
-        context.beginPath()
+        ctx.beginPath()
         console.groupEnd()
     }
 
     const drawTo = (x: number, y: number): void => {
-        const context = canvasContext()
-        context.imageSmoothingEnabled = false;
+        const canvas = document.getElementById(id) as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d')!
+
+        ctx.imageSmoothingEnabled = false;
 
         console.log(`drawing a line to ${x} ${y}`)
 
         window.requestAnimationFrame(() => {
-            context.lineTo(x, y)
-            context.stroke();
+            ctx.lineTo(x, y)
+            ctx.stroke();
         })
     }
 
     onMount(async () => {
         if (!browser) return;
 
-        const context = canvasContext()
-        context.strokeStyle = 'black'
-        context.lineWidth = lineWidth;
-        context.lineCap = 'square';
-        context.imageSmoothingEnabled = false;
+        const canvas = document.getElementById(id) as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d')!
+
+        ctx.strokeStyle = 'black'
+        ctx.lineWidth = lineWidth;
+        ctx.lineCap = 'square';
+        ctx.imageSmoothingEnabled = false;
 
         await resizeCanvas()
 
