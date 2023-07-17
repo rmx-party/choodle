@@ -1,24 +1,4 @@
-import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
-import {getUndoStack, load, push} from "$lib/StorageStuff";
-import {targetMaxSize} from "$lib/Configuration";
-
-
-export const resizeCanvas = async (_event?: Event) => {
-    const bounds = canvas().getBoundingClientRect();
-    const viewportHeight = canvas().parentElement?.clientHeight - bounds.y
-    const viewportWidth = canvas().parentElement?.clientWidth - bounds.x
-
-    const canvasDimensions = maximumSize({x: viewportWidth, y: viewportHeight}, targetMaxSize)
-    const offsetCanvasDimensions = removeOffset(canvasDimensions, {x: bounds.x, y: bounds.y})
-    const ratioedCanvasDimensions = applyRatio(offsetCanvasDimensions, pixelRatio())
-
-    canvas().width = ratioedCanvasDimensions.x
-    canvas().height = ratioedCanvasDimensions.y
-    canvas().style.width = `${canvasDimensions.x}px`
-    canvas().style.height = `${canvasDimensions.y}px`
-
-    await load()
-}
+import {getUndoStack} from "$lib/StorageStuff";
 
 export function clearDisplay() {
     canvasContext().clearRect(0, 0, canvas().width, canvas().height);

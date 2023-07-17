@@ -1,11 +1,29 @@
 <script lang="ts">
     import {browser} from "$app/environment";
     import {load, push} from "$lib/StorageStuff";
-    import {canvasContext, canvasCoordsFromEvent, resizeCanvas} from "$lib/CanvasStuff";
+    import {canvas, canvasContext, canvasCoordsFromEvent, pixelRatio} from "$lib/CanvasStuff";
     import {onMount} from "svelte";
-    import {lineWidth} from "$lib/Configuration";
+    import {lineWidth, targetMaxSize} from "$lib/Configuration";
+    import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
 
     let isDrawing = false;
+
+    const resizeCanvas = async (_event?: Event) => {
+        const bounds = canvas().getBoundingClientRect();
+        const viewportHeight = canvas().parentElement?.clientHeight - bounds.y
+        const viewportWidth = canvas().parentElement?.clientWidth - bounds.x
+
+        const canvasDimensions = maximumSize({x: viewportWidth, y: viewportHeight}, targetMaxSize)
+        const offsetCanvasDimensions = removeOffset(canvasDimensions, {x: bounds.x, y: bounds.y})
+        const ratioedCanvasDimensions = applyRatio(offsetCanvasDimensions, pixelRatio())
+
+        canvas().width = ratioedCanvasDimensions.x
+        canvas().height = ratioedCanvasDimensions.y
+        canvas().style.width = `${canvasDimensions.x}px`
+        canvas().style.height = `${canvasDimensions.y}px`
+
+        await load()
+    }
 
     /* Drawing */
     function startDrawing(event: MouseEvent | TouchEvent) {
