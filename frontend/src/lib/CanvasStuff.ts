@@ -1,17 +1,13 @@
 import {browser} from '$app/environment';
-import localforage from 'localforage';
-import {UndoStack} from "$lib/UndoStack";
-import {crunchCanvas} from "$lib/ImageUtils";
-import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
 import type {Dimensiony} from "$lib/Calculations";
+import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
+import {getUndoStack, load, push} from "$lib/StorageStuff";
 
 /* Configuration */
 const lineWidth = 4;
 const targetMaxSize: Dimensiony = {x: 420, y: 746}
 
 let isDrawing = false;
-
-const choodleUndoKey = 'choodle-undo'
 
 export function canShare(): boolean {
     if (browser) return !!navigator.share
@@ -77,14 +73,6 @@ export const resizeCanvas = async (_event?: Event) => {
     await load()
 }
 
-export function clearStorage() {
-    localforage.keys().then((keys) => {
-        keys.map(async (key) => {
-            await localforage.removeItem(key)
-        })
-    })
-}
-
 export function clearDisplay() {
     canvasContext().clearRect(0, 0, canvas().width, canvas().height);
     canvasContext().fillStyle = "#ffffff";
@@ -116,13 +104,6 @@ export function drawImageFromDataURL(dataURL: string, context: CanvasRenderingCo
     image.src = dataURL;
 }
 
-export const load = async () => {
-    const undoStack = await getUndoStack()
-
-    drawImageFromDataURL(undoStack.last, canvasContext());
-    console.log(`loaded`, undoStack)
-}
-
 export function canvas() {
     let instance = null;
     instance ||= document.getElementById('choodle-board') as HTMLCanvasElement;
@@ -131,24 +112,6 @@ export function canvas() {
 
 export function canvasContext() {
     return canvas().getContext('2d')!
-}
-
-export async function setUndoStack(undoStack: UndoStack) {
-    await localforage.setItem(choodleUndoKey, undoStack.storable)
-}
-
-export async function getUndoStack() {
-    return UndoStack.fromStorable(await localforage.getItem(choodleUndoKey));
-}
-
-export async function push() {
-    const undoStack = await getUndoStack()
-
-    const imageDataUrl = await crunchCanvas(canvas(), canvasContext())
-    undoStack.push(imageDataUrl)
-
-    await setUndoStack(undoStack);
-    await logCurrentState()
 }
 
 export function pixelRatio(): number {

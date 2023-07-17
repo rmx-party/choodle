@@ -4,14 +4,12 @@
 
     import {
         canShare, canvas, canvasContext,
-        clearDisplay, clearStorage,
-        drawImageFromDataURL,
-        getUndoStack,
-        initialize,
-        setUndoStack
+        clearDisplay, drawImageFromDataURL,
+        initialize
     } from "$lib/CanvasStuff.ts";
     import {connectAndMint, generateOpenSeaURL} from "$lib/MagicStuff";
     import {goto} from "$app/navigation";
+    import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff";
 
     const undo = async (event: Event) => {
         event.preventDefault()

@@ -7,9 +7,9 @@ import {
     PUBLIC_OPENSEA_PREFIX
 } from "$env/static/public";
 import abi from '../abi/MyToken.json'
-import {getUndoStack} from "$lib/CanvasStuff";
 import {loading} from "$lib/store";
 import fp from 'lodash/fp'
+import {getUndoStack} from "$lib/StorageStuff";
 
 export function magicFactory() {
     const magic = new Magic(PUBLIC_MAGIC_API_KEY, {

@@ -3,11 +3,11 @@
     import {page} from "$app/stores";
     import {generateOpenSeaURL, magicFactory} from "$lib/MagicStuff.js";
     import {imageData, tokenId, nftTitle, nftAlt, nftDescription, loading} from "$lib/store.js";
-    import {clearStorage} from "$lib/CanvasStuff.js";
     import {goto} from "$app/navigation";
     import {PUBLIC_CONTRACT_ADDRESS} from "$env/static/public";
     import {Alchemy, Network} from "alchemy-sdk";
     import {get} from "svelte/store";
+    import {clearStorage} from "$lib/StorageStuff";
 
     tokenId.set(parseInt($page.params.tokenId))
 
@@ -88,37 +88,43 @@
 
 <svelte:head>
     <!-- TODO: set canonical URL (decide trailing slash etc) -->
-    <meta property="og:type" content='website' />
-    <meta property="og:url" content={$page.url} />
-    <meta property="og:site_name" content="Choodle" />
+    <meta property="og:type" content='website'/>
+    <meta property="og:url" content={$page.url}/>
+    <meta property="og:site_name" content="Choodle"/>
     <title>{$nftTitle}</title>
-    <meta property="og:title" content={$nftTitle} />
-    <meta property="og:image" content={$imageData} />
-    <meta property="og:image:secure_url" content={$imageData} />
-    <meta property="og:image:width" content="430" />
-    <meta property="og:image:height" content="932" />
-    <meta property="og:image:alt" content={$nftAlt} />
-    <meta property="og:description" content={$nftDescription} />
-    <meta name="description" content={$nftDescription} />
+    <meta property="og:title" content={$nftTitle}/>
+    <meta property="og:image" content={$imageData}/>
+    <meta property="og:image:secure_url" content={$imageData}/>
+    <meta property="og:image:width" content="430"/>
+    <meta property="og:image:height" content="932"/>
+    <meta property="og:image:alt" content={$nftAlt}/>
+    <meta property="og:description" content={$nftDescription}/>
+    <meta name="description" content={$nftDescription}/>
 </svelte:head>
 
 {#if !$loading}
-<h1>{$nftTitle}</h1>
+    <h1>{$nftTitle}</h1>
 
-<div style="z-index: 999; text-align: center;">
-    <img alt="{$nftAlt}" src="{$imageData}"/>
+    <div style="z-index: 999; text-align: center;">
+        <img alt="{$nftAlt}" src="{$imageData}"/>
 
-    <ul style="text-align: left;">
-        <li>You can <a
-            href="{generateOpenSeaURL($tokenId)}"
-            target="_blank">view your choodle on OpenSea</a>
-        </li>
-        <li><button on:click={share}>Share</button></li>
-        <li><button on:click={choodleAgain}>Choodle again</button></li>
-        <li><button on:click={showWallet}>Show Wallet</button></li>
-    </ul>
-</div>
+        <ul style="text-align: left;">
+            <li>You can <a
+                    href="{generateOpenSeaURL($tokenId)}"
+                    target="_blank">view your choodle on OpenSea</a>
+            </li>
+            <li>
+                <button on:click={share}>Share</button>
+            </li>
+            <li>
+                <button on:click={choodleAgain}>Choodle again</button>
+            </li>
+            <li>
+                <button on:click={showWallet}>Show Wallet</button>
+            </li>
+        </ul>
+    </div>
 {:else}
-    <LoadingIndicator />
+    <LoadingIndicator/>
 {/if}
 
