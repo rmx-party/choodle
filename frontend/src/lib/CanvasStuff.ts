@@ -24,14 +24,13 @@ export const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent
     console.log(event)
 }
 
-export function endDrawing(context: CanvasRenderingContext2D) {
-    return async (event: Event) => {
-        event.preventDefault()
-        isDrawing = false;
-        await push()
-        context.beginPath()
-        console.groupEnd()
-    };
+export async function endDrawing(event: MouseEvent | TouchEvent) {
+    const context = canvasContext()
+    event.preventDefault()
+    isDrawing = false;
+    await push()
+    context.beginPath()
+    console.groupEnd()
 }
 
 const drawTo = (x: number, y: number): void => {

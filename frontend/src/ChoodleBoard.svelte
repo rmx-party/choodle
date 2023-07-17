@@ -14,28 +14,20 @@
         context.lineCap = 'square';
         context.imageSmoothingEnabled = false;
 
-        canvas().addEventListener('mousedown', startDrawing);
-        canvas().addEventListener('touchstart', startDrawing);
-
-        canvas().addEventListener('mouseup', endDrawing(canvasContext()));
-        canvas().addEventListener('touchend', endDrawing(canvasContext()));
-
-        canvas().addEventListener('mousemove', doDraw);
-        canvas().addEventListener('touchmove', doDraw);
-
-        canvas().addEventListener('click', event => {
-            event.preventDefault()
-        });
-        canvas().addEventListener('drag', event => {
-            event.preventDefault()
-        });
-
-        window.addEventListener('resize', resizeCanvas, false);
-
         await resizeCanvas()
 
         await load()
     });
 </script>
 
-<canvas id="choodle-board" style="border: 1px solid lawngreen"></canvas>
+<canvas id="choodle-board" style="border: 1px solid lawngreen"
+        on:mousedown={startDrawing}
+        on:touchstart={startDrawing}
+        on:mouseup={endDrawing}
+        on:touchend={endDrawing}
+        on:mousemove={doDraw}
+        on:touchmove={doDraw}
+        on:click={(event) => {event.preventDefault()}}
+        on:drag={(event) => {event.preventDefault()}}
+        on:resize={resizeCanvas}>
+</canvas>
