@@ -1,7 +1,6 @@
 import localforage from "localforage";
 import {UndoStack} from "$lib/UndoStack";
-
-const choodleUndoKey = 'choodle-undo'
+import {choodleUndoKey} from "$lib/Configuration";
 
 export function clearStorage() {
     localforage.keys().then((keys) => {
