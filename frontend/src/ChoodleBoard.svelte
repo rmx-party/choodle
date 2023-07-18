@@ -5,6 +5,7 @@
     import {drawColor, backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
+    import {client} from "$lib/PersistedImagesUtils";
 
     export let id;
 
@@ -39,8 +40,8 @@
             ctx.beginPath()
             ctx.fillStyle = drawColor
             ctx.fillRect(
-                Math.round(newX - lineWidth / 2), Math.round(newY - lineWidth / 2), 
-                Math.round(lineWidth / 2) , Math.round(lineWidth / 2)
+                Math.round(newX - lineWidth / 2), Math.round(newY - lineWidth / 2),
+                Math.round(lineWidth / 2), Math.round(lineWidth / 2)
             )
         })
     }
@@ -175,6 +176,10 @@
         }
     };
 
+    const save = async (event: Event) => {
+        // FIXME: upload the choodle to sanity
+    }
+
     function clearCanvas(id: string) {
         const canvas = document.getElementById(id) as HTMLCanvasElement;
         const ctx = canvas.getContext('2d')!
@@ -217,60 +222,61 @@
     <button id="undo" on:click={undo}>Undo</button>
     <button id="redo" on:click={redo}>Redo</button>
     <button id="clear-board" on:click={clear}>Clear</button>
+    <button id="clear-board" on:click={save}>Save</button>
     {#if canShare()}
         <button id="share" on:click={share}>Share</button>
     {/if}
 </div>
 
 <canvas id={id}
-    on:mousedown={startDrawing}
-    on:touchstart={startDrawing}
-    on:mouseup={endDrawing}
-    on:touchend={endDrawing}
-    on:mousemove={doDraw}
-    on:touchmove={doDraw}
-    on:click={(event) => {event.preventDefault()}}
-    on:drag={(event) => {event.preventDefault()}}>
+        on:mousedown={startDrawing}
+        on:touchstart={startDrawing}
+        on:mouseup={endDrawing}
+        on:touchend={endDrawing}
+        on:mousemove={doDraw}
+        on:touchmove={doDraw}
+        on:click={(event) => {event.preventDefault()}}
+        on:drag={(event) => {event.preventDefault()}}>
 </canvas>
 
 <style>
-canvas {
-    position: relative;
-    z-index: 100;
-    align-self: stretch;
-    justify-self: center;
-    margin: 0 auto;
-    width: 100%;
-    height: 100%;
+    canvas {
+        position: relative;
+        z-index: 100;
+        align-self: stretch;
+        justify-self: center;
+        margin: 0 auto;
+        width: 100%;
+        height: 100%;
 
-    /* minimize the amount of antialiasing effects in the canvas */
-    image-rendering: optimizeSpeed; /* Older versions of FF          */
-    image-rendering: -moz-crisp-edges; /* FF 6.0+                       */
-    image-rendering: -webkit-optimize-contrast; /* Safari                        */
-    image-rendering: -o-crisp-edges; /* OS X & Windows Opera (12.02+) */
-    image-rendering: pixelated; /* Awesome future-browsers       */
-    -ms-interpolation-mode: nearest-neighbor; /* IE                            */
-}
+        /* minimize the amount of antialiasing effects in the canvas */
+        image-rendering: optimizeSpeed; /* Older versions of FF          */
+        image-rendering: -moz-crisp-edges; /* FF 6.0+                       */
+        image-rendering: -webkit-optimize-contrast; /* Safari                        */
+        image-rendering: -o-crisp-edges; /* OS X & Windows Opera (12.02+) */
+        image-rendering: pixelated; /* Awesome future-browsers       */
+        -ms-interpolation-mode: nearest-neighbor; /* IE                            */
+    }
 
-#buttons {
-    z-index: 10000;
-    width: 100%;
+    #buttons {
+        z-index: 10000;
+        width: 100%;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-content: center;
-    gap: 2mm;
-    padding: 2mm;
-}
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-content: center;
+        gap: 2mm;
+        padding: 2mm;
+    }
 
-#buttons button {
-    font-size: 1rem;
-    padding: 0.2em;
-    flex-grow: 1;
-    min-height: 42px;
-    min-width: 42px;
-}
+    #buttons button {
+        font-size: 1rem;
+        padding: 0.2em;
+        flex-grow: 1;
+        min-height: 42px;
+        min-width: 42px;
+    }
 </style>
