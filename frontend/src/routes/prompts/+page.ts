@@ -7,16 +7,16 @@ const client = createClient({
     useCdn: false
 })
 
-export async function load({ params }) {
-  const data = await client.fetch(`*[_type == "dailyPrompt"]`);
+export async function load({params}) {
+    const data = await client.fetch(`*[_type == "dailyPrompt"]`);
 
-  if (data) {
+    if (data) {
+        return {
+            prompts: data
+        };
+    }
     return {
-      prompts: data
+        status: 500,
+        body: new Error("Internal Server Error")
     };
-  }
-  return {
-    status: 500,
-    body: new Error("Internal Server Error")
-  };
 }
