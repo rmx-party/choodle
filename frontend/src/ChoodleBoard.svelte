@@ -177,7 +177,18 @@
     };
 
     const save = async (event: Event) => {
-        // FIXME: upload the choodle to sanity
+        const image = new Image;
+        image.src = (await getUndoStack()).current
+        const currentImage = (await getUndoStack()).current
+        const choodle = {
+            _id: 'my-choodle',
+            _type: 'choodle',
+            title: 'My Choodle',
+            image: currentImage
+        }
+
+        const createResult = await client.createOrReplace(choodle)
+        console.log(createResult)
     }
 
     function clearCanvas(id: string) {
@@ -222,7 +233,7 @@
     <button id="undo" on:click={undo}>Undo</button>
     <button id="redo" on:click={redo}>Redo</button>
     <button id="clear-board" on:click={clear}>Clear</button>
-    <button id="clear-board" on:click={save}>Save</button>
+    <!--    <button id="clear-board" on:click={save}>Save</button>-->
     {#if canShare()}
         <button id="share" on:click={share}>Share</button>
     {/if}
