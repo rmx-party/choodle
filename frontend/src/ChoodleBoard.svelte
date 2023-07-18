@@ -40,8 +40,8 @@
             ctx.beginPath()
             ctx.fillStyle = drawColor
             ctx.fillRect(
-                (newX - lineWidth / 2), (newY - lineWidth / 2), 
-                (lineWidth / 2) , (lineWidth / 2)
+                Math.round(newX - lineWidth / 2), Math.round(newY - lineWidth / 2), 
+                Math.round(lineWidth / 2) , Math.round(lineWidth / 2)
             )
         })
     }
@@ -68,7 +68,7 @@
         console.log(`drawing a line to ${roundedX} ${roundedY}`)
 
         window.requestAnimationFrame(() => {
-            ctx.lineTo(x, y)
+            ctx.lineTo(roundedX, roundedY)
             ctx.stroke();
             applyCrunchToCanvas(canvas, ctx)
         })
