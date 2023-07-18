@@ -1,7 +1,7 @@
 <script lang="ts">
     import {loading} from "$lib/store";
-    import LoadingIndicator from "../LoadingIndicator.svelte";
-    import ChoodleBoard from "../ChoodleBoard.svelte";
+    import LoadingIndicator from "../../LoadingIndicator.svelte";
+    import ChoodleBoard from "../../ChoodleBoard.svelte";
 </script>
 
 {#if !$loading}
