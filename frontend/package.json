@@ -33,6 +33,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@sanity/client": "^6.1.7",
     "@vercel/analytics": "^1.0.1",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
