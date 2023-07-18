@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {loading} from "$lib/store";
     import {browser} from "$app/environment";
     import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff";
     import {onMount} from "svelte";
@@ -176,19 +177,27 @@
         }
     };
 
-    const save = async (event: Event) => {
-        const image = new Image;
-        image.src = (await getUndoStack()).current
-        const currentImage = (await getUndoStack()).current
-        const choodle = {
-            _id: 'my-choodle',
-            _type: 'choodle',
-            title: 'My Choodle',
-            image: currentImage
-        }
+    const save = async (_event: Event) => {
+        loading.set(true)
+        canvas.toBlob(async (blob) => {
+            const uploadResult = await client.assets.upload('image', blob)
+            console.log(`uploaded: `, uploadResult)
 
-        const createResult = await client.createOrReplace(choodle)
-        console.log(createResult)
+            const choodle = {
+                _type: 'choodle',
+                title: 'Untitled',
+                image: {
+                    _type: "image",
+                    asset: {
+                        _type: "reference",
+                        _ref: uploadResult?._id,
+                    }
+                }
+            }
+            const createResult = await client.create(choodle)
+            console.log(createResult)
+            loading.set(false)
+        })
     }
 
     function clearCanvas(id: string) {
@@ -233,7 +242,7 @@
     <button id="undo" on:click={undo}>Undo</button>
     <button id="redo" on:click={redo}>Redo</button>
     <button id="clear-board" on:click={clear}>Clear</button>
-    <!--    <button id="clear-board" on:click={save}>Save</button>-->
+    <button id="save" on:click={save}>Save</button>
     {#if canShare()}
         <button id="share" on:click={share}>Share</button>
     {/if}
