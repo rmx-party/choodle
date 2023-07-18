@@ -224,7 +224,8 @@
         <button id="share" on:click={share}>Share</button>
     {/if}
 </div>
-<canvas id={id} style="border: 1px solid lawngreen"
+
+<canvas id={id}
     on:mousedown={startDrawing}
     on:touchstart={startDrawing}
     on:mouseup={endDrawing}
@@ -234,3 +235,45 @@
     on:click={(event) => {event.preventDefault()}}
     on:drag={(event) => {event.preventDefault()}}>
 </canvas>
+
+<style>
+canvas {
+    position: relative;
+    z-index: 100;
+    align-self: stretch;
+    justify-self: center;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+
+    /* minimize the amount of antialiasing effects in the canvas */
+    image-rendering: optimizeSpeed; /* Older versions of FF          */
+    image-rendering: -moz-crisp-edges; /* FF 6.0+                       */
+    image-rendering: -webkit-optimize-contrast; /* Safari                        */
+    image-rendering: -o-crisp-edges; /* OS X & Windows Opera (12.02+) */
+    image-rendering: pixelated; /* Awesome future-browsers       */
+    -ms-interpolation-mode: nearest-neighbor; /* IE                            */
+}
+
+#buttons {
+    z-index: 10000;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: center;
+    gap: 2mm;
+    padding: 2mm;
+}
+
+#buttons button {
+    font-size: 1rem;
+    padding: 0.2em;
+    flex-grow: 1;
+    min-height: 42px;
+    min-width: 42px;
+}
+</style>
