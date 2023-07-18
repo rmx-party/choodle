@@ -33,7 +33,6 @@
     function startDrawing(event: MouseEvent | TouchEvent) {
         isDrawing = true;
         event.preventDefault()
-        console.groupCollapsed('drawing')
         const [newX, newY] = canvasCoordsFromEvent(event)
 
         window.requestAnimationFrame(() => {
@@ -51,7 +50,6 @@
 
         event.preventDefault()
         drawTo(...canvasCoordsFromEvent(event));
-        console.log(event)
     }
 
     async function endDrawing(event: MouseEvent | TouchEvent) {
@@ -59,13 +57,12 @@
         isDrawing = false;
         ctx.beginPath()
         applyCrunchToCanvas(canvas, ctx)
-        console.groupEnd()
         await push()
     }
 
     function drawTo(x: number, y: number) {
         const [roundedX, roundedY] = [Math.round(x), Math.round(y)]
-        console.log(`drawing a line to ${roundedX} ${roundedY}`)
+        console.table([{x, y, roundedX, roundedY}])
 
         window.requestAnimationFrame(() => {
             ctx.lineTo(roundedX, roundedY)
