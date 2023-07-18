@@ -2,7 +2,7 @@
     import {browser} from "$app/environment";
     import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff";
     import {onMount} from "svelte";
-    import {backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
+    import {drawColor, backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
 
@@ -38,7 +38,7 @@
 
         window.requestAnimationFrame(() => {
             ctx.beginPath()
-            ctx.fillStyle = "#000000"
+            ctx.fillStyle = drawColor
             ctx.fillRect(
                 (newX - lineWidth / 2), (newY - lineWidth / 2), 
                 (lineWidth / 2) , (lineWidth / 2)
@@ -204,7 +204,7 @@
         canvas = document.getElementById(id) as HTMLCanvasElement;
         ctx = canvas.getContext('2d')
 
-        ctx.strokeStyle = 'black'
+        ctx.strokeStyle = drawColor
         ctx.lineWidth = lineWidth;
         ctx.lineCap = 'square';
         ctx.imageSmoothingEnabled = false;
