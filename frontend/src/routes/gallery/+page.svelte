@@ -8,7 +8,7 @@
     <ul>
         {#each data.choodles as choodle (choodle)}
             <li>
-                <a href="/viewToken/{choodle._id}">{choodle.title}</a>
+                <a href="/choodle/{choodle._id}">{choodle.title}</a>
                 <img src={urlFor(choodle.image)} height="20" width="20"/>
             </li>
         {/each}
