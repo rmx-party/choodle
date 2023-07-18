@@ -5,6 +5,11 @@
 </svelte:head>
 
 <main id="main">
+    <nav>
+        <a href="/">draw</a>
+        <a href="/gallery">gallery</a>
+        <a href="/prompts">prompts</a>
+    </nav>
     <noscript>
         <p>
             This app requires JavaScript to run. Please enable JavaScript and reload the page.
