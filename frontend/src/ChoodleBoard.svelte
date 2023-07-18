@@ -7,6 +7,7 @@
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
     import {client} from "$lib/PersistedImagesUtils";
+    import {goto} from "$app/navigation";
 
     export let id;
 
@@ -196,6 +197,9 @@
             }
             const createResult = await client.create(choodle)
             console.log(createResult)
+            if (createResult._id) {
+                goto(`/choodle/${createResult._id}`)
+            }
             loading.set(false)
         })
     }
