@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>blah</title>
+    <title>Choodle Prototype</title>
 </svelte:head>
 
 <main id="main">
