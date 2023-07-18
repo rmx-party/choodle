@@ -48,7 +48,7 @@ export const crunchCanvasToBuffer = async (canvas: HTMLCanvasElement, ctx: Canva
     const buffer = PNG.sync.write(await png.pack());
 
     console.table([{
-        stage: 'buffer',
+        action: 'crunch to buffer',
         imageDataSize,
         crunchedSize: buffer.length,
         compression: `${100 - ((buffer.length / imageDataSize) * 100).toFixed(2)}%`
@@ -63,12 +63,12 @@ export const crunchCanvasToUrl = async (canvas: HTMLCanvasElement, ctx: CanvasRe
 
     const bufferSize = buffer.length;
     const dataUrlSize = dataUrlResult.length;
-    console.table({
-        stage: 'url',
+    console.table([{
+        action: 'crunch to url',
         bufferSize,
         dataUrlSize,
         compression: `${(100 - ((dataUrlSize / buffer.length) * 100)).toFixed(2)}%`
-    });
+    }]);
 
     return dataUrlResult;
 }

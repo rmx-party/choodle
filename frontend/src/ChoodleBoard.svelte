@@ -62,7 +62,7 @@
 
     function drawTo(x: number, y: number) {
         const [roundedX, roundedY] = [Math.round(x), Math.round(y)]
-        console.table([{x, y, roundedX, roundedY}])
+        console.table([{action: 'drawing', x, y, roundedX, roundedY}])
 
         window.requestAnimationFrame(() => {
             ctx.lineTo(roundedX, roundedY)
