@@ -1,12 +1,13 @@
 <script lang="ts">
-    export let data = [];
+    export let data;
 </script>
 
+<h1>Daily Prompts</h1>
 {#if data.prompts && data.prompts.length}
     <ul>
         {#each data.prompts as prompt}
             <li>
-                <pre>{JSON.stringify(prompt)}</pre>
+                <pre>{prompt.prompt}</pre>
             </li>
         {/each}
     </ul>

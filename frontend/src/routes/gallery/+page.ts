@@ -4,6 +4,7 @@ export async function load({params}) {
     const data = await client.fetch(`*[_type == "choodle"]`);
 
     if (data) {
+        console.log(`load data: `, data)
         return {
             choodles: data
         };
