@@ -12,15 +12,14 @@
 :global(body) {
     position: absolute;
     overflow: hidden; /* Avoid scrollbars */
-    height: 100vh;
-    width: 100vw;
     margin: 0;
     padding: 0;
 }
 
 :global(#draw) {
-    width: 100%;
-    height: 100%;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; /* Avoid scrollbars */
     margin: 0;
     padding: 0;
 
