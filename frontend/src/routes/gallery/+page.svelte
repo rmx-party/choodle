@@ -22,7 +22,7 @@
 
 <style>
 .gallery {
-    padding: 0;
+    padding: 1em;
 }
 
 .gallery li {
@@ -31,6 +31,10 @@
     justify-content: space-between;
     flex-direction: row;
     flex-wrap: nowrap;
-    margin: 0;
+    margin: 0.25em 0;
+}
+
+.gallery img {
+    object-fit: cover;
 }
 </style>

@@ -4,17 +4,12 @@
           content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0">
 </svelte:head>
 
+<nav>
+    <a href="/">draw</a>
+    <a href="/gallery">gallery</a>
+    <a href="/prompts">prompts</a>
+</nav>
 <main id="main">
-    <nav>
-        <a href="/">draw</a>
-        <a href="/gallery">gallery</a>
-        <a href="/prompts">prompts</a>
-    </nav>
-    <noscript>
-        <p>
-            This app requires JavaScript to run. Please enable JavaScript and reload the page.
-        </p>
-    </noscript>
     <slot/>
 </main>
 

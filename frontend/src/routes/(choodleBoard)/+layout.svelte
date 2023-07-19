@@ -1,26 +1,12 @@
 <svelte:head>
-    <title>Choodle Prototype</title>
+    <title>Choodle: Draw</title>
     <meta name="viewport"
           content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
 </svelte:head>
 
-<main id="main">
-    <noscript>
-        <p>
-            This app requires JavaScript to run. Please enable JavaScript and reload the page.
-        </p>
-    </noscript>
+<div id="draw">
     <slot/>
-</main>
-
-<script lang="ts">
-    import {dev} from "$app/environment"
-    import {inject} from "@vercel/analytics"
-    import '../../app.css'
-
-    inject({mode: (dev ? 'development' : 'production')});
-</script>
-
+</div>
 
 <style>
 :global(body) {
@@ -32,7 +18,7 @@
     padding: 0;
 }
 
-:global(#main) {
+:global(#draw) {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -45,5 +31,4 @@
     flex-direction: column;
     flex-wrap: nowrap;
 }
-
 </style>
