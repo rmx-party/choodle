@@ -8,8 +8,10 @@
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
     import {client} from "$lib/PersistedImagesUtils";
     import {goto} from "$app/navigation";
+    import Prompt from "./Prompt.svelte"
 
     export let id;
+    export let prompt;
 
     let isDrawing = false;
     let canvas: HTMLCanvasElement;
@@ -251,6 +253,8 @@
         <button id="share" on:click={share}>Share</button>
     {/if}
 </div>
+
+<Prompt {prompt} />
 
 <canvas id={id}
         on:mousedown={startDrawing}
