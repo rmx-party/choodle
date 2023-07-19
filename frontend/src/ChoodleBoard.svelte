@@ -245,7 +245,7 @@
 <div id="buttons">
     <button id="undo" on:click={undo}>Undo</button>
     <!-- <button id="redo" on:click={redo}>Redo</button> -->
-    <!-- <button id="clear-board" on:click={clear}>Clear</button> -->
+    <button id="clear-board" on:click={clear}>Clear</button>
     <button id="save" on:click={save}>Save</button>
     {#if canShare()}
         <button id="share" on:click={share}>Share</button>
