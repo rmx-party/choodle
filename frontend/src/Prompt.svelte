@@ -1,13 +1,15 @@
 <script lang="ts">
     export let prompt;
+    import wordmark from '$lib/assets/choodle-wordmark.png';
 </script>
 
 
 {#if prompt}
     <div class="anchor">
-        <div class="prompt overlay">
-            {prompt.prompt}
-        </div>
+        <p class="daily-prompt board-overlay">
+            <img src={wordmark} alt="Choodle" height="16" width="55" /><br/>
+            <span>{prompt.prompt}</span>
+        </p>
     </div>
 {:else}
     <span style="display:none;">no prompt</span>
@@ -22,21 +24,27 @@
         width: 100%;
         height: 0;
     }
-    .prompt {
-        padding: 0.5em;
-        pointer-events: none;
-        text-align: center;
-    }
-    .overlay {
+    .board-overlay {
         border-radius: 0.3em;
         background: hsla(50, 100%, 60%, 0.9);
         box-shadow: 0px 0px 20px 10px hsla(0, 0%, 0%, 0.1);
         z-index: 999;
         position: absolute;
         display: block;
-        margin: 1em auto;
-        top: 0.2em;
+        margin: 0 auto;
+        top: 1em;
         left: 1em;
         right: 1em;
+    }
+    .daily-prompt {
+        padding: 0.5em;
+        pointer-events: none;
+        text-align: center;
+        vertical-align: bottom;
+        line-height: 1.5em;
+    }
+    img {
+        display: inline-block;
+        vertical-align: text-top;
     }
 </style>
