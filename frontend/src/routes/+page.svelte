@@ -3,7 +3,10 @@
 import wordmark from '$lib/assets/choodle-wordmark.png';
 </script>
 <h1>Welcome to 
+    <br/>
     <img alt="Choodle" src={wordmark} width="300"/>
+    <br/>
+    (prototype)
 </h1>
 <a href="/draw">Let's Play!</a>
 
