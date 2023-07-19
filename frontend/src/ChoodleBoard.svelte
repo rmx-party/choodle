@@ -158,7 +158,8 @@
     const share = async (event: Event) => {
         event.preventDefault()
 
-        const imgBlob = await (await fetch(canvas.toDataURL("image/png", 1.0))).blob();
+        const undoStack = await getUndoStack()
+        const imgBlob = await (await fetch(undoStack.current)).blob();
         const files = [
             new File(
                 [imgBlob],
