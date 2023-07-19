@@ -157,6 +157,7 @@
 
     const share = async (event: Event) => {
         event.preventDefault()
+        if (!navigator.share) return;
 
         const undoStack = await getUndoStack()
         const imgBlob = await (await fetch(undoStack.current)).blob();
@@ -170,15 +171,11 @@
                 }
             )
         ];
-        if (navigator.share) {
-            navigator.share({
-                files
-            }).then(() => {
-                console.log('Thanks for sharing!');
-            }).catch(console.error);
-        } else {
-            console.error('Web Share API not supported')
-        }
+        navigator.share({
+            files
+        }).then(() => {
+            console.log('Thanks for sharing!');
+        }).catch(console.error);
     };
 
     const save = async (_event: Event) => {
@@ -245,16 +242,6 @@
 
 </script>
 
-<div id="buttons">
-    <button id="undo" on:click={undo}>Undo</button>
-    <button id="redo" on:click={redo}>Redo</button>
-    <button id="clear-board" on:click={clear}>Clear</button>
-    <button id="save" on:click={save}>Save</button>
-    {#if canShare()}
-        <button id="share" on:click={share}>Share</button>
-    {/if}
-</div>
-
 <Prompt {prompt} />
 
 <canvas id={id}
@@ -267,6 +254,17 @@
         on:click={(event) => {event.preventDefault()}}
         on:drag={(event) => {event.preventDefault()}}>
 </canvas>
+
+<div id="buttons">
+    <button id="undo" on:click={undo}>Undo</button>
+    <!-- <button id="redo" on:click={redo}>Redo</button> -->
+    <!-- <button id="clear-board" on:click={clear}>Clear</button> -->
+    <button id="save" on:click={save}>Save</button>
+    {#if canShare()}
+        <button id="share" on:click={share}>Share</button>
+    {/if}
+</div>
+
 
 <style>
     canvas {
