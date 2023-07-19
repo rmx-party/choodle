@@ -10,3 +10,13 @@
 {:else}
     <p>No choodle found.</p>
 {/if}
+
+<footer>
+    <a href="/draw">make more choodles</a>
+</footer>
+
+<style>
+    footer {
+        width: 100%;
+    }
+</style>
