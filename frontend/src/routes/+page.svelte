@@ -1,10 +1,10 @@
 
 <script>
-import wordmark from '$lib/assets/choodle-wordmark.png';
+import wordmark from '$lib/assets/choodle-wordmark-420.png';
 </script>
 <h1>Welcome to 
     <br/>
-    <img alt="Choodle" src={wordmark} width="300"/>
+    <img class="wordmark" alt="Choodle" src={wordmark} width="300"/>
     <br/>
     (prototype)
 </h1>
@@ -17,8 +17,9 @@ import wordmark from '$lib/assets/choodle-wordmark.png';
     h1 {
         line-height: 3em;
     }
-    h1 img {
+    h1 .wordmark {
         display: inline-block;
         font-size: 4rem;
+        image-rendering: pixelated;
     }
 </style>
