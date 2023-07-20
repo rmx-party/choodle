@@ -180,28 +180,28 @@
 
     const save = async (_event: Event) => {
         loading.set(true)
-        canvas.toBlob(async (blob) => {
-            const uploadResult = await client.assets.upload('image', blob)
-            console.log(`uploaded: `, uploadResult)
+        const undoStack = await getUndoStack()
+        const imgBlob = await (await fetch(undoStack.current)).blob();
+        const uploadResult = await client.assets.upload('image', imgBlob)
+        console.log(`uploaded: `, uploadResult)
 
-            const choodle = {
-                _type: 'choodle',
-                title: 'Untitled',
-                image: {
-                    _type: "image",
-                    asset: {
-                        _type: "reference",
-                        _ref: uploadResult?._id,
-                    }
+        const choodle = {
+            _type: 'choodle',
+            title: 'Untitled',
+            image: {
+                _type: "image",
+                asset: {
+                    _type: "reference",
+                    _ref: uploadResult?._id,
                 }
             }
-            const createResult = await client.create(choodle)
-            console.log(createResult)
-            if (createResult._id) {
-                goto(`/choodle/${createResult._id}`)
-            }
-            loading.set(false)
-        })
+        }
+        const createResult = await client.create(choodle)
+        console.log(createResult)
+        if (createResult._id) {
+            goto(`/choodle/${createResult._id}`)
+        }
+        loading.set(false)
     }
 
     function clearCanvas(id: string) {
