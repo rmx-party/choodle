@@ -244,9 +244,9 @@
 </script>
 
 <div id="buttons">
-    <Button on:click={undo}>Undo</Button>
-    <Button on:click={clear}>Clear</Button>
-    <Button on:click={save} variant='primary'>Save</Button>
+    <Button handler={undo}>Undo</Button>
+    <Button handler={clear}>Clear</Button>
+    <Button handler={save} variant='primary'>Save</Button>
     <!-- {#if canShare()} -->
     <!--     <button id="share" on:click={share}>Share</button> -->
     <!-- {/if} -->

@@ -1,8 +1,9 @@
 <script lang="ts">
     export let variant = 'secondary';
+    export let handler;
 </script>
 
-<div class={`btn ${variant}`}>
+<div class={`btn ${variant}`} on:click={handler}>
     <slot />
 </div>
 
