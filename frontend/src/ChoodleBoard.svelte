@@ -62,7 +62,7 @@
         event.preventDefault()
         isDrawing = false;
         ctx.beginPath()
-        applyCrunchToCanvas(canvas, ctx)
+        await applyCrunchToCanvas(canvas, ctx)
         await push()
     }
 
@@ -70,10 +70,10 @@
         const [roundedX, roundedY] = [Math.round(x), Math.round(y)]
         console.table([{action: 'drawing', x, y, roundedX, roundedY}])
 
-        window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(async () => {
             ctx.lineTo(roundedX, roundedY)
             ctx.stroke();
-            applyCrunchToCanvas(canvas, ctx)
+            await applyCrunchToCanvas(canvas, ctx)
         })
     }
 
