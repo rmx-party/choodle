@@ -1,6 +1,7 @@
 <script lang="ts">
     import {urlFor} from "$lib/PersistedImagesUtils"
     import {page} from "$app/stores";
+    import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-630x630-2x.png';
 
     export let data = {};
 </script>

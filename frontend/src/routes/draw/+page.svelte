@@ -3,6 +3,7 @@
     import LoadingIndicator from "../../LoadingIndicator.svelte";
     import ChoodleBoard from "../../ChoodleBoard.svelte";
     import {page} from "$app/stores";
+    import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-630x630-2x.png';
 
     export let data;
 </script>
