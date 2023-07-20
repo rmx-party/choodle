@@ -8,7 +8,6 @@
 html, button, input, label {
     font-family: var(--app-main-font-family);
     font-size: var(--font-size-base);
-    overflow: hidden;
 }
 
 * {
