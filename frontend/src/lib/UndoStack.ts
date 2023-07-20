@@ -12,7 +12,7 @@ export class UndoStack {
     }
 
     get storable(): { cursor: number, stack: string[] } {
-        return { cursor: this.cursor, stack: this.stack }
+        return {cursor: this.cursor, stack: this.stack}
     }
 
     public push = (item: string): UndoStack => {
@@ -44,11 +44,6 @@ export class UndoStack {
         }
 
         return this
-    }
-
-    get last() {
-        this.cursor = this.stack.length - 1
-        return this.current
     }
 
     static fromStorable(storable: { cursor: number; stack: string[] } | null) {

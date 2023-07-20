@@ -107,7 +107,7 @@
     const load = async () => {
         const undoStack = await getUndoStack()
 
-        drawImageFromDataURL(undoStack.last, ctx);
+        drawImageFromDataURL(undoStack.current, ctx);
         console.log(`loaded`, undoStack)
     }
 

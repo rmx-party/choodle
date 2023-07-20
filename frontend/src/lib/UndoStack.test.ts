@@ -156,18 +156,7 @@ describe('UndoStack', () => {
             expect(undoStack.current).toBe('bar')
         });
     });
-
-    describe('last', () => {
-        it('sets the cursor to the end and returns current', () => {
-            const undoStack = new UndoStack(['foo', 'bar', 'baz'])
-            undoStack.cursor = 1
-
-            undoStack.last
-
-            expect(undoStack.current).toBe('baz')
-        });
-    });
-
+    
     describe('storable', () => {
         it('gives an object with the stack and the cursor for storage', () => {
             const undoStack = new UndoStack(['foo', 'bar', 'baz'])
@@ -182,7 +171,6 @@ describe('UndoStack', () => {
 
         it('gives an empty UndoStack when a storable is not provided', () => {
             const undoStack = UndoStack.fromStorable(null)
-            expect(undoStack.last).toEqual(new UndoStack().last)
             expect(undoStack.current).toEqual(new UndoStack().current)
             expect(undoStack.stack).toEqual(new UndoStack().stack)
         })
