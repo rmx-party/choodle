@@ -13,7 +13,7 @@
     height: 3.5em; 
     padding: 8px; 
     box-shadow: 0px 0.3em 1.5em rgba(0, 0, 0, 0.1); 
-    border-radius: 24px;
+    border-radius: 1.5rem;
     backdrop-filter: blur(80px); 
     justify-content: center;
     align-items: center; 

@@ -25,9 +25,10 @@
         height: 0;
     }
     .board-overlay {
-        border-radius: 0.3em;
+        border-radius: 1.5rem;
         background: var(--color-primary);
-        box-shadow: 0px 0px 20px 10px hsla(0, 0%, 0%, 0.1);
+        /* box-shadow: 0px 0px 20px 10px hsla(0, 0%, 0%, 0.1); */
+        box-shadow: 0px 0.3em 1.5em rgba(0, 0, 0, 0.1); 
         z-index: 999;
         position: absolute;
         display: block;
@@ -37,6 +38,7 @@
         right: 1em;
     }
     .daily-prompt {
+        font-weight: 700;
         padding: 0.5em;
         pointer-events: none;
         text-align: center;
