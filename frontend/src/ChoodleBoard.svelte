@@ -9,6 +9,7 @@
     import {client} from "$lib/PersistedImagesUtils";
     import {goto} from "$app/navigation";
     import Prompt from "./Prompt.svelte"
+    import Button from "./Button.svelte"
 
     export let id;
     export let prompt;
@@ -243,10 +244,9 @@
 </script>
 
 <div id="buttons">
-    <button id="undo" on:click={undo}>Undo</button>
-    <!-- <button id="redo" on:click={redo}>Redo</button> -->
-    <button id="clear-board" on:click={clear}>Clear</button>
-    <button id="save" on:click={save}>Save</button>
+    <Button on:click={undo}>Undo</Button>
+    <Button on:click={clear}>Clear</Button>
+    <Button on:click={save} variant='primary'>Save</Button>
     <!-- {#if canShare()} -->
     <!--     <button id="share" on:click={share}>Share</button> -->
     <!-- {/if} -->

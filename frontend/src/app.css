@@ -1,7 +1,8 @@
 :root {
+    --debug: 0;
     --app-main-font-family: monospace;
     --font-size-base: 16px;
-    --debug: 0;
+    --color-primary: #FEF40A;
 }
 
 html, button, input, label {

@@ -26,7 +26,7 @@
     }
     .board-overlay {
         border-radius: 0.3em;
-        background: hsla(50, 100%, 60%, 0.9);
+        background: var(--color-primary);
         box-shadow: 0px 0px 20px 10px hsla(0, 0%, 0%, 0.1);
         z-index: 999;
         position: absolute;
