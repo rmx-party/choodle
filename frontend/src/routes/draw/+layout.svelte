@@ -9,25 +9,18 @@
 </div>
 
 <style>
-:global(body) {
-    position: absolute;
-    overflow: hidden; /* Avoid scrollbars */
-    margin: 0;
-    padding: 0;
-}
+    #draw {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden; /* Avoid scrollbars */
+        margin: 0;
+        padding: 0;
 
-:global(#draw) {
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden; /* Avoid scrollbars */
-    margin: 0;
-    padding: 0;
-
-    display: flex;
-    align-content: center;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: column;
-    flex-wrap: nowrap;
-}
+        display: flex;
+        align-content: center;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
 </style>
