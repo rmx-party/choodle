@@ -229,7 +229,7 @@
         if (!browser) return;
 
         canvas = document.getElementById(id) as HTMLCanvasElement;
-        ctx = canvas.getContext('2d')
+        ctx = canvas.getContext('2d', {willReadFrequently: true})
 
         ctx.strokeStyle = drawColor
         ctx.lineWidth = lineWidth;
@@ -252,7 +252,7 @@
     <!-- {/if} -->
 </div>
 
-<Prompt {prompt} />
+<Prompt {prompt}/>
 
 <canvas id={id}
         on:mousedown={startDrawing}
