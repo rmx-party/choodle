@@ -28,7 +28,7 @@
         border-radius: 1.5rem;
         background: var(--color-primary);
         /* box-shadow: 0px 0px 20px 10px hsla(0, 0%, 0%, 0.1); */
-        box-shadow: 0px 0.3em 1.5em rgba(0, 0, 0, 0.1); 
+        box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.01), 0px -2px 8px 0px rgba(0, 0, 0, 0.12) inset, 0px 2px 24px 0px rgba(255, 255, 255, 0.40) inset, 0px 1px 4px 0px rgba(0, 0, 0, 0.04);
         z-index: 999;
         position: absolute;
         display: block;

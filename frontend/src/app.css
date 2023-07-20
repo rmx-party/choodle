@@ -2,7 +2,7 @@
     --debug: 0;
     --app-main-font-family: monospace;
     --font-size-base: 16px;
-    --color-primary: #FEF40A;
+    --color-primary: hsla(58, 100%, 51%, 1);
 }
 
 html, button, input, label {
