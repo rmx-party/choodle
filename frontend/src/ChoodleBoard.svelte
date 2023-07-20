@@ -214,6 +214,7 @@
     }
 
     function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
+        if (dataURL === '') clearCanvas(id)
         const image = new Image;
         image.addEventListener('load', () => {
             window.requestAnimationFrame(() => {
