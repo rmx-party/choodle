@@ -217,7 +217,7 @@
 
 <div id="buttons">
     <Button handler={undo}>Undo</Button>
-    <Button handler={save} variant='primary'>Save</Button>
+    <Button handler={save} variant='primary'>Done</Button>
 </div>
 
 <Prompt {prompt}/>
