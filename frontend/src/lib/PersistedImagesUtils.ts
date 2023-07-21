@@ -1,10 +1,13 @@
 import {createClient} from "@sanity/client";
 import imageUrlBuilder from '@sanity/image-url'
+import {PUBLIC_SANITY_PROJECT_ID} from "$env/static/public";
+import {PUBLIC_SANITY_DATASET} from "$env/static/public";
+import {PUBLIC_SANITY_TOKEN} from "$env/static/public";
 
 export const client = createClient({
-    projectId: "tdnjp9se",
-    dataset: "production",
-    token: "sk1P3LdFayn1WzYlZjUNEyuHR276OEnwQO2EvN2L8Yi34VlvjWa8QsZkYUQaYuWElO7sgtz2iMECjptmzjqoqcLCIbPNU5Lfb2c9Cdczf1D9M7IBozgfmJ4nJmZVZIQWIAbvC4N7Lhmu8altZ9ENaxQAEI7XzhD4c6ohjiGKo6u4qvTFRzQl",
+    projectId: PUBLIC_SANITY_PROJECT_ID,
+    dataset: PUBLIC_SANITY_DATASET,
+    token: PUBLIC_SANITY_TOKEN,
     apiVersion: "2023-07-18",
     useCdn: false
 })
