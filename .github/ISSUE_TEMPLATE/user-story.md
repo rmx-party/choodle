@@ -1,7 +1,7 @@
 ---
 name: User Story
 about: Create a task via a user story
-title: "[Function] or [UI]"
+title: As a [user], I want to [  ], so that [  ]
 labels: ''
 assignees: ''
 
