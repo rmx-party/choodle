@@ -56,16 +56,16 @@
     <p>No choodle found.</p>
 {/if}
 
-<footer>
+<menu>
     <a href="/draw">make more choodles</a>
     {#if canShare()}
-        <Button handler={share}>share</Button>
+        <Button variant="primary" handler={share}>share</Button>
     {/if}
-
-</footer>
+</menu>
 
 <style>
-    footer {
+    menu {
         width: 100%;
+        display:flex;
     }
 </style>
