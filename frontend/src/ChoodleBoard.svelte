@@ -9,7 +9,7 @@
     import {goto} from "$app/navigation";
     import Prompt from "./Prompt.svelte"
     import Button from "./Button.svelte"
-	import { readWriteClient } from "$lib/CMSUtils";
+    import {readWriteClient} from "$lib/CMSUtils";
 
     export let id;
     export let prompt;
@@ -217,7 +217,6 @@
 
 <div id="buttons">
     <Button handler={undo}>Undo</Button>
-    <Button handler={clear}>Clear</Button>
     <Button handler={save} variant='primary'>Save</Button>
 </div>
 
