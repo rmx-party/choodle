@@ -4,6 +4,8 @@
     import Button from "../../../Button.svelte";
     import {browser} from "$app/environment";
     import MetaData from "../../../MetaData.svelte";
+    import {goto} from "$app/navigation";
+    import {clearStorage} from "$lib/StorageStuff";
 
     export let data = {};
 
@@ -40,6 +42,11 @@
             console.error('Web Share API not supported')
         }
     };
+
+    const clearAndStartOver = async () => {
+        clearStorage()
+        await goto("/draw")
+    }
 </script>
 
 <MetaData url={$page.url}
@@ -50,18 +57,16 @@
           description={data.choodle.title}/>
 
 <main>
-{#if data.choodle }
+    {#if data.choodle }
         <img src={urlFor(data.choodle.image)}/>
         <p>Save your Choodle as a photo, send it to a friend, and keep choodling.</p>
-{:else}
-    <p>No choodle found.</p>
-{/if}
+    {:else}
+        <p>No choodle found.</p>
+    {/if}
 </main>
 
 <menu>
-    <Button>
-        <a href="/draw">make more choodles</a>
-    </Button>
+    <Button handler={clearAndStartOver}>make more choodles</Button>
     {#if canShare()}
         <Button variant="primary" handler={share}>share</Button>
     {/if}
@@ -72,8 +77,9 @@
         text-align: center;
         padding: 3rem;
     }
+
     menu {
         width: 100%;
-        display:flex;
+        display: flex;
     }
 </style>
