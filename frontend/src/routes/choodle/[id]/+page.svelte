@@ -49,21 +49,29 @@
           height="932"
           description={data.choodle.title}/>
 
+<main>
 {#if data.choodle }
-    <h1>{data.choodle.title}</h1>
-    <img src={urlFor(data.choodle.image)}/>
+        <img src={urlFor(data.choodle.image)}/>
+        <p>Save your Choodle as a photo, send it to a friend, and keep choodling.</p>
 {:else}
     <p>No choodle found.</p>
 {/if}
+</main>
 
 <menu>
-    <a href="/draw">make more choodles</a>
+    <Button>
+        <a href="/draw">make more choodles</a>
+    </Button>
     {#if canShare()}
         <Button variant="primary" handler={share}>share</Button>
     {/if}
 </menu>
 
 <style>
+    main {
+        text-align: center;
+        padding: 3rem;
+    }
     menu {
         width: 100%;
         display:flex;
