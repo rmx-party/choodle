@@ -7,8 +7,8 @@ export default defineConfig({
     name: 'default',
     title: 'Choodle CMS',
 
-    projectId: 'tdnjp9se',
-    dataset: 'staging',
+    projectId: process.env.PUBLIC_SANITY_PROJECT_ID!,
+    dataset: process.env.PUBLIC_SANITY_DATASET!,
 
     plugins: [deskTool(), visionTool()],
 
