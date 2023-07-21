@@ -5,8 +5,8 @@ export default {
     fields: [
         {
             name: 'howto',
-            type: 'block',
             title: 'Howto',
+            type: 'array',
             of: [{type: 'block'}]
         }
     ]
