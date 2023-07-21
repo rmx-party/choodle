@@ -4,7 +4,6 @@
     import ChoodleBoard from "../../ChoodleBoard.svelte";
     import {page} from "$app/stores";
     import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-630x630-2x.png';
-    import {urlFor} from "$lib/PersistedImagesUtils";
     import MetaData from "../../MetaData.svelte";
 
     export let data;
