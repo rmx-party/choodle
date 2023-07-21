@@ -1,6 +1,6 @@
 :root {
     --debug: 0;
-    --app-main-font-family: monospace;
+    --app-main-font-family: 'DejaVu Sans';
     --font-size-base: 16px;
     --color-primary: hsla(58, 100%, 51%, 1);
 }
