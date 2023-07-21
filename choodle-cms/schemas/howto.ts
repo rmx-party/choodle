@@ -6,7 +6,8 @@ export default {
         {
             name: 'howto',
             type: 'block',
-            title: 'Howto'
+            title: 'Howto',
+            of: [{type: 'block'}]
         }
     ]
 }
