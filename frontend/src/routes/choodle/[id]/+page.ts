@@ -1,7 +1,7 @@
-import {client} from "$lib/PersistedImagesUtils";
+import {readWriteClient} from "$lib/PersistedImagesUtils";
 
 export async function load({params}) {
-    const data = await client.fetch(`*[_type == "choodle" && _id == "${params.id}"]`);
+    const data = await readWriteClient.fetch(`*[_type == "choodle" && _id == "${params.id}"]`);
 
     if (data) {
         return {

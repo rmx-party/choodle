@@ -1,16 +1,7 @@
-import {createClient} from '@sanity/client';
-import {PUBLIC_SANITY_DATASET, PUBLIC_SANITY_PROJECT_ID} from "$env/static/public";
-
-const client = createClient({
-    projectId: PUBLIC_SANITY_PROJECT_ID,
-    dataset: PUBLIC_SANITY_DATASET,
-    perspective: 'published',
-    apiVersion: "2023-07-18",
-    useCdn: false
-})
+import {readOnlyClient} from "$lib/CMSUtils";
 
 export async function load({params}) {
-    const data = await client.fetch(`*[_type == "dailyPrompt"] | order(_createdAt) [0]`);
+    const data = await readOnlyClient.fetch(`*[_type == "dailyPrompt"] | order(_createdAt) [0]`);
 
     if (data) {
         console.log(`load data: `, data)

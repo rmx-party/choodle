@@ -6,7 +6,7 @@
     import {drawColor, backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
-    import {client} from "$lib/PersistedImagesUtils";
+    import {readWriteClient} from "$lib/PersistedImagesUtils";
     import {goto} from "$app/navigation";
     import Prompt from "./Prompt.svelte"
     import Button from "./Button.svelte"
@@ -119,7 +119,7 @@
 
         await setUndoStack(undoStack);
     }
-    
+
     const undo = async (event: Event) => {
         event.preventDefault()
 
@@ -155,7 +155,7 @@
         loading.set(true)
         const undoStack = await getUndoStack()
         const imgBlob = await (await fetch(undoStack.current)).blob();
-        const uploadResult = await client.assets.upload('image', imgBlob)
+        const uploadResult = await readWriteClient.assets.upload('image', imgBlob)
         console.log(`uploaded: `, uploadResult)
 
         const choodle = {
@@ -169,7 +169,7 @@
                 }
             }
         }
-        const createResult = await client.create(choodle)
+        const createResult = await readWriteClient.create(choodle)
         console.log(createResult)
         if (createResult._id) {
             goto(`/choodle/${createResult._id}`)
