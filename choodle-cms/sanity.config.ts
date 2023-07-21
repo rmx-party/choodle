@@ -4,15 +4,15 @@ import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemas'
 
 export default defineConfig({
-  name: 'default',
-  title: 'Choodle CMS',
+    name: 'default',
+    title: 'Choodle CMS',
 
-  projectId: 'tdnjp9se',
-  dataset: 'production',
+    projectId: 'tdnjp9se',
+    dataset: 'staging',
 
-  plugins: [deskTool(), visionTool()],
+    plugins: [deskTool(), visionTool()],
 
-  schema: {
-    types: schemaTypes,
-  },
+    schema: {
+        types: schemaTypes,
+    },
 })
