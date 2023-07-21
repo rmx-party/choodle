@@ -6,10 +6,10 @@
     import {drawColor, backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
-    import {readWriteClient} from "$lib/PersistedImagesUtils";
     import {goto} from "$app/navigation";
     import Prompt from "./Prompt.svelte"
     import Button from "./Button.svelte"
+	import { readWriteClient } from "$lib/CMSUtils";
 
     export let id;
     export let prompt;
