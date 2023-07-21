@@ -32,6 +32,7 @@
         margin: 0;
         min-width: 100vw;
         min-height: 100vh;
+        text-align: center;
     }
 
     .cta {
