@@ -14,7 +14,7 @@ html, button, input, label {
     box-sizing: border-box;
 }
 
-html {
+html, body, main {
     margin: 0;
     padding: 0;
 }

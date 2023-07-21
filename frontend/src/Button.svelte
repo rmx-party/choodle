@@ -25,7 +25,7 @@
     font-weight: 400; 
     line-height: 21.60px; 
     letter-spacing: 0.18px; 
-    word-wrap: break-word
+    word-wrap: break-word;
 }
 .secondary {
     background: white; 

@@ -17,7 +17,7 @@
     <br/>
     (prototype)
 </h1>
-<a href="/draw">Let's Play!</a>
+<a href="/howto">Let's Draw!</a>
 
 <style>
     :root {

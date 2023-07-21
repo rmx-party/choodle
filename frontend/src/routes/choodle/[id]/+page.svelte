@@ -31,7 +31,7 @@
         console.log('page url: ', $page.url)
         if (navigator.share) {
             navigator.share({
-                //files,
+                files,
                 url: $page.url
             }).then(() => {
                 console.log('Thanks for sharing!');
