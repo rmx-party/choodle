@@ -53,17 +53,13 @@ Want to be a beta tester?
         background: var(--color-primary);
         padding: 3rem;
         margin: 0;
-        width: 100vw;
-        height: 100vh;
+        min-width: 100vw;
+        min-height: 100vh;
     }
 
     .cta {
         display: flex;
         padding: 1em;
         text-decoration: none;
-        position: absolute;
-        bottom: 2em;
-        left: 1em;
-        right: 1em;
     }
 </style>
