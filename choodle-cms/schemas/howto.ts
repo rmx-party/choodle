@@ -5,7 +5,7 @@ export default {
     fields: [
         {
             name: 'howto',
-            type: 'string',
+            type: 'block',
             title: 'Howto'
         }
     ]
