@@ -2,7 +2,7 @@
   "name": "Choodle",
   "short_name": "Choodle",
   "start_url": "/draw",
-  "display": "standalone",
+  "display": "minimal-ui",
   "theme_color": "#ffffff",
   "background_color":"#ffffff",
   "icons": [
