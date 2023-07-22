@@ -34,6 +34,7 @@
         if (navigator.share) {
             navigator.share({
                 files,
+                title: 'Choodle',
                 url: $page.url
             }).then(() => {
                 console.log('Thanks for sharing!');
@@ -50,7 +51,7 @@
 </script>
 
 <MetaData url={$page.url}
-          title={data.choodle.title}
+          title="Choodle"
           imageUrl={urlFor(data.choodle.image)}
           width="430"
           height="932"
