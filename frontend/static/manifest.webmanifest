@@ -1,0 +1,14 @@
+{
+  "name": "Choodle",
+  "short_name": "Choodle",
+  "start_url": "/draw",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color":"#ffffff",
+  "icons": [
+    {
+      "src": "Icon-App-Store-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }]
+}

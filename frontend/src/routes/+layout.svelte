@@ -9,11 +9,16 @@
 </main>
 
 <script lang="ts">
-    import {dev} from "$app/environment"
+    import {browser, dev} from "$app/environment"
     import {inject} from "@vercel/analytics"
     import '../app.css'
     import '../fonts.css'
 
     inject({mode: (dev ? 'development' : 'production')});
+
+    if(browser && 'serviceWorker' in navigator) {
+        console.log('registering service worker');
+        navigator.serviceWorker.register('/service-worker.js');
+    }
 </script>
 
