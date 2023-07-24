@@ -24,7 +24,9 @@
         <meta property="og:image:secure_url" content={imageUrl}/>
         <meta property="og:image:width" content={width}/>
         <meta property="og:image:height" content={height}/>
-        <meta property="og:image:alt" content={imageAlt}/>
+        {#if imageAlt}
+            <meta property="og:image:alt" content={imageAlt}/>
+        {/if}
     {/if}
     {#if description}
         <meta property="og:description" content={description}/>

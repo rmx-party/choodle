@@ -5,7 +5,7 @@
     import MetaData from "../MetaData.svelte";
 </script>
 <MetaData url={$page.url}
-          title="Choodle"
+          title="Welcome!"
           imageUrl={opengraphChoodle}
           width="630"
           height="630"
