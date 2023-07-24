@@ -5,11 +5,13 @@
     import {onMount} from "svelte";
     import {drawColor, backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
+    import type {Dimensiony} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
     import {goto} from "$app/navigation";
     import Prompt from "./Prompt.svelte"
     import Button from "./Button.svelte"
     import {readWriteClient} from "$lib/CMSUtils";
+    import {isNil, last} from "lodash";
 
     export let id;
     export let prompt;
@@ -17,6 +19,7 @@
     let isDrawing = false;
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
+    let lastTouchedPoint: Dimensiony;
 
     const resizeCanvas = async () => {
         canvas.style.width = `100%`
@@ -40,14 +43,11 @@
         isDrawing = true;
         event.preventDefault()
         const [newX, newY] = canvasCoordsFromEvent(event)
+        lastTouchedPoint = {x: newX, y: newY}
 
         window.requestAnimationFrame(() => {
             ctx.beginPath()
             ctx.fillStyle = drawColor
-            ctx.fillRect(
-                Math.round(newX - lineWidth / 2), Math.round(newY - lineWidth / 2),
-                Math.round(lineWidth / 2), Math.round(lineWidth / 2)
-            )
         })
     }
 
@@ -61,7 +61,18 @@
     async function endDrawing(event: MouseEvent | TouchEvent) {
         event.preventDefault()
         isDrawing = false;
+
+        const [newX, newY] = canvasCoordsFromEvent(event)
+
+        if (lastTouchedPoint.x === newX && lastTouchedPoint.y === newY) {
+            ctx.fillRect(
+                Math.round(newX - lineWidth / 2), Math.round(newY - lineWidth / 2),
+                Math.round(lineWidth / 2), Math.round(lineWidth / 2)
+            )
+        }
+        
         ctx.beginPath()
+
         await applyCrunchToCanvas(canvas, ctx)
         await push()
     }
