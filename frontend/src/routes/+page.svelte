@@ -1,5 +1,4 @@
 <script>
-    import wordmark from '$lib/assets/choodle-wordmark-420.png';
     import {page} from "$app/stores";
     import opengraphChoodle from "$lib/assets/OpenGraph-Choodle-630x630-2x.png";
     import MetaData from "../MetaData.svelte";
