@@ -11,7 +11,6 @@
     import Prompt from "./Prompt.svelte"
     import Button from "./Button.svelte"
     import {readWriteClient} from "$lib/CMSUtils";
-    import {isNil, last} from "lodash";
 
     export let id;
     export let prompt;
