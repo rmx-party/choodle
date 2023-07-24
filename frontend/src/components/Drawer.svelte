@@ -1,7 +1,5 @@
 <script lang="ts">
-    import { cubicOut } from "svelte/easing";
     import Wordmark from "../components/Wordmark.svelte"
-    import { tweened } from "svelte/motion";
 
     export let content = `<h1>html contents</h1><p>html from
         cms</p><p>foo</p><p>foo</p>`

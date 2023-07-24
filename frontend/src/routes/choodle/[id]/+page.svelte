@@ -1,9 +1,9 @@
 <script lang="ts">
     import {urlFor} from "$lib/PersistedImagesUtils"
     import {page} from "$app/stores";
-    import Button from "../../../Button.svelte";
+    import Button from "../../../components/Button.svelte";
     import {browser} from "$app/environment";
-    import MetaData from "../../../MetaData.svelte";
+    import MetaData from "../../../components/MetaData.svelte";
     import {goto} from "$app/navigation";
     import {clearStorage} from "$lib/StorageStuff";
 

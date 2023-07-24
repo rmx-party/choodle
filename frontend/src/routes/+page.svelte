@@ -1,7 +1,9 @@
 <script>
+	import { goto } from "$app/navigation";
     import {page} from "$app/stores";
     import opengraphChoodle from "$lib/assets/OpenGraph-Choodle-630x630-2x.png";
-    import MetaData from "../MetaData.svelte";
+    import Button from "../components/Button.svelte";
+    import MetaData from "../components/MetaData.svelte";
     import Wordmark from "../components/Wordmark.svelte";
 </script>
 <MetaData url={$page.url}
@@ -17,7 +19,7 @@
     <br/>
     (prototype)
 </h1>
-<a href="/howto">Let's Draw!</a>
+<Button variant="primary" on:click={() => goto('/howto')}>Let's Draw!</Button>
 
 <style>
     :root {

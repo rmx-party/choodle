@@ -1,6 +1,6 @@
 <script lang="ts">
-    import wordmark from '$lib/assets/choodle-wordmark.png';
-    import Button from '../../Button.svelte';
+	import { goto } from '$app/navigation';
+    import Button from '../../components/Button.svelte';
     import Wordmark from "../../components/Wordmark.svelte";
     import {toHTML} from "@portabletext/to-html";
 
@@ -19,11 +19,9 @@
         {@html toHTML(data.howto.howto)}
     </content>
 
-    <a class="cta" href="/draw">
-        <Button class="cta" variant="primary">
-            Let's Draw!
-        </Button>
-    </a>
+    <Button variant="primary" on:click={() => {goto('/draw')}}>
+        Let's Draw!
+    </Button>
 </main>
 
 <style>
@@ -42,3 +40,5 @@
         text-decoration: none;
     }
 </style>
+
+
