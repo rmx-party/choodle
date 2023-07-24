@@ -1,10 +1,11 @@
 "use strict";
 // Cache Name
-const CACHE_NAME = "static-cache-v2"; // TODO: ratchet this on changes
+const CACHE_NAME = "static-cache-v3"; // TODO: ratchet this on changes
 // Cache Files
 const FILES_TO_CACHE = [
-    "/howto.html",
-    "/draw.html"
+    "/offline",
+    "/howto",
+    "/draw"
 ];
 // install
 self.addEventListener("install", (evt) => {
@@ -44,7 +45,7 @@ self.addEventListener("fetch", (evt) => {
   evt.respondWith(
     fetch(evt.request).catch(() => {
       return caches.open(CACHE_NAME).then((cache) => {
-        return cache.match("offline.html");
+        return cache.match("/offline");
       });
     })
   );
