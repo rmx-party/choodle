@@ -10,7 +10,7 @@
 </script>
 
 <MetaData url={$page.url}
-          title="Choodle"
+          title="Choodle a doodle?"
           imageUrl={opengraphChoodle}
           width="630"
           height="630"
