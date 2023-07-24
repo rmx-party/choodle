@@ -19,7 +19,7 @@
     let isDrawing = false;
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
-    let lastTouchedPoint: Dimensiony;
+    let lastTouchedPoint: Dimensiony | null;
 
     const resizeCanvas = async () => {
         canvas.style.width = `100%`
@@ -53,6 +53,7 @@
 
     const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
         if (!isDrawing) return;
+        lastTouchedPoint = null;
 
         event.preventDefault()
         drawTo(...canvasCoordsFromEvent(event));
@@ -62,15 +63,13 @@
         event.preventDefault()
         isDrawing = false;
 
-        const [newX, newY] = canvasCoordsFromEvent(event)
-
-        if (lastTouchedPoint.x === newX && lastTouchedPoint.y === newY) {
+        if (lastTouchedPoint) {
             ctx.fillRect(
-                Math.round(newX - lineWidth / 2), Math.round(newY - lineWidth / 2),
+                Math.round(lastTouchedPoint.x - lineWidth / 2), Math.round(lastTouchedPoint.y - lineWidth / 2),
                 Math.round(lineWidth / 2), Math.round(lineWidth / 2)
             )
         }
-        
+
         ctx.beginPath()
 
         await applyCrunchToCanvas(canvas, ctx)
