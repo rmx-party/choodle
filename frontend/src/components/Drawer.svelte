@@ -3,33 +3,26 @@
     import Wordmark from "../components/Wordmark.svelte"
     import { tweened } from "svelte/motion";
 
-    export let content = '<h1>html contents</h1><p>html from cms</p>'
+    export let content = `<h1>html contents</h1><p>html from
+        cms</p><p>foo</p><p>foo</p>`
     export let prompt = 'prompt'
 
     let toggleState: 'minimized' | 'closed' | 'open' = 'closed';
 
-    const contentHeight = tweened(1, {
-        duration: 3000,
-        easing: cubicOut
-    })
-
     const handleTap = (event) => {
         if (toggleState == 'open') {
             toggleState = 'closed';
-            $contentHeight = 0;
         } else if (toggleState == 'closed') {
             toggleState = 'minimized'
-            $contentHeight = 0;
         } else if (toggleState == 'minimized') {
             toggleState = 'open'
-            $contentHeight = 100;
         }
         console.log(`drawer toggle`, event, toggleState)
     }
 </script>
 
 <div id="drawer" class={toggleState}>
-    <section class="drawer-content" style:height={`${$contentHeight * 100}%`}>
+    <section class="drawer-content">
         {@html content}
         <hr/>
     </section>
@@ -58,23 +51,25 @@
         text-align: center;
         border-radius: 0 0 1rem 1rem;
         padding: 1rem 1rem 0;
-        height: auto;
         overflow: hidden;
+        transition: top 1s;
+    }
+    #drawer.minimized {
+        top: -46%;
+    }
+    #drawer.closed {
+        top: -34%;
+    }
+    #drawer.open {
+        top: 0;
     }
 
     .drawer-content {
-        /* height: 0; */
-        overflow: hidden;
-        transition: height 0.5s;
-    }
-    .open .drawer-content {
-        height: auto;
+        max-height: 60vh;
+        overflow: scroll-y;
     }
     .drawer-prompt {
-        /* height: auto; */
-    }
-    .minimized .drawer-prompt {
-        /* height: 0; */
+        max-height: 6.5rem;
         overflow: hidden;
         text-align: center;
     }
