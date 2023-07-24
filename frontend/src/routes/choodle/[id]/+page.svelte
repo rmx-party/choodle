@@ -67,9 +67,9 @@
 </main>
 
 <menu>
-    <Button handler={clearAndStartOver}>make more choodles</Button>
+    <Button on:click={clearAndStartOver}>make more choodles</Button>
     {#if canShare()}
-        <Button variant="primary" handler={share}>share</Button>
+        <Button variant="primary" on:click={share}>share</Button>
     {/if}
 </menu>
 

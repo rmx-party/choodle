@@ -216,8 +216,8 @@
 </script>
 
 <div id="buttons">
-    <Button handler={undo}>Undo</Button>
-    <Button handler={save} variant='primary'>Done</Button>
+    <Button on:click={undo}>Undo</Button>
+    <Button on:click={save} variant='primary'>Done</Button>
 </div>
 
 <Prompt {prompt}/>
