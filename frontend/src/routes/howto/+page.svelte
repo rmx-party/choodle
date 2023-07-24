@@ -1,6 +1,7 @@
 <script lang="ts">
     import wordmark from '$lib/assets/choodle-wordmark.png';
     import Button from '../../Button.svelte';
+    import Wordmark from "../../components/Wordmark.svelte";
     import {toHTML} from "@portabletext/to-html";
 
     export let data;
@@ -11,7 +12,7 @@
 <main id="main">
 
     <h1>
-        How to <img class="wordmark" src={wordmark} alt="Choodle"/>
+        How to <Wordmark />
     </h1>
 
     <content id="content">

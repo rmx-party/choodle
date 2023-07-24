@@ -3,6 +3,7 @@
     import {page} from "$app/stores";
     import opengraphChoodle from "$lib/assets/OpenGraph-Choodle-630x630-2x.png";
     import MetaData from "../MetaData.svelte";
+    import Wordmark from "../components/Wordmark.svelte";
 </script>
 <MetaData url={$page.url}
           title="Welcome!"
@@ -13,7 +14,7 @@
 
 <h1>Welcome to
     <br/>
-    <img class="wordmark" alt="Choodle" src={wordmark} width="300"/>
+    <Wordmark fontSize='4rem' />
     <br/>
     (prototype)
 </h1>
@@ -26,11 +27,6 @@
 
     h1 {
         line-height: 3em;
-    }
-
-    h1 .wordmark {
-        display: inline-block;
-        font-size: 4rem;
-        image-rendering: pixelated;
+        font-size: 2rem;
     }
 </style>
