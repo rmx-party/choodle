@@ -51,11 +51,11 @@
 </script>
 
 <MetaData url={$page.url}
-          title="Choodle"
-          imageUrl={urlFor(data.choodle.image)}
-          width="430"
-          height="932"
-          description={data.choodle.title}/>
+    title="Look, it's a choodle"
+    imageUrl={urlFor(data.choodle.image)}
+    width="430"
+    height="932" 
+/>
 
 <main>
     {#if data.choodle }
@@ -74,13 +74,19 @@
 </menu>
 
 <style>
-    main {
+    main, menu {
         text-align: center;
-        padding: 3rem;
+        padding: 0 2rem;
     }
 
     menu {
-        width: 100%;
         display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    img {
+        width: 70%;
+        image-rendering: pixelated;
     }
 </style>
