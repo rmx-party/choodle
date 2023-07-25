@@ -2,7 +2,7 @@
     import {urlFor} from "$lib/PersistedImagesUtils"
     import {page} from "$app/stores";
     import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-630x630-2x.png';
-    import MetaData from "../../MetaData.svelte";
+    import MetaData from "../../components/MetaData.svelte";
 
     export let data = {};
 </script>
