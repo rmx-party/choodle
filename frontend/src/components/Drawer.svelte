@@ -50,7 +50,7 @@
         border-radius: 0 0 1rem 1rem;
         padding: 1rem 1rem 0;
         overflow: hidden;
-        transition: top 1s;
+        transition: top 0.3s ease-in-out;
     }
     #drawer.minimized {
         top: -46%;
