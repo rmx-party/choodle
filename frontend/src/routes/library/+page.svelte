@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Button from "../../Button.svelte";
+    import Button from "../../components/Button.svelte";
     import Drawer from "../../components/Drawer.svelte"
     import Wordmark from "../../components/Wordmark.svelte"
 </script>
