@@ -26,6 +26,12 @@ dependencies:
   pngjs:
     specifier: ^7.0.0
     version: 7.0.0
+  workbox-routing:
+    specifier: ^7.0.0
+    version: 7.0.0
+  workbox-strategies:
+    specifier: ^7.0.0
+    version: 7.0.0
 
 devDependencies:
   '@sveltejs/adapter-auto':
@@ -2526,6 +2532,22 @@ packages:
       siginfo: 2.0.0
       stackback: 0.0.2
     dev: true
+
+  /workbox-core@7.0.0:
+    resolution: {integrity: sha512-81JkAAZtfVP8darBpfRTovHg8DGAVrKFgHpOArZbdFd78VqHr5Iw65f2guwjE2NlCFbPFDoez3D3/6ZvhI/rwQ==}
+    dev: false
+
+  /workbox-routing@7.0.0:
+    resolution: {integrity: sha512-8YxLr3xvqidnbVeGyRGkaV4YdlKkn5qZ1LfEePW3dq+ydE73hUUJJuLmGEykW3fMX8x8mNdL0XrWgotcuZjIvA==}
+    dependencies:
+      workbox-core: 7.0.0
+    dev: false
+
+  /workbox-strategies@7.0.0:
+    resolution: {integrity: sha512-dg3qJU7tR/Gcd/XXOOo7x9QoCI9nk74JopaJaYAQ+ugLi57gPsXycVdBnYbayVj34m6Y8ppPwIuecrzkpBVwbA==}
+    dependencies:
+      workbox-core: 7.0.0
+    dev: false
 
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
