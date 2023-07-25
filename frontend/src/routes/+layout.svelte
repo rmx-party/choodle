@@ -14,10 +14,5 @@
     import '../fonts.css'
 
     inject({mode: (dev ? 'development' : 'production')});
-
-    if(browser && 'serviceWorker' in navigator) {
-        console.log('registering service worker');
-        navigator.serviceWorker.register('/service-worker.js');
-    }
 </script>
 
