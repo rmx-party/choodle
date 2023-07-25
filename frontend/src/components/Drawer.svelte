@@ -9,11 +9,11 @@
 
     const handleTap = (event) => {
         if (toggleState == 'open') {
-            toggleState = 'closed';
-        } else if (toggleState == 'closed') {
             toggleState = 'minimized'
-        } else if (toggleState == 'minimized') {
+        } else if (toggleState == 'closed') {
             toggleState = 'open'
+        } else if (toggleState == 'minimized') {
+            toggleState = 'closed';
         }
         console.log(`drawer toggle`, event, toggleState)
     }
