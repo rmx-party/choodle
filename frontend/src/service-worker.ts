@@ -3,12 +3,20 @@
 /// <reference lib="esnext" />
 /// <reference lib="webworker" />
 
+import {registerRoute} from 'workbox-routing';
+import {StaleWhileRevalidate} from 'workbox-strategies';
+
+registerRoute(
+    ({url}) => url.host.endsWith('sanity.io'),
+    new StaleWhileRevalidate()
+);
+
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
 import {build, files, version} from '$service-worker';
 
 // Create a unique cache name for this deployment
-const CACHE = `cache-${version}`;
+const CACHE = `cache-6`;
 
 const ASSETS = [
     ...build, // the app itself
