@@ -14,6 +14,7 @@ registerRoute(
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
 import {build, files, version} from '$service-worker';
+import {cleanupOutdatedCaches} from "workbox-precaching";
 
 // Create a unique cache name for this deployment
 const CACHE = `cache-${version}`;
@@ -74,3 +75,5 @@ sw.addEventListener('fetch', (event) => {
 
     event.respondWith(respond());
 });
+
+cleanupOutdatedCaches()
