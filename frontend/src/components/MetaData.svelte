@@ -1,11 +1,12 @@
 <script lang="ts">
-    export let url;
-    export let title;
-    export let imageUrl;
-    export let imageAlt;
-    export let width;
-    export let height;
-    export let description;
+    export let url: string | undefined;
+    export let title: string | undefined;
+    export let imageUrl: string | undefined;
+    export let imageAlt: string | undefined;
+    export let width: number | string | undefined;
+    export let height: number | string | undefined;
+    export let description: string | undefined;
+    export let themeColor: string | null = '#ffffff';
 </script>
 
 <svelte:head>
@@ -31,5 +32,8 @@
     {#if description}
         <meta property="og:description" content={description}/>
         <meta name="description" content={description}/>
+    {/if}
+    {#if themeColor}
+        <meta name="theme-color" content={themeColor} />
     {/if}
 </svelte:head>
