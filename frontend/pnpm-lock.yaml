@@ -26,6 +26,9 @@ dependencies:
   pngjs:
     specifier: ^7.0.0
     version: 7.0.0
+  workbox-precaching:
+    specifier: ^7.0.0
+    version: 7.0.0
   workbox-routing:
     specifier: ^7.0.0
     version: 7.0.0
@@ -2535,6 +2538,14 @@ packages:
 
   /workbox-core@7.0.0:
     resolution: {integrity: sha512-81JkAAZtfVP8darBpfRTovHg8DGAVrKFgHpOArZbdFd78VqHr5Iw65f2guwjE2NlCFbPFDoez3D3/6ZvhI/rwQ==}
+    dev: false
+
+  /workbox-precaching@7.0.0:
+    resolution: {integrity: sha512-EC0vol623LJqTJo1mkhD9DZmMP604vHqni3EohhQVwhJlTgyKyOkMrZNy5/QHfOby+39xqC01gv4LjOm4HSfnA==}
+    dependencies:
+      workbox-core: 7.0.0
+      workbox-routing: 7.0.0
+      workbox-strategies: 7.0.0
     dev: false
 
   /workbox-routing@7.0.0:
