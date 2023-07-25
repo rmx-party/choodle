@@ -1,8 +1,14 @@
 <script lang="ts">
     import Button from "../../components/Button.svelte";
     import Drawer from "../../components/Drawer.svelte"
+    import MetaData from "../../components/MetaData.svelte";
     import Wordmark from "../../components/Wordmark.svelte"
 </script>
+
+<MetaData 
+    title="Choodle Components"
+    themeColor="#FEF40A"
+/>
 
 <h1>Choodle Design Components</h1>
 

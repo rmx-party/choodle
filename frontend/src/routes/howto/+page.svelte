@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+    import { goto } from '$app/navigation';
     import Button from '../../components/Button.svelte';
+    import MetaData from '../../components/MetaData.svelte';
     import Wordmark from "../../components/Wordmark.svelte";
     import {toHTML} from "@portabletext/to-html";
 
@@ -8,6 +9,12 @@
 
     console.log(data)
 </script>
+
+
+<MetaData 
+    title="How to Choodle"
+    themeColor="#FEF40A"
+/>
 
 <main id="main">
 
