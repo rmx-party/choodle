@@ -2,6 +2,14 @@ import adapter from '@sveltejs/adapter-auto';
 import {vitePreprocess} from '@sveltejs/kit/vite';
 import * as child_process from "child_process";
 
+let name;
+
+if (process.env.VERCEL === '1') {
+    name = process.env.VERCEL_GIT_COMMIT_SHA
+} else {
+    name = child_process.execSync('git rev-parse HEAD').toString().trim()
+}
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
     // Consult https://kit.svelte.dev/docs/integrations#preprocessors
@@ -14,7 +22,7 @@ const config = {
         // See https://kit.svelte.dev/docs/adapters for more information about adapters.
         adapter: adapter(),
         version: {
-            name: child_process.execSync('git rev-parse HEAD').toString().trim()
+            name: name
         }
     }
 };
