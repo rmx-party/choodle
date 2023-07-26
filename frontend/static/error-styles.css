@@ -49,8 +49,10 @@ pre {
   margin: 2rem auto;
 }
 button {
+  width: 100%;
+  margin: 1rem auto;
+
   display: flex;
-  width: 21.4375rem;
   height: 6.5rem;
   padding: 0.5rem;
   justify-content: center;
