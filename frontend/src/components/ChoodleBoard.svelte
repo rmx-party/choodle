@@ -56,7 +56,8 @@
 
         event.preventDefault()
         drawTo(...canvasCoordsFromEvent(event));
-        applyCrunchToCanvas(canvas, ctx)
+        const url = crunchCanvasToUrl(canvas, ctx)
+        drawImageFromDataURL(url, ctx);
     }
 
     async function endDrawing(event: MouseEvent | TouchEvent) {
