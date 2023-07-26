@@ -6,7 +6,7 @@
     import {drawColor, backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
     import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
     import type {Dimensiony} from "$lib/Calculations";
-    import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
+    import {crunchCanvasToUrl, applyCrunchToCanvas, crunchCanvasToBuffer} from "$lib/ImageUtils";
     import {goto} from "$app/navigation";
     import Prompt from "./Prompt.svelte"
     import Button from "./Button.svelte"
@@ -56,6 +56,8 @@
 
         event.preventDefault()
         drawTo(...canvasCoordsFromEvent(event));
+
+        applyCrunchToCanvas(canvas, ctx)
     }
 
     async function endDrawing(event: MouseEvent | TouchEvent) {
