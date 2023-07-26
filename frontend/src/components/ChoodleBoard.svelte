@@ -56,10 +56,6 @@
 
         event.preventDefault()
         drawTo(...canvasCoordsFromEvent(event));
-
-        applyCrunchToCanvas(canvas, ctx)
-        ctx.save()
-        ctx.restore()
     }
 
     async function endDrawing(event: MouseEvent | TouchEvent) {
@@ -77,6 +73,8 @@
 
         await applyCrunchToCanvas(canvas, ctx)
         await push()
+
+        await load()
     }
 
     function drawTo(x: number, y: number) {
