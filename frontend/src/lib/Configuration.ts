@@ -6,4 +6,4 @@ export const pixelRatio = 0.4
 export const drawColor = "#000000"
 export const backgroundColour = "#ffffff"
 export const choodleUndoKey = 'choodle-undo'
-export const blackWhiteThreshold = 255;
+export const blackWhiteThreshold = 250;
