@@ -1,0 +1,24 @@
+:root {
+  --font-base-size: 16px;
+}
+html {
+  height: 100vh;
+  width: 100vw;
+
+  font-size: var(--font-base-size);
+  text-align: center;
+}
+pre {
+  text-align: left;
+  white-space: pre-wrap;
+  margin: 0 auto;
+}
+footer {
+  position: fixed;
+  bottom: 0px;
+
+  padding: 1rem;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
