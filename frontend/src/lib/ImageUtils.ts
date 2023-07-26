@@ -7,7 +7,7 @@ export const applyCrunchToCanvas = async (canvas, ctx) => {
 
     if (blackWhiteData.length % 4 === 0) {
         const imgData = new ImageData(blackWhiteData, canvas.width)
-        ctx.putImageData(imgData, 0, 0, 0, 0, canvas.width, canvas.height)
+        ctx.putImageData(imgData, 0, 0)
     }
 }
 
