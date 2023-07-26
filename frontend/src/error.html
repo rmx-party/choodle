@@ -5,16 +5,23 @@
     <title>Choops!</title>
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0">
     <link rel="stylesheet" href="/error-styles.css" />
+    <script>
+        function goBack() {
+            history.back();
+            return false;
+        }
+    </script>
 </head>
 <body>
     <h1>Oops!</h1>
-    <p>Something got <i>very</i> lost on our end.</p>
-    <p>Retry again soon.</p>
+    <p>Looks like you encountered an unknown error in cyberspace.</p>
 
 <pre>
 %sveltekit.status%
 %sveltekit.error.message%
 </pre>
+
+    <button onClick="goBack">Back</button>
 
     <p>Having trouble? <a href="mailto:admin@rmx.party">Email us</a></p>
 
