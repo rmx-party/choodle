@@ -279,7 +279,7 @@
     #buttons {
         z-index: 10000;
         width: 100%;
-
+        margin-top: 1.5rem;
         display: flex;
         align-items: center;
         justify-content: space-around;
