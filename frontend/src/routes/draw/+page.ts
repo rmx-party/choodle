@@ -6,7 +6,7 @@ export async function load({params}) {
     const promptData = await readOnlyClient.fetch(`*[_type == "dailyPrompt"] | order(_createdAt) [0]`);
     const howtoData = await readOnlyClient.fetch(`*[_type == "howto"] | order(_createdAt) [0]`);
 
-    // FIXME: I suspect we can do _one_ query for both things.
+    // FIXME: do both fetches asynchronously
 
     if (promptData || howtoData) {
         console.log(`load data: `, promptData)
