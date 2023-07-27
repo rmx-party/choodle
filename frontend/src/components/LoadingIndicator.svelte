@@ -4,14 +4,17 @@
     loading.subscribe(value => {
         console.log(`loading state: `, value)
     })
+
+    export let explanation = "";
 </script>
 
 {#if $loading}
-<div class="LoadingIndicator">
-    <div class="loading">
-        <div class="spinner"></div>
+    <div class="LoadingIndicator">
+        <div class="loading">
+            <div class="spinner"></div>
+        </div>
+        <p>${explanation}</p>
     </div>
-    </div> 
 {:else}
     <span class="not-loading">
         not loading
@@ -45,6 +48,7 @@
         justify-content: center;
         flex-direction: column;
     }
+
     .loading .spinner {
         margin: 0;
         padding: 0;
