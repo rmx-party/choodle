@@ -163,8 +163,9 @@
     }
 
     const save = async (_event: Event) => {
-        loading.set(true)
         const undoStack = await getUndoStack()
+        if (undoStack.current === '') return;
+        loading.set(true)
         const imgBlob = await (await fetch(undoStack.current)).blob();
         const uploadResult = await readWriteClient.assets.upload('image', imgBlob)
         console.log(`uploaded: `, uploadResult)
@@ -183,7 +184,7 @@
         const createResult = await readWriteClient.create(choodle)
         console.log(createResult)
         if (createResult._id) {
-            goto(`/choodle/${createResult._id}`)
+            await goto(`/choodle/${createResult._id}`)
         }
         loading.set(false)
     }
