@@ -9,17 +9,17 @@
     export let data;
 </script>
 
-<MetaData 
-    url={$page.url}
-    title="Choodle a doodle?"
-    imageUrl={opengraphChoodle}
-    width="630"
-    height="630"
-    themeColor="#FEF40A"
-    description="Draw something that lasts forever. Express yourself with lo-fi doodles that are yours to keep, sell, or share."/>
+<MetaData
+        url={$page.url}
+        title="Choodle a doodle?"
+        imageUrl={opengraphChoodle}
+        width="630"
+        height="630"
+        themeColor="#FEF40A"
+        description="Draw something that lasts forever. Express yourself with lo-fi doodles that are yours to keep, sell, or share."/>
 
 {#if !$loading}
     <ChoodleBoard id="choodle-board" prompt={data.prompt}></ChoodleBoard>
 {:else}
-    <LoadingIndicator></LoadingIndicator>
+    <LoadingIndicator explanation="loading..."></LoadingIndicator>
 {/if}
