@@ -170,13 +170,14 @@
     function getCreatorId() {
         try {
             const existingId = localforage.getItem('choodle-creator-id');
-            if (!existingId) {
+            if (existingId === '') {
                 const uuid = crypto.randomUUID()
                 localforage.setItem('choodle-creator-id', uuid)
                 return uuid
             }
             return existingId
-        } finally {
+        } catch (e) {
+            console.error(e)
             return 'unknown'
         }
     }
