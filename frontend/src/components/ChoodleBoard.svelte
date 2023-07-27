@@ -19,7 +19,7 @@
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
     let lastTouchedPoint: Dimensiony | null;
-    let isOnline = true;
+    let isOnline = window.navigator.onLine;
 
     const resizeCanvas = async () => {
         canvas.style.width = `100%`
