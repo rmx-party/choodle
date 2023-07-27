@@ -13,6 +13,8 @@
     import {readWriteClient} from "$lib/CMSUtils";
     import Drawer from "./Drawer.svelte";
     import {toHTML} from "@portabletext/to-html";
+    import localforage from "localforage";
+    import * as crypto from "crypto";
 
     export let id;
     export let prompt;
@@ -165,6 +167,20 @@
         await clearStorage();
     }
 
+    function getCreatorId() {
+        try {
+            const existingId = localforage.getItem('choodle-creator-id');
+            if (!existingId) {
+                const uuid = crypto.randomUUID()
+                localforage.setItem('choodle-creator-id', uuid)
+                return uuid
+            }
+            return existingId
+        } finally {
+            return 'unknown'
+        }
+    }
+
     const save = async (_event: Event) => {
         const undoStack = await getUndoStack()
         if (undoStack.current === '') return;
@@ -182,7 +198,8 @@
                     _type: "reference",
                     _ref: uploadResult?._id,
                 }
-            }
+            },
+            creatorId: getCreatorId()
         }
         const createResult = await readWriteClient.create(choodle)
         console.log(createResult)
