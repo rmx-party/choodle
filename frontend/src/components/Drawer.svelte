@@ -1,4 +1,6 @@
 <script lang="ts">
+    export const ssr = false;
+
     import Wordmark from "../components/Wordmark.svelte"
 
     export let content = `<h1>html contents</h1><p>html from
@@ -7,16 +9,35 @@
 
     let toggleState: 'minimized' | 'closed' | 'open' = 'closed';
 
+    const calculateElementHeights = () => {
+        const handle = document.getElementsByClassName("drag-zone")[0]
+        const prompt = document.getElementsByClassName("drawer-prompt")[0]
+        const content = document.getElementsByClassName("drawer-content")[0]
+        const handleHeight = handle.offsetHeight
+        const promptHeight = prompt.offsetHeight
+        const contentHeight = content.offsetHeight
+
+        return {handleHeight, promptHeight, contentHeight}
+    }
+
     const handleTap = (event) => {
+        const heights = calculateElementHeights()
+        const drawer = document.getElementById("drawer")
+
         if (toggleState == 'open') {
             toggleState = 'minimized'
+            drawer.style.top = `${(0 - drawer.offsetHeight + heights.handleHeight)}px`.toString()
         } else if (toggleState == 'closed') {
             toggleState = 'open'
+            drawer.style.top = "0px".toString()
         } else if (toggleState == 'minimized') {
             toggleState = 'closed';
+            drawer.style.top = `${0 - drawer.offsetHeight + heights.promptHeight + heights.handleHeight}px`.toString()
         }
-        console.log(`drawer toggle`, event, toggleState)
+        console.warn(`drawer toggle`, event, toggleState)
     }
+
+    console.log(calculateElementHeights())
 </script>
 
 <div id="drawer" class={toggleState}>
@@ -40,6 +61,7 @@
 
 <style>
     #drawer {
+        margin: 0;
         position: fixed;
         top: 0;
         width: 100%;
@@ -53,30 +75,22 @@
         transition: top 0.3s ease-in-out;
     }
 
-    #drawer.minimized {
-        top: -37%;
-    }
-
-    #drawer.closed {
-        top: -27%;
-    }
-
-    #drawer.open {
-        top: 0;
-    }
-
     .drawer-content {
+        margin: 0;
         max-height: 60vh;
         overflow: scroll-y;
     }
 
     .drawer-prompt {
+        margin: 0;
+        padding: 0.5rem;
         max-height: 6.5rem;
         overflow: hidden;
         text-align: center;
     }
 
     .drag-zone {
+        margin: 0;
         height: 1.5rem;
         width: 100%;
         background: none;
@@ -97,6 +111,8 @@
     }
 
     hr {
+        margin: 0;
+        padding: 0;
         border-top: 1px;
         border-color: rgba(0, 0, 0, 0.10);
         width: 100%;
