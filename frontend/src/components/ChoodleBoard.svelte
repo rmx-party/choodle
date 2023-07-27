@@ -14,7 +14,6 @@
     import Drawer from "./Drawer.svelte";
     import {toHTML} from "@portabletext/to-html";
     import localforage from "localforage";
-    import * as crypto from "crypto";
 
     export let id;
     export let prompt;
@@ -167,17 +166,18 @@
         await clearStorage();
     }
 
-    function getCreatorId() {
+    async function getCreatorId() {
         try {
-            const existingId = localforage.getItem('choodle-creator-id');
-            if (existingId === '') {
-                const uuid = crypto.randomUUID()
-                localforage.setItem('choodle-creator-id', uuid)
-                return uuid
+            const existingId = await localforage.getItem('choodle-creator-id');
+            if (existingId && existingId.length > 1) {
+                return existingId
             }
-            return existingId
+
+            const uuid = window.crypto.randomUUID()
+            localforage.setItem('choodle-creator-id', uuid)
+            return uuid
         } catch (e) {
-            console.error(e)
+            console.error(`getCreatorId failure, returning 'unknown'`, e)
             return 'unknown'
         }
     }
@@ -200,7 +200,7 @@
                     _ref: uploadResult?._id,
                 }
             },
-            creatorId: getCreatorId()
+            creatorId: await getCreatorId()
         }
         const createResult = await readWriteClient.create(choodle)
         console.log(createResult)
