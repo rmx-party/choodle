@@ -10,13 +10,12 @@
 
     export let data = {};
 
-    const canShare = (): boolean => {
-        if (browser) return !!navigator.share
+    const canShare = async (): Promise<boolean> => {
+        if (browser) return navigator.canShare(await generateShareable())
         return false
     }
 
-    const share = async (event: Event) => {
-        event.preventDefault()
+    const generateFilesArray = async () => {
         const img: unknown = urlFor(data.choodle.image);
         const imgBlob = await (await fetch(img as URL)).blob();
         // TODO: maybe remove files from this share once opengraph metadata is
@@ -31,13 +30,23 @@
                 }
             )
         ];
+        return files;
+    }
+
+    const generateShareable = async () => {
+        return {
+            files: await generateFilesArray(),
+            title: 'Choodle',
+            url: $page.url
+        }
+    }
+
+    const share = async (event: Event) => {
+        event.preventDefault()
+
         console.log('page url: ', $page.url)
         if (navigator.share) {
-            navigator.share({
-                files,
-                title: 'Choodle',
-                url: $page.url
-            }).then(() => {
+            navigator.share(await generateShareable()).then(() => {
                 console.log('Thanks for sharing!');
             }).catch(console.error);
         } else {
