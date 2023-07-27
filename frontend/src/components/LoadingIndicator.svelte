@@ -13,7 +13,7 @@
         <div class="loading">
             <div class="spinner"></div>
         </div>
-        <p>${explanation}</p>
+        <p>{explanation}</p>
     </div>
 {:else}
     <span class="not-loading">
