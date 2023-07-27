@@ -11,6 +11,7 @@
     import Prompt from "./Prompt.svelte"
     import Button from "./Button.svelte"
     import {readWriteClient} from "$lib/CMSUtils";
+    import Drawer from "./Drawer.svelte";
 
     export let id;
     export let prompt;
@@ -20,6 +21,7 @@
     let ctx: CanvasRenderingContext2D;
     let lastTouchedPoint: Dimensiony | null;
     let isOnline = true;
+
 
     const resizeCanvas = async () => {
         canvas.style.width = `100%`
@@ -234,14 +236,16 @@
             isOnline = false
         })
     });
+
+    const content = "hello"
 </script>
+
+<Drawer prompt={prompt.prompt} content={content}/>
 
 <div id="buttons">
     <Button on:click={undo}>Undo</Button>
     <Button on:click={save} variant='primary' isOnline={isOnline}>Done</Button>
 </div>
-
-<Prompt {prompt}/>
 
 <canvas id={id}
         on:mousedown={startDrawing}

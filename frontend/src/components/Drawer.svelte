@@ -1,6 +1,4 @@
 <script lang="ts">
-    export const ssr = false;
-
     import Wordmark from "../components/Wordmark.svelte"
 
     export let content = `<h1>html contents</h1><p>html from
@@ -36,8 +34,6 @@
         }
         console.warn(`drawer toggle`, event, toggleState)
     }
-
-    console.log(calculateElementHeights())
 </script>
 
 <div id="drawer" class={toggleState}>
@@ -46,13 +42,13 @@
         <hr/>
     </section>
 
-    {#if prompt}
-        <section class="drawer-prompt">
+    <section class="drawer-prompt">
+        {#if prompt}
             <Wordmark fontSize="2rem"/>
             <br/>
             <strong>Draw:</strong> ‘{prompt}’ (icon)
-        </section>
-    {/if}
+        {/if}
+    </section>
 
     <button class="drag-zone" on:click|preventDefault={handleTap}>
         <div class="drawer-pull">pull</div>
