@@ -21,5 +21,5 @@
 {#if !$loading}
     <ChoodleBoard id="choodle-board" prompt={data.prompt}></ChoodleBoard>
 {:else}
-    <LoadingIndicator explanation="loading..."></LoadingIndicator>
+    <LoadingIndicator explanation="saving choodle"></LoadingIndicator>
 {/if}
