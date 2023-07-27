@@ -1,5 +1,5 @@
 <script>
-	import { goto } from "$app/navigation";
+    import {goto} from "$app/navigation";
     import {page} from "$app/stores";
     import opengraphChoodle from "$lib/assets/OpenGraph-Choodle-630x630-2x.png";
     import Button from "../components/Button.svelte";
@@ -15,11 +15,11 @@
 
 <h1>Welcome to
     <br/>
-    <Wordmark fontSize='4rem' />
+    <Wordmark fontSize='4rem'/>
     <br/>
     (prototype)
 </h1>
-<Button variant="primary" on:click={() => goto('/howto')}>Let's Draw!</Button>
+<Button variant="primary" on:click={() => goto('/draw')}>Let's Draw!</Button>
 
 <style>
     :root {
