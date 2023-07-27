@@ -27,7 +27,7 @@
 
     {#if prompt}
         <section class="drawer-prompt">
-            <Wordmark fontSize="2rem" />
+            <Wordmark fontSize="2rem"/>
             <br/>
             <strong>Draw:</strong> ‘{prompt}’ (icon)
         </section>
@@ -52,12 +52,15 @@
         overflow: hidden;
         transition: top 0.3s ease-in-out;
     }
+
     #drawer.minimized {
-        top: -46%;
+        top: -37%;
     }
+
     #drawer.closed {
-        top: -34%;
+        top: -27%;
     }
+
     #drawer.open {
         top: 0;
     }
@@ -66,6 +69,7 @@
         max-height: 60vh;
         overflow: scroll-y;
     }
+
     .drawer-prompt {
         max-height: 6.5rem;
         overflow: hidden;
@@ -81,6 +85,7 @@
         align-items: center;
         justify-content: center;
     }
+
     .drawer-pull {
         border-radius: 0.25rem;
         width: 3rem;
@@ -96,6 +101,7 @@
         border-color: rgba(0, 0, 0, 0.10);
         width: 100%;
     }
+
     strong {
         font-family: 'Dejavu Sans Bold';
         font-weight: 700;
