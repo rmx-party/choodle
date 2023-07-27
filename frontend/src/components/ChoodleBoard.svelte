@@ -19,6 +19,7 @@
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
     let lastTouchedPoint: Dimensiony | null;
+    let isOnline = true;
 
     const resizeCanvas = async () => {
         canvas.style.width = `100%`
@@ -222,12 +223,21 @@
         window.addEventListener('resize', resizeCanvas)
         await resizeCanvas()
         await load()
+
+        window.addEventListener('online', () => {
+            console.log('online')
+            isOnline = true
+        })
+        window.addEventListener('offline', () => {
+            console.log('offline')
+            isOnline = false
+        })
     });
 </script>
 
 <div id="buttons">
     <Button on:click={undo}>Undo</Button>
-    <Button on:click={save} variant='primary'>Done</Button>
+    <Button on:click={save} variant='primary' isOnline={isOnline}>Done</Button>
 </div>
 
 <Prompt {prompt}/>
