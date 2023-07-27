@@ -19,7 +19,7 @@
         description="Draw something that lasts forever. Express yourself with lo-fi doodles that are yours to keep, sell, or share."/>
 
 {#if !$loading}
-    <ChoodleBoard id="choodle-board" prompt={data.prompt}></ChoodleBoard>
+    <ChoodleBoard id="choodle-board" prompt={data.prompt} howto={data.howto}></ChoodleBoard>
 {:else}
     <LoadingIndicator explanation="saving choodle"></LoadingIndicator>
 {/if}

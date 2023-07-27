@@ -3,12 +3,16 @@ import {readOnlyClient} from "$lib/CMSUtils";
 export const ssr = false;
 
 export async function load({params}) {
-    const data = await readOnlyClient.fetch(`*[_type == "dailyPrompt"] | order(_createdAt) [0]`);
+    const promptData = await readOnlyClient.fetch(`*[_type == "dailyPrompt"] | order(_createdAt) [0]`);
+    const howtoData = await readOnlyClient.fetch(`*[_type == "howto"] | order(_createdAt) [0]`);
 
-    if (data) {
-        console.log(`load data: `, data)
+    // FIXME: I suspect we can do _one_ query for both things.
+
+    if (promptData || howtoData) {
+        console.log(`load data: `, promptData)
         return {
-            prompt: data
+            prompt: promptData,
+            howto: howtoData
         };
     }
     return {

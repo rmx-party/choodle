@@ -12,16 +12,17 @@
     import Button from "./Button.svelte"
     import {readWriteClient} from "$lib/CMSUtils";
     import Drawer from "./Drawer.svelte";
+    import {toHTML} from "@portabletext/to-html";
 
     export let id;
     export let prompt;
+    export let howto;
 
     let isDrawing = false;
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
     let lastTouchedPoint: Dimensiony | null;
     let isOnline = true;
-
 
     const resizeCanvas = async () => {
         canvas.style.width = `100%`
@@ -236,11 +237,9 @@
             isOnline = false
         })
     });
-
-    const content = "hello"
 </script>
 
-<Drawer prompt={prompt.prompt} content={content}/>
+<Drawer prompt={prompt.prompt} content={toHTML(howto.howto)}/>
 
 <div id="buttons">
     <Button on:click={undo}>Undo</Button>
