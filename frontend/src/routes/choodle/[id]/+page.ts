@@ -1,11 +1,13 @@
-import {readWriteClient} from "$lib/CMSUtils";
+import {readOnlyClient} from "$lib/CMSUtils";
 
 export async function load({params}) {
-    const data = await readWriteClient.fetch(`*[_type == "choodle" && _id == "${params.id}"]`);
+    const choodle = await readOnlyClient.fetch(`*[_type == "choodle" && _id == "${params.id}"]`);
+    const copy = await readOnlyClient.fetch(`*[_type == "viewChoodle"][0]`);
 
-    if (data) {
+    if (choodle) {
         return {
-            choodle: data[0]
+            choodle: choodle[0],
+            copy: copy
         };
     }
     return {

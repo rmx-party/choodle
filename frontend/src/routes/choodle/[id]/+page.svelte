@@ -6,6 +6,7 @@
     import MetaData from "../../../components/MetaData.svelte";
     import {goto} from "$app/navigation";
     import {clearStorage} from "$lib/StorageStuff";
+    import {toHTML} from "@portabletext/to-html";
 
     export let data = {};
 
@@ -48,19 +49,34 @@
         clearStorage()
         await goto("/draw")
     }
+
+    const topContent = () => {
+        if (data.copy?.top) {
+            return toHTML(data.copy.top)
+        }
+        return ''
+    }
+
+    const bottomContent = () => {
+        if (data.copy?.bottom) {
+            return toHTML(data.copy.bottom)
+        }
+        return ''
+    }
 </script>
 
 <MetaData url={$page.url}
-    title="Look, it's a choodle"
-    imageUrl={urlFor(data.choodle.image)}
-    width="430"
-    height="932" 
+          title="Look, it's a choodle"
+          imageUrl={urlFor(data.choodle.image)}
+          width="430"
+          height="932"
 />
 
 <main>
     {#if data.choodle }
+        {@html topContent()}
         <img src={urlFor(data.choodle.image)}/>
-        <p>Save your Choodle as a photo, send it to a friend, and keep choodling.</p>
+        {@html bottomContent()}
     {:else}
         <p>No choodle found.</p>
     {/if}
