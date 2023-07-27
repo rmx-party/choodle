@@ -12,7 +12,12 @@ export default {
             name: 'title',
             type: 'string',
             title: 'Choodle Title'
+        },
+        {
+            name: 'creatorId',
+            type: 'string',
+            title: 'Creator ID',
+            readOnly: true
         }
-
     ]
 }
