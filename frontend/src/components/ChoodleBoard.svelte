@@ -242,8 +242,6 @@
         ctx.lineCap = 'square';
         ctx.imageSmoothingEnabled = false;
 
-        window.addEventListener('resize', resizeCanvas)
-        await resizeCanvas()
         await load()
 
         window.addEventListener('online', () => {
@@ -259,31 +257,39 @@
 
 <Drawer prompt={prompt.prompt} content={toHTML(howto.howto)}/>
 
-<div id="buttons">
-    <Button on:click={undo}>Undo</Button>
-    <Button on:click={save} variant='primary' isOnline={isOnline}>Done</Button>
+<div id="flex-container">
+    <canvas id={id}
+            on:mousedown={startDrawing}
+            on:touchstart={startDrawing}
+            on:mouseup={endDrawing}
+            on:touchend={endDrawing}
+            on:mousemove={doDraw}
+            on:touchmove={doDraw}
+            on:click={(event) => {event.preventDefault()}}
+            on:drag={(event) => {event.preventDefault()}}>
+    </canvas>
+
+    <div id="buttons">
+        <Button on:click={undo}>Undo</Button>
+        <Button on:click={save} variant='primary' isOnline={isOnline}>Done</Button>
+    </div>
 </div>
 
-<canvas id={id}
-        on:mousedown={startDrawing}
-        on:touchstart={startDrawing}
-        on:mouseup={endDrawing}
-        on:touchend={endDrawing}
-        on:mousemove={doDraw}
-        on:touchmove={doDraw}
-        on:click={(event) => {event.preventDefault()}}
-        on:drag={(event) => {event.preventDefault()}}>
-</canvas>
-
 <style>
+    #flex-container {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: space-between;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+    }
+
     canvas {
-        position: relative;
-        z-index: 100;
-        align-self: stretch;
-        justify-self: center;
-        margin: 0 auto;
-        width: 100%;
-        height: 100%;
+        flex-grow: 1;
+        outline: 2px lawngreen dashed;
 
         /* minimize the amount of antialiasing effects in the canvas */
         image-rendering: optimizeSpeed; /* Older versions of FF          */
@@ -292,15 +298,15 @@
         image-rendering: -o-crisp-edges; /* OS X & Windows Opera (12.02+) */
         image-rendering: pixelated; /* Awesome future-browsers       */
         -ms-interpolation-mode: nearest-neighbor; /* IE                            */
+
     }
 
     #buttons {
-        z-index: 10000;
         width: 100%;
-        margin-top: 1.5rem;
+        margin-top: 0.5rem;
         display: flex;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-evenly;
         flex-wrap: wrap;
         flex-direction: row;
         align-content: center;
@@ -316,3 +322,4 @@
         min-width: 42px;
     }
 </style>
+
