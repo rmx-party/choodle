@@ -1,5 +1,6 @@
 <script lang="ts">
     import Wordmark from "../components/Wordmark.svelte"
+    import {onMount} from "svelte";
 
     export let content = `<h1>html contents</h1><p>html from
         cms</p><p>foo</p><p>foo</p>`
@@ -49,6 +50,10 @@
         }
         console.warn(`drawer toggle`, event, toggleState)
     }
+
+    onMount(async () => {
+        toggleStateTo(toggleState)
+    })
 </script>
 
 <div id="drawer" class={toggleState}>
