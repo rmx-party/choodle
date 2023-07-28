@@ -5,7 +5,8 @@
         cms</p><p>foo</p><p>foo</p>`
     export let prompt = 'prompt'
 
-    let toggleState: 'minimized' | 'closed' | 'open' = 'closed';
+    type possibleStates = 'minimized' | 'closed' | 'open'
+    let toggleState: possibleStates = 'closed';
 
     const calculateElementHeights = () => {
         const handle = document.getElementsByClassName("drag-zone")[0]
@@ -18,19 +19,33 @@
         return {handleHeight, promptHeight, contentHeight}
     }
 
-    const handleTap = (event) => {
+    const toggleStateTo = (targetState: possibleStates) => {
         const heights = calculateElementHeights()
         const drawer = document.getElementById("drawer")
 
+        switch (targetState) {
+            case 'minimized':
+                toggleState = 'minimized'
+                drawer.style.top = `${(0 - drawer.offsetHeight + heights.handleHeight)}px`.toString()
+                break;
+            case 'open':
+                toggleState = 'open'
+                drawer.style.top = "0px".toString()
+                break;
+            case 'closed':
+                toggleState = 'closed';
+                drawer.style.top = `${0 - drawer.offsetHeight + heights.promptHeight + heights.handleHeight}px`.toString()
+                break;
+        }
+    }
+
+    const handleTap = (event) => {
         if (toggleState == 'open') {
-            toggleState = 'minimized'
-            drawer.style.top = `${(0 - drawer.offsetHeight + heights.handleHeight)}px`.toString()
+            toggleStateTo('minimized')
         } else if (toggleState == 'closed') {
-            toggleState = 'open'
-            drawer.style.top = "0px".toString()
+            toggleStateTo('open')
         } else if (toggleState == 'minimized') {
-            toggleState = 'closed';
-            drawer.style.top = `${0 - drawer.offsetHeight + heights.promptHeight + heights.handleHeight}px`.toString()
+            toggleStateTo('closed')
         }
         console.warn(`drawer toggle`, event, toggleState)
     }
@@ -42,7 +57,7 @@
         <hr/>
     </section>
 
-    <div id="clickable-area" on:click={handleTap}>
+    <div id="clickable-area" on:click|preventDefault={handleTap}>
         <section class="drawer-prompt">
             {#if prompt}
                 <Wordmark fontSize="2rem"/>
