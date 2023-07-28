@@ -7,6 +7,7 @@
     import {goto} from "$app/navigation";
     import {clearStorage} from "$lib/StorageStuff";
     import {toHTML} from "@portabletext/to-html";
+    import * as Configuration from "$lib/Configuration";
 
     export let data = {};
 
@@ -72,15 +73,16 @@
           height="932"
 />
 
-<main>
+<choodle>
     {#if data.choodle }
         {@html topContent()}
-        <img src={urlFor(data.choodle.image)}/>
+        <img src={urlFor(data.choodle.image)} width={Configuration.targetMaxSize.x}
+             height={Configuration.targetMaxSize.y}/>
         {@html bottomContent()}
     {:else}
         <p>No choodle found.</p>
     {/if}
-</main>
+</choodle>
 
 <menu>
     <Button on:click={clearAndStartOver}>make more choodles</Button>
@@ -104,5 +106,6 @@
     img {
         width: 70%;
         image-rendering: pixelated;
+        object-fit: contain;
     }
 </style>
