@@ -39,10 +39,6 @@ export function maximumSize(desiredSize: Dimensiony, maxSize: Dimensiony): Dimen
     return maxSize
 }
 
-export function applyRatio(dimensions: Dimensiony, ratio: number) {
-    return {x: dimensions.x * ratio, y: dimensions.y * ratio}
-}
-
 export function removeOffset(dimensions: Dimensiony, offsetToRemove: Dimensiony): Dimensiony {
     return {x: dimensions.x - offsetToRemove.x, y: dimensions.y - offsetToRemove.y}
 }

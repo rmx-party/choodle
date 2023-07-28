@@ -3,8 +3,8 @@
     import {browser} from "$app/environment";
     import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff";
     import {onMount} from "svelte";
-    import {drawColor, backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
-    import {applyRatio, maximumSize} from "$lib/Calculations";
+    import {drawColor, backgroundColour, lineWidth, targetMaxSize} from "$lib/Configuration";
+    import {maximumSize} from "$lib/Calculations";
     import type {Dimensiony} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
     import {goto} from "$app/navigation";
@@ -24,11 +24,10 @@
         const bounds = canvas.getBoundingClientRect();
 
         const canvasDimensions = maximumSize({x: bounds.width, y: bounds.height}, targetMaxSize)
-        const ratioedCanvasDimensions = applyRatio(canvasDimensions, pixelRatio)
 
         window.requestAnimationFrame(async () => {
-            canvas.width = ratioedCanvasDimensions.x
-            canvas.height = ratioedCanvasDimensions.y
+            canvas.width = canvasDimensions.x
+            canvas.height = canvasDimensions.y
             await load()
         })
     }
