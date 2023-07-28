@@ -13,20 +13,20 @@
     <title>Oops!</title>
 </svelte:head>
 
-<main>
+<div class="container">
     <h1>Oops!</h1>
     <p>Something got lost on our end. <br/>Retry again soon.</p>
 
-    <img class="error-image" src='/choodle-choos.png' />
+    <img class="error-image" src='/choodle-bob-p2.png' alt="A doodle of the painter Bob Ross, slightly smiling" />
 
-    <Button variant="big primary" on:click={reload}>Refresh</Button>
+    <Button variant="big primary" on:click={reload}>Retry</Button>
 
     <p>Having trouble? <a href="mailto:help@rmx.party">Email us</a></p>
 
     <footer>
         <Wordmark /> © 2023
     </footer>
-</main>
+</div>
 
 <style>
 :root {
@@ -38,8 +38,16 @@
   font-weight: 400;
   line-height: 120%; /* 1.35rem */
 }
-main {
-    padding: 1rem;
+
+.container {
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  flex-wrap: nowrap;
 }
 h1 {
   font-size: 2rem;
@@ -53,10 +61,9 @@ p {
 }
 
 img {
-    width: 80vw;
-    height: 10rem;
-    margin-bottom: 6rem;
-    object-fit: cover;
+    width: 100%;
+    height: 12rem;
+    object-fit: contain;
     overflow: visible;
 }
 
@@ -68,6 +75,7 @@ pre {
 }
 
 footer {
+  flex-grow: 1;
   padding: 1rem;
   margin: 0 auto;
   width: 100%;
