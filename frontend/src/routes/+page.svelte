@@ -3,6 +3,7 @@
     import {page} from "$app/stores";
     import opengraphChoodle from "$lib/assets/OpenGraph-Choodle-630x630-2x.png";
     import Button from "../components/Button.svelte";
+    import handDraw from "$lib/assets/hand-draw.svg"
     import MetaData from "../components/MetaData.svelte";
     import Wordmark from "../components/Wordmark.svelte";
 </script>
@@ -19,7 +20,7 @@
     <br/>
     (prototype)
 </h1>
-<Button variant="primary" on:click={() => goto('/howto')}>Let's Draw!</Button>
+<Button variant="primary" on:click={() => goto('/howto')} icon={handDraw}>Let's Draw!</Button>
 
 <style>
     :root {
