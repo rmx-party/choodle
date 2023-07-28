@@ -26,6 +26,7 @@
     let isOnline = true;
 
     const resizeCanvas = async () => {
+        const buttons = document.getElementById('buttons')
         canvas.style.width = `100%`
         canvas.style.height = `100%`
         const bounds = canvas.getBoundingClientRect();
@@ -259,11 +260,6 @@
 
 <Drawer prompt={prompt.prompt} content={toHTML(howto.howto)}/>
 
-<div id="buttons">
-    <Button on:click={undo}>Undo</Button>
-    <Button on:click={save} variant='primary' isOnline={isOnline}>Done</Button>
-</div>
-
 <canvas id={id}
         on:mousedown={startDrawing}
         on:touchstart={startDrawing}
@@ -275,6 +271,11 @@
         on:drag={(event) => {event.preventDefault()}}>
 </canvas>
 
+<div id="buttons">
+    <Button on:click={undo}>Undo</Button>
+    <Button on:click={save} variant='primary' isOnline={isOnline}>Done</Button>
+</div>
+
 <style>
     canvas {
         position: relative;
@@ -284,6 +285,7 @@
         margin: 0 auto;
         width: 100%;
         height: 100%;
+        margin-top: 2rem;
 
         /* minimize the amount of antialiasing effects in the canvas */
         image-rendering: optimizeSpeed; /* Older versions of FF          */
@@ -297,7 +299,6 @@
     #buttons {
         z-index: 10000;
         width: 100%;
-        margin-top: 1.5rem;
         display: flex;
         align-items: center;
         justify-content: space-around;
