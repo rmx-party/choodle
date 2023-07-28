@@ -2,6 +2,7 @@
     import {urlFor} from "$lib/PersistedImagesUtils"
     import {page} from "$app/stores";
     import Button from "../../../components/Button.svelte";
+    import handDraw from "$lib/assets/hand-draw.svg"
     import {browser} from "$app/environment";
     import MetaData from "../../../components/MetaData.svelte";
     import {goto} from "$app/navigation";
@@ -85,7 +86,7 @@
 </choodle>
 
 <menu>
-    <Button on:click={clearAndStartOver}>make more choodles</Button>
+    <Button on:click={clearAndStartOver} icon={handDraw}>Again!</Button>
     {#if canShare()}
         <Button variant="primary" on:click={share}>share</Button>
     {/if}
