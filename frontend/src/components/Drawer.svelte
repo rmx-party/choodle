@@ -36,7 +36,7 @@
     }
 </script>
 
-<div id="drawer" class={toggleState}>
+<div id="drawer" class={toggleState} on:click={handleTap}>
     <section class="drawer-content">
         {@html content}
         <hr/>
@@ -50,7 +50,7 @@
         {/if}
     </section>
 
-    <button class="drag-zone" on:click|preventDefault={handleTap}>
+    <button class="drag-zone">
         <div class="drawer-pull">pull</div>
     </button>
 </div>
