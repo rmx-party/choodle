@@ -65,8 +65,9 @@
 
         if (lastTouchedPoint) {
             ctx.fillRect(
-                Math.round(lastTouchedPoint.x - lineWidth / 2), Math.round(lastTouchedPoint.y - lineWidth / 2),
-                Math.round(lineWidth / 2), Math.round(lineWidth / 2)
+                Math.round(lastTouchedPoint.x - lineWidth * 2),
+                Math.round(lastTouchedPoint.y - lineWidth * 2),
+                Math.round(lineWidth * 2), Math.round(lineWidth * 2)
             )
         }
 
