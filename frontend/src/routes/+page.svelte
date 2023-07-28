@@ -19,7 +19,7 @@
     <br/>
     (prototype)
 </h1>
-<Button variant="primary" on:click={() => goto('/draw')}>Let's Draw!</Button>
+<Button variant="primary" on:click={() => goto('/howto')}>Let's Draw!</Button>
 
 <style>
     :root {
