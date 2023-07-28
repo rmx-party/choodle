@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
+    import {goto} from '$app/navigation';
     import Button from '../../components/Button.svelte';
     import MetaData from '../../components/MetaData.svelte';
     import Wordmark from "../../components/Wordmark.svelte";
@@ -11,15 +11,16 @@
 </script>
 
 
-<MetaData 
-    title="How to Choodle"
-    themeColor="#FEF40A"
+<MetaData
+        title="How to Choodle"
+        themeColor="#FEF40A"
 />
 
 <main id="main">
 
     <h1>
-        How to <Wordmark />
+        How to
+        <Wordmark/>
     </h1>
 
     <content id="content">
@@ -39,12 +40,6 @@
         min-width: 100vw;
         min-height: 100vh;
         text-align: center;
-    }
-
-    .cta {
-        display: flex;
-        padding: 1em;
-        text-decoration: none;
     }
 </style>
 
