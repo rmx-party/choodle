@@ -4,15 +4,12 @@
     import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff";
     import {onMount} from "svelte";
     import {drawColor, backgroundColour, lineWidth, pixelRatio, targetMaxSize} from "$lib/Configuration";
-    import {applyRatio, maximumSize, removeOffset} from "$lib/Calculations";
+    import {applyRatio, maximumSize} from "$lib/Calculations";
     import type {Dimensiony} from "$lib/Calculations";
-    import {crunchCanvasToUrl, applyCrunchToCanvas, crunchCanvasToBuffer} from "$lib/ImageUtils";
+    import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
     import {goto} from "$app/navigation";
-    import Prompt from "./Prompt.svelte"
     import Button from "./Button.svelte"
     import {readWriteClient} from "$lib/CMSUtils";
-    import Drawer from "./Drawer.svelte";
-    import {toHTML} from "@portabletext/to-html";
     import localforage from "localforage";
 
     export let id;
