@@ -25,6 +25,7 @@
 
     #draw {
         height: 100vh;
+        height: -webkit-fill-available;
         width: 100vw;
         overflow: hidden; /* Avoid scrollbars */
         margin: 0;
