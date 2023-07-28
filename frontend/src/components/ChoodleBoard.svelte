@@ -24,8 +24,6 @@
     let isOnline = true;
 
     const resizeCanvas = async () => {
-        canvas.style.width = `100%`
-        canvas.style.height = `100%`
         const bounds = canvas.getBoundingClientRect();
 
         const canvasDimensions = maximumSize({x: bounds.width, y: bounds.height}, targetMaxSize)
@@ -34,8 +32,6 @@
         window.requestAnimationFrame(async () => {
             canvas.width = ratioedCanvasDimensions.x
             canvas.height = ratioedCanvasDimensions.y
-            canvas.style.width = `${canvasDimensions.x}px`
-            canvas.style.height = `${canvasDimensions.y}px`
             await load()
         })
     }
@@ -240,6 +236,7 @@
         ctx.lineCap = 'square';
         ctx.imageSmoothingEnabled = false;
 
+        await resizeCanvas()
         await load()
 
         window.addEventListener('online', () => {
@@ -254,6 +251,11 @@
 </script>
 
 <div id="flex-container">
+    <div id="buttons">
+        <Button on:click={undo}>Undo</Button>
+        <Button on:click={save} variant='primary' isOnline={isOnline}>Done</Button>
+    </div>
+
     <canvas id={id}
             on:mousedown={startDrawing}
             on:touchstart={startDrawing}
@@ -264,11 +266,6 @@
             on:click={(event) => {event.preventDefault()}}
             on:drag={(event) => {event.preventDefault()}}>
     </canvas>
-
-    <div id="buttons">
-        <Button on:click={undo}>Undo</Button>
-        <Button on:click={save} variant='primary' isOnline={isOnline}>Done</Button>
-    </div>
 </div>
 
 <style>
@@ -285,16 +282,15 @@
 
     canvas {
         flex-grow: 1;
-        outline: 2px lawngreen dashed;
+        object-fit: contain;
 
         /* minimize the amount of antialiasing effects in the canvas */
-        image-rendering: optimizeSpeed; /* Older versions of FF          */
-        image-rendering: -moz-crisp-edges; /* FF 6.0+                       */
-        image-rendering: -webkit-optimize-contrast; /* Safari                        */
+        image-rendering: optimizeSpeed; /* Older versions of FF */
+        image-rendering: -moz-crisp-edges; /* FF 6.0+ */
+        image-rendering: -webkit-optimize-contrast; /* Safari */
         image-rendering: -o-crisp-edges; /* OS X & Windows Opera (12.02+) */
-        image-rendering: pixelated; /* Awesome future-browsers       */
-        -ms-interpolation-mode: nearest-neighbor; /* IE                            */
-
+        image-rendering: pixelated; /* Awesome future-browsers */
+        -ms-interpolation-mode: nearest-neighbor; /* IE */
     }
 
     #buttons {
