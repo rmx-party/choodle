@@ -16,8 +16,6 @@
     import localforage from "localforage";
 
     export let id;
-    export let prompt;
-    export let howto;
 
     let isDrawing = false;
     let canvas: HTMLCanvasElement;
@@ -254,8 +252,6 @@
         })
     });
 </script>
-
-<Drawer prompt={prompt.prompt} content={toHTML(howto.howto)}/>
 
 <div id="flex-container">
     <canvas id={id}
