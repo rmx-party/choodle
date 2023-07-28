@@ -36,23 +36,25 @@
     }
 </script>
 
-<div id="drawer" class={toggleState} on:click={handleTap}>
+<div id="drawer" class={toggleState}>
     <section class="drawer-content">
         {@html content}
         <hr/>
     </section>
 
-    <section class="drawer-prompt">
-        {#if prompt}
-            <Wordmark fontSize="2rem"/>
-            <br/>
-            <strong>Draw:</strong> ‘{prompt}’ (icon)
-        {/if}
-    </section>
+    <div id="clickable-area" on:click={handleTap}>
+        <section class="drawer-prompt">
+            {#if prompt}
+                <Wordmark fontSize="2rem"/>
+                <br/>
+                <strong>Draw:</strong> ‘{prompt}’ (icon)
+            {/if}
+        </section>
 
-    <button class="drag-zone">
-        <div class="drawer-pull">pull</div>
-    </button>
+        <button class="drag-zone">
+            <div class="drawer-pull">pull</div>
+        </button>
+    </div>
 </div>
 
 <style>
