@@ -20,6 +20,12 @@
     let lastTouchedPoint: Dimensiony | null;
     let isOnline = true;
 
+    const resetViewportUnit = async () => {
+        // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
     const resizeCanvas = async () => {
         const bounds = canvas.getBoundingClientRect();
 
@@ -232,6 +238,7 @@
         ctx.lineCap = 'square';
         ctx.imageSmoothingEnabled = false;
 
+        await resetViewportUnit()
         await resizeCanvas()
         await load()
 
@@ -242,6 +249,10 @@
         window.addEventListener('offline', () => {
             console.log('offline')
             isOnline = false
+        })
+        window.addEventListener('resize', () => {
+            resizeCanvas() // TODO: debounce
+            resetViewportUnit()
         })
     });
 </script>
@@ -274,6 +285,7 @@
         align-items: center;
         width: 100vw;
         height: 100vh;
+        height: calc(var(--vh, 1vh) * 100) /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
     }
 
     canvas {
