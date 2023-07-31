@@ -199,13 +199,13 @@
     const save = async (_event: Event) => {
         const upScaledImage = await upScaledImageUrlBy(canvas, ctx, 4)
         const upScaledImageBlob = await (await fetch(upScaledImage)).blob()
-        const upScaledUploadResult = await readWriteClient.assets.upload('image', upScaledImageBlob)
+        const upScaledUploadResult = readWriteClient.assets.upload('image', upScaledImageBlob)
 
         const undoStack = await getUndoStack()
         if (undoStack.current === '') return;
         loading.set(true)
         const imgBlob = await (await fetch(undoStack.current)).blob();
-        const uploadResult = await readWriteClient.assets.upload('image', imgBlob)
+        const uploadResult = readWriteClient.assets.upload('image', imgBlob)
         console.log(`uploaded: `, uploadResult)
 
         const choodle = {
@@ -215,14 +215,14 @@
                 _type: "image",
                 asset: {
                     _type: "reference",
-                    _ref: uploadResult?._id,
+                    _ref: (await uploadResult)?._id,
                 }
             },
             upScaledImage: {
                 _type: "image",
                 asset: {
                     _type: "reference",
-                    _ref: upScaledUploadResult?._id,
+                    _ref: (await upScaledUploadResult)?._id,
                 }
             },
             creatorId: await getCreatorId()
