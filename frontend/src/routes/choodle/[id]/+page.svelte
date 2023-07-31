@@ -82,7 +82,7 @@
     </h1>
     {#if data.choodle }
         {@html topContent()}
-        <img src={urlFor(data.choodle.image)} width={300} height={350}/>
+        <img class="choodle" src={urlFor(data.choodle.image)} width={330} height={330}/>
         {@html bottomContent()}
     {:else}
         <p>No choodle found.</p>
@@ -112,9 +112,16 @@
         align-items: center;
     }
 
-    img {
-        width: 70%;
+    img.choodle {
+        margin: 1rem;
+        max-height: 40%;
+        width: auto;
+        max-width: 80%;
         image-rendering: pixelated;
         object-fit: contain;
+
+        border-radius: 0.22175rem;
+        background: lightgray 0px -1.601px / 100% 105.839% no-repeat, #FFF;
+        box-shadow: 1px 1px 17.74193572998047px 0.8870968222618103px rgba(0, 0, 0, 0.12);
     }
 </style>
