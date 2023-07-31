@@ -56,7 +56,7 @@ export const crunchCanvasToBuffer = async (canvas: HTMLCanvasElement, ctx: Canva
     return buffer
 }
 
-export const crunchCanvasToUrl = async (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
+export const crunchCanvasToUrl = async (canvas: HTMLCanvasElement | OffscreenCanvas, ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => {
     const buffer = await crunchCanvasToBuffer(canvas, ctx);
     const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
     const dataUrlResult = `data:image/png;base64,${base64}`;

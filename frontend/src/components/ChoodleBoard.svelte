@@ -179,7 +179,28 @@
         }
     }
 
+    const upScaledImageUrlBy = async (canvas, context, scale: number) => {
+        const image = await createImageBitmap(canvas, 0, 0, canvas.width, canvas.height, {
+            resizeWidth: canvas.width * scale,
+            resizeHeight: canvas.height * scale,
+            resizeQuality: 'pixelated'
+        })
+        ctx.drawImage(image, 0, 0)
+
+        const offScreenCanvas = new OffscreenCanvas(canvas.width * scale, canvas.height * scale)
+        const offScreenContext = offScreenCanvas.getContext('2d')!
+        offScreenContext.drawImage(image, 0, 0)
+
+        // FIXME: should probably close the offscreen canvas here.
+
+        return await crunchCanvasToUrl(offScreenCanvas, offScreenContext)
+    }
+
     const save = async (_event: Event) => {
+        const upScaledImage = await upScaledImageUrlBy(canvas, ctx, 4)
+        const upScaledImageBlob = await (await fetch(upScaledImage)).blob()
+        const upScaledUploadResult = await readWriteClient.assets.upload('image', upScaledImageBlob)
+
         const undoStack = await getUndoStack()
         if (undoStack.current === '') return;
         loading.set(true)
@@ -195,6 +216,13 @@
                 asset: {
                     _type: "reference",
                     _ref: uploadResult?._id,
+                }
+            },
+            upScaledImage: {
+                _type: "image",
+                asset: {
+                    _type: "reference",
+                    _ref: upScaledUploadResult?._id,
                 }
             },
             creatorId: await getCreatorId()
@@ -290,6 +318,7 @@
     }
 
     canvas {
+        outline: #051BDC 1px dashed;
         flex-grow: 1;
         object-fit: contain;
 
