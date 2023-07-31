@@ -77,11 +77,12 @@
 />
 
 <choodle>
-    <Wordmark />
+    <h1>
+        <Wordmark/>
+    </h1>
     {#if data.choodle }
         {@html topContent()}
-        <img src={urlFor(data.choodle.image)} width={300}
-             height={350}/>
+        <img src={urlFor(data.choodle.image)} width={300} height={350}/>
         {@html bottomContent()}
     {:else}
         <p>No choodle found.</p>
