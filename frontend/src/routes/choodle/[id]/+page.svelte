@@ -102,7 +102,7 @@
     }
 
     .container {
-        padding: 1rem;
+        padding: 1rem 1rem 130px;
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -110,7 +110,6 @@
         align-items: stretch;
         height: 100vh;
         width: 100%;
-        max-height: 100vh;
         gap: 1rem;
     }
 
@@ -123,8 +122,9 @@
 
     img.choodle {
         flex-grow: 1;
+        flex-shrink: 1;
         margin: 1.5rem auto;
-        max-height: 70%;
+        max-height: 30vh;
         width: auto;
         max-width: 100%;
         image-rendering: pixelated;
