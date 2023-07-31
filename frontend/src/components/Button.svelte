@@ -2,21 +2,28 @@
     export let variant = 'secondary';
     export let isOnline = true;
     export let icon: string | undefined;
+    export let iconPosition: 'left' | 'right' = 'left';
 </script>
 
 {#if isOnline}
     <div class={`btn ${variant}`} on:click>
-        {#if icon}
+        {#if icon && iconPosition == 'left'}
             <img class="icon" src={icon} alt='' />
         {/if}
         <slot/>
+        {#if icon && iconPosition == 'right'}
+            <img class="icon" src={icon} alt='' />
+        {/if}
     </div>
 {:else}
     <div class={`btn ${variant} disabled`}>
-        {#if icon}
+        {#if icon && iconPosition == 'left'}
             <img class="icon" src={icon} alt='' />
         {/if}
         <slot/>
+        {#if icon && iconPosition == 'right'}
+            <img class="icon" src={icon} alt='' />
+        {/if}
     </div>
 {/if}
 
@@ -125,6 +132,11 @@
 
 
     .icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        image-rendering: pixelated;
+    }
+    .primary .icon {
         width: 2.5rem;
         height: 2.5rem;
         image-rendering: pixelated;
