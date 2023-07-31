@@ -21,7 +21,7 @@
 
     const share = async (event: Event) => {
         event.preventDefault()
-        const img: unknown = urlFor(data.choodle.image);
+        const img: unknown = urlFor(data.choodle.upScaledImage);
         const imgBlob = await (await fetch(img as URL)).blob();
         // TODO: maybe remove files from this share once opengraph metadata is
         // hooked up
@@ -71,7 +71,7 @@
 
 <MetaData url={$page.url}
           title="Look, it's a choodle"
-          imageUrl={urlFor(data.choodle.image)}
+          imageUrl={urlFor(data.choodle.upScaledImage)}
           themeColor="#FEF40A"
           width="430"
           height="932"
@@ -81,7 +81,7 @@
     <Wordmark fontSize="3.5rem"/>
     {#if data.choodle }
         {@html topContent()}
-        <img class="choodle" src={urlFor(data.choodle.image)} width={330} height={330}/>
+        <img class="choodle" src={urlFor(data.choodle.upScaledImage)} width={330} height={330}/>
         <section class="content">
             {@html bottomContent()}
         </section>
