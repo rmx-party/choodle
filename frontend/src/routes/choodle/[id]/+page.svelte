@@ -72,6 +72,7 @@
 <MetaData url={$page.url}
           title="Look, it's a choodle"
           imageUrl={urlFor(data.choodle.image)}
+          themeColor="#FEF40A"
           width="430"
           height="932"
 />
@@ -107,7 +108,7 @@
         flex-wrap: nowrap;
         align-content: stretch;
         align-items: stretch;
-        height: 100%;
+        height: 100vh;
         width: 100%;
         max-height: 100vh;
         gap: 1rem;
@@ -122,8 +123,8 @@
 
     img.choodle {
         flex-grow: 1;
-        margin: 0 auto;
-        max-height: 60%;
+        margin: 1.5rem auto;
+        max-height: 70%;
         width: auto;
         max-width: 100%;
         image-rendering: pixelated;

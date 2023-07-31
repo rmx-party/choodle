@@ -45,6 +45,8 @@
 <Button variant="primary disabled" icon={handDraw}>primary disabled</Button>
 
 <Button>button</Button>
+<Button icon={handDraw}>button + icon</Button>
+<Button icon={handDraw} iconPosition="right">right icon</Button>
 
 <hr/>
 
