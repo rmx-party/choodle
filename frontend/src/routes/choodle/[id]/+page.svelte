@@ -3,12 +3,14 @@
     import {page} from "$app/stores";
     import Button from "../../../components/Button.svelte";
     import handDraw from "$lib/assets/hand-draw.svg"
+    import send from "$lib/assets/send.svg"
     import {browser} from "$app/environment";
     import MetaData from "../../../components/MetaData.svelte";
     import {goto} from "$app/navigation";
     import {clearStorage} from "$lib/StorageStuff";
     import {toHTML} from "@portabletext/to-html";
     import * as Configuration from "$lib/Configuration";
+	import Wordmark from "../../../components/Wordmark.svelte";
 
     export let data = {};
 
@@ -75,10 +77,11 @@
 />
 
 <choodle>
+    <Wordmark />
     {#if data.choodle }
         {@html topContent()}
-        <img src={urlFor(data.choodle.image)} width={Configuration.targetMaxSize.x}
-             height={Configuration.targetMaxSize.y}/>
+        <img src={urlFor(data.choodle.image)} width={300}
+             height={350}/>
         {@html bottomContent()}
     {:else}
         <p>No choodle found.</p>
@@ -86,13 +89,17 @@
 </choodle>
 
 <menu>
-    <Button on:click={clearAndStartOver} icon={handDraw}>Again!</Button>
+    <Button on:click={clearAndStartOver} icon={handDraw}>Draw</Button>
     {#if canShare()}
-        <Button variant="primary" on:click={share}>share</Button>
+        <Button on:click={share} icon={send}>Share</Button>
     {/if}
 </menu>
 
 <style>
+    :root {
+        background: var(--choodle-yellow);
+    }
+
     main, menu {
         text-align: center;
         padding: 0 2rem;
