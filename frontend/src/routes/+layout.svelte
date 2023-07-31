@@ -3,9 +3,7 @@
           content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0">
 </svelte:head>
 
-<main id="main">
-    <slot/>
-</main>
+<slot/>
 
 <script lang="ts">
     import {browser, dev} from "$app/environment"

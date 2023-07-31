@@ -48,8 +48,10 @@
         letter-spacing: 0.18px;
         word-wrap: break-word;
         text-decoration: none;
+    }
 
-
+    :global(.btn + .btn) {
+        margin-left: 1rem;
     }
 
     .secondary {

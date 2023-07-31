@@ -12,5 +12,6 @@
         height: 1em;
         image-rendering: pixelated;
         vertical-align: baseline;
+        margin: 0 auto;
     }
 </style>

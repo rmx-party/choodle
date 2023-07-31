@@ -76,52 +76,60 @@
           height="932"
 />
 
-<choodle>
-    <h1>
-        <Wordmark/>
-    </h1>
+<div class="container">
+    <Wordmark fontSize="3.5rem"/>
     {#if data.choodle }
         {@html topContent()}
         <img class="choodle" src={urlFor(data.choodle.image)} width={330} height={330}/>
-        {@html bottomContent()}
+        <section class="content">
+            {@html bottomContent()}
+        </section>
     {:else}
         <p>No choodle found.</p>
     {/if}
-</choodle>
 
-<menu>
-    <Button on:click={clearAndStartOver} icon={handDraw}>Draw</Button>
-    {#if canShare()}
-        <Button on:click={share} icon={send}>Share</Button>
-    {/if}
-</menu>
+    <menu>
+        <Button on:click={clearAndStartOver} icon={handDraw}>Draw</Button>
+        <Button on:click={share} icon={send} iconPosition='right'>Share</Button>
+    </menu>
+</div>
 
 <style>
     :root {
         background: var(--choodle-yellow);
+        text-align: center;
     }
 
-    main, menu {
-        text-align: center;
-        padding: 0 2rem;
+    .container {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: stretch;
+        align-items: stretch;
+        height: 100%;
+        width: 100%;
+        max-height: 100vh;
+        gap: 1rem;
     }
 
     menu {
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-direction: row;
+        margin: 0;
+        padding: 0;
     }
 
     img.choodle {
-        margin: 1rem;
-        max-height: 40%;
+        flex-grow: 1;
+        margin: 0 auto;
+        max-height: 60%;
         width: auto;
-        max-width: 80%;
+        max-width: 100%;
         image-rendering: pixelated;
         object-fit: contain;
 
         border-radius: 0.22175rem;
-        background: lightgray 0px -1.601px / 100% 105.839% no-repeat, #FFF;
         box-shadow: 1px 1px 17.74193572998047px 0.8870968222618103px rgba(0, 0, 0, 0.12);
     }
 </style>
