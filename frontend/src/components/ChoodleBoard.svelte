@@ -318,7 +318,7 @@
     }
 
     canvas {
-        outline: #051BDC 1px dashed;
+        /* outline: #051BDC 1px dashed; */
         flex-grow: 1;
         object-fit: contain;
 
