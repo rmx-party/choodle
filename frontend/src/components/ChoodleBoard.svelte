@@ -197,7 +197,7 @@
     }
 
     const save = async (_event: Event) => {
-        const upScaledImage = await upScaledImageUrlBy(canvas, ctx, 4)
+        const upScaledImage = await upScaledImageUrlBy(canvas, ctx, 8)
         const upScaledImageBlob = await (await fetch(upScaledImage)).blob()
         const upScaledUploadResult = readWriteClient.assets.upload('image', upScaledImageBlob)
 
