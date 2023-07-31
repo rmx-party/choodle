@@ -9,6 +9,11 @@ export default {
             title: 'Choodle Image'
         },
         {
+            name: 'upScaledImage',
+            type: 'image',
+            title: 'Up Scaled Choodle Image'
+        },
+        {
             name: 'title',
             type: 'string',
             title: 'Choodle Title'
