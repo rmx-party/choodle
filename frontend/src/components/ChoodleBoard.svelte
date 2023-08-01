@@ -302,9 +302,24 @@
             on:click={(event) => {event.preventDefault()}}
             on:drag={(event) => {event.preventDefault()}}>
     </canvas>
+    <div id="safaribar">safari needs this</div>
 </div>
 
 <style>
+    #safaribar {
+        height: 0;
+        background: none;
+    }
+    @supports (-webkit-touch-callout: none) {
+      /* CSS specific to iOS devices */ 
+        #safaribar {
+            height: 74px;
+            background: cyan;
+            width: 100%;
+            flex-shrink: 1;
+        }
+    }
+
     #flex-container {
         display: flex;
         flex-direction: column;
