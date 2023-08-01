@@ -19,7 +19,16 @@
     description="Draw something that lasts forever. Express yourself with lo-fi doodles that are yours to keep, sell, or share."/>
 
 {#if !$loading}
-    <ChoodleBoard id="choodle-board" prompt={data.prompt} howto={data.howto}></ChoodleBoard>
+    <div id="choodle-box">
+        <ChoodleBoard id="choodle-board" prompt={data.prompt} howto={data.howto}></ChoodleBoard>
+    </div>
 {:else}
     <LoadingIndicator explanation="saving choodle"></LoadingIndicator>
 {/if}
+
+<style>
+#choodle-box {
+  touch-action: pan-x pan-y;
+  touch-action: none;
+}
+</style>
