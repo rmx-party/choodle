@@ -33,6 +33,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@bugsnag/js": "^7.20.2",
     "@portabletext/to-html": "^2.0.0",
     "@sanity/client": "^6.1.7",
     "@sanity/image-url": "^1.0.2",
