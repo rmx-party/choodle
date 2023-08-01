@@ -10,4 +10,8 @@
 </div>
 
 <style>
+    #container {
+        background: white;
+        text-align: center;
+    }
 </style>
