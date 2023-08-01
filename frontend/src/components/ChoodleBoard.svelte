@@ -291,6 +291,7 @@
 <div id="flex-container">
     <Prompt prompt={prompt}/>
 
+    <div class="canvas-container">
     <canvas id={id}
             on:mousedown={startDrawing}
             on:touchstart={startDrawing}
@@ -301,6 +302,7 @@
             on:click={(event) => {event.preventDefault()}}
             on:drag={(event) => {event.preventDefault()}}>
     </canvas>
+    </div>
 
     <div id="buttons">
         <Button on:click={undo} colour="yellow">Undo</Button>
@@ -321,10 +323,17 @@
         height: calc(var(--vh, 1vh) * 100) /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
     }
 
+    .canvas-container {
+        flex-grow: 1;
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     canvas {
         /* outline: #051BDC 1px dashed; */
-        flex-grow: 1;
         object-fit: contain;
+        width: 100%;
         max-width: 95vw;
         max-height: 95vh;
 
