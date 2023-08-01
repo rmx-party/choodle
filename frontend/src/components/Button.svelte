@@ -102,6 +102,7 @@
         line-height: 120%; /* 1.8rem */
 
         width: 100%;
+        max-width: 21rem;
         margin: 1rem auto;
 
         display: flex;
