@@ -5,6 +5,8 @@
     import Wordmark from "../components/Wordmark.svelte";
     import {toHTML} from "@portabletext/to-html";
     import handDraw from "$lib/assets/hand-draw.svg";
+    import star1 from "$lib/assets/star-1.png";
+    import star2 from "$lib/assets/star-2.png";
 
     export let data;
 
@@ -19,18 +21,17 @@
 
 <main id="main">
     <Wordmark fontSize="4rem"/>
+    <p><img src={star1} alt="a doodle of a star"/>FWB Fest 2023<img src={star2} alt="a doodle of a star"/></p>
 
     <content id="content">
-        {@html toHTML(data.howto.howto)}
+        {@html toHTML(data.howto.top)}
     </content>
 
     <Button variant="primary" icon={handDraw} on:click={() => {goto('/draw')}}>
         Let's Draw!
     </Button>
 
-    <content id="bottom">
-        {@html toHTML(data.howto.bottom)}
-    </content>
+    Choodle is a canvas for in-chain creativity. Read the FAQ.
 </main>
 
 <style>
