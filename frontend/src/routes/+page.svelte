@@ -1,35 +1,46 @@
-<script>
-    import {goto} from "$app/navigation";
-    import {page} from "$app/stores";
-    import opengraphChoodle from "$lib/assets/OpenGraph-Choodle-630x630-2x.png";
-    import Button from "../components/Button.svelte";
-    import handDraw from "$lib/assets/hand-draw.svg"
-    import MetaData from "../components/MetaData.svelte";
+<script lang="ts">
+    import {goto} from '$app/navigation';
+    import Button from '../components/Button.svelte';
+    import MetaData from '../components/MetaData.svelte';
     import Wordmark from "../components/Wordmark.svelte";
-</script>
-<MetaData url={$page.url}
-          title="Welcome!"
-          imageUrl={opengraphChoodle}
-          width="630"
-          height="630"
-          description="Draw something that lasts forever. Express yourself with lo-fi doodles that are yours to keep, sell, or share."/>
+    import {toHTML} from "@portabletext/to-html";
+    import handDraw from "$lib/assets/hand-draw.svg";
 
-<h1>Welcome to
-    <br/>
-    <Wordmark fontSize='4rem'/>
-    <br/>
-    (prototype)
-</h1>
-<Button variant="primary" on:click={() => goto('/howto')} icon={handDraw}>Let's Draw!</Button>
+    export let data;
+
+    console.log(data)
+</script>
+
+
+<MetaData
+        title="How to Choodle"
+        themeColor="#FEF40A"
+/>
+
+<main id="main">
+    <Wordmark fontSize="4rem"/>
+
+    <content id="content">
+        {@html toHTML(data.howto.howto)}
+    </content>
+
+    <Button variant="primary" icon={handDraw} on:click={() => {goto('/draw')}}>
+        Let's Draw!
+    </Button>
+
+    <content id="bottom">
+        {@html toHTML(data.howto.bottom)}
+    </content>
+</main>
 
 <style>
-    :root {
+    main {
+        background: var(--color-primary);
+        padding: 3rem;
+        margin: 0;
+        min-width: 100vw;
+        min-height: 100vh;
         text-align: center;
-    }
-
-    h1 {
-        line-height: 3em;
-        font-size: 2rem;
     }
 </style>
 

@@ -12,6 +12,7 @@ html, button, input, label {
     font-family: var(--app-main-font-family);
     font-size: var(--font-size-base);
     color: var(--choodle-black);
+    background: var(--choodle-yellow)
 }
 
 * {
@@ -117,6 +118,7 @@ a, .link {
     font-weight: 700;
     line-height: 120%; /* 1.05rem */
 }
+
 .caption-reg, figcaption {
     color: var(--choodle-black);
 

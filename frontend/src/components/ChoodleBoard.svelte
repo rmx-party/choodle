@@ -288,8 +288,8 @@
 
 <div id="flex-container">
     <div id="buttons">
-        <Button on:click={undo}>Undo</Button>
-        <Button on:click={save} isOnline={isOnline}>Done</Button>
+        <Button on:click={undo} colour="white">Undo</Button>
+        <Button on:click={save} isOnline={isOnline} colour="white">Done</Button>
     </div>
 
     <canvas id={id}
