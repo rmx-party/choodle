@@ -329,6 +329,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        margin: 0.75rem;
     }
     canvas {
         /* outline: #051BDC 1px dashed; */
@@ -336,8 +337,6 @@
         width: 100%;
         max-width: 95vw;
         max-height: 95vh;
-
-        margin: 0.75rem;
 
         background: #FFF;
         box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.12), 1px 1px 1px 0px rgba(0, 0, 0, 0.08);
