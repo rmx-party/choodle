@@ -325,6 +325,8 @@
         /* outline: #051BDC 1px dashed; */
         flex-grow: 1;
         object-fit: contain;
+        max-width: 95vw;
+        max-height: 95vh;
 
         margin: 0.75rem;
 
