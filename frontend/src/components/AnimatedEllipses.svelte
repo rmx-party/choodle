@@ -29,3 +29,10 @@
 </script>
 
 <span class="ellipses">...</span>
+
+<style>
+    .ellipses {
+        display: inline-block;
+        width: 2em;
+    }
+</style>
