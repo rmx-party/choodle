@@ -21,7 +21,10 @@
 
 <main id="main">
     <Wordmark fontSize="4rem"/>
-    <p><img src={star1} alt="a doodle of a star"/>FWB Fest 2023<img src={star2} alt="a doodle of a star"/></p>
+    <p><img width="22" height="17" src={star1} alt="a doodle of a star"/>FWB Fest 2023<img width="22" height="17"
+                                                                                           src={star2}
+                                                                                           alt="a doodle of a star"/>
+    </p>
 
     <content id="content">
         {@html toHTML(data.howto.top)}
