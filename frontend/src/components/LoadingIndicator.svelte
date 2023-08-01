@@ -1,5 +1,6 @@
 <script lang="ts">
     import {loading} from "$lib/store";
+    import AnimatedEllipses from "./AnimatedEllipses.svelte";
 
     loading.subscribe(value => {
         console.log(`loading state: `, value)
@@ -11,9 +12,13 @@
 {#if $loading}
     <div class="LoadingIndicator">
         <div class="loading">
-            <div class="spinner"></div>
+            <img class="loading-image" width="" src='/choodle-bob-p2.png'
+                 alt="A doodle of the painter Bob Ross, slightly smiling"/>
+            <strong>
+                {explanation}
+                <AnimatedEllipses/>
+            </strong>
         </div>
-        <p>{explanation}</p>
     </div>
 {:else}
     <span class="not-loading">
@@ -42,45 +47,21 @@
         width: 100vw;
         margin: 0;
         padding: 0;
-        background: hsla(150, 0%, 90%, 0.8);
+        background: white;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
     }
 
-    .loading .spinner {
-        margin: 0;
-        padding: 0;
-        width: var(--radius);
-        height: var(--radius);
-        border-radius: 50%;
-        border: var(--ring-width) solid var(--light-color);
+    strong {
+        margin-top: 2.5rem;
     }
 
-    .loading .spinner:before {
-        margin: 0;
-        padding: 0;
-        display: block;
-        position: relative;
-        left: calc(var(--ring-width) * -2);
-        top: calc(var(--ring-width) * -2);
-        content: ' ';
-        width: var(--radius);
-        height: var(--radius);
-        border-radius: 50%;
-        border: var(--ring-width) solid;
-        border-color: var(--dark-color) transparent transparent transparent;
-        animation: loading-rotate .8s ease-out infinite;
-    }
-
-    @keyframes loading-rotate {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
+    .loading-image {
+        width: 10.875rem;
+        height: 16.4375rem;
+        flex-shrink: 0;
     }
 
     .not-loading {
