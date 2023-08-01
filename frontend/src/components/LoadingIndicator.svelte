@@ -56,6 +56,7 @@
 
     strong {
         margin-top: 2.5rem;
+        text-align: left;
     }
 
     .loading-image {
