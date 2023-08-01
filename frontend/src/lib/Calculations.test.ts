@@ -22,31 +22,5 @@ describe('Calculations', () => {
             expect(maximumSize(desired, maximum)).toEqual(expected)
         })
     });
-
-    describe('removeOffset', () => {
-        test.each([
-            {dimensions: {x: 0, y: 0}, offsetToRemove: {x: 0, y: 0}, expected: {x: 0, y: 0}},
-            {dimensions: {x: 20, y: 20}, offsetToRemove: {x: 0, y: 0}, expected: {x: 20, y: 20}},
-            {dimensions: {x: 20, y: 20}, offsetToRemove: {x: 5, y: 5}, expected: {x: 15, y: 15}},
-            {dimensions: {x: 50, y: 50}, offsetToRemove: {x: 10, y: 20}, expected: {x: 40, y: 30}},
-            {dimensions: {x: 50, y: 50}, offsetToRemove: {x: 20, y: 10}, expected: {x: 30, y: 40}},
-            {dimensions: {x: 50, y: 50}, offsetToRemove: {x: -20, y: 10}, expected: {x: 70, y: 40}},
-            {dimensions: {x: 50, y: 50}, offsetToRemove: {x: 10, y: -20}, expected: {x: 40, y: 70}},
-            {dimensions: {x: 50, y: 50}, offsetToRemove: {x: 100, y: 20}, expected: {x: -50, y: 30}},
-            {dimensions: {x: 50, y: 50}, offsetToRemove: {x: 10, y: 100}, expected: {x: 40, y: -50}},
-        ])('removeOffset($dimensions, $offsetToRemove) -> $expected', ({
-                                                                           dimensions,
-                                                                           offsetToRemove,
-                                                                           expected
-                                                                       }) => {
-            expect(removeOffset(dimensions, offsetToRemove)).toEqual(expected)
-        })
-    });
-
-    describe("tuplizeDimensiony", () => {
-        it('turns an order-insensitivbe dimensiony object into an ordered tuple of dimensions', () => {
-            expect(tuplizeDimensiony({x: 100, y: 150})).toEqual([100, 150])
-        })
-    })
 });
 

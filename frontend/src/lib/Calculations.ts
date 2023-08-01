@@ -38,11 +38,3 @@ export function maximumSize(desiredSize: Dimensiony, maxSize: Dimensiony): Dimen
     }
     return maxSize
 }
-
-export function removeOffset(dimensions: Dimensiony, offsetToRemove: Dimensiony): Dimensiony {
-    return {x: dimensions.x - offsetToRemove.x, y: dimensions.y - offsetToRemove.y}
-}
-
-export function tuplizeDimensiony(dimensions: Dimensiony) {
-    return [dimensions.x, dimensions.y]
-}
