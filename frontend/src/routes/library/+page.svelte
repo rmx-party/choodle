@@ -47,6 +47,11 @@
 <Button>button</Button>
 <Button icon={handDraw}>button + icon</Button>
 <Button icon={handDraw} iconPosition="right">right icon</Button>
+<Button variant="secondary hover" icon={handDraw} iconPosition="right">hover</Button>
+<Button variant="secondary press" icon={handDraw} iconPosition="right">press</Button>
+<Button variant="secondary focus" icon={handDraw} iconPosition="right">focus</Button>
+<Button variant="secondary disabled" icon={handDraw}
+    iconPosition="right">disabled</Button>
 
 <hr/>
 
