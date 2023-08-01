@@ -19,9 +19,9 @@
 
     <img class="error-image" src='/choodle-bob-p2.png' alt="A doodle of the painter Bob Ross, slightly smiling" />
 
-    <Button variant="big primary" on:click={reload}>Retry</Button>
+    <Button variant="big primary" on:click={() => goto('/')}>Retry</Button>
 
-    <p>Having trouble? <a href="mailto:help@rmx.party">Email us</a></p>
+    <p>Having trouble? <a href="mailto:help@choodle.xyz">Email us</a></p>
 
     <footer>
         <Wordmark /> © 2023
