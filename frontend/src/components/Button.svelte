@@ -126,7 +126,6 @@
 
     .disabled {
         color: #BFBFBF;
-        border-radius: 1.5rem;
         background: none;
         box-shadow: none;
         border: none;
