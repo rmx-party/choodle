@@ -3,7 +3,7 @@
     import {browser} from "$app/environment";
     import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff";
     import {onMount} from "svelte";
-    import {drawColor, backgroundColour, lineWidth, targetMaxSize} from "$lib/Configuration";
+    import {drawColor, backgroundColour, lineWidth, targetMaxSize, upScaledImageRatio} from "$lib/Configuration";
     import {maximumSize} from "$lib/Calculations";
     import type {Dimensiony} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
@@ -197,7 +197,7 @@
     }
 
     const save = async (_event: Event) => {
-        const upScaledImage = await upScaledImageUrlBy(canvas, ctx, 8)
+        const upScaledImage = await upScaledImageUrlBy(canvas, ctx, upScaledImageRatio)
         const upScaledImageBlob = await (await fetch(upScaledImage)).blob()
         const upScaledUploadResult = readWriteClient.assets.upload('image', upScaledImageBlob)
 
@@ -311,8 +311,9 @@
         background: none;
         display: none;
     }
+
     @supports (-webkit-touch-callout: none) {
-      /* CSS specific to iOS devices */ 
+        /* CSS specific to iOS devices */
         #safaribar {
             height: 74px;
             background: cyan;
