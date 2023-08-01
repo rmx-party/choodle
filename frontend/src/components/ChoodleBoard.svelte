@@ -173,7 +173,7 @@
             }
 
             const uuid = window.crypto.randomUUID()
-            localforage.setItem('choodle-creator-id', uuid)
+            await localforage.setItem('choodle-creator-id', uuid)
             return uuid
         } catch (e) {
             console.error(`getCreatorId failure, returning 'unknown'`, e)
