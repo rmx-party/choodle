@@ -2,7 +2,7 @@ import localforage from "localforage";
 import {UndoStack} from "$lib/UndoStack";
 import {choodleUndoKey} from "$lib/Configuration";
 
-export function clearStorage() {
+export async function clearStorage() {
     await localforage.removeItem(choodleUndoKey)
 }
 
