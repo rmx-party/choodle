@@ -4,7 +4,7 @@ export default {
     title: 'Howto',
     fields: [
         {
-            name: 'howto',
+            name: 'top',
             title: 'Howto',
             type: 'array',
             of: [{type: 'block'}]
