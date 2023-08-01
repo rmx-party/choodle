@@ -100,6 +100,7 @@
         <img class="choodle" src={urlFor(data.choodle.upScaledImage)} width={330} height={330}/>
         <section class="content">
             <p>Get your sticker at the Art Center.</p>
+            <br/>
             <p>Wanna mint? Email: <a
                     href={`mailto:fwb@choodle.xyz?subject=Please mint my choodle&body=My choodle can be found at ${$page.url}`}>fwb@choodle.xyz</a>
             </p>
