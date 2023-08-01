@@ -117,6 +117,7 @@
     .primary:active,
     .primary.focus,
     .primary:focus {
+        border-radius: 4rem;
         border: 1px solid #FFF506;
         background: linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.02) 100%), #FEF40A;
 
