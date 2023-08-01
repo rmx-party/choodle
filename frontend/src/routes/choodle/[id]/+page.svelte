@@ -4,28 +4,27 @@
     import Button from "../../../components/Button.svelte";
     import handDraw from "$lib/assets/hand-draw.svg"
     import send from "$lib/assets/send.svg"
-    import {browser} from "$app/environment";
     import MetaData from "../../../components/MetaData.svelte";
     import {goto} from "$app/navigation";
     import {clearStorage} from "$lib/StorageStuff";
     import {toHTML} from "@portabletext/to-html";
-    import * as Configuration from "$lib/Configuration";
-	import Wordmark from "../../../components/Wordmark.svelte";
+    import Wordmark from "../../../components/Wordmark.svelte";
+    import {onMount} from "svelte";
+    import {browser} from "$app/environment";
 
     export let data = {};
+    let imgBlob;
 
     const canShare = (): boolean => {
-        if (browser) return !!navigator.share
-        return false
+        console.log('canshare')
+        console.log(imgBlob)
+        if (!browser) return false;
+        if (!navigator.share) return false;
+        return navigator.canShare(generateShareableFor(imgBlob))
     }
 
-    const share = async (event: Event) => {
-        event.preventDefault()
-        const img: unknown = urlFor(data.choodle.upScaledImage);
-        const imgBlob = await (await fetch(img as URL)).blob();
-        // TODO: maybe remove files from this share once opengraph metadata is
-        // hooked up
-        const files = [
+    function generateFilesFor(imgBlob: Blob) {
+        return [
             new File(
                 [imgBlob],
                 'choodle.png',
@@ -35,13 +34,30 @@
                 }
             )
         ];
+    }
+
+    onMount(async () => {
+        const img: unknown = urlFor(data.choodle.upScaledImage);
+        imgBlob = await (await fetch(img as URL)).blob();
+    })
+
+    function generateShareableFor(files: File[]) {
+        return {
+            files,
+            title: 'Choodle',
+            url: $page.url
+        };
+    }
+
+    const share = async (event: Event) => {
+        if (!browser) return;
+        event.preventDefault()
+        // TODO: maybe remove files from this share once opengraph metadata is
+        // hooked up
+        const files = generateFilesFor(imgBlob);
         console.log('page url: ', $page.url)
         if (navigator.share) {
-            navigator.share({
-                files,
-                title: 'Choodle',
-                url: $page.url
-            }).then(() => {
+            navigator.share(generateShareableFor(files)).then(() => {
                 console.log('Thanks for sharing!');
             }).catch(console.error);
         } else {
@@ -91,7 +107,9 @@
 
     <menu>
         <Button on:click={clearAndStartOver} icon={handDraw}>Draw</Button>
-        <Button on:click={share} icon={send} iconPosition='right'>Share</Button>
+        {#if canShare()}
+            <Button on:click={share} icon={send} iconPosition='right'>Share</Button>
+        {/if}
     </menu>
 </div>
 
