@@ -1,7 +1,7 @@
 {
   "name": "Choodle",
   "short_name": "Choodle",
-  "start_url": "/draw",
+  "start_url": "/",
   "display": "standalone",
   "icons": [
     {
