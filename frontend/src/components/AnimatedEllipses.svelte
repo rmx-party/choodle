@@ -1,5 +1,6 @@
 <script lang="ts">
     import {browser} from "$app/environment";
+    import {onDestroy} from "svelte";
 
     const newEllipsesFrom = (oldEllipses) => {
         switch (oldEllipses) {
@@ -15,10 +16,16 @@
     const updateEllipses = async () => {
         if (!browser) return;
         const ellipses = document.getElementsByClassName("ellipses")[0]
+        if (!ellipses) return;
         ellipses.innerHTML = newEllipsesFrom(ellipses.innerHTML)
     }
 
-    setInterval(updateEllipses, 500)
+    const intervalId = setInterval(updateEllipses, 500)
+
+    onDestroy(() => {
+        console.log('clearing the interval')
+        clearInterval(intervalId)
+    })
 </script>
 
 <span class="ellipses">...</span>
