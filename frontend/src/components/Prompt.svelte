@@ -2,7 +2,6 @@
     import handDraw from '$lib/assets/hand-draw-filled-40px.svg'
 
     export let prompt;
-
 </script>
 
 

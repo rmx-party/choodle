@@ -14,6 +14,7 @@
     import Prompt from "./Prompt.svelte";
 
     export let id;
+    export let prompt;
 
     let isDrawing = false;
     let canvas: HTMLCanvasElement;
@@ -288,7 +289,7 @@
 </script>
 
 <div id="flex-container">
-    <Prompt prompt={{prompt: "Your Best Friend as a Ghost Eating a Slice of Pie"}}/>
+    <Prompt prompt={prompt}/>
 
     <canvas id={id}
             on:mousedown={startDrawing}
