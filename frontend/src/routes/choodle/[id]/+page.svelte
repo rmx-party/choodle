@@ -124,7 +124,7 @@
         flex-grow: 1;
         flex-shrink: 1;
         margin: 1.5rem auto;
-        max-height: 30vh;
+        max-height: 40vh;
         width: auto;
         max-width: 100%;
         image-rendering: pixelated;
