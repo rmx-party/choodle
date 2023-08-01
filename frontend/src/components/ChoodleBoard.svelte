@@ -292,16 +292,16 @@
     <Prompt prompt={prompt}/>
 
     <div class="canvas-container">
-    <canvas id={id}
-            on:mousedown={startDrawing}
-            on:touchstart={startDrawing}
-            on:mouseup={endDrawing}
-            on:touchend={endDrawing}
-            on:mousemove={doDraw}
-            on:touchmove={doDraw}
-            on:click={(event) => {event.preventDefault()}}
-            on:drag={(event) => {event.preventDefault()}}>
-    </canvas>
+        <canvas id={id}
+                on:mousedown={startDrawing}
+                on:touchstart={startDrawing}
+                on:mouseup={endDrawing}
+                on:touchend={endDrawing}
+                on:mousemove={doDraw}
+                on:touchmove={doDraw}
+                on:click={(event) => {event.preventDefault()}}
+                on:drag={(event) => {event.preventDefault()}}>
+        </canvas>
     </div>
 
     <div id="buttons">
@@ -330,7 +330,9 @@
         align-items: center;
         justify-content: center;
         margin: 0.75rem;
+        width: 100%;
     }
+
     canvas {
         /* outline: #051BDC 1px dashed; */
         object-fit: contain;
