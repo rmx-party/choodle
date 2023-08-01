@@ -309,6 +309,7 @@
     #safaribar {
         height: 0;
         background: none;
+        display: none;
     }
     @supports (-webkit-touch-callout: none) {
       /* CSS specific to iOS devices */ 
@@ -321,6 +322,7 @@
     }
 
     #flex-container {
+        background: var(--choodle-yellow);
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
