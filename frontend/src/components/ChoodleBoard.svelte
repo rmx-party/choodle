@@ -11,6 +11,7 @@
     import Button from "./Button.svelte"
     import {readWriteClient} from "$lib/CMSUtils";
     import localforage from "localforage";
+    import Prompt from "./Prompt.svelte";
 
     export let id;
 
@@ -287,10 +288,7 @@
 </script>
 
 <div id="flex-container">
-    <div id="buttons">
-        <Button on:click={undo} colour="white">Undo</Button>
-        <Button on:click={save} isOnline={isOnline} colour="white">Done</Button>
-    </div>
+    <Prompt prompt={{prompt: "Your Best Friend as a Ghost Eating a Slice of Pie"}}/>
 
     <canvas id={id}
             on:mousedown={startDrawing}
@@ -302,28 +300,15 @@
             on:click={(event) => {event.preventDefault()}}
             on:drag={(event) => {event.preventDefault()}}>
     </canvas>
-    <div id="safaribar">safari needs this</div>
+
+    <div id="buttons">
+        <Button on:click={undo} colour="yellow">Undo</Button>
+        <Button on:click={save} isOnline={isOnline} colour="yellow">Done</Button>
+    </div>
 </div>
 
 <style>
-    #safaribar {
-        height: 0;
-        background: none;
-        display: none;
-    }
-
-    @supports (-webkit-touch-callout: none) {
-        /* CSS specific to iOS devices */
-        #safaribar {
-            height: 74px;
-            background: cyan;
-            width: 100%;
-            flex-shrink: 1;
-        }
-    }
-
     #flex-container {
-        background: var(--choodle-yellow);
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -340,6 +325,12 @@
         flex-grow: 1;
         object-fit: contain;
 
+        margin: 0.75rem;
+
+        background: #FFF;
+        box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.12), 1px 1px 1px 0px rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(52px);
+
         /* minimize the amount of antialiasing effects in the canvas */
         image-rendering: optimizeSpeed; /* Older versions of FF */
         image-rendering: -moz-crisp-edges; /* FF 6.0+ */
@@ -351,7 +342,6 @@
 
     #buttons {
         width: 100%;
-        margin-top: 0.5rem;
         display: flex;
         align-items: center;
         justify-content: space-evenly;
@@ -360,6 +350,7 @@
         align-content: center;
         gap: 2mm;
         padding: 2mm;
+        padding-top: 0;
     }
 
     #buttons button {

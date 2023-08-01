@@ -15,7 +15,6 @@
         imageUrl={opengraphChoodle}
         width="630"
         height="630"
-        themeColor="#FEF40A"
         description="Draw something that lasts forever. Express yourself with lo-fi doodles that are yours to keep, sell, or share."/>
 
 {#if !$loading}
