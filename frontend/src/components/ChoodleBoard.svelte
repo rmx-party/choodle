@@ -314,7 +314,13 @@
 </div>
 
 <style>
+    :root {
+        background-color: rgba(20, 21, 24, 0.03);
+    }
+
     #flex-container {
+        background-color: rgba(20, 21, 24, 0.03);
+
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
