@@ -93,7 +93,7 @@
 
     setTimeout(async () => {
         await resetViewportUnit()
-    }, 100);
+    }, 50);
 </script>
 
 <MetaData url={$page.url}

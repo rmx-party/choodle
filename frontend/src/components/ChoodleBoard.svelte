@@ -304,7 +304,7 @@
             await resetViewportUnit()
             await resizeCanvas()
             await load()
-        }, 100)
+        }, 50)
     });
 </script>
 
@@ -388,17 +388,9 @@
         flex-wrap: wrap;
         flex-direction: row;
         align-content: center;
-        gap: 2mm;
-        padding: 2mm;
-        padding-top: 0;
-    }
-
-    #buttons button {
-        font-size: 1rem;
-        padding: 0.2em;
-        flex-grow: 1;
-        min-height: 42px;
-        min-width: 42px;
+        gap: 1rem;
+        padding: 0 1rem 1rem;
+        margin: 0;
     }
 </style>
 
