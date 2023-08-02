@@ -27,11 +27,15 @@
         description="Draw something that lasts forever. Express yourself with lo-fi doodles that are yours to keep, sell, or share."/>
 
 <main id="main">
-    <Wordmark fontSize="88px"/>
-    <p><img width="22" height="17" src={star1} alt="a doodle of a star"/>FWB Fest 2023<img width="22" height="17"
-                                                                                           src={star2}
-                                                                                           alt="a doodle of a star"/>
-    </p>
+    <div id="top-box">
+        <Wordmark fontSize="88px"/>
+        <p class="tagline"><img width="22" height="17" src={star1} alt="a doodle of a star"/>FWB Fest 2023<img
+                width="22"
+                height="17"
+                src={star2}
+                alt="a doodle of a star"/>
+        </p>
+    </div>
 
     <content id="content">
         {@html toHTML(data.howto.top)}
@@ -41,17 +45,29 @@
         Let's Draw!
     </Button>
 
-    Choodle is a canvas for in-chain creativity. Read the FAQ.
+    <p id="bottom-content">Choodle is a canvas for in-chain creativity. Read the <a href="https://www.example.com/"
+                                                                                    target="_blank">FAQ</a>.</p>
 </main>
 
 <style>
     main {
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
         background: var(--color-primary);
         padding: 3rem;
         margin: 0;
         min-width: 100vw;
-        min-height: 100vh;
+        height: 100vh;
         text-align: center;
+    }
+
+    .tagline {
+        margin-top: 0rem;
+    }
+
+    #bottom-content {
+        color: rgba(20, 21, 24, 0.8);
     }
 </style>
 
