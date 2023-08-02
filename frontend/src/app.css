@@ -24,11 +24,6 @@ html, body, main {
     max-width: 720px;
 }
 
-body, main {
-    width: 100vw;
-    min-height: 100vh;
-}
-
 pre {
     whitespace: pre-wrap;
 }

@@ -34,15 +34,19 @@
         flex-grow: 1;
         flex-shrink: 0;
         height: 3.5em;
-        padding: 0.5rem 1rem;
-        box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.01), 0px -2px 8px 0px rgba(0, 0, 0, 0.12) inset, 0px 2px 24px 0px rgba(255, 255, 255, 0.40) inset, 0px 1px 4px 0px rgba(0, 0, 0, 0.04);
-
         border-radius: 1.5rem;
-        backdrop-filter: blur(80px);
         justify-content: center;
         align-items: center;
         display: inline-flex;
-        color: #141518;
+        padding: 0.5rem 1rem;
+        margin: 0.25rem auto;
+
+        backdrop-filter: blur(40px);
+        background: #FFF;
+        box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.01), 0px -2px 8px 0px rgba(0, 0, 0, 0.12) inset, 0px 2px 24px 0px rgba(255, 255, 255, 0.40) inset, 0px 1px 4px 0px rgba(0, 0, 0, 0.04);
+        backdrop-filter: blur(40px);
+
+        color: var(--choodle-black);
         font-size: 18px;
         font-family: var(--app-main-font-family);
         font-weight: 400;
@@ -52,18 +56,14 @@
         text-decoration: none;
     }
 
-    :global(.btn + .btn) {
-        margin-left: 1rem;
-    }
-
     .white {
-        background: white;
+        background: rgba(255, 255, 255, 0.98);
         color: var(--choodle-black)
     }
 
     .yellow {
         background: var(--choodle-yellow);
-        color: var(--choodle-black);
+        color: var(--choodle-black)
     }
 
     .secondary {
@@ -84,28 +84,15 @@
     .btn:active,
     .btn.focus,
     .btn:focus {
-        border-radius: 1.5rem;
-        background: linear-gradient(0deg, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0.01) 100%), #FFF;
-
-        /* button/pressed */
-        box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.12) inset, 1px 1px 2px 0px rgba(0, 0, 0, 0.12) inset;
+        box-shadow: -1px -1px 1px 0px rgba(20, 21, 24, 0.09) inset, 2px 2px 4px 0px rgba(20, 21, 24, 0.16) inset;
     }
 
     .primary {
-        /* mobile/button-primary */
-        font-family: DejaVu Sans Bold;
-        font-size: 1.5rem;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 120%; /* 1.8rem */
-
         flex-grow: 0;
-        width: 100%;
         max-width: 21rem;
         margin: 1rem auto;
 
         display: flex;
-        padding: 0.5rem;
         justify-content: center;
         align-items: center;
         height: 6.5rem;
@@ -113,9 +100,14 @@
 
         border-radius: 4rem;
 
-        /* button/action */
-        box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.01), 0px -2px 8px 0px rgba(0, 0, 0, 0.12) inset, 0px 2px 24px 0px rgba(255, 255, 255, 0.40) inset, 0px 1px 4px 0px rgba(0, 0, 0, 0.04);
+        font-family: DejaVu Sans Bold;
+        font-size: 1.5rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 120%; /* 1.8rem */
+
         backdrop-filter: blur(40px);
+        box-shadow: 0px 4px 24px 0px rgba(20, 21, 24, 0.10), 0px -2px 8px 0px rgba(20, 21, 24, 0.18) inset, 0px 2px 24px 0px rgba(255, 255, 255, 0.40) inset, 0px 1px 2px 0px rgba(20, 21, 24, 0.17);
     }
 
     .primary.hover,
@@ -124,11 +116,7 @@
     .primary:active,
     .primary.focus,
     .primary:focus {
-        border-radius: 4rem;
-        background: linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.02) 100%), #FEF40A;
-
-        /* button/pressed */
-        box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.12) inset, 1px 1px 2px 0px rgba(0, 0, 0, 0.12) inset;
+        box-shadow: -1px -1px 1px 0px rgba(20, 21, 24, 0.09) inset, 2px 2px 4px 0px rgba(20, 21, 24, 0.16) inset;
     }
 
     .disabled {

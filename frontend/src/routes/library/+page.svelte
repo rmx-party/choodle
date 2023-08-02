@@ -33,11 +33,13 @@
 <Wordmark />
 
 <h2>Buttons</h2>
-<Button variant="primary" icon={handDraw}>primary + icon</Button>
-<Button variant="primary hover" icon={handDraw}>primary hover</Button>
-<Button variant="primary press" icon={handDraw}>primary press</Button>
-<Button variant="primary focus" icon={handDraw}>primary focus</Button>
-<Button variant="primary disabled" icon={handDraw}>primary disabled</Button>
+<Button variant="primary" icon={handDraw}>primary</Button>
+<Button variant="primary yellow" icon={handDraw}>yellow</Button>
+<Button variant="primary hover" icon={handDraw}>hover</Button>
+<Button variant="primary press" icon={handDraw}>press</Button>
+<Button variant="primary press yellow" icon={handDraw}>press yellow</Button>
+<Button variant="primary focus" icon={handDraw}>focus</Button>
+<Button variant="primary disabled" icon={handDraw}>disabled</Button>
 
 <Button>button</Button>
 <Button icon={handDraw}>button + icon</Button>
@@ -47,6 +49,10 @@
 <Button variant="secondary focus" icon={handDraw} iconPosition="right">focus</Button>
 <Button variant="secondary disabled" icon={handDraw}
     iconPosition="right">disabled</Button>
+<Button icon={handDraw} variant="secondary yellow">yellow</Button>
+<Button variant="yellow" iconPosition="right">yellow</Button>
+<Button variant="secondary hover yellow" icon={handDraw}
+    iconPosition="right">hover</Button>
 
 <hr/>
 
