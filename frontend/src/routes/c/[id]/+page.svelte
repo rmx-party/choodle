@@ -112,8 +112,10 @@
             {@html topContent()}
         </span>
     </div>
-    <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
-         width='330' height='330' alt=''/>
+    <div class="choodle-container">
+        <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
+            width='390' height='520' alt=''/>
+    </div>
     <section class="content">
         <!-- {@html bottomContent()} -->
         <p>Get your sticker at the Art Center.
@@ -139,7 +141,7 @@
     }
 
     .container {
-        gap: 2rem;
+        /* gap: 2rem; */
         padding: 1rem 1rem;
         display: flex;
         flex-direction: column;
@@ -150,25 +152,35 @@
         height: 100vh;
         height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
         width: 100%;
+        padding: 1.5rem;
     }
 
     menu {
         display: flex;
         flex-direction: row;
-        margin: 0;
+        margin: 1rem 0;
         padding: 0;
         gap: 1rem;
     }
 
-    img.choodle {
+    .choodle-container {
+        flex-grow: 1;
+        margin: 2rem auto;
+        display: flex;
+        align-items: center;
+        padding: 0;
         flex-grow: 1;
         flex-shrink: 1;
-        margin: 1.5rem auto;
-        max-height: 40vh;
-        width: auto;
+        max-height: 50%;
+        max-width: 100%;
+        aspect-ratio: 3/4;
+    }
+    img.choodle {
+        flex-shrink: 1;
+        flex-grow: 1;
+        max-height: 100%;
         max-width: 100%;
         image-rendering: pixelated;
-        object-fit: contain;
 
         border-radius: 0.22175rem;
         box-shadow: 1px 1px 17.74193572998047px 0.8870968222618103px rgba(0, 0, 0, 0.12);
