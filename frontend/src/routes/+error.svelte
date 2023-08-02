@@ -8,6 +8,7 @@
 	import { browser } from "$app/environment";
 
     function reload() {
+        if (!browser) return;
         window.location.reload(true)
     }
 

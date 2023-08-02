@@ -30,6 +30,7 @@
     }
 
     const resizeCanvas = async () => {
+        if (!browser) return;
         const bounds = canvas.getBoundingClientRect();
 
         const canvasDimensions = maximumSize({x: bounds.width, y: bounds.height}, targetMaxSize)
@@ -43,6 +44,7 @@
 
     /* Drawing */
     function startDrawing(event: MouseEvent | TouchEvent) {
+        if (!browser) return;
         isDrawing = true;
         event.preventDefault()
         const [newX, newY] = canvasCoordsFromEvent(event)
@@ -82,6 +84,7 @@
     }
 
     function drawTo(x: number, y: number) {
+        if (!browser) return;
         const [roundedX, roundedY] = [Math.round(x), Math.round(y)]
         console.table([{action: 'drawing', x, y, roundedX, roundedY}])
 
@@ -168,6 +171,7 @@
     }
 
     async function getCreatorId() {
+        if (!browser) return;
         try {
             const existingId = await localforage.getItem('choodle-creator-id');
             if (existingId && existingId.length > 1) {
@@ -184,6 +188,7 @@
     }
 
     const upScaledImageUrlBy = async (canvas, context, scale: number) => {
+        if (!browser) return;
         const image = await createImageBitmap(canvas, 0, 0, canvas.width, canvas.height, {
             resizeWidth: canvas.width * scale,
             resizeHeight: canvas.height * scale,
@@ -253,6 +258,7 @@
     }
 
     function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
+        if (!browser) return;
         if (dataURL === '') clearCanvas(id)
         const image = new Image;
         image.addEventListener('load', () => {
