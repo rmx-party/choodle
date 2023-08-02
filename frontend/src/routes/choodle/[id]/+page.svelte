@@ -74,7 +74,7 @@
         if (data.copy?.top) {
             return toHTML(data.copy.top)
         }
-        return 'A canvas for in-chain creativity.'
+        return ''
     }
 
     const bottomContent = () => {
