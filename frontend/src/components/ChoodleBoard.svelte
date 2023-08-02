@@ -377,7 +377,6 @@
         gap: 2mm;
         padding: 2mm;
         padding-top: 0;
-        margin-bottom: 75px;
     }
 
     #buttons button {
