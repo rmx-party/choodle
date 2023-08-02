@@ -97,7 +97,8 @@
     <Wordmark fontSize="3.5rem"/>
     {#if data.choodle }
         {@html topContent()}
-        <img class="choodle" src={urlFor(data.choodle.upScaledImage)} width={330} height={330}/>
+        <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
+    width='330' height='330' alt='' />
         <section class="content">
             <p>Get your sticker at the Art Center.</p>
             <br/>
