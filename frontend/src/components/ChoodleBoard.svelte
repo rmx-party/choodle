@@ -159,6 +159,7 @@
     }
 
     const clear = async (event: Event) => {
+        if (!browser) return;
         event.preventDefault()
 
         clearCanvas(id);
@@ -241,6 +242,8 @@
     }
 
     function clearCanvas(id: string) {
+        if (!browser) return;
+
         const canvas = document.getElementById(id) as HTMLCanvasElement;
         const ctx = canvas.getContext('2d')!
 
