@@ -6,7 +6,7 @@
     export let width: number | string | undefined;
     export let height: number | string | undefined;
     export let description: string | undefined;
-    export let themeColor: string | null = '#ffffff';
+    export let themeColor: string | null = '#FEF40A';
 </script>
 
 <svelte:head>
@@ -34,6 +34,6 @@
         <meta name="description" content={description}/>
     {/if}
     {#if themeColor}
-        <meta name="theme-color" content={themeColor} />
+        <meta name="theme-color" content={themeColor}/>
     {/if}
 </svelte:head>
