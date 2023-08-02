@@ -9,15 +9,28 @@
     function reload() {
         window.location.reload(true)
     }
+
+    const resetViewportUnit = async () => {
+        // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
+    setTimeout(async () => {
+        await resetViewportUnit()
+    }, 100);
 </script>
 
 <MetaData title="Oops!" themeColor="#fff"/>
 
 <div class="container">
-    <h1>Oops!</h1>
-    <p>Something got lost on our end. <br/>Retry again soon.</p>
+    <div id="top-box">
+        <h1>Oops!</h1>
+        <p>Something got lost on our end. <br/>Retry again soon.</p>
+    </div>
 
-    <img class="error-image" src='/choodle-bob-p2.png' alt="A doodle of the painter Bob Ross, slightly smiling"/>
+    <img class="error-image" height="263" width="174" src='/choodle-bob-p2.png'
+         alt="A doodle of the painter Bob Ross, slightly smiling"/>
 
     <Button variant="big primary" on:click={() => goto('/')}>Retry</Button>
 
@@ -32,42 +45,27 @@
 <style>
     :root {
         color: var(--choodle-black, #141518);
-        font-size: var(--font-base-size);
-        font-family: 'DejaVu Sans';
         text-align: center;
-        font-style: normal;
-        font-weight: 400;
         line-height: 120%; /* 1.35rem */
     }
 
     .container {
         height: 100%;
+        height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
         width: 100%;
         padding: 1rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 0.5rem;
         flex-direction: column;
         flex-wrap: nowrap;
     }
 
-    h1 {
-        font-size: 2rem;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 120%; /* 2.4rem */
-        letter-spacing: 0.004rem;
-    }
-
-    p {
-        font-size: 1.125rem;
-    }
-
     img {
-        width: 100%;
-        height: 12rem;
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
         object-fit: contain;
-        overflow: visible;
     }
 
     pre {
@@ -79,7 +77,6 @@
 
     footer {
         flex-grow: 1;
-        padding: 1rem;
         margin: 0 auto;
         width: 100%;
         text-align: center;
