@@ -27,7 +27,7 @@
         return [
             new File(
                 [imgBlob],
-                'choodle.png',
+                'c.png',
                 {
                     type: 'image/png',
                     lastModified: Date.now()

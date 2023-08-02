@@ -232,7 +232,7 @@
         const createResult = await readWriteClient.create(choodle)
         console.log(createResult)
         if (createResult._id) {
-            await goto(`/choodle/${createResult._id}`)
+            await goto(`/c/${createResult._id}`)
         }
         loading.set(false)
     }
