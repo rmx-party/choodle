@@ -115,9 +115,11 @@
     <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
          width='330' height='330' alt=''/>
     <section class="content">
-        <p>Get your sticker at the Art Center.</p>
+        <!-- {@html bottomContent()} -->
+        <p>Get your sticker at the Art Center.
         <br/>
-        <p>Wanna mint? Email: <a
+            Wanna mint? Email: 
+            <a
                 href={`mailto:fwb@choodle.xyz?subject=Please mint my choodle&body=My choodle can be found at ${$page.url}`}>fwb@choodle.xyz</a>
         </p>
     </section>
@@ -144,8 +146,9 @@
         flex-wrap: nowrap;
         align-content: stretch;
         align-items: stretch;
+        justify-content: space-between;
         height: 100vh;
-        height: calc(var(--vh, 1vh) * 100 - 150px); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
+        height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
         width: 100%;
     }
 
@@ -154,6 +157,7 @@
         flex-direction: row;
         margin: 0;
         padding: 0;
+        gap: 1rem;
     }
 
     img.choodle {
