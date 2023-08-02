@@ -254,6 +254,7 @@
         if (!browser) return;
 
         const canvas = document.getElementById(id) as HTMLCanvasElement;
+        if(!canvas) return;
         const ctx = canvas.getContext('2d')!
 
         ctx.fillStyle = backgroundColour;
