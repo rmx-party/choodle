@@ -67,7 +67,6 @@
     }
 
     .secondary {
-        border: 0.50px white solid;
         gap: 1rem;
 
         /* mobile/button-secondary */
@@ -86,7 +85,6 @@
     .btn.focus,
     .btn:focus {
         border-radius: 1.5rem;
-        border: 1px solid #FFF;
         background: linear-gradient(0deg, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0.01) 100%), #FFF;
 
         /* button/pressed */
@@ -113,7 +111,6 @@
         gap: 0.5rem;
 
         border-radius: 4rem;
-        border: 1px solid #FFF506;
 
         /* button/action */
         box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.01), 0px -2px 8px 0px rgba(0, 0, 0, 0.12) inset, 0px 2px 24px 0px rgba(255, 255, 255, 0.40) inset, 0px 1px 4px 0px rgba(0, 0, 0, 0.04);
@@ -127,7 +124,6 @@
     .primary.focus,
     .primary:focus {
         border-radius: 4rem;
-        border: 1px solid #FFF506;
         background: linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.02) 100%), #FEF40A;
 
         /* button/pressed */

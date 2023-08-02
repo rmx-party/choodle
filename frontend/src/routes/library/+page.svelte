@@ -1,6 +1,5 @@
 <script lang="ts">
     import Button from "../../components/Button.svelte";
-    import Drawer from "../../components/Drawer.svelte"
     import MetaData from "../../components/MetaData.svelte";
     import Wordmark from "../../components/Wordmark.svelte"
     import handDraw from "$lib/assets/hand-draw.svg"
@@ -11,10 +10,6 @@
     themeColor="#FEF40A"
 />
 
-<Drawer/>
-<br/>
-<br/>
-<hr style="margin-bottom: 6rem;" />
 
 <h1>Choodle Design Components</h1>
 
