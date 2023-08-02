@@ -108,9 +108,9 @@
         <a href="/">
             <Wordmark fontSize="4.25rem"/>
         </a>
-        <p class="tagline">
+        <span class="tagline">
             {@html topContent()}
-        </p>
+        </span>
     </div>
     <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
          width='330' height='330' alt=''/>
