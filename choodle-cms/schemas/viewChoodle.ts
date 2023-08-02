@@ -4,8 +4,9 @@ export default {
     title: 'View Choodle',
     fields: [
         {
-            name: 'top',
-            title: 'Top',
+            name: 'tagline',
+            title: 'Tagline',
+            validation: Rule => Rule.required().max(36),
             type: 'array',
             of: [{type: 'block'}]
         },

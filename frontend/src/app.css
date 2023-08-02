@@ -19,8 +19,9 @@ html, button, input, label {
 }
 
 html, body, main {
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
+    max-width: 720px;
 }
 
 body, main {

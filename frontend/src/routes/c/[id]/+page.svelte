@@ -71,8 +71,8 @@
     }
 
     const topContent = () => {
-        if (data.copy?.top) {
-            return toHTML(data.copy.top)
+        if (data.copy?.tagline) {
+            return toHTML(data.copy.tagline)
         }
         return ''
     }
@@ -83,6 +83,16 @@
         }
         return ''
     }
+
+    const resetViewportUnit = async () => {
+        // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
+    setTimeout(async () => {
+        await resetViewportUnit()
+    }, 100);
 </script>
 
 <MetaData url={$page.url}
@@ -93,21 +103,23 @@
 />
 
 <div class="container">
-    <Wordmark fontSize="3.5rem"/>
-    {#if data.choodle }
-        {@html topContent()}
-        <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
-             width='330' height='330' alt=''/>
-        <section class="content">
-            <p>Get your sticker at the Art Center.</p>
-            <br/>
-            <p>Wanna mint? Email: <a
-                    href={`mailto:fwb@choodle.xyz?subject=Please mint my choodle&body=My choodle can be found at ${$page.url}`}>fwb@choodle.xyz</a>
-            </p>
-        </section>
-    {:else}
-        <p>No choodle found.</p>
-    {/if}
+    <div id="top-box">
+        <a href="/">
+            <Wordmark fontSize="4.25rem"/>
+        </a>
+        <p class="tagline">
+            {@html topContent()}
+        </p>
+    </div>
+    <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
+         width='330' height='330' alt=''/>
+    <section class="content">
+        <p>Get your sticker at the Art Center.</p>
+        <br/>
+        <p>Wanna mint? Email: <a
+                href={`mailto:fwb@choodle.xyz?subject=Please mint my choodle&body=My choodle can be found at ${$page.url}`}>fwb@choodle.xyz</a>
+        </p>
+    </section>
 
     <menu>
         <Button on:click={clearAndStartOver} icon={handDraw}>Draw</Button>
@@ -124,15 +136,16 @@
     }
 
     .container {
-        padding: 1rem 1rem 130px;
+        gap: 2rem;
+        padding: 1rem 1rem;
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
         align-content: stretch;
         align-items: stretch;
         height: 100vh;
+        height: calc(var(--vh, 1vh) * 100 - 150px); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
         width: 100%;
-        gap: 1rem;
     }
 
     menu {
@@ -154,5 +167,9 @@
 
         border-radius: 0.22175rem;
         box-shadow: 1px 1px 17.74193572998047px 0.8870968222618103px rgba(0, 0, 0, 0.12);
+    }
+
+    .tagline {
+        margin-top: 0rem;
     }
 </style>
