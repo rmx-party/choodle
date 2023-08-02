@@ -331,8 +331,8 @@
         justify-content: space-between;
         align-items: center;
         width: 100vw;
-        height: 100vh;
-        height: calc(var(--vh, 1vh) * 100 - 150px); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
+        height: 90vh;
+        height: calc(var(--vh, 1vh) * 90); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
     }
 
     .canvas-container {
@@ -351,7 +351,7 @@
         /* outline: #051BDC 1px dashed; */
         max-width: 95vw;
         height: 75vh;
-        height: calc(var(--vh, 1vh) * 75); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
+        height: calc(var(--vh, 1vh) * 65); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
 
         background: #FFF;
         box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.12), 1px 1px 1px 0px rgba(0, 0, 0, 0.08);
