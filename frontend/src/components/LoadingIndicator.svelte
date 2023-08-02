@@ -15,8 +15,7 @@
             <img class="loading-image" height="263" width="174" src='/choodle-bob-p2.png'
                  alt="A doodle of the painter Bob Ross, slightly smiling"/>
             <strong>
-                {explanation}
-                <AnimatedEllipses/>
+                <span>{explanation}<AnimatedEllipses/></span>
             </strong>
         </div>
     </div>
