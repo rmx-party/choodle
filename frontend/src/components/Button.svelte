@@ -99,6 +99,7 @@
         font-weight: 700;
         line-height: 120%; /* 1.8rem */
 
+        flex-grow: 0;
         width: 100%;
         max-width: 21rem;
         margin: 1rem auto;
