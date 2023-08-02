@@ -32,9 +32,9 @@
     <img class="error-image" height="263" width="174" src='/choodle-bob-p2.png'
          alt="A doodle of the painter Bob Ross, slightly smiling"/>
 
-    <Button variant="big primary" on:click={() => goto('/')}>Retry</Button>
+    <Button variant="big primary yellow" on:click={() => goto('/')}>Back Home</Button>
 
-    <p>Having trouble? <a href="mailto:help@choodle.xyz">Email us</a></p>
+    <p><strong>Having trouble?</strong> <a href="mailto:help@choodle.xyz">Email us</a></p>
 
     <footer>
         <Wordmark/>
