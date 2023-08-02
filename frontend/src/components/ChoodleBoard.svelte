@@ -269,9 +269,6 @@
         ctx.lineCap = 'square';
         ctx.imageSmoothingEnabled = false;
 
-        await resetViewportUnit()
-        await resizeCanvas()
-        await load()
 
         window.addEventListener('online', () => {
             console.log('online')
@@ -285,6 +282,12 @@
             resizeCanvas() // TODO: debounce
             resetViewportUnit()
         })
+
+        setTimeout(async () => {
+            await resetViewportUnit()
+            await resizeCanvas()
+            await load()
+        }, 100)
     });
 </script>
 
