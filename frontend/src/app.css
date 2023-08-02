@@ -56,6 +56,15 @@ h2 {
 
 h3 {
     color: var(--choodle-black);
+
+    /* h3-reg */
+    font-family: DejaVu Sans;
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%; /* 1.35rem */
+}
+h3 strong, h3 b, h3 .body-bold, strong h3, b h3, .body-bold h3 {
     font-family: DejaVu Sans Bold;
     font-size: 1.125rem;
     font-style: normal;
