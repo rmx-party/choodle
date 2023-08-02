@@ -5,12 +5,14 @@
     import Wordmark from "../components/Wordmark.svelte";
     import {goto} from "$app/navigation";
     import MetaData from "../components/MetaData.svelte";
+	import { browser } from "$app/environment";
 
     function reload() {
         window.location.reload(true)
     }
 
     const resetViewportUnit = async () => {
+        if (!browser) return;
         // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
         const vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
