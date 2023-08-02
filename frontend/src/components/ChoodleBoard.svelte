@@ -232,6 +232,9 @@
         const createResult = await readWriteClient.create(choodle)
         console.log(createResult)
         if (createResult._id) {
+            clearCanvas(id);
+            await clearStorage();
+
             await goto(`/c/${createResult._id}`)
         }
         loading.set(false)
