@@ -12,7 +12,7 @@
 {#if $loading}
     <div class="LoadingIndicator">
         <div class="loading">
-            <img class="loading-image" width="" src='/choodle-bob-p2.png'
+            <img class="loading-image" height="263" width="174" src='/choodle-bob-p2.png'
                  alt="A doodle of the painter Bob Ross, slightly smiling"/>
             <strong>
                 {explanation}
@@ -60,9 +60,7 @@
     }
 
     .loading-image {
-        width: 10.875rem;
-        height: 16.4375rem;
-        flex-shrink: 0;
+        margin-top: -75px;
     }
 
     .not-loading {

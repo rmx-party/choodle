@@ -4,12 +4,14 @@
 
     const newEllipsesFrom = (oldEllipses) => {
         switch (oldEllipses) {
+            case '':
+                return '.'
             case '.':
                 return '..';
             case '..':
                 return '...';
             case '...':
-                return '.';
+                return '';
         }
     }
 
@@ -20,7 +22,7 @@
         ellipses.innerHTML = newEllipsesFrom(ellipses.innerHTML)
     }
 
-    const intervalId = setInterval(updateEllipses, 500)
+    const intervalId = setInterval(updateEllipses, 300)
 
     onDestroy(() => {
         console.log('clearing the interval')
@@ -28,7 +30,7 @@
     })
 </script>
 
-<span class="ellipses">...</span>
+<span class="ellipses"></span>
 
 <style>
     .ellipses {
