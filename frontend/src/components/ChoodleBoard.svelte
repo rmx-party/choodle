@@ -206,8 +206,11 @@
     }
 
     const save = async (_event: Event) => {
+        if (!browser) return;
+
         const upScaledImage = await upScaledImageUrlBy(canvas, ctx, upScaledImageRatio)
-        const upScaledImageBlob = await (await fetch(upScaledImage)).blob()
+        const upScaledImageBlob = await (await fetch(upScaledImage as unknown as
+        URL)).blob()
         const upScaledUploadResult = readWriteClient.assets.upload('image', upScaledImageBlob)
 
         const undoStack = await getUndoStack()
