@@ -4,7 +4,7 @@
     import MetaData from '../components/MetaData.svelte';
     import Wordmark from "../components/Wordmark.svelte";
     import {toHTML} from "@portabletext/to-html";
-    import handDraw from "$lib/assets/hand-draw.svg";
+    import handDraw from "$lib/assets/hand-draw-filled-40px.svg";
     import star1 from "$lib/assets/star-1.png";
     import star2 from "$lib/assets/star-2.png";
     import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-1200x630-2x.jpg';
@@ -29,11 +29,12 @@
 <main id="main">
     <div id="top-box">
         <Wordmark fontSize="88px"/>
-        <p class="tagline"><img width="22" height="17" src={star1} alt="a doodle of a star"/>FWB Fest 2023<img
+        <p class="tagline"><strong><img width="22" height="17" src={star1} alt="a doodle of a star"/>FWB Fest 2023<img
                 width="22"
                 height="17"
                 src={star2}
-                alt="a doodle of a star"/>
+            alt="a doodle of a star"/>
+            </strong>
         </p>
     </div>
 
@@ -55,7 +56,7 @@
         flex-direction: column;
         gap: 4rem;
         background: var(--color-primary);
-        padding: 3rem;
+        padding: 1.5rem;
         margin: 0;
         min-width: 100vw;
         height: 100vh;
