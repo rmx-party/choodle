@@ -7,8 +7,8 @@ export default {
             name: 'prompt',
             type: 'string',
             title: 'Prompt',
-            validation: Rule => Rule.required().max(14),
-            description: 'Max 14 characters.'
+            validation: Rule => Rule.required().max(60),
+            description: 'Max 60 characters.'
         }
 
     ]
