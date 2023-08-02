@@ -9,7 +9,7 @@
     <div class="prompt">
         <img src={handDraw}/>
         <p class="daily-prompt">
-            <span><strong>Draw: </strong>‘{prompt.prompt}’</span>
+            <span><strong>Draw: </strong>‘{prompt}’</span>
         </p>
     </div>
 {:else}

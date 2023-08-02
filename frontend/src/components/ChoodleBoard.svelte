@@ -292,7 +292,7 @@
 </script>
 
 <div id="flex-container">
-    <Prompt prompt={prompt}/>
+    <Prompt prompt={prompt.prompt}/>
 
     <div class="canvas-container">
         <canvas id={id}
