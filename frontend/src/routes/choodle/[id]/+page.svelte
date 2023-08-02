@@ -74,7 +74,7 @@
         if (data.copy?.top) {
             return toHTML(data.copy.top)
         }
-        return ''
+        return 'A canvas for in-chain creativity.'
     }
 
     const bottomContent = () => {
@@ -88,7 +88,6 @@
 <MetaData url={$page.url}
           title="Look, it's a choodle"
           imageUrl={urlFor(data.choodle.upScaledImage)}
-          themeColor="#FEF40A"
           width="430"
           height="932"
 />
@@ -98,7 +97,7 @@
     {#if data.choodle }
         {@html topContent()}
         <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
-    width='330' height='330' alt='' />
+             width='330' height='330' alt=''/>
         <section class="content">
             <p>Get your sticker at the Art Center.</p>
             <br/>
