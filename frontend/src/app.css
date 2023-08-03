@@ -19,9 +19,19 @@ html, button, input, label {
 }
 
 html, body, main {
+    padding: 0;
+    margin: 0;
+}
+html {
+    background: var(--choodle-yellow);
+}
+body {
     margin: 0 auto;
     padding: 0;
     max-width: 720px;
+    overflow: hidden;
+    display: block;
+    background: var(--choodle-yellow);
 }
 
 pre {
