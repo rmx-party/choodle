@@ -97,7 +97,7 @@
 </script>
 
 <MetaData url={$page.url}
-          title="Look, it's a choodle"
+          title="Look, it's a Choodle"
           imageUrl={urlFor(data.choodle.upScaledImage)}
           width="430"
           height="932"

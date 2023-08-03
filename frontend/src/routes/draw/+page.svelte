@@ -11,7 +11,7 @@
 
 <MetaData
     url={$page.url}
-    title="Choodle a doodle?"
+    title="Draw a Choodle"
     imageUrl={opengraphChoodle}
     imageAlt="Cursive writing of the word “Choodle” with doodle stars and a smiley face on a yellow background"
     width="1200"

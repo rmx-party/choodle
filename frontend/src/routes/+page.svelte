@@ -17,7 +17,7 @@
 
 
 <MetaData
-        title="How to Choodle"
+        title="Choodle"
         themeColor="#FEF40A"
         url={$page.url}
         imageUrl={opengraphChoodle}
