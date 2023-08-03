@@ -46,7 +46,7 @@
         Let's Draw!
     </Button>
 
-    <p id="bottom-content">Choodle is a canvas for in-chain creativity. Read the <a href="https://www.example.com/"
+    <p id="bottom-content">Choodle is a canvas for in-chain creativity. Read the <a href="https://rmxparty.notion.site/Choodle-FAQ-f2f50cf66a484ee79f9d5657d6c0e7d1"
                                                                                     target="_blank">FAQ</a>.</p>
 </main>
 
