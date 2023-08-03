@@ -344,7 +344,6 @@
         align-content: center;
         justify-content: space-between;
         align-items: center;
-        width: 100vw;
         height: 100vh;
         height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
     }

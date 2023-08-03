@@ -46,23 +46,25 @@
 </div>
 
 <style>
-    :root {
+    .container {
         color: var(--choodle-black, #141518);
         text-align: center;
         line-height: 120%; /* 1.35rem */
-    }
-
-    .container {
-        height: 100%;
-        height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
-        width: 100%;
-        padding: 1rem;
+        background: white;
+        padding: 1.5rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 0.5rem;
         flex-direction: column;
         flex-wrap: nowrap;
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
 
     img {
@@ -74,7 +76,7 @@
     pre {
         text-align: left;
         white-space: pre-wrap;
-        margin: 2rem auto;
+        margin: 0 auto;
         display: block;
     }
 
@@ -89,5 +91,9 @@
         font-style: normal;
         font-weight: 400;
         line-height: 120%; /* 1.05rem */
+    }
+
+    :global(.btn.primary) {
+        width: 100%;
     }
 </style>

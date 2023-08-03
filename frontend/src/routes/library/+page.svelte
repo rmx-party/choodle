@@ -5,11 +5,20 @@
     import handDraw from "$lib/assets/hand-draw.svg"
 </script>
 
+<style>
+    .container {
+        background: white;
+        padding: 1rem;
+    }
+</style>
+
 <MetaData 
     title="Choodle Components"
-    themeColor="#FEF40A"
+    themeColor="#FFFFFF"
 />
 
+
+<div class="container">
 
 <h1>Choodle Design Components</h1>
 
@@ -54,5 +63,4 @@
 <Button variant="secondary hover yellow" icon={handDraw}
     iconPosition="right">hover</Button>
 
-<hr/>
-
+</div>

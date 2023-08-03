@@ -58,7 +58,6 @@
         background: var(--color-primary);
         padding: 1.5rem;
         margin: 0;
-        min-width: 100vw;
         height: 100vh;
         text-align: center;
     }
