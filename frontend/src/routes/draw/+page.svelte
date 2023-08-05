@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {loading} from "$lib/store";
+    import {loading, loadingMessage} from "$lib/store";
     import LoadingIndicator from "../../components/LoadingIndicator.svelte";
     import ChoodleBoard from "../../components/ChoodleBoard.svelte";
     import MetaData from "../../components/MetaData.svelte";
@@ -7,6 +7,8 @@
     import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-1200x630-2x.jpg';
 
     export let data;
+
+    loadingMessage.set('saving choodle')
 </script>
 
 <MetaData
@@ -23,7 +25,7 @@
         <ChoodleBoard id="choodle-board" prompt={data.prompt} howto={data.howto}></ChoodleBoard>
     </div>
 {:else}
-    <LoadingIndicator explanation="saving choodle"></LoadingIndicator>
+    <LoadingIndicator explanation={$loadingMessage}></LoadingIndicator>
 {/if}
 
 <style>
