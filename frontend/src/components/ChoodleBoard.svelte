@@ -205,19 +205,23 @@
         return await crunchCanvasToUrl(offScreenCanvas, offScreenContext)
     }
 
+    const uploadImageBlob = (imageBlob: Blob) => {
+        return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
+    }
+
     const save = async (_event: Event) => {
         if (!browser) return;
 
         const upScaledImage = await upScaledImageUrlBy(canvas, ctx, upScaledImageRatio)
         const upScaledImageBlob = await (await fetch(upScaledImage as unknown as
         URL)).blob()
-        const upScaledUploadResult = readWriteClient.assets.upload('image', upScaledImageBlob)
+        const upScaledUploadResult = uploadImageBlob(upScaledImageBlob)
 
         const undoStack = await getUndoStack()
         if (undoStack.current === '') return;
         loading.set(true)
         const imgBlob = await (await fetch(undoStack.current)).blob();
-        const uploadResult = readWriteClient.assets.upload('image', imgBlob)
+        const uploadResult = uploadImageBlob(imgBlob)
         console.log(`uploaded: `, uploadResult)
 
         const choodle = {
