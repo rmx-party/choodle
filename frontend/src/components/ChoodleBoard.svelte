@@ -241,7 +241,8 @@
                     _ref: (await upScaledUploadResult)?._id,
                 }
             },
-            creatorId: await getCreatorId()
+            creatorId: await getCreatorId(),
+            shouldMint: true
         }
         const createResult = await readWriteClient.create(choodle)
         console.log(createResult)
