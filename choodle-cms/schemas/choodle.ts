@@ -23,6 +23,12 @@ export default {
             type: 'string',
             title: 'Creator ID',
             readOnly: true
+        },
+        {
+            name: 'shouldMint',
+            type: 'boolean',
+            title: 'Should Mint?',
+            initialValue: true
         }
     ]
 }
