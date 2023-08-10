@@ -3,8 +3,9 @@
     import Button from "../../components/Button.svelte";
     import fp from "lodash/fp";
     import {readWriteClient} from "$lib/CMSUtils";
+    import {filterState} from "$lib/store";
 
-    export let data = {};
+    export let data = { choodles: [] };
 
     const mint = () => {
         console.log('mint')
@@ -20,12 +21,35 @@
             }
         }
     }
+
+
+    const filter = (state: string) => {
+        return () => {filterState.set(state)};
+    }
+
+    filterState.subscribe((state) => {
+        console.log('subscribe filterState', state)
+    })
+
+    const filteredChoodles = (filterState: string) => {
+        console.log("filteredChoodles(", filterState)
+        console.log(data.choodles)
+        if (!data.choodles) return [];
+
+        if (filterState === 'all') return data.choodles;
+
+        if (filterState === 'should-mint') return fp.filter(c => c.shouldMint === true)(data.choodles)
+        if (filterState === 'should-not-mint') return fp.filter(c => c.shouldMint !== true)(data.choodles)
+    }
 </script>
 
 <h1>Choodles!</h1>
+<Button on:click={filter('all')}>All</Button>
+<Button on:click={filter('should-mint')}>Choodles That Should Be Minted</Button>
+<Button on:click={filter('should-not-mint')}>Choodles That Should Not Be Minted</Button>
 <div>
     <ul>
-        {#each data.choodles as choodle}
+        {#each filteredChoodles($filterState) as choodle}
             <li>
                 <div>
                     {choodle._id}

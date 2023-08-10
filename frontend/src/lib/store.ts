@@ -8,3 +8,5 @@ export const imageData = writable("");
 export const nftTitle = writable("");
 export const nftAlt = writable("");
 export const nftDescription = writable("");
+
+export const filterState = writable('all');
