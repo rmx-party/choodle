@@ -75,7 +75,7 @@
                     {choodle._id}
                     {choodle.creatorId}
                     <br/>
-                    <img alt={choodle.title} src={urlFor(choodle.upScaledImage)} height="300" width="300" lazy />
+                    <img alt={choodle.title} src={urlFor(choodle.image)} height="300" width="300" lazy />
                     <br/>
                     {#if choodle.shouldMint}
                         <Button on:click={mint(choodle._id)}>Mint</Button>
