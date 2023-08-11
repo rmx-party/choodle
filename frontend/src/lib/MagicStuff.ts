@@ -58,9 +58,7 @@ export function generateOpenSeaURL(tokenId: number | string) {
     return `${PUBLIC_OPENSEA_PREFIX}/${PUBLIC_CONTRACT_ADDRESS}/${tokenId}`
 }
 
-export async function connectAndMint() {
-    const undoStack = await getUndoStack()
-    const imageData = undoStack.current
+export async function connectAndMint(imageData: string) {
     if (!imageData) console.error(`image data missing, please fix teh code`)
 
     loading.set(true)
