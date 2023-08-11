@@ -38,9 +38,9 @@
         return async () => {
             const choodle = fp.find(c => c._id === choodleId)(data?.choodles)
             if (choodle.shouldMint) {
-                console.log(await readWriteClient.patch(choodle._id).set({shouldMint: false}).commit())
+                await readWriteClient.patch(choodle._id).set({shouldMint: false}).commit()
             } else {
-                console.log(await readWriteClient.patch(choodle._id).set({shouldMint: true}).commit())
+                await readWriteClient.patch(choodle._id).set({shouldMint: true}).commit()
             }
         }
     }
