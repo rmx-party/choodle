@@ -30,8 +30,8 @@
             const imageUrl = await readBlob(blob)
 
             await connectAndMint(imageUrl)
+            await readWriteClient.patch(choodle._id).set({shouldMint: false}).commit()
         }
-
     }
 
     const toggleShouldMint = (choodleId: string) => {
