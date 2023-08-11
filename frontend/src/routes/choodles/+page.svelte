@@ -2,11 +2,27 @@
     import {urlFor} from "$lib/PersistedImagesUtils";
     import Button from "../../components/Button.svelte";
     import fp from "lodash/fp";
-    import {readWriteClient} from "$lib/CMSUtils";
+    import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
     import {filterState} from "$lib/store";
     import {connectAndMint} from "$lib/MagicStuff";
+    import {_query} from "./+page";
+    import {writable} from "svelte/store";
 
     export let data = { choodles: [] };
+
+    const allChoodles = writable([]);
+    $: allChoodles.set([...data.choodles]);
+
+    const filteredChoodles = writable([])
+    $: filteredChoodles.set(filterChoodles($allChoodles, $filterState));
+
+    const subscription = readOnlyClient.listen(_query).subscribe((update) => {
+        const changedChoodle = update.result
+        const indexToChange = fp.findIndex(c => c._id === changedChoodle._id)($allChoodles)
+        const copiedChoodles = $allChoodles
+        copiedChoodles[indexToChange] = changedChoodle
+        allChoodles.set(copiedChoodles)
+    })
 
     const readBlob = (b) => {
         return new Promise(function(resolve, reject) {
@@ -25,7 +41,7 @@
             console.log('mint')
             const choodle = fp.find((c) => {
                 return c._id === choodleId
-            })(data.choodles)
+            })($allChoodles)
             const blob = await (await fetch(urlFor(choodle.image).url())).blob()
             const imageUrl = await readBlob(blob)
 
@@ -36,7 +52,7 @@
 
     const toggleShouldMint = (choodleId: string) => {
         return async () => {
-            const choodle = fp.find(c => c._id === choodleId)(data?.choodles)
+            const choodle = fp.find(c => c._id === choodleId)($allChoodles)
             if (choodle.shouldMint) {
                 await readWriteClient.patch(choodle._id).set({shouldMint: false}).commit()
             } else {
@@ -53,13 +69,11 @@
         console.log('subscribe filterState', state)
     })
 
-    const filteredChoodles = (filterState: string) => {
-        if (!data.choodles) return [];
+    const filterChoodles = (choodles: [], filterState: string) => {
+        if (filterState === 'all') return choodles;
 
-        if (filterState === 'all') return data.choodles;
-
-        if (filterState === 'should-mint') return fp.filter(c => c.shouldMint === true)(data.choodles)
-        if (filterState === 'should-not-mint') return fp.filter(c => c.shouldMint !== true)(data.choodles)
+        if (filterState === 'should-mint') return fp.filter(c => c.shouldMint === true)(choodles)
+        if (filterState === 'should-not-mint') return fp.filter(c => c.shouldMint !== true)(choodles)
     }
 </script>
 
@@ -69,7 +83,7 @@
 <Button on:click={filter('should-not-mint')}>Choodles That Should Not Be Minted</Button>
 <div>
     <ul>
-        {#each filteredChoodles($filterState) as choodle}
+        {#each $filteredChoodles as choodle}
             <li>
                 <div>
                     {choodle._id}
