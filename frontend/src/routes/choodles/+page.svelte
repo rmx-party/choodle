@@ -8,7 +8,6 @@
 
     export let data = { choodles: [] };
 
-
     const readBlob = (b) => {
         return new Promise(function(resolve, reject) {
             const reader = new FileReader();
@@ -20,17 +19,17 @@
             reader.readAsDataURL(b);
         });
     }
+
     const mint = (choodleId: string) => {
         return async () => {
             console.log('mint')
             const choodle = fp.find((c) => {
                 return c._id === choodleId
             })(data.choodles)
-            console.log(choodle)
-            const imageUrl = readBlob((await fetch(urlFor(choodle.image))).blob())
-            console.log(imageUrl)
+            const blob = await (await fetch(urlFor(choodle.image).url())).blob()
+            const imageUrl = await readBlob(blob)
 
-            //connectAndMint(imageData)
+            await connectAndMint(imageUrl)
         }
 
     }
@@ -45,7 +44,6 @@
             }
         }
     }
-
 
     const filter = (state: string) => {
         return () => {filterState.set(state)};
@@ -77,7 +75,7 @@
                     {choodle._id}
                     {choodle.creatorId}
                     <br/>
-                    <img alt={choodle.title} src={urlFor(choodle.upScaledImage)} height="300" width="300"/>
+                    <img alt={choodle.title} src={urlFor(choodle.upScaledImage)} height="300" width="300" lazy />
                     <br/>
                     {#if choodle.shouldMint}
                         <Button on:click={mint(choodle._id)}>Mint</Button>
