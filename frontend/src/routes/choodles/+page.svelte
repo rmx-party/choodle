@@ -4,11 +4,35 @@
     import fp from "lodash/fp";
     import {readWriteClient} from "$lib/CMSUtils";
     import {filterState} from "$lib/store";
+    import {connectAndMint} from "$lib/MagicStuff";
 
     export let data = { choodles: [] };
 
-    const mint = () => {
-        console.log('mint')
+
+    const readBlob = (b) => {
+        return new Promise(function(resolve, reject) {
+            const reader = new FileReader();
+
+            reader.onloadend = function() {
+                resolve(reader.result);
+            };
+
+            reader.readAsDataURL(b);
+        });
+    }
+    const mint = (choodleId: string) => {
+        return async () => {
+            console.log('mint')
+            const choodle = fp.find((c) => {
+                return c._id === choodleId
+            })(data.choodles)
+            console.log(choodle)
+            const imageUrl = readBlob((await fetch(urlFor(choodle.image))).blob())
+            console.log(imageUrl)
+
+            //connectAndMint(imageData)
+        }
+
     }
 
     const toggleShouldMint = (choodleId: string) => {
@@ -32,8 +56,6 @@
     })
 
     const filteredChoodles = (filterState: string) => {
-        console.log("filteredChoodles(", filterState)
-        console.log(data.choodles)
         if (!data.choodles) return [];
 
         if (filterState === 'all') return data.choodles;
@@ -58,7 +80,7 @@
                     <img alt={choodle.title} src={urlFor(choodle.upScaledImage)} height="300" width="300"/>
                     <br/>
                     {#if choodle.shouldMint}
-                        <Button on:click={mint}>Mint</Button>
+                        <Button on:click={mint(choodle._id)}>Mint</Button>
                     {/if}
                     <Button on:click={toggleShouldMint(choodle._id)}>
                         {#if choodle.shouldMint}
