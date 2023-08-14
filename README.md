@@ -1,13 +1,17 @@
-# Sample Hardhat Project
+# Choodle
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
 
-Try running some of the following tasks:
+[Choodle](https://choodle.xyz) is a minimal onchain doodling app intended to
+help bring the advantages of web3 technologies to typical web users without
+friction.
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
+
+## Documentation TODO:
+- [ ] User guide / links
+- [ ] Tech stack / architecture overview
+- [ ] Developer workflow / project structure
+- [ ] Deployment
+- [ ] Contribution
+- [ ] License/copyright
+
+
