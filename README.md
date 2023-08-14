@@ -1,3 +1,5 @@
+<img src="frontend/src/lib/assets/Opengraph-Choodle-1200x630-2x.jpg" alt="Choodle" />
+
 # Choodle
 
 
