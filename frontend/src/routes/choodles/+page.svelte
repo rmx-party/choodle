@@ -78,31 +78,85 @@
 </script>
 
 <h1>Choodles!</h1>
-<Button on:click={filter('all')}>All</Button>
-<Button on:click={filter('should-mint')}>Choodles That Should Be Minted</Button>
-<Button on:click={filter('should-not-mint')}>Choodles That Should Not Be Minted</Button>
+
+<menu>
+    <Button on:click={filter('all')}>All</Button>
+    <Button on:click={filter('should-mint')}>To Mint</Button>
+    <Button on:click={filter('should-not-mint')}>Not To Mint</Button>
+</menu>
+
 <div>
-    <ul>
+    <ul class="filtered-choodles">
         {#each $filteredChoodles as choodle}
-            <li>
-                <div>
-                    {choodle._id}
-                    {choodle.creatorId}
-                    <br/>
-                    <img alt={choodle.title} src={urlFor(choodle.image)} height="300" width="300" lazy />
-                    <br/>
+            <li class={`choodle ${choodle._id} ${choodle.creatorId}`}>
+                <img alt={choodle.title} src={urlFor(choodle.image)} height="100" width="100" lazy />
+                <pre>
+Id: {choodle._id}
+Creator: {choodle.creatorId}
+{#if choodle.shouldMint}
+✔️  Should Mint
+{:else}
+🚫 Should Not Mint
+{/if}
+                </pre>
+                <menu>
+                    <Button on:click={toggleShouldMint(choodle._id)}>
+                        Toggle
+                    </Button>
                     {#if choodle.shouldMint}
                         <Button on:click={mint(choodle._id)}>Mint</Button>
                     {/if}
-                    <Button on:click={toggleShouldMint(choodle._id)}>
-                        {#if choodle.shouldMint}
-                            Should Mint
-                        {:else}
-                            Should Not Mint
-                        {/if}
-                    </Button>
-                </div>
+                </menu>
             </li>
         {/each}
     </ul>
 </div>
+
+
+<style>
+h1 {
+text-align: center;
+}
+menu {
+    display: flex;
+    flex-direction: row;
+}
+
+.filtered-choodles {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.choodle {
+    width: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid hsla(0, 0%, 60%, 0.1);
+}
+.choodle > * {
+    margin: 0;
+    padding: 0;
+}
+.choodle img {
+  flex-shrink: 1;
+  object-fit: contain;
+}
+.choodle pre {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    whitespace: pre-wrap;
+    justify-self: flex-start;
+    flex-grow: 1;
+}
+.choodle menu {
+    justify-self: flex-end;
+}
+</style>
