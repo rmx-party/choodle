@@ -22,14 +22,15 @@ html, body, main {
     padding: 0;
     margin: 0;
 }
+
 html {
     background: var(--choodle-yellow);
 }
+
 body {
     margin: 0 auto;
     padding: 0;
     max-width: 720px;
-    overflow: hidden;
     display: block;
     background: var(--choodle-yellow);
 }
@@ -77,6 +78,7 @@ h3 {
     padding: 0;
     margin: 0;
 }
+
 h3 strong, h3 b, h3 .body-bold, strong h3, b h3, .body-bold h3 {
     font-family: DejaVu Sans Bold;
     font-size: 1.125rem;
