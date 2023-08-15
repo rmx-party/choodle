@@ -40,7 +40,7 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
 
     // FIXME: this should be done by the contract, and use the real ID
     const data = 'data:application/json;base64,' + btoa(JSON.stringify({
-        "description": `Drawing by ${accounts[0]}`,
+        "description": `This collection of Choodles was made by attendees who participated in our private beta at FWB FEST 2023 at Idyllwild Arts Academy, Idyllwild, CA.`,
         "attributes": [
             {
                 "trait_type": "Creator ID",
@@ -53,7 +53,7 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
             }
         ],
         "image": `${imageData}`,
-        "name": `Choodle #${'TBD'}`
+        "name": `Choodle`
     }))
 
     const contract = new ethers.Contract(contractAddress, abi, provider.getSigner())
