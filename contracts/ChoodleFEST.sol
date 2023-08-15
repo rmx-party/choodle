@@ -39,9 +39,13 @@ contract ChoodleFEST is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Burnab
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("ChoodleFEST", "CFTK") {}
+    string private _contractMetadataURI;
 
-    function safeMint(address to, string memory uri) public {
+    constructor() ERC721("Choodle FEST", "CFTK") {}
+
+    function safeMint(address to, string memory uri)
+    public
+    {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
@@ -78,5 +82,19 @@ contract ChoodleFEST is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Burnab
     returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    function contractURI()
+    public
+    view
+    returns (string memory)
+    {
+        return _contractMetadataURI;
+    }
+
+    function setContractURI(string memory uri)
+    public onlyOwner
+    {
+        _contractMetadataURI = uri;
     }
 }
