@@ -4,7 +4,7 @@
 
 ### Draw onchain!
 
-[Choodle](https://choodle.xyz/) is a simple mobile-first doodling app that publishes to the chain. Choodle's mission: Help bring the advantages of web3 technologies to typical users without friction. 
+[Choodle](https://choodle.xyz/) is a simple mobile-first doodling app that publishes to the blockchain. By enabling creative expression and ownership, Choodle seeks to bring the advantages of web3 technologies to typical users without friction
 
 ## Documentation TODO:
 - [x] User guide / links
