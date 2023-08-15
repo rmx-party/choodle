@@ -41,7 +41,7 @@ contract ChoodleFEST is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Burnab
 
     string private _contractMetadataURI;
 
-    constructor() ERC721("Choodle FEST", "CFTK") {}
+    constructor() ERC721("Choodle FEST", "CHFST") {}
 
     function safeMint(address to, string memory uri)
     public
