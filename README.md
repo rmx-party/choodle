@@ -11,18 +11,19 @@
 - [ ] Tech stack / architecture overview
 - [ ] Developer workflow / project structure
 - [ ] Deployment
-- [ ] Contribution
+- [x] Contribution
 - [x] License/copyright
 
 
 ## Table of Contents
 
 - [Features](#features)
+- [Architecture overview](#Architecture overview)
+– [Developer workflow](#Developer workflow)
+– [Deployment](#Deployment)
 - [Contributing](#contributing)
 - [License](#license)
-- [Credits](#credits)
-- [Contact](#contact)
-- [Changelog](#changelog)
+- [Links](#links)
 
 # Features
 
@@ -38,6 +39,14 @@
 ### Image sharing
 - Native sharing via "share" button allows user to save image, share via messaging application of choice, etc.
 
+#Architecture overview
+TBD
+
+#Developer workflow
+TBD
+
+#Deployment
+#TBD
 
 # Contributing
 If you'd like to contribute to this project, please follow the steps below. 
@@ -53,19 +62,14 @@ This project is licensed under the [MIT License](https://opensource.org/license/
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit/)
 
-# Credits
-We'd like to acknowledge the following libraries, resources, and contributors that have helped with this project.
+# Links
 
-- [rmx.party](https://www.rmx.party/)
-
-# Contact
-
+**Contact**
 - Email: help@choodle.xyz
 - Website: [choodle.xyz](https://choodle.xyz/)
 - Twitter: [@choodlexyz](https://twitter.com/choodlexyz)
 - Instagram: [@choodlexyz](https://www.instagram.com/choodlexyz/)
 
-# Changelog
-Document changes, improvements, and bugfixes between versions. 
-
-- v1.0.0.0 (2023-08-16)
+**Friends**
+- [RMX](https://www.rmx.party/)
+- [FWB FEST 2023](https://www.fwbfest.xyz/)
