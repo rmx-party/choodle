@@ -33,15 +33,20 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import {LicenseVersion, CantBeEvil} from "@a16z/contracts/licenses/CantBeEvil.sol";
 
-contract ChoodleFEST is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Burnable, Ownable {
+
+contract ChoodleFEST is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Burnable, Ownable, CantBeEvil {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
 
     string private _contractMetadataURI;
 
-    constructor() ERC721("Choodle FEST", "CHFST") {}
+    constructor()
+    ERC721("Choodle FEST", "CHFST")
+    CantBeEvil(LicenseVersion.PUBLIC)
+    {}
 
     function safeMint(address to, string memory uri)
     public
