@@ -3,7 +3,7 @@
 # Choodle
 
 
-[Choodle](https://choodle.xyz) is a minimal onchain doodling app intended to
+[Choodle](https://choodle.xyz) is a mobile-first minimal onchain doodling app intended to
 help bring the advantages of web3 technologies to typical web users without
 friction.
 
