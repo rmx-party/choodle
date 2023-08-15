@@ -18,8 +18,8 @@
 ## Table of Contents
 
 - [Features](#features)
-- [Architecture overview](#Architecture overview)
-- [Developer workflow](#Developer workflow)
+- [Architecture overview](#Architecture)
+- [Developer workflow](#Developer)
 – [Deployment](#Deployment)
 - [Contributing](#contributing)
 - [License](#license)
