@@ -45,7 +45,7 @@
             const blob = await (await fetch(urlFor(choodle.image).url())).blob()
             const imageUrl = await readBlob(blob)
 
-            await connectAndMint(imageUrl)
+            await connectAndMint(imageUrl, choodle.creatorId)
             await readWriteClient.patch(choodle._id).set({shouldMint: false}).commit()
         }
     }

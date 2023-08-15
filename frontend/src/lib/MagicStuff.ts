@@ -31,7 +31,7 @@ async function connectMagic() {
     return {provider, accounts};
 }
 
-async function mint(accounts: string[], provider: ethers.providers.Web3Provider, imageData: string) {
+async function mint(accounts: string[], provider: ethers.providers.Web3Provider, imageData: string, creatorId: string) {
     const contractAddress = PUBLIC_CONTRACT_ADDRESS
     if (!(contractAddress?.length > 0)) {
         throw new Error(`ENV var PUBLIC_CONTRACT_ADDRESS not set`)
@@ -40,6 +40,12 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
     // FIXME: this should be done by the contract, and use the real ID
     const data = 'data:application/json;base64,' + btoa(JSON.stringify({
         "description": `Drawing by ${accounts[0]}`,
+        "attributes": [
+            {
+                "trait_type": "Creator ID",
+                "value": `${creatorId}`
+            }
+        ],
         "image": `${imageData}`,
         "name": `Choodle #${'TBD'}`
     }))
@@ -58,7 +64,7 @@ export function generateOpenSeaURL(tokenId: number | string) {
     return `${PUBLIC_OPENSEA_PREFIX}/${PUBLIC_CONTRACT_ADDRESS}/${tokenId}`
 }
 
-export async function connectAndMint(imageData: string) {
+export async function connectAndMint(imageData: string, creatorId: string) {
     if (!imageData) console.error(`image data missing, please fix teh code`)
 
     loading.set(true)
@@ -69,7 +75,7 @@ export async function connectAndMint(imageData: string) {
             console.error(error)
         });
 
-    const preReceipt = await mint(accounts, provider, imageData);
+    const preReceipt = await mint(accounts, provider, imageData, creatorId);
     console.log(preReceipt)
 
     const receipt = await preReceipt.wait()
