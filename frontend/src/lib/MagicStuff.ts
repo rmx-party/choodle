@@ -31,11 +31,12 @@ async function connectMagic() {
     return {provider, accounts};
 }
 
-async function mint(accounts: string[], provider: ethers.providers.Web3Provider, imageData: string, creatorId: string) {
+async function mint(accounts: string[], provider: ethers.providers.Web3Provider, imageData: string, creatorId: string, createdAt: string) {
     const contractAddress = PUBLIC_CONTRACT_ADDRESS
     if (!(contractAddress?.length > 0)) {
         throw new Error(`ENV var PUBLIC_CONTRACT_ADDRESS not set`)
     }
+    const createdAtEpoch = new Date(createdAt).valueOf()
 
     // FIXME: this should be done by the contract, and use the real ID
     const data = 'data:application/json;base64,' + btoa(JSON.stringify({
@@ -44,6 +45,11 @@ async function mint(accounts: string[], provider: ethers.providers.Web3Provider,
             {
                 "trait_type": "Creator ID",
                 "value": `${creatorId}`
+            },
+            {
+                "display_type": "date",
+                "trait_type": "Created At",
+                "value": createdAtEpoch
             }
         ],
         "image": `${imageData}`,
@@ -64,7 +70,7 @@ export function generateOpenSeaURL(tokenId: number | string) {
     return `${PUBLIC_OPENSEA_PREFIX}/${PUBLIC_CONTRACT_ADDRESS}/${tokenId}`
 }
 
-export async function connectAndMint(imageData: string, creatorId: string) {
+export async function connectAndMint(imageData: string, creatorId: string, createdAt: string) {
     if (!imageData) console.error(`image data missing, please fix teh code`)
 
     loading.set(true)
@@ -75,7 +81,7 @@ export async function connectAndMint(imageData: string, creatorId: string) {
             console.error(error)
         });
 
-    const preReceipt = await mint(accounts, provider, imageData, creatorId);
+    const preReceipt = await mint(accounts, provider, imageData, creatorId, createdAt);
     console.log(preReceipt)
 
     const receipt = await preReceipt.wait()

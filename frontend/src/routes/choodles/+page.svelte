@@ -45,7 +45,7 @@
             const blob = await (await fetch(urlFor(choodle.image).url())).blob()
             const imageUrl = await readBlob(blob)
 
-            await connectAndMint(imageUrl, choodle.creatorId)
+            await connectAndMint(imageUrl, choodle.creatorId, choodle._createdAt)
             await readWriteClient.patch(choodle._id).set({shouldMint: false}).commit()
         }
     }
@@ -93,6 +93,7 @@
                 <pre>
 Id: {choodle._id}
 Creator: {choodle.creatorId}
+Created At: {new Date(choodle._createdAt).valueOf()}
 {#if choodle.shouldMint}
 ✔️  Should Mint
 {:else}
