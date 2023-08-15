@@ -49,7 +49,7 @@ contract ChoodleFEST is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Burnab
     {}
 
     function safeMint(address to, string memory uri)
-    public
+    public onlyOwner
     {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
