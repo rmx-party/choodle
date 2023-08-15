@@ -46,7 +46,7 @@
             const imageUrl = await readBlob(blob)
 
             await connectAndMint(imageUrl, choodle.creatorId, choodle._createdAt)
-            await readWriteClient.patch(choodle._id).set({shouldMint: false}).commit()
+            await readWriteClient.patch(choodle._id).set({shouldMint: false, mintedAt: new Date().toISOString()}).commit()
         }
     }
 
@@ -74,6 +74,7 @@
 
         if (filterState === 'should-mint') return fp.filter(c => c.shouldMint === true)(choodles)
         if (filterState === 'should-not-mint') return fp.filter(c => c.shouldMint !== true)(choodles)
+        if (filterState === 'minted') return fp.filter(c => c.mintedAt !== undefined)(choodles)
     }
 </script>
 
@@ -83,6 +84,7 @@
     <Button on:click={filter('all')}>All</Button>
     <Button on:click={filter('should-mint')}>To Mint</Button>
     <Button on:click={filter('should-not-mint')}>Not To Mint</Button>
+    <Button on:click={filter('minted')}>Mint Complete</Button>
 </menu>
 
 <div>
@@ -94,6 +96,9 @@
 Id: {choodle._id}
 Creator: {choodle.creatorId}
 Created At: {new Date(choodle._createdAt).valueOf()}
+{#if choodle.mintedAt}
+Minted At: {choodle.mintedAt}
+{/if}
 {#if choodle.shouldMint}
 ✔️  Should Mint
 {:else}

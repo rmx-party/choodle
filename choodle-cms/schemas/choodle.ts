@@ -29,6 +29,11 @@ export default {
             type: 'boolean',
             title: 'Should Mint?',
             initialValue: true
+        },
+        {
+            name: 'mintedAt',
+            type: 'datetime',
+            title: 'Minted At'
         }
     ]
 }
