@@ -62,8 +62,8 @@ We'd like to acknowledge the following libraries, resources, and contributors th
 
 - Email: help@choodle.xyz
 - Website: [choodle.xyz](https://choodle.xyz/)
-- Twitter: [@choodle.xyz](https://twitter.com/choodlexyz)
-- Instagram: [@choodle.xyz](https://www.instagram.com/choodlexyz/)
+- Twitter: [@choodlexyz](https://twitter.com/choodlexyz)
+- Instagram: [@choodlexyz](https://www.instagram.com/choodlexyz/)
 
 # Changelog
 Document changes, improvements, and bugfixes between versions. 
