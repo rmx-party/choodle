@@ -19,7 +19,7 @@
 
 - [Features](#features)
 - [Architecture overview](#Architecture overview)
-– [Developer workflow](#Developer workflow)
+- [Developer workflow](#Developer workflow)
 – [Deployment](#Deployment)
 - [Contributing](#contributing)
 - [License](#license)
@@ -39,13 +39,13 @@
 ### Image sharing
 - Native sharing via "share" button allows user to save image, share via messaging application of choice, etc.
 
-#Architecture overview
+# Architecture overview
 TBD
 
-#Developer workflow
+# Developer workflow
 TBD
 
-#Deployment
+# Deployment
 #TBD
 
 # Contributing
