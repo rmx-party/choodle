@@ -18,9 +18,9 @@
 ## Table of Contents
 
 - [Features](#features)
-- [Architecture overview](#Architecture)
-- [Developer workflow](#Developer)
-– [Deployment](#Deployment)
+- [Architecture overview](#architecture)
+- [Developer workflow](#developer)
+- [Deployment](#deployment)
 - [Contributing](#contributing)
 - [License](#license)
 - [Links](#links)
