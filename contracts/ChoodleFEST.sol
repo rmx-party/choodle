@@ -83,7 +83,7 @@ contract ChoodleFEST is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Burnab
     function supportsInterface(bytes4 interfaceId)
     public
     view
-    override(ERC721, ERC721Enumerable, ERC721URIStorage)
+    override(ERC721, ERC721Enumerable, ERC721URIStorage, CantBeEvil)
     returns (bool)
     {
         return super.supportsInterface(interfaceId);
