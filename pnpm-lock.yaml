@@ -3673,7 +3673,7 @@ packages:
     resolution: {integrity: sha512-5Evy2epuL+6TM0lCQGpFIj6KwiEsGh1SrHUhTbNX+sLbBtjidPZFAnVK9y5yU1+h//RitLbRHTIMyxQPtxMdHw==}
     dependencies:
       object.getownpropertydescriptors: 2.1.6
-      semver: 5.7.1
+      semver: 5.7.2
     dev: true
 
   /node-gyp-build@4.6.0:
@@ -4317,8 +4317,8 @@ packages:
       node-addon-api: 2.0.2
       node-gyp-build: 4.6.0
 
-  /semver@5.7.1:
-    resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
+  /semver@5.7.2:
+    resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
     hasBin: true
 
   /semver@6.3.0:
@@ -4425,7 +4425,7 @@ packages:
       js-sha3: 0.8.0
       memorystream: 0.3.1
       require-from-string: 2.0.2
-      semver: 5.7.1
+      semver: 5.7.2
       tmp: 0.0.33
     transitivePeerDependencies:
       - debug
