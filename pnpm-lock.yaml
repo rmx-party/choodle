@@ -12,8 +12,8 @@ dependencies:
     specifier: ^3.1.7
     version: 3.1.7(hardhat@2.16.0)
   '@openzeppelin/contracts':
-    specifier: ^4.9.2
-    version: 4.9.2
+    specifier: ^4.9.3
+    version: 4.9.3
   '@types/lodash':
     specifier: ^4.14.195
     version: 4.14.195
@@ -94,7 +94,7 @@ packages:
   /@a16z/contracts@0.0.9:
     resolution: {integrity: sha512-Aj0oov1iLSPE4n6zAknQ6zoLniXazlcYlTwKPymEoyT3cQKbFaRnWE9EcVmYjASLTAzpWL3rnJkNmbYpIIwTlA==}
     dependencies:
-      '@openzeppelin/contracts': 4.9.2
+      '@openzeppelin/contracts': 4.9.3
     dev: false
 
   /@adraffy/ens-normalize@1.9.2:
@@ -958,8 +958,8 @@ packages:
       - supports-color
     dev: false
 
-  /@openzeppelin/contracts@4.9.2:
-    resolution: {integrity: sha512-mO+y6JaqXjWeMh9glYVzVu8HYPGknAAnWyxTRhGeckOruyXQMNnlcW6w/Dx9ftLeIQk6N+ZJFuVmTwF7lEIFrg==}
+  /@openzeppelin/contracts@4.9.3:
+    resolution: {integrity: sha512-He3LieZ1pP2TNt5JbkPA4PNT9WC3gOTOlDcFGJW4Le4QKqwmiNJCRt44APfxMxvq7OugU/cqYuPcSBzOw38DAg==}
     dev: false
 
   /@scure/base@1.1.1:
