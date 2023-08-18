@@ -1,0 +1,102 @@
+
+@font-face {
+    font-family: 'DejaVu Sans';
+    src: url('/fonts/DejaVuSans-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DejaVu Sans Bold';
+    src: url('/fonts/DejaVuSans-Bold-webfont.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+:root {
+  --font-base-size: 16px;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  height: 100vh;
+  width: 100vw;
+  padding: 1rem;
+
+  font-size: var(--font-base-size);
+  font-family: 'DejaVu Sans';
+  text-align: center;
+}
+h1 {
+  color: var(--choodle-black, #141518);
+  text-align: center;
+  font-family: DejaVu Sans;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 2.4rem */
+  letter-spacing: 0.004rem;
+}
+p {
+  color: var(--choodle-black, #141518);
+  text-align: center;
+  font-family: DejaVu Sans;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 1.35rem */
+}
+
+img {
+  width: 10rem;
+  height: 12rem;
+  object-fit: contain;
+  overflow: visible;
+}
+pre {
+  text-align: left;
+  white-space: pre-wrap;
+  margin: 2rem auto;
+  display: block;
+}
+#back-link {
+  width: 100%;
+  margin: 1rem auto;
+  text-decoration: none;
+
+  display: flex;
+  height: 6.5rem;
+  padding: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  border-radius: 4rem;
+  border: 1px solid #FFF506;
+  background: var(--choodle-yellow, #FEF40A);
+
+  /* button/action */
+  box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.01), 0px -2px 8px 0px rgba(0, 0, 0, 0.12) inset, 0px 2px 24px 0px rgba(255, 255, 255, 0.40) inset, 0px 1px 4px 0px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(40px);
+
+  color: #000;
+  font-family: DejaVu Sans;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 1.8rem */
+}
+footer {
+  padding: 1rem;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+
+  color: #000;
+  font-family: DejaVu Sans;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 1.05rem */
+}

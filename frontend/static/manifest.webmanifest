@@ -1,0 +1,13 @@
+{
+  "name": "Choodle",
+  "short_name": "Choodle",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "Icon-App-Store-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }]
+}

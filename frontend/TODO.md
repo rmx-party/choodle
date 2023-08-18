@@ -1,0 +1,6 @@
+ - cleanups
+ - multi touch
+ - connect to a wallet
+ - add buttons
+ - add licenses
+ - get hardhat setup to do contracts
