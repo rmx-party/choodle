@@ -1,5 +1,6 @@
 import sgMail from "@sendgrid/mail";
 import { SENDGRID_API_KEY } from "$env/static/private";
+import { json } from "@sveltejs/kit";
 
 sgMail.setApiKey(SENDGRID_API_KEY)
 
@@ -15,7 +16,7 @@ export const POST = async (req) => {
   };
 
   console.log("Form submitted");
-  const output = await sgMail.send(msg)
+  const rawOutput = await sgMail.send(msg)
     .then((res) => {
       console.log('Email sent')
       return {
@@ -28,6 +29,7 @@ export const POST = async (req) => {
         body: JSON.stringify(error),
       };
     })
+  const output = JSON.parse(rawOutput.body)
 
-  return new Response(String(JSON.stringify(output)));
+  return json(output);
 }
