@@ -19,7 +19,7 @@ export const POST = async (req) => {
   const attachment = fs.readFileSync(pathToAttachment).toString("base64");
 
   const msg = {
-    to: "dees@rmx.party",
+    to: req.url.searchParams.get('to'),
     from: "help@rmx.party",
     subject: "Sending with SendGrid is Fun",
     text: "and easy to do anywhere, even with Node.js",
