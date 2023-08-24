@@ -1,7 +1,7 @@
 <script lang="ts">
     export let variant = 'secondary';
     export let isOnline = true;
-    export let icon: string | undefined;
+    export let icon: string | undefined = undefined;
     export let iconPosition: 'left' | 'right' = 'left';
 
     export let colour: 'yellow' | 'white' = 'white';
