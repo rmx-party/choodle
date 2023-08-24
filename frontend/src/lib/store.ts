@@ -1,5 +1,10 @@
 import {writable} from 'svelte/store';
 
+export type DialogState = {
+  [domId: string]: boolean
+}
+export const dialogState = writable<DialogState>({});
+
 export const tokenId = writable(0);
 export const loading = writable(false);
 export const loadingMessage = writable('');

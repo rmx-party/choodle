@@ -3,6 +3,15 @@
     import MetaData from "../../components/MetaData.svelte";
     import Wordmark from "../../components/Wordmark.svelte"
     import handDraw from "$lib/assets/hand-draw.svg"
+    import Dialog from "../../components/Dialog.svelte"
+    import { dialogState } from "$lib/store"
+
+    function openTestDialog() {
+      dialogState.update((dialogs) => {
+        dialogs["test-dialog"] = true
+        return dialogs
+      })
+    }
 </script>
 
 <style>
@@ -21,6 +30,57 @@
 <div class="container">
 
 <h1>Choodle Design Components</h1>
+
+<Button on:click={openTestDialog}>Open Dialog</Button>
+<Dialog id="test-dialog" initialOpen={false}>
+    <h2 slot="header">
+      modal <small><em>adjective</em>  mod·al \ˈmō-dəl\</small>
+    </h2>
+    <ol class="definition-list">
+      <li>of or relating to modality in logic</li>
+      <li>containing provisions as to the mode of procedure or the manner of taking effect —used of a contract or legacy</li>
+      <li>of or relating to a musical mode</li>
+      <li>of or relating to structure as opposed to substance</li>
+      <li>of, relating to, or constituting a grammatical form or category characteristically indicating predication</li>
+      <li>of or relating to a statistical mode</li>
+    </ol>
+    <ol class="definition-list">
+      <li>of or relating to modality in logic</li>
+      <li>containing provisions as to the mode of procedure or the manner of taking effect —used of a contract or legacy</li>
+      <li>of or relating to a musical mode</li>
+      <li>of or relating to structure as opposed to substance</li>
+      <li>of, relating to, or constituting a grammatical form or category characteristically indicating predication</li>
+      <li>of or relating to a statistical mode</li>
+    </ol>
+    <ol class="definition-list">
+      <li>of or relating to modality in logic</li>
+      <li>containing provisions as to the mode of procedure or the manner of taking effect —used of a contract or legacy</li>
+      <li>of or relating to a musical mode</li>
+      <li>of or relating to structure as opposed to substance</li>
+      <li>of, relating to, or constituting a grammatical form or category characteristically indicating predication</li>
+      <li>of or relating to a statistical mode</li>
+    </ol>
+    <ol class="definition-list">
+      <li>of or relating to modality in logic</li>
+      <li>containing provisions as to the mode of procedure or the manner of taking effect —used of a contract or legacy</li>
+      <li>of or relating to a musical mode</li>
+      <li>of or relating to structure as opposed to substance</li>
+      <li>of, relating to, or constituting a grammatical form or category characteristically indicating predication</li>
+      <li>of or relating to a statistical mode</li>
+    </ol>
+    <ol class="definition-list">
+      <li>of or relating to modality in logic</li>
+      <li>containing provisions as to the mode of procedure or the manner of taking effect —used of a contract or legacy</li>
+      <li>of or relating to a musical mode</li>
+      <li>of or relating to structure as opposed to substance</li>
+      <li>of, relating to, or constituting a grammatical form or category characteristically indicating predication</li>
+      <li>of or relating to a statistical mode</li>
+    </ol>
+
+    <a href="https://www.merriam-webster.com/dictionary/modal">
+      merriam-webster.com
+    </a>
+  </Dialog>
 
 <h2>typography</h2>
 <h1>h1</h1>
