@@ -4,6 +4,11 @@ export default {
     title: 'Howto',
     fields: [
         {
+            name: 'tagline',
+            title: 'Tagline',
+            type: 'string'
+        },
+        {
             name: 'top',
             title: 'Top Text',
             type: 'array',
