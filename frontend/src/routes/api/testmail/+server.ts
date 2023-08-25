@@ -21,15 +21,32 @@ export const POST = async ({request, cookies}) => {
   const pathToAttachment = `${__dirname}/../../../../static/choodle-bob-p2.png`;
   const attachment = fs.readFileSync(pathToAttachment).toString("base64");
 
+  const choodleUrl = `https://choodle.xyz/c/${choodleId}`
+
   const to = creatorEmail
   const from = "help@rmx.party"
   const subject = `Choodle ${choodleId} is officially yours!` // placeholder for CMS content
+  const html = `
+🌟 Choodle Certificate of Authenticity 🌟
+<br />
+<img src='data:image/png;${attachment}' alt='Choodle Certificate of Authenticity' />
+<br />
+🌟 
+<p>This certificate guarantees that this Choodle is an original artwork created by ${creatorEmail}.</p>
+<p>Made on: ${new Date().toLocaleDateString()}</p>
+<p>Edition: 1/1</p>
+<p>Creator: ${creatorEmail}</p>
+<p><a href=${choodleUrl}>View your Choodle here</a></p>
+🌟
+<p><a href='https://choodle.xyz'>Choodle :)</a></p>
+<p>a project by <a href='https://rmx.party'>rmx.party</a></p>
+`
+
   const msg = {
     to,
     from,
     subject,
-    text: "and easy to do anywhere, even with Node.js",
-    html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+    html,
     attachments: [
       {
         content: attachment,
