@@ -7,10 +7,7 @@
     import { dialogState } from "$lib/store"
 
     function openTestDialog() {
-      dialogState.update((dialogs) => {
-        dialogs["test-dialog"] = true
-        return dialogs
-      })
+      dialogState.update((dialogs) => {return { ...dialogs, "test-dialog": true }})
     }
 </script>
 

@@ -12,6 +12,8 @@
   import {readWriteClient} from "$lib/CMSUtils";
   import localforage from "localforage";
   import Prompt from "./Prompt.svelte";
+  import Dialog from "./Dialog.svelte";
+  import { dialogState } from "$lib/store";
 
   export let id;
   export let prompt;
@@ -21,6 +23,8 @@
   let ctx: CanvasRenderingContext2D;
   let lastTouchedPoint: Dimensiony | null;
   let isOnline = true;
+  let creatorEmail: EmailAddress | undefined;
+  let creatorEmailInput: EmailAddress | undefined;
 
   const resetViewportUnit = async () => {
     if(!browser) return;
@@ -209,22 +213,49 @@
     return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
   }
 
+  const promptForEmailOrSave = async (event: Event) => {
+    if (!browser) return;
+
+    const undoStack = await getUndoStack()
+    if (undoStack.current === '') return loading.set(false);
+
+    const asyncCreatorId = (async () => await getCreatorId())()
+    const asyncCreatorEmail = (async () => creatorEmail = await localforage.getItem('choodle-creator-email'))()
+
+    if (!creatorEmail && !await asyncCreatorEmail) {
+      console.log(`prompting for email...`)
+      dialogState.update(dialogs => {return { ...dialogs, ["email-prompt"]: true }})
+    } else {
+      console.log(`saving without email...`)
+      save(event)
+    }
+  }
+
   const save = async (_event: Event) => {
     if (!browser) return;
 
-    const upScaledImage = await upScaledImageUrlBy(canvas, ctx, upScaledImageRatio)
-    const upScaledImageBlob = await (await fetch(upScaledImage as unknown as
-      URL)).blob()
-    const upScaledUploadResult = uploadImageBlob(upScaledImageBlob)
-
     const undoStack = await getUndoStack()
-    if (undoStack.current === '') return;
-    loading.set(true)
-    const imgBlob = await (await fetch(undoStack.current)).blob();
-    const uploadResult = uploadImageBlob(imgBlob)
-    console.log(`uploaded: `, uploadResult)
+    if (undoStack.current === '') return loading.set(false);
 
-    const choodle = {
+    loading.set(true)
+
+    const asyncCreatorId = (async () => await getCreatorId())()
+
+    const upScaledUploadResult = (async () => {
+      const upScaledImage = await upScaledImageUrlBy(canvas, ctx, upScaledImageRatio)
+      const upScaledImageBlob = await (await fetch(upScaledImage as unknown as
+        URL)).blob()
+      return await uploadImageBlob(upScaledImageBlob)
+    })()
+
+    const uploadResult = (async () => {
+      const imgBlob = await (await fetch(undoStack.current)).blob();
+      return await uploadImageBlob(imgBlob)
+    })()
+
+    console.log(`pending uploads`, uploadResult, upScaledUploadResult, getCreatorId)
+
+    const cmsChoodle = {
       _type: 'choodle',
       title: 'Untitled',
       image: {
@@ -241,18 +272,65 @@
           _ref: (await upScaledUploadResult)?._id,
         }
       },
-      creatorId: await getCreatorId(),
+      creatorId: await asyncCreatorId,
       shouldMint: true
     }
-    const createResult = await readWriteClient.create(choodle)
-    console.log(createResult)
-    if (createResult._id) {
-      clearCanvas(id);
-      await clearStorage();
+    const createResult = await readWriteClient.create(cmsChoodle)
+    console.log(`createResult`, createResult)
 
+    if (createResult._id) {
+      let sendingCertificate;
+      const clearingStorage = clearStorage()
+
+      if (creatorEmail) {
+        sendingCertificate = sendCreatorCertificate({creatorEmail, choodleId: createResult._id})
+      }
+
+      clearCanvas(id);
+      const promises = [clearingStorage, sendingCertificate]
+      console.log(`awaiting promises`, promises)
+      await Promise.all(promises)
+      console.log(`promises resolved, navigating`)
       await goto(`/c/${createResult._id}`)
     }
+
     loading.set(false)
+  }
+
+  async function sendCreatorCertificate({creatorEmail, choodleId}: { creatorEmail: string, choodleId: string}) {
+    console.log(`sending certificate to ${creatorEmail} for ${choodleId}`)
+    const pendingRequest = fetch(`/api/testmail`, {
+      method: 'POST',
+      body: JSON.stringify({creatorEmail, choodleId}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const json = await (await pendingRequest).json()
+    console.log(`creator certificate result`, json)
+
+    return json
+  }
+
+  async function saveCreatorEmail(event) {
+    if (!browser) return;
+    const input = document.getElementById('creator-email') as HTMLInputElement
+    const validity = input.reportValidity()
+    if (validity === false) return;
+
+    console.log(`saving creator email`)
+    creatorEmail = creatorEmailInput
+
+    await localforage.setItem('choodle-creator-email', creatorEmail)
+
+    // TODO: maybe also instruct server to remap sanity creator id to email
+
+    onDismissEmailPrompt(event)
+  }
+
+  async function onDismissEmailPrompt(event) {
+    dialogState.update(dialogs => {return { ...dialogs, ["email-prompt"]: false }})
+    save(event)
   }
 
   function clearCanvas(id: string) {
@@ -291,7 +369,6 @@
     ctx.lineCap = 'square';
     ctx.imageSmoothingEnabled = false;
 
-
     window.addEventListener('online', () => {
       console.log('online')
       isOnline = true
@@ -310,6 +387,11 @@
       await resizeCanvas()
       await load()
     }, 50)
+
+    const storedCreatorEmail = await localforage.getItem('choodle-creator-email');
+    if (storedCreatorEmail) {
+      creatorEmail = storedCreatorEmail
+    }
   });
 </script>
 
@@ -331,9 +413,23 @@
 
   <div id="buttons">
     <Button on:click={undo} colour="yellow">Undo</Button>
-    <Button on:click={save} isOnline={isOnline} colour="yellow">Done</Button>
+    <Button on:click={promptForEmailOrSave} isOnline={isOnline} colour="yellow">Done</Button>
   </div>
 </div>
+
+<Dialog id={'email-prompt'}>
+  <h2 slot="header">Get Yer Certificate PLACEHOLDER</h2>
+  <img height="100" src="/choodle-bob-p2.png" alt="Choodle Certificate" />
+  <p>PLACEHOLDER Enter your email, and we will send you a certificate of ownership for your unique creation!</p>
+  <br/>
+
+  <label for="creator-email">Email</label><br/>
+  <input bind:value={creatorEmailInput} type="email" id="creator-email" name="creatorEmail" placeholder="Enter Email"
+required title="Please enter a valid email address as the creator to attribute this art to"/>
+
+  <Button on:click={saveCreatorEmail} variant="primary" colour="yellow">Claim</Button>
+  <a href='' on:click={onDismissEmailPrompt}>PLACEHOLDER No thanks</a>
+</Dialog>
 
 <style>
   :root {
