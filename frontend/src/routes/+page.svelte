@@ -29,12 +29,10 @@
 <main id="main">
     <div id="top-box">
         <Wordmark fontSize="88px"/>
-        <p class="tagline"><strong><img width="22" height="17" src={star1} alt="a doodle of a star"/>FWB Fest 2023<img
-                width="22"
-                height="17"
-                src={star2}
-            alt="a doodle of a star"/>
-            </strong>
+        <p class="tagline">
+            <img width="22" height="17" src={star1} alt="a doodle of a star"/>
+            <strong>FWB Fest 2023</strong>
+            <img width="22" height="17" src={star2} alt="a doodle of a star"/>
         </p>
     </div>
 
@@ -46,8 +44,9 @@
         Let's Draw!
     </Button>
 
-    <p id="bottom-content">Choodle is a canvas for onchain creativity. Read the <a href="https://rmxparty.notion.site/Choodle-FAQ-f2f50cf66a484ee79f9d5657d6c0e7d1"
-                                                                                    target="_blank">FAQ</a>.</p>
+    <div id="bottom-content">
+        {@html toHTML(data.howto.bottom)}
+    </div>
 </main>
 
 <style>
