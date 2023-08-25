@@ -31,7 +31,7 @@
         <Wordmark fontSize="88px"/>
         <p class="tagline">
             <img width="22" height="17" src={star1} alt="a doodle of a star"/>
-            <strong>FWB Fest 2023</strong>
+            <strong>{data.howto.tagline}</strong>
             <img width="22" height="17" src={star2} alt="a doodle of a star"/>
         </p>
     </div>
