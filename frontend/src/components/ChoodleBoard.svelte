@@ -423,9 +423,12 @@
   <p>PLACEHOLDER Enter your email, and we will send you a certificate of ownership for your unique creation!</p>
   <br/>
 
-  <label for="creator-email">Email</label><br/>
+  <label for="creator-email" style="text-align: left; display: block;">Email
+  <br/>
   <input bind:value={creatorEmailInput} type="email" id="creator-email" name="creatorEmail" placeholder="Enter Email"
-required title="Please enter a valid email address as the creator to attribute this art to"/>
+required title="Please enter a valid email address as the creator to attribute this art to" style='width: 100%; padding:
+    1rem 0.5rem; border-radius: 0.25rem;'/>
+  </label>
 
   <Button on:click={saveCreatorEmail} variant="primary" colour="yellow">Claim</Button>
   <a href='' on:click={onDismissEmailPrompt}>PLACEHOLDER No thanks</a>
