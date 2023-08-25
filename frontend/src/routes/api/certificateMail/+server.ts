@@ -33,7 +33,7 @@ export const POST = async ({request, cookies}) => {
 
     const to = creatorEmail
     const from = "help@rmx.party"
-    const subject = `Choodle ${choodleId} is officially yours!` // placeholder for CMS content
+    const subject = certificateEmail.emailSubject
     const html = `
 ${toHTML(certificateEmail.top)}
 <br />
