@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 
 import Jimp from "jimp";
-import {readOnlyClient} from "$lib/CMSUtils";
+import {getChoodleById, readOnlyClient} from "$lib/CMSUtils";
 import {urlFor} from "$lib/PersistedImagesUtils";
 import * as fs from "fs";
 
@@ -11,8 +11,8 @@ describe('load an image', () => {
         const image = await Jimp.read(blankCertificatePath)
         const choodleId = "nylCqCwRnhr26khFEUw8oj"
 
-        const choodles = await readOnlyClient.fetch(`*[_type == "choodle" && _id == "${choodleId}"]`)
-        const choodleImage = await Jimp.read(urlFor(choodles[0].image).toString())
+        const choodles = await getChoodleById(choodleId)
+        const choodleImage = await Jimp.read(urlFor(choodles[0].image).url())
         choodleImage.scale(3)
 
         image.blit(choodleImage, 665, 675)
