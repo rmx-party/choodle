@@ -117,13 +117,7 @@
             width='390' height='520' alt=''/>
     </div>
     <section class="content">
-        <!-- {@html bottomContent()} -->
-        <p>Get your sticker at the Art Center.
-        <br/>
-            Wanna mint? Email: 
-            <a
-                href={`mailto:fwb@choodle.xyz?subject=Please mint my choodle&body=My choodle can be found at ${$page.url}`}>fwb@choodle.xyz</a>
-        </p>
+        {@html bottomContent()}
     </section>
 
     <menu>
