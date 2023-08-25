@@ -302,7 +302,7 @@
 
   async function sendCreatorCertificate({creatorEmail, choodleId}: { creatorEmail: string, choodleId: string}) {
     console.log(`sending certificate to ${creatorEmail} for ${choodleId}`)
-    const pendingRequest = fetch(`/api/testmail`, {
+    const pendingRequest = fetch(`/api/certificateMail`, {
       method: 'POST',
       body: JSON.stringify({creatorEmail, choodleId}),
       headers: {
