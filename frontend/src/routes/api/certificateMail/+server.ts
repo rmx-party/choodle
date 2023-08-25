@@ -8,6 +8,7 @@ import {fileURLToPath} from 'url';
 import {dirname} from 'path';
 import {getChoodleById} from "$lib/CMSUtils";
 import {urlFor} from "$lib/PersistedImagesUtils";
+import {generateCertificateFor} from "$lib/CertificateGenerator";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -25,6 +26,7 @@ export const POST = async ({request, cookies}) => {
 
     const fetchedImage = await fetch(choodleImageUrl.url());
     const attachment = Buffer.from(await fetchedImage.arrayBuffer()).toString("base64")
+    const certificateAttachment = await generateCertificateFor(choodleId)
 
     const choodleUrl = `https://choodle.xyz/c/${choodleId}`
 
@@ -58,8 +60,13 @@ export const POST = async ({request, cookies}) => {
                 filename: `choodle-${choodleId}.png`,
                 type: "application/png",
                 disposition: "attachment"
+            },
+            {
+                content: certificateAttachment,
+                filename: `choodle-certificate-${choodleId}.png`,
+                type: "application/png",
+                disposition: "attachment"
             }
-            // FIXME: add the certificate
         ]
     };
 
