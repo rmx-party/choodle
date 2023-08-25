@@ -46,8 +46,7 @@ ${toHTML(certificateEmail.top)}
 <p>Creator: ${creatorEmail}</p>
 <p><a href=${choodleUrl}>View your Choodle here</a></p>
 🌟
-<p><a href='https://choodle.xyz'>Choodle :)</a></p>
-<p>a project by <a href='https://rmx.party'>rmx.party</a></p>
+${toHTML(certificateEmail.footer)}
 `
 
     const msg = {
