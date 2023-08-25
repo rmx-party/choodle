@@ -16,3 +16,8 @@ export const readOnlyClient = createClient({
     apiVersion: "2023-07-18",
     useCdn: false
 })
+
+export const getChoodleById = async (choodleId) => {
+    const choodles = await readOnlyClient.fetch(`*[_type == "choodle" && _id == "${choodleId}"]`)
+    return choodles[0];
+}
