@@ -36,7 +36,7 @@ export const POST = async ({request, cookies}) => {
     const html = `
 🌟 Choodle Certificate of Authenticity 🌟
 <br />
-<img src='data:image/png;${attachment}' alt='Choodle Certificate of Authenticity' />
+<img width="300" src='data:image/png;base64,${certificateAttachment}' alt='Choodle Certificate of Authenticity' />
 <br />
 🌟 
 <p>This certificate guarantees that this Choodle is an original artwork created by ${creatorEmail}.</p>
