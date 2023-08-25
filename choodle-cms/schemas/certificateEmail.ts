@@ -21,6 +21,11 @@ export default {
             title: 'Footer Text',
             type: 'array',
             of: [{type: 'block'}]
+        },
+        {
+            name: 'emailSubject',
+            title: 'Email Subject Line',
+            type: 'string'
         }
     ]
 }
