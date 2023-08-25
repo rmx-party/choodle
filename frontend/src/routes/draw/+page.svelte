@@ -22,7 +22,7 @@
 
 {#if !$loading}
     <div id="choodle-box">
-        <ChoodleBoard id="choodle-board" prompt={data.prompt} howto={data.howto}></ChoodleBoard>
+        <ChoodleBoard id="choodle-board" prompt={data.prompt} certificateModal={data.certificateModal}></ChoodleBoard>
     </div>
 {:else}
     <LoadingIndicator explanation={$loadingMessage}></LoadingIndicator>

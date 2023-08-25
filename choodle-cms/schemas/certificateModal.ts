@@ -24,6 +24,11 @@ export default {
             name: 'DeclineCTA',
             title: 'Decline CTA link text',
             type: 'string',
+        },
+        {
+            name: 'Image',
+            title: 'Image to show',
+            type: 'image'
         }
     ]
 }

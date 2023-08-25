@@ -14,17 +14,20 @@
   import Prompt from "./Prompt.svelte";
   import Dialog from "./Dialog.svelte";
   import { dialogState } from "$lib/store";
+  import {toHTML} from "@portabletext/to-html";
+  import {urlFor} from "$lib/PersistedImagesUtils";
 
   export let id;
   export let prompt;
+  export let certificateModal;
 
   let isDrawing = false;
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
   let lastTouchedPoint: Dimensiony | null;
   let isOnline = true;
-  let creatorEmail: EmailAddress | undefined;
-  let creatorEmailInput: EmailAddress | undefined;
+  let creatorEmail: string | undefined;
+  let creatorEmailInput: string | undefined;
 
   const resetViewportUnit = async () => {
     if(!browser) return;
@@ -418,9 +421,9 @@
 </div>
 
 <Dialog id={'email-prompt'}>
-  <h2 slot="header">Get Yer Certificate PLACEHOLDER</h2>
-  <img height="100" src="/choodle-bob-p2.png" alt="Choodle Certificate" />
-  <p>PLACEHOLDER Enter your email, and we will send you a certificate of ownership for your unique creation!</p>
+  <h2 slot="header">{@html toHTML(certificateModal.title)}</h2>
+  <img height="100" src="{urlFor(certificateModal.Image)}" alt="Choodle Certificate" />
+  <div>{@html toHTML(certificateModal.body)}</div>
   <br/>
 
   <label for="creator-email" style="text-align: left; display: block;">Email
@@ -430,8 +433,8 @@ required title="Please enter a valid email address as the creator to attribute t
     1rem 0.5rem; border-radius: 0.25rem;'/>
   </label>
 
-  <Button on:click={saveCreatorEmail} variant="primary" colour="yellow">Claim</Button>
-  <a href='' on:click={onDismissEmailPrompt}>PLACEHOLDER No thanks</a>
+  <Button on:click={saveCreatorEmail} variant="primary" colour="yellow">{certificateModal.CTA}</Button>
+  <a href='' on:click={onDismissEmailPrompt}>{certificateModal.DeclineCTA}</a>
 </Dialog>
 
 <style>
