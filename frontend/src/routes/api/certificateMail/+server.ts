@@ -1,14 +1,13 @@
 import sgMail from "@sendgrid/mail";
 import {SENDGRID_API_KEY} from "$env/static/private";
 import {json} from "@sveltejs/kit";
-import * as fs from "fs";
-
 
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
-import {getChoodleById} from "$lib/CMSUtils";
+import {getChoodleById, readOnlyClient} from "$lib/CMSUtils";
 import {urlFor} from "$lib/PersistedImagesUtils";
 import {generateCertificateFor} from "$lib/CertificateGenerator";
+import {toHTML} from "@portabletext/to-html";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,6 +15,8 @@ const __dirname = dirname(__filename);
 sgMail.setApiKey(SENDGRID_API_KEY)
 
 export const POST = async ({request, cookies}) => {
+    const certificateEmail = await readOnlyClient.fetch(`*[_type == "CertificateEmail"] [0]`);
+
     console.log(`mail request`, request)
 
     const {creatorEmail, choodleId, ...unknown} = await request.json()
@@ -34,7 +35,7 @@ export const POST = async ({request, cookies}) => {
     const from = "help@rmx.party"
     const subject = `Choodle ${choodleId} is officially yours!` // placeholder for CMS content
     const html = `
-🌟 Choodle Certificate of Authenticity 🌟
+${toHTML(certificateEmail.top)}
 <br />
 <img width="300" src='data:image/png;base64,${certificateAttachment}' alt='Choodle Certificate of Authenticity' />
 <br />
