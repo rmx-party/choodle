@@ -3,11 +3,14 @@ import {getChoodleById} from "$lib/CMSUtils";
 import {urlFor} from "$lib/PersistedImagesUtils";
 import {temporaryFileTask} from "tempy";
 import fs from "fs";
-import certBackground from "~/lib/assets/CoA-blank.png"
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const generateCertificateFor = async ({choodleId, creatorEmail}) => {
 
-    const image = await Jimp.read(certBackground)
+    const image = await Jimp.read(path.join(__dirname, 'assets', 'CoA-blank.png'))
 
     const choodle = await getChoodleById(choodleId)
     const choodleImage = await Jimp.read(urlFor(choodle.image).url())
