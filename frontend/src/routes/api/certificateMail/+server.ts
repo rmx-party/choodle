@@ -2,15 +2,10 @@ import sgMail from "@sendgrid/mail";
 import {SENDGRID_API_KEY} from "$env/static/private";
 import {json} from "@sveltejs/kit";
 
-import {fileURLToPath} from 'url';
-import {dirname} from 'path';
 import {getChoodleById, readOnlyClient} from "$lib/CMSUtils";
 import {urlFor} from "$lib/PersistedImagesUtils";
 import {generateCertificateFor} from "$lib/CertificateGenerator";
 import {toHTML} from "@portabletext/to-html";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 sgMail.setApiKey(SENDGRID_API_KEY)
 
