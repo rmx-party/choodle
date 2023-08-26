@@ -5,12 +5,13 @@ import {temporaryFileTask} from "tempy";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+// import cert from "$lib/assets/CoA-blank.png"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const generateCertificateFor = async ({choodleId, creatorEmail}) => {
 
-    const image = await Jimp.read(path.join(__dirname, 'assets', 'CoA-blank.png'))
+    const image = await Jimp.read(path.join(__dirname, "..", "assets", "CoA-blank.png"))
 
     const choodle = await getChoodleById(choodleId)
     const choodleImage = await Jimp.read(urlFor(choodle.image).url())
