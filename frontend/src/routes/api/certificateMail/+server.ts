@@ -4,7 +4,7 @@ import {json} from "@sveltejs/kit";
 
 import {getChoodleById, readOnlyClient} from "$lib/CMSUtils";
 import {urlFor} from "$lib/PersistedImagesUtils";
-import {generateCertificateFor} from "$lib/CertificateGenerator";
+import {generateCertificateFor} from "$lib/server/CertificateGenerator";
 import {toHTML} from "@portabletext/to-html";
 
 sgMail.setApiKey(SENDGRID_API_KEY)
