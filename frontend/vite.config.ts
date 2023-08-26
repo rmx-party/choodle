@@ -1,10 +1,11 @@
 import {sveltekit} from '@sveltejs/kit/vite';
 import {defineConfig} from 'vitest/config';
+import * as path from 'path';
 
 export default defineConfig({
     plugins: [sveltekit()],
     build: {
-        sourcemap: true
+        sourcemap: true,
     },
     test: {
         include: ['src/**/*.{test,spec}.{js,ts}'],
@@ -12,5 +13,10 @@ export default defineConfig({
     },
     define: {
         'process.env': process.env
+    },
+  resolve: {
+    alias: {
+      '~': path.resolve(__dirname, 'src')
     }
+  }
 });
