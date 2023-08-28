@@ -49,6 +49,11 @@ export default {
             name: 'sentAt',
             type: 'datetime',
             title: 'Sent At'
+        },
+        {
+            name: 'certificate',
+            type: 'image',
+            title: 'Generated Certificate'
         }
     ]
 }
