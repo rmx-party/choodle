@@ -34,13 +34,12 @@ ${toHTML(certificateEmail.top)}
 <br />
 <img width="300" src='data:image/png;base64,${certificateAttachment}' alt='Choodle Certificate of Authenticity' />
 <br />
-🌟 
-<p>This certificate guarantees that this Choodle is an original artwork created by ${creatorEmail}.</p>
-<p>Made on: ${new Date().toLocaleDateString()}</p>
+${toHTML(certificateEmail.createdBy)} ${creatorEmail}.
+<br/>
+<p>Made on: ${new Date(choodle._createdAt).toLocaleDateString()}</p>
 <p>Edition: 1/1</p>
 <p>Creator: ${creatorEmail}</p>
 <p><a href=${choodleUrl}>View your Choodle here</a></p>
-🌟
 ${toHTML(certificateEmail.footer)}
 `
 
