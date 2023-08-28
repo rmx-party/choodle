@@ -5,6 +5,7 @@ import {temporaryFileTask} from "tempy";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import {PUBLIC_URL_BASE} from "$env/static/public";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -19,7 +20,7 @@ export const generateCertificateFor = async ({choodleId, creatorEmail}) => {
     choodleImage.scale(3)
 
     image.blit(choodleImage, 665, 675)
-    const font = await Jimp.loadFont(__dirname+"/../../../static/open-sans/open-sans-64-black/open-sans-64-black.fnt")
+    const font = await Jimp.loadFont(`${PUBLIC_URL_BASE}/open-sans/open-sans-64-black/open-sans-64-black.fnt`)
 
     const creationDate = new Date(choodle._createdAt).toLocaleDateString()
 
