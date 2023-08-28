@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import { DialogOverlay, DialogContent } from 'svelte-accessible-dialog';
   import { dialogState } from "$lib/store"
+  import closeBtn from "$lib/assets/icon-close-32px.svg"
 
   export let initialOpen = false;
   let isOpen;
@@ -35,13 +36,13 @@
 
 {#if browser}
 <DialogOverlay {id} {isOpen} onDismiss={dismiss} class={`overlay`}>
-  <DialogContent aria-label="Definition" class={`dialog`}>
-    <button on:click={dismiss}>Close</button>
+  <DialogContent aria-label="Dialog" class={`dialog`}>
+    <button class="close-btn" on:click={dismiss}><img src={closeBtn} alt="icon of an X for exit" title="close dialog"/></button>
 
-      <div class="content">
-        <slot name="header" />
-        <slot />
-      </div>
+    <div class="content">
+      <slot name="header" />
+      <slot />
+    </div>
 
   </DialogContent>
 </DialogOverlay>
@@ -68,6 +69,9 @@
     margin: 0;
     padding: 1rem;
     border-radius: 0.5rem 0.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
   }
   :global([data-svelte-dialog-content] .content) {
     display: block;
@@ -75,4 +79,13 @@
     max-height: 100%;
     max-width: 100%;
   }
+
+  .close-btn {
+    border: none;
+    background: none;
+    padding: 0;
+    align-self: flex-end;
+  }
 </style>
+
+
