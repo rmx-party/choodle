@@ -72,6 +72,8 @@
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+
+    padding-bottom: env(safe-area-inset-bottom); /* adjust for safari mobile chrome overlay */
   }
   :global([data-svelte-dialog-content] .content) {
     display: block;
