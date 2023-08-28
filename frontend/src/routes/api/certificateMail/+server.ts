@@ -47,14 +47,14 @@ export const POST = async ({request, cookies}) => {
     const certificateAttachment = await generateCertificateFor({choodleId, creatorEmail})
     const certificateDataUri = `data:image/png;base64,${certificateAttachment}`;
     const supposedBuffer = dataUriToBuffer(certificateDataUri);
-    const uploadResult = readWriteClient.assets.upload('image', supposedBuffer, {timeout: 5000})
+    const certificateUploadResult = await readWriteClient.assets.upload('image', supposedBuffer, {timeout: 5000})
 
-    await readWriteClient.patch(choodle._id).set({
+    const newChoodle = await readWriteClient.patch(choodle._id).set({
         certificate: {
             _type: "image",
             asset: {
                 _type: "reference",
-                _ref: (await uploadResult)?._id,
+                _ref: certificateUploadResult?._id,
             }
         }
     }).commit();
@@ -67,7 +67,7 @@ export const POST = async ({request, cookies}) => {
     const html = `
 ${toHTML(certificateEmail.top)}
 <br />
-<img width="300" src=${certificateDataUri} alt='Choodle Certificate of Authenticity' />
+<img width="300" src=${urlFor(newChoodle.certificate).width(300).url()} alt='Choodle Certificate of Authenticity' />
 <br />
 ${toHTML(certificateEmail.createdBy)} ${creatorEmail}.
 <br/>
