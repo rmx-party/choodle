@@ -7,6 +7,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import {PUBLIC_URL_BASE} from "$env/static/public";
 import QRCode from 'qrcode';
+import {toHTML} from "@portabletext/to-html";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -24,10 +25,14 @@ export const generateCertificateFor = async ({choodleId, creatorEmail}) => {
     const font = await Jimp.loadFont(`${PUBLIC_URL_BASE}/open-sans/open-sans-64-black/open-sans-64-black.fnt`)
 
     const creationDate = new Date(choodle._createdAt).toLocaleDateString()
+    const creatorString = toHTML(certificateEmail.createdBy) + ` ${creatorEmail}`
 
-    image.print(font, 400, 1700, `Made on: ${creationDate}`)
-    image.print(font, 400, 1780, "Edition: 1/1")
-    image.print(font, 400, 1860, `Creator: ${creatorEmail}`)
+    image.print(font, 192, 442, `Certificate of Ownership`)
+    image.print(font, 194, 1563, creatorString)
+
+    image.print(font, 194, 1700, `Made on: ${creationDate}`)
+    image.print(font, 194, 1780, "Edition: 1/1")
+    image.print(font, 194, 1860, `Creator: ${creatorEmail}`)
 
     const qrcode = await QRCode.toDataURL( `${PUBLIC_URL_BASE}/c/${choodleId}`, { errorCorrectionLevel: 'L', scale: 8 })
     const qrcodeImage = await Jimp.read(Buffer.from(qrcode.split(',')[1], 'base64'))
