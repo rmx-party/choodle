@@ -36,9 +36,13 @@ ${toHTML(certificateEmail.top)}
 <br />
 ${toHTML(certificateEmail.createdBy)} ${creatorEmail}.
 <br/>
-<p>Made on: ${new Date(choodle._createdAt).toLocaleDateString()}</p>
-<p>Edition: 1/1</p>
-<p>Creator: ${creatorEmail}</p>
+<p>Made on: ${new Date(choodle._createdAt).toLocaleDateString()}
+<br/>
+Edition: 1/1
+<br/>
+Creator: ${creatorEmail}
+</p>
+
 <p><a href=${choodleUrl}>View your Choodle here</a></p>
 ${toHTML(certificateEmail.footer)}
 `
