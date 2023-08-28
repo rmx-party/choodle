@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import {PUBLIC_URL_BASE} from "$env/static/public";
+import QRCode from 'qrcode';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -28,6 +29,9 @@ export const generateCertificateFor = async ({choodleId, creatorEmail}) => {
     image.print(font, 400, 1780, "Edition: 1/1")
     image.print(font, 400, 1860, `Creator: ${creatorEmail}`)
 
+    const qrcode = await QRCode.toDataURL( `${PUBLIC_URL_BASE}/c/${choodleId}`, { errorCorrectionLevel: 'L', scale: 8 })
+    const qrcodeImage = await Jimp.read(Buffer.from(qrcode.split(',')[1], 'base64'))
+    image.blit(qrcodeImage, 1300, 2100)
 
     return await temporaryFileTask(async tempFile => {
         console.log({tempFile})
