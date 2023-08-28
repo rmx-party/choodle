@@ -19,7 +19,7 @@ export const generateCertificateFor = async ({choodleId, creatorEmail}) => {
     choodleImage.scale(3)
 
     image.blit(choodleImage, 665, 675)
-    const font = await Jimp.loadFont(Jimp.FONT_SANS_64_BLACK)
+    const font = await Jimp.loadFont(__dirname+"/../../../static/open-sans/open-sans-64-black/open-sans-64-black.fnt")
 
     const creationDate = new Date(choodle._createdAt).toLocaleDateString()
 
