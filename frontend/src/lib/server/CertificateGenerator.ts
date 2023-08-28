@@ -1,17 +1,18 @@
 import Jimp from "jimp";
-import {getChoodleById} from "$lib/CMSUtils";
+import {getChoodleById, readOnlyClient} from "$lib/CMSUtils";
 import {urlFor} from "$lib/PersistedImagesUtils";
 import {temporaryFileTask} from "tempy";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-// import cert from "$lib/assets/CoA-blank.png"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const generateCertificateFor = async ({choodleId, creatorEmail}) => {
+    const certificateEmail = await readOnlyClient.fetch(`*[_type == "CertificateEmail"] [0]`);
 
-    const image = await Jimp.read(path.join(__dirname, "..", "assets", "CoA-blank.png"))
+    const blankCertificateImageUrl = urlFor(certificateEmail.blankCertificate).url();
+    const image = await Jimp.read(blankCertificateImageUrl)
 
     const choodle = await getChoodleById(choodleId)
     const choodleImage = await Jimp.read(urlFor(choodle.image).url())
