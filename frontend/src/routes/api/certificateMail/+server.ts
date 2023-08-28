@@ -7,6 +7,7 @@ import {urlFor} from "$lib/PersistedImagesUtils";
 import {generateCertificateFor} from "$lib/server/CertificateGenerator";
 import {toHTML} from "@portabletext/to-html";
 import dataUriToBuffer from "data-uri-to-buffer";
+import {PUBLIC_URL_BASE} from "$env/static/public";
 
 sgMail.setApiKey(SENDGRID_API_KEY)
 
@@ -58,7 +59,7 @@ export const POST = async ({request, cookies}) => {
         }
     }).commit();
 
-    const choodleUrl = `https://choodle.xyz/c/${choodleId}`
+    const choodleUrl = `${PUBLIC_URL_BASE}/c/${choodleId}`
 
     const to = creatorEmail
     const from = "help@rmx.party"
