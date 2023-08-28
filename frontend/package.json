@@ -50,6 +50,7 @@
     "web3": "^4.1.0",
     "workbox-precaching": "^7.0.0",
     "workbox-routing": "^7.0.0",
-    "workbox-strategies": "^7.0.0"
+    "workbox-strategies": "^7.0.0",
+    "data-uri-to-buffer": "^5.0.1"
   }
 }
