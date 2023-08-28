@@ -26,6 +26,11 @@ export default {
             name: 'emailSubject',
             title: 'Email Subject Line',
             type: 'string'
+        },
+        {
+            name: 'blankCertificate',
+            title: 'Blank Certificate',
+            type: 'image'
         }
     ]
 }
