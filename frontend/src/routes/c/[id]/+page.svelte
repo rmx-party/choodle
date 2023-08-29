@@ -118,7 +118,7 @@
     </section>
 
     <menu>
-        <Button on:click={clearAndStartOver} icon={handDraw}>Draw</Button>
+        <Button on:click={clearAndStartOver} icon={handDraw}>New</Button>
         {#if canShare()}
             <Button on:click={share} icon={send} iconPosition='right'>Share</Button>
         {/if}
