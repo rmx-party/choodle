@@ -62,7 +62,7 @@ export const POST = async ({request, cookies}) => {
 
     const to = creatorEmail
     const from = {email: "help@rmx.party", name: "RMX Party"}
-    const subject = certificateEmail.emailSubject
+    const subject = `${certificateEmail.emailSubject} ${choodleId}`
     const html = `
 ${toHTML(certificateEmail.top)}
 <br />
