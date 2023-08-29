@@ -41,7 +41,6 @@ export const POST = async ({request, cookies}) => {
 
     const choodle = await getChoodleById(choodleId)
     const choodleImageUrl = urlFor(choodle.image)
-
     const fetchedImage = await fetch(choodleImageUrl.url());
     const attachment = Buffer.from(await fetchedImage.arrayBuffer()).toString("base64")
     const certificateAttachment = await generateCertificateFor({choodleId, creatorEmail})

@@ -292,7 +292,7 @@
       clearCanvas(id);
       const promises = [clearingStorage, sendingCertificate]
       console.log(`awaiting promises`, promises)
-      await Promise.all(promises)
+      await Promise.all(promises) // TODO: may need to handle error with user feedback
       console.log(`promises resolved, navigating`)
       await goto(`/c/${createResult._id}`)
     }
