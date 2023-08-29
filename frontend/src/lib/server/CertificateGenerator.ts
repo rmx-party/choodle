@@ -1,17 +1,13 @@
-import Jimp from "jimp";
-import {getChoodleById, readOnlyClient} from "$lib/CMSUtils";
-import {urlFor} from "$lib/PersistedImagesUtils";
-import {temporaryFileTask} from "tempy";
+import { PUBLIC_URL_BASE } from "$env/static/public";
+import { getChoodleById, readOnlyClient } from "$lib/CMSUtils";
+import { urlFor } from "$lib/PersistedImagesUtils";
+import { toHTML } from "@portabletext/to-html";
 import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import {PUBLIC_URL_BASE} from "$env/static/public";
+import Jimp from "jimp";
 import QRCode from 'qrcode';
-import {toHTML} from "@portabletext/to-html";
+import { temporaryFileTask } from "tempy";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-export const generateCertificateFor = async ({choodleId, creatorEmail}) => {
+export const generateCertificateFor = async ({choodleId, creatorEmail}: {choodleId: string, creatorEmail: string}) => {
     const certificateEmail = await readOnlyClient.fetch(`*[_type == "CertificateEmail"] [0]`);
 
     const blankCertificateImageUrl = urlFor(certificateEmail.blankCertificate).url();
@@ -23,16 +19,20 @@ export const generateCertificateFor = async ({choodleId, creatorEmail}) => {
 
     image.blit(choodleImage, 665, 675)
     const font = await Jimp.loadFont(`${PUBLIC_URL_BASE}/open-sans/open-sans-64-black/open-sans-64-black.fnt`)
+    const fontHeader = await Jimp.loadFont(`${PUBLIC_URL_BASE}/open-sans/open-sans-128-black/open-sans-128-black.fnt`)
 
     const creationDate = new Date(choodle._createdAt).toLocaleDateString()
-    const creatorString = toHTML(certificateEmail.createdBy) + ` ${creatorEmail}`
+    const creatorString = `${certificateEmail.createdBy} ${creatorEmail}`
 
-    image.print(font, 192, 442, `Certificate of Ownership`)
-    image.print(font, 194, 1563, creatorString)
+    image.print(fontHeader, 215, 458, `Certificate™ of Ownership`)
+    image.print(font, 194, 1563, creatorString, 1600, 150)
 
-    image.print(font, 194, 1700, `Made on: ${creationDate}`)
-    image.print(font, 194, 1780, "Edition: 1/1")
-    image.print(font, 194, 1860, `Creator: ${creatorEmail}`)
+    image.print(font, 197, 1737, `Made on: `)
+    image.print(font, 515, 1737, `${creationDate}`)
+    image.print(font, 197, 1804, "Edition: ")
+    image.print(font, 515, 1804, "1/1")
+    image.print(font, 198, 1871, `Creator: `)
+    image.print(font, 515, 1871, `${creatorEmail}`)
 
     const qrcode = await QRCode.toDataURL( `${PUBLIC_URL_BASE}/c/${choodleId}`, { errorCorrectionLevel: 'L', scale: 8 })
     const qrcodeImage = await Jimp.read(Buffer.from(qrcode.split(',')[1], 'base64'))

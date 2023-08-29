@@ -69,15 +69,13 @@ ${toHTML(certificateEmail.top)}
 <br />
 <img width="300" src=${urlFor(newChoodle.certificate).width(300).url()} alt='Choodle Certificate of Authenticity' />
 <br />
-${toHTML(certificateEmail.createdBy)} ${creatorEmail}.
+<p>${certificateEmail.createdBy} ${creatorEmail}.</p>
+<p><strong>Made on:</strong> ${new Date(choodle._createdAt).toLocaleDateString()}
 <br/>
-<p>Made on: ${new Date(choodle._createdAt).toLocaleDateString()}
+<strong>Edition:</strong> 1/1
 <br/>
-Edition: 1/1
-<br/>
-Creator: ${creatorEmail}
+<strong>Creator:</strong> ${creatorEmail}
 </p>
-
 <p><a href=${choodleUrl}>View your Choodle here</a></p>
 ${toHTML(certificateEmail.footer)}
 `

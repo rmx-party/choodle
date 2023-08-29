@@ -3,8 +3,8 @@
 
 <script lang="ts">
     import {browser, dev} from "$app/environment"
-    import '../app.css'
     import '$lib/assets/fonts.css'
+    import '../app.css'
 
     import Bugsnag from "@bugsnag/js";
 
