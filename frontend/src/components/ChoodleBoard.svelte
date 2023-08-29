@@ -422,7 +422,9 @@
 
 <Dialog id={'email-prompt'}>
   <header slot="header">{@html toHTML(certificateModal.title)}</header>
-  <img height="100" style="margin: 1rem;" src="{urlFor(certificateModal.Image)}" alt="Choodle Certificate" />
+  {#if certificateModal.Image}
+    <img height="100" style="margin: 1.5rem;" src="{urlFor(certificateModal.Image)}" alt="Choodle Certificate" />
+  {/if}
   <div>{@html toHTML(certificateModal.body)}</div>
   <br/>
 
@@ -434,7 +436,7 @@ required title="Please enter a valid email address as the creator to attribute t
   </label>
 
   <Button on:click={saveCreatorEmail} variant="primary" colour="yellow">{certificateModal.CTA}</Button>
-  <a href='' on:click={onDismissEmailPrompt}>{certificateModal.DeclineCTA}</a>
+  <span role="button" tabindex="0" on:keydown={onDismissEmailPrompt} on:click={onDismissEmailPrompt}>{certificateModal.DeclineCTA}</span>
 </Dialog>
 
 <style>

@@ -94,6 +94,10 @@
     height: 2rem;
     width: 2rem;
   }
+
+  :global([data-svelte-dialog-content] .content h1) {
+    margin-bottom: 0;
+  }
 </style>
 
 
