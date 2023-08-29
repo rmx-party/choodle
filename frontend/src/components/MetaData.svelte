@@ -1,12 +1,19 @@
 <script lang="ts">
-    export let url: string | undefined;
-    export let title: string | undefined;
-    export let imageUrl: string | undefined;
-    export let imageAlt: string | undefined;
-    export let width: number | string | undefined;
-    export let height: number | string | undefined;
-    export let description: string | undefined;
+  import { browser } from "$app/environment";
+
+    export let url: string | undefined = undefined;
+    export let title: string | undefined = undefined;
+    export let imageUrl: string | undefined = undefined;
+    export let imageAlt: string | undefined = undefined;
+    export let width: number | string | undefined = undefined;
+    export let height: number | string | undefined = undefined;
+    export let description: string | undefined = undefined;
     export let themeColor: string | null = '#FEF40A';
+
+    if (browser) {
+      console.log('setting theme color', themeColor)
+      document?.querySelector('meta[name=theme-color]')?.setAttribute('content', `${themeColor}`)
+    }
 </script>
 
 <svelte:head>

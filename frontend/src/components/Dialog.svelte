@@ -58,34 +58,41 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    padding: env(safe-area-inset-top, 1rem) env(safe-area-inset-right, 1rem) env(safe-area-inset-bottom, 1rem) env(safe-area-inset-left, 1rem);
   }
 
   :global([data-svelte-dialog-content].dialog) {
     height: auto;
     width: auto;
-    max-height: 90vh;
+    max-height: 90dvh;
     max-width: 100vw;
 
     margin: 0;
     padding: 1rem;
+    padding-bottom: 2rem;
     border-radius: 0.5rem 0.5rem 0 0;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-
+    touch-action: pan-x pan-y;
+    touch-action: none;
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0));
   }
   :global([data-svelte-dialog-content] .content) {
     display: block;
     overflow: scroll;
-    max-height: 100%;
-    max-width: 100%;
+    width: 100%;
+    height: auto;
   }
 
   .close-btn {
     border: none;
     background: none;
     padding: 0;
+    margin: 0;
     align-self: flex-end;
+    height: 2rem;
+    width: 2rem;
   }
 </style>
 

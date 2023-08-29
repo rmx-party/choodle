@@ -104,9 +104,9 @@ ${toHTML(certificateEmail.footer)}
     };
 
     const sgResponse = await sgMail.send(msg)
-        .then((res) => {
+        .then((response) => {
             console.log(`Email sent to ${creatorEmail} for Choodle ${choodleId}`)
-            return res;
+            return response;
         })
         .catch((error) => {
             console.error(error)
@@ -115,7 +115,7 @@ ${toHTML(certificateEmail.footer)}
                 statusCode: 500,
             }, ''];
         })
-    console.log(`sgResponse`, sgResponse)
+    console.log({sgResponse})
     const {statusCode, body} = sgResponse[0]
 
     return json({statusCode, body})

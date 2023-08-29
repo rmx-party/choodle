@@ -33,7 +33,6 @@ body {
     max-width: 720px;
     display: block;
     background: var(--choodle-yellow);
-    padding-bottom: env(safe-area-inset-bottom); /* adjust for safari mobile chrome overlay */
 }
 
 pre {

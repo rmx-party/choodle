@@ -32,7 +32,5 @@
 #choodle-box {
   touch-action: pan-x pan-y;
   touch-action: none;
-  padding: 0;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 </style>
