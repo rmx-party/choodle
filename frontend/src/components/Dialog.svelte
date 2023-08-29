@@ -6,9 +6,9 @@
   import closeBtn from "$lib/assets/icon-close-32px.svg"
 
   export let initialOpen = false;
-  let isOpen;
-  export let onClose;
-  export let id;
+  let isOpen: boolean;
+  export let onClose = undefined;
+  export let id: string;
 
   onMount(() => {
     isOpen = initialOpen;

@@ -436,7 +436,7 @@ required title="Please enter a valid email address as the creator to attribute t
   </label>
 
   <Button on:click={saveCreatorEmail} variant="primary" colour="yellow">{certificateModal.CTA}</Button>
-  <span role="button" tabindex="0" on:keydown={onDismissEmailPrompt} on:click={onDismissEmailPrompt}>{certificateModal.DeclineCTA}</span>
+  <!-- <span role="button" tabindex="0" on:keydown={onDismissEmailPrompt} on:click={onDismissEmailPrompt}>{certificateModal.DeclineCTA}</span> -->
 </Dialog>
 
 <style>
