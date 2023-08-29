@@ -364,6 +364,11 @@
   onMount(async () => {
     if (!browser) return;
 
+    let root = document.documentElement;
+
+    // Explicitly reset bg color since it sticks after being set on next page and then navigating back
+    root.style.setProperty('--page-background-color', 'rgba(20, 21, 24, 0.03)');
+
     canvas = document.getElementById(id) as HTMLCanvasElement;
     ctx = canvas.getContext('2d', {willReadFrequently: true})
 
@@ -440,8 +445,8 @@ required title="Please enter a valid email address as the creator to attribute t
 </Dialog>
 
 <style>
-  :root {
-    background-color: rgba(20, 21, 24, 0.03);
+  :global(:root) {
+    --page-background-color: rgba(20, 21, 24, 0.03);
   }
 
   #flex-container {

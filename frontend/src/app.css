@@ -2,10 +2,10 @@
     --debug: 0;
     --app-main-font-family: 'DejaVu Sans';
     --font-size-base: 16px;
-    --color-primary: hsla(58, 100%, 51%, 1); /* choodle yellow */
     --choodle-yellow: #FEF40A;
     --choodle-black: #141518;
     --color-link: #051BDC;
+    --page-background-color: var(--choodle-yellow);
 }
 
 html, button, input, label {
@@ -24,7 +24,7 @@ html, body, main {
 }
 
 html {
-    background: var(--choodle-yellow);
+    background: var(--page-background-color);
 }
 
 body {
@@ -32,7 +32,6 @@ body {
     padding: 0;
     max-width: 720px;
     display: block;
-    background: var(--choodle-yellow);
 }
 
 pre {

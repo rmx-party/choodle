@@ -85,7 +85,7 @@
         width: 100%;
         z-index: 99999;
 
-        background-color: var(--color-primary);
+        background-color: var(--choodle-yellow);
         text-align: center;
         border-radius: 0 0 1rem 1rem;
         padding: 1rem 1rem 0;

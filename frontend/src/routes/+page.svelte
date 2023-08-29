@@ -9,10 +9,16 @@
     import star2 from "$lib/assets/star-2.png";
     import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-1200x630-2x.jpg';
     import {page} from '$app/stores';
+	import { onMount } from 'svelte';
 
     export let data;
 
     console.log(data)
+
+    onMount(() => {
+      let root = document.documentElement;
+      root.style.setProperty('--page-background-color', 'var(--choodle-yellow)');
+    });
 </script>
 
 
@@ -54,7 +60,6 @@
         display: flex;
         flex-direction: column;
         gap: 4rem;
-        background: var(--color-primary);
         padding: 1.5rem;
         margin: 0;
         height: 100vh;

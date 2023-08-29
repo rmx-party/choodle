@@ -88,9 +88,14 @@
         document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
 
-    setTimeout(async () => {
-        await resetViewportUnit()
-    }, 50);
+    onMount(() => {
+      let root = document.documentElement;
+      root.style.setProperty('--page-background-color', 'var(--choodle-yellow)');
+
+      setTimeout(async () => {
+          await resetViewportUnit()
+      }, 20);
+    })
 </script>
 
 <MetaData url={$page.url}
@@ -127,7 +132,6 @@
 
 <style>
     :root {
-        background: var(--choodle-yellow);
         text-align: center;
     }
 
