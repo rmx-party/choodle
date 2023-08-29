@@ -92,7 +92,7 @@
         flex-grow: 0;
         max-width: 21rem;
         margin: 1rem auto;
-        padding: 1rem 3.75rem;
+        padding: 1rem 1.5rem;
 
         display: flex;
         justify-content: center;
