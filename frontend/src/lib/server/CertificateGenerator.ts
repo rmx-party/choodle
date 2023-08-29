@@ -1,7 +1,6 @@
 import { PUBLIC_URL_BASE } from "$env/static/public";
 import { getChoodleById, readOnlyClient } from "$lib/CMSUtils";
 import { urlFor } from "$lib/PersistedImagesUtils";
-import { toHTML } from "@portabletext/to-html";
 import fs from "fs";
 import Jimp from "jimp";
 import QRCode from 'qrcode';

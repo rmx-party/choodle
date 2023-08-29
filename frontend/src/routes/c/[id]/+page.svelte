@@ -41,9 +41,8 @@
         imgBlob = await (await fetch(img as URL)).blob();
     })
 
-    function generateShareableFor(files: File[]) {
+    function generateShareableFor() {
         return {
-            files,
             title: 'Choodle',
             url: $page.url
         };
@@ -52,12 +51,10 @@
     const share = async (event: Event) => {
         if (!browser) return;
         event.preventDefault()
-        // TODO: maybe remove files from this share once opengraph metadata is
-        // hooked up
-        const files = generateFilesFor(imgBlob);
+        // const files = generateFilesFor(imgBlob);
         console.log('page url: ', $page.url)
         if (navigator.share) {
-            navigator.share(generateShareableFor(files)).then(() => {
+            navigator.share(generateShareableFor()).then(() => {
                 console.log('Thanks for sharing!');
             }).catch(console.error);
         } else {
