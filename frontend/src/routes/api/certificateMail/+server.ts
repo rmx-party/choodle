@@ -67,7 +67,7 @@ export const POST = async ({request, cookies}) => {
     const html = `
 ${toHTML(certificateEmail.top)}
 <br />
-<img width="300" src=${urlFor(newChoodle.certificate).width(300).url()} alt='Choodle Certificate of Authenticity' />
+<img width="300" src=${urlFor(newChoodle.certificate).width(300).url()} alt='Choodle Certificate of Ownership' />
 <br />
 <p>${certificateEmail.createdBy} ${creatorEmail}.</p>
 <p><strong>Made on:</strong> ${new Date(choodle._createdAt).toLocaleDateString()}

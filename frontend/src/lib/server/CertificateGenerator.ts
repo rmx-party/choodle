@@ -24,7 +24,7 @@ export const generateCertificateFor = async ({choodleId, creatorEmail}: {choodle
     const creationDate = new Date(choodle._createdAt).toLocaleDateString()
     const creatorString = `${certificateEmail.createdBy} ${creatorEmail}`
 
-    image.print(fontHeader, 215, 458, `Certificate of Ownership`)
+    image.print(fontHeader, 458, 215, { text: `Certificate of Ownership`, alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER, alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE }, 1000, 360)
     image.print(font, 194, 1563, creatorString, 1600, 150)
 
     image.print(font, 197, 1737, `Made on: `)
