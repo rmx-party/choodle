@@ -288,7 +288,7 @@
 
       if (creatorEmail) {
         sendingCertificate = sendCreatorCertificate({creatorEmail, choodleId: createResult._id})
-        // loadingMessage.set('generating certificate')
+        loadingMessage.set('generating certificate')
       }
 
       clearCanvas(id);
