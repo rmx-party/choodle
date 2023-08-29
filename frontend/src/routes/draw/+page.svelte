@@ -7,8 +7,6 @@
     import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-1200x630-2x.jpg';
 
     export let data;
-
-    loadingMessage.set('saving choodle')
 </script>
 
 <MetaData

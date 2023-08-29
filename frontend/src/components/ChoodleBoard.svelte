@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {loading} from "$lib/store";
+  import {loading, loadingMessage} from "$lib/store";
   import {browser} from "$app/environment";
   import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff";
   import {onMount} from "svelte";
@@ -240,6 +240,7 @@
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false);
 
+    loadingMessage.set('saving your choodle')
     loading.set(true)
 
     const asyncCreatorId = (async () => await getCreatorId())()
@@ -287,6 +288,7 @@
 
       if (creatorEmail) {
         sendingCertificate = sendCreatorCertificate({creatorEmail, choodleId: createResult._id})
+        // loadingMessage.set('generating certificate')
       }
 
       clearCanvas(id);
@@ -364,9 +366,9 @@
   onMount(async () => {
     if (!browser) return;
 
-    let root = document.documentElement;
 
     // Explicitly reset bg color since it sticks after being set on next page and then navigating back
+    let root = document.documentElement;
     root.style.setProperty('--page-background-color', 'rgba(20, 21, 24, 0.03)');
 
     canvas = document.getElementById(id) as HTMLCanvasElement;
