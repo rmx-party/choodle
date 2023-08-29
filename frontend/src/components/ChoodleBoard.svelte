@@ -421,7 +421,7 @@
 </div>
 
 <Dialog id={'email-prompt'}>
-  <h2 slot="header">{@html toHTML(certificateModal.title)}</h2>
+  <header slot="header">{@html toHTML(certificateModal.title)}</header>
   <img height="100" src="{urlFor(certificateModal.Image)}" alt="Choodle Certificate" />
   <div>{@html toHTML(certificateModal.body)}</div>
   <br/>
