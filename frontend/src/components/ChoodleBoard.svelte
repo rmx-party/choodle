@@ -194,22 +194,24 @@
     }
   }
 
-  const upScaledImageUrlBy = async (canvas, context, scale: number) => {
+  const upScaledImageUrlBy = async (canvas, scale: number) => {
     if (!browser) return;
-    const image = await createImageBitmap(canvas, 0, 0, canvas.width, canvas.height, {
-      resizeWidth: canvas.width * scale,
-      resizeHeight: canvas.height * scale,
-      resizeQuality: 'pixelated'
-    })
-    ctx.drawImage(image, 0, 0)
+    try { // OffScreenCanvas is not supported well in all browsers, namely older versions of safari
+      const image = await createImageBitmap(canvas, 0, 0, canvas.width, canvas.height, {
+        resizeWidth: canvas.width * scale,
+        resizeHeight: canvas.height * scale,
+        resizeQuality: 'pixelated'
+      })
+      // ctx.drawImage(image, 0, 0) // TODO: ensure this is correct, explain if needed
 
-    const offScreenCanvas = new OffscreenCanvas(canvas.width * scale, canvas.height * scale)
-    const offScreenContext = offScreenCanvas.getContext('2d')!
-    offScreenContext.drawImage(image, 0, 0)
+      const offScreenCanvas = new OffscreenCanvas(canvas.width * scale, canvas.height * scale)
+      const offScreenContext = offScreenCanvas.getContext('2d')!
+      offScreenContext.drawImage(image, 0, 0)
 
-    // FIXME: should probably close the offscreen canvas here.
-
-    return await crunchCanvasToUrl(offScreenCanvas, offScreenContext)
+      return await crunchCanvasToUrl(offScreenCanvas, offScreenContext)
+    } catch {
+      return null
+    }
   }
 
   const uploadImageBlob = (imageBlob: Blob) => {
@@ -246,7 +248,9 @@
     const asyncCreatorId = (async () => await getCreatorId())()
 
     const upScaledUploadResult = (async () => {
-      const upScaledImage = await upScaledImageUrlBy(canvas, ctx, upScaledImageRatio)
+      const upScaledImage = await upScaledImageUrlBy(canvas, upScaledImageRatio)
+      if (!upScaledImage) return;
+
       const upScaledImageBlob = await (await fetch(upScaledImage as unknown as
         URL)).blob()
       return await uploadImageBlob(upScaledImageBlob)
