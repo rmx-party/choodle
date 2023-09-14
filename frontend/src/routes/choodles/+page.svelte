@@ -7,6 +7,7 @@
     import {connectAndMint, sendAChoodle} from "$lib/MagicStuff";
     import {_query} from "./+page";
     import {writable, type Writable} from "svelte/store";
+    import {readBlob} from "$lib/ImageUtils";
 
     export let data = { choodles: [] };
 
@@ -23,18 +24,6 @@
         copiedChoodles[indexToChange] = changedChoodle
         allChoodles.set(copiedChoodles)
     })
-
-    const readBlob = (b) => {
-        return new Promise(function(resolve, reject) {
-            const reader = new FileReader();
-
-            reader.onloadend = function() {
-                resolve(reader.result);
-            };
-
-            reader.readAsDataURL(b);
-        });
-    }
 
     const mint = (choodleId: string) => {
         return async () => {

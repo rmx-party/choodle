@@ -72,3 +72,15 @@ export const crunchCanvasToUrl = async (canvas: HTMLCanvasElement | OffscreenCan
 
     return dataUrlResult;
 }
+
+export const readBlob = (b) => {
+    return new Promise(function(resolve, reject) {
+        const reader = new FileReader();
+
+        reader.onloadend = function() {
+            resolve(reader.result);
+        };
+
+        reader.readAsDataURL(b);
+    });
+}
