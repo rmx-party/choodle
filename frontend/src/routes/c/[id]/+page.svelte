@@ -124,6 +124,7 @@
 
     <menu>
         <Button on:click={clearAndStartOver} icon={handDraw}>New</Button>
+        <Button on:click={() => goto(`/resume/${data.choodle._id}`)} icon={handDraw}>Resume</Button>
         {#if canShare()}
             <Button on:click={share} icon={send} iconPosition='right'>Share</Button>
         {/if}
