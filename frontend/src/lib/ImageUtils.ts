@@ -73,7 +73,7 @@ export const crunchCanvasToUrl = async (canvas: HTMLCanvasElement | OffscreenCan
     return dataUrlResult;
 }
 
-export const readBlob = (b) => {
+export const readBlob = (b) : Promise<string> => {
     // FIXME: I think this can be replaced with URL.createObjectURL
     return new Promise(function(resolve, reject) {
         const reader = new FileReader();
