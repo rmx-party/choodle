@@ -8,7 +8,7 @@
 
     export let data;
 
-    onMount(async () => {
+    const resume = async () => {
         console.log(data.choodle)
         const blob = await (await fetch(urlFor(data.choodle.image) as URL)).blob()
         const imgUrl = await readBlob(blob)
@@ -16,7 +16,8 @@
         const undoStack = await getUndoStack()
         undoStack.push(imgUrl)
         await setUndoStack(undoStack);
-    })
+        await goto('/draw')
+    }
 </script>
 
 <div class="container">
@@ -25,5 +26,5 @@
              width='390' height='520' alt=''/>
     </div>
 
-    <Button variant="big primary yellow" on:click={() => goto('/draw')}>Resume This Choodle</Button>
+    <Button variant="big primary yellow" on:click={resume}>Resume This Choodle</Button>
 </div>
