@@ -3,7 +3,7 @@
   import {browser} from "$app/environment";
   import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff";
   import {onMount} from "svelte";
-  import {drawColor, backgroundColour, lineWidth, targetMaxSize, upScaledImageRatio} from "$lib/Configuration";
+  import {drawColor, backgroundColour, lineWidth, targetMaxSize, upScaledImageRatio, choodlePromptKey} from "$lib/Configuration";
   import {maximumSize} from "$lib/Calculations";
   import type {Dimensiony} from "$lib/Calculations";
   import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
@@ -16,6 +16,7 @@
   import { dialogState } from "$lib/store";
   import {toHTML} from "@portabletext/to-html";
   import {urlFor} from "$lib/PersistedImagesUtils";
+	import { writable } from "svelte/store";
 
   export let id;
   export let prompt;
@@ -28,6 +29,7 @@
   let isOnline = true;
   let creatorEmail: string | undefined;
   let creatorEmailInput: string | undefined;
+  const gamePrompt = writable<string | null>(null)
 
   const resetViewportUnit = async () => {
     if(!browser) return;
@@ -281,10 +283,12 @@
         }
       },
       creatorId: await asyncCreatorId,
+      gamePrompt: $gamePrompt || null,
       shouldMint: true
     }
+    console.log({cmsChoodle})
     const createResult = await readWriteClient.create(cmsChoodle)
-    console.log(`createResult`, createResult)
+    console.log({createResult})
 
     if (createResult._id) {
       let sendingCertificate;
@@ -406,11 +410,12 @@
     if (storedCreatorEmail) {
       creatorEmail = storedCreatorEmail
     }
+    gamePrompt.set(await localforage.getItem(choodlePromptKey))
   });
 </script>
 
 <div id="flex-container">
-  <Prompt prompt={prompt.prompt}/>
+  <Prompt prompt={$gamePrompt || prompt.prompt}/>
 
   <div class="canvas-container">
     <canvas id={id}

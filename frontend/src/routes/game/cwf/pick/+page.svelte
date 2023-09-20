@@ -1,0 +1,73 @@
+<script lang="ts">
+  import { writable } from 'svelte/store';
+  import Button from '../../../../components/Button.svelte';
+  import { goto } from '$app/navigation';
+  import fp from 'lodash/fp';
+  import { onMount } from 'svelte';
+  import localforage from 'localforage';
+  import { choodlePromptKey } from '$lib/Configuration';
+
+  export let data;
+
+  const selectedPrompt = writable(null);
+  selectedPrompt.subscribe((value) => {
+    localforage.setItem(choodlePromptKey, value);
+  })
+
+  onMount(() => {
+    shufflePrompts(new MouseEvent('click'));
+  })
+
+  const shufflePrompts = (event: MouseEvent, tries = 0) => {
+    if (tries > 10) {
+      console.error(`shufflePrompts: too many tries, maybe there aren't any other prompts`);
+      return;
+    }
+
+    const prompts = fp.map('prompt')(data.records);
+    const newPrompt = (prompts.sort(() => Math.random() - 0.5))[0];
+
+    if (newPrompt !== $selectedPrompt) {
+      selectedPrompt.set(newPrompt);
+      console.log(`selected prompt: ${newPrompt}`);
+    } else {
+      shufflePrompts(event, tries + 1)
+    }
+  };
+
+  const proceed = () => {
+    const prompt = $selectedPrompt;
+    if (prompt) {
+      console.log(`proceeding with prompt ${prompt}`);
+      goto(`/draw`)
+    }
+  };
+</script>
+
+<main>
+  <h1>Your Secret Word</h1>
+
+  <div>
+    <input type="text" bind:value={$selectedPrompt} disabled />
+    <br/>
+    <Button on:click={shufflePrompts}>Shuffle</Button>
+  </div>
+  <div>
+    <Button variant='primary' on:click={proceed}>Draw</Button>
+  </div>
+</main>
+
+<style>
+  main {
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100dvh;
+  }
+  main > * {
+    flex-grow: 0 !important;
+  }
+</style>

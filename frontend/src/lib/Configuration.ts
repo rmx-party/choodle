@@ -5,5 +5,6 @@ export const targetMaxSize: Dimensiony = {x: 195, y: 260}
 export const drawColor = "#000000"
 export const backgroundColour = "#ffffff"
 export const choodleUndoKey = 'choodle-undo'
+export const choodlePromptKey = 'choodle-selected-prompt'
 export const blackWhiteThreshold = 250;
 export const upScaledImageRatio = 8;

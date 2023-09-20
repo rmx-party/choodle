@@ -18,7 +18,7 @@
         {/if}
     </button>
 {:else}
-    <div role="button" class={`btn ${variant}  ${colour} disabled`}>
+    <button disabled class={`btn ${variant}  ${colour} disabled`}>
         {#if icon && iconPosition == 'left'}
             <img class="icon" src={icon} alt=''/>
         {/if}
@@ -26,7 +26,7 @@
         {#if icon && iconPosition == 'right'}
             <img class="icon" src={icon} alt=''/>
         {/if}
-    </div>
+    </button>
 {/if}
 
 <style>
