@@ -1,9 +1,10 @@
 import localforage from "localforage";
 import {UndoStack} from "$lib/UndoStack";
-import {choodleUndoKey} from "$lib/Configuration";
+import {choodlePromptKey, choodleUndoKey} from "$lib/Configuration";
 
 export async function clearStorage() {
     await localforage.removeItem(choodleUndoKey)
+    await localforage.removeItem(choodlePromptKey)
 }
 
 export async function setUndoStack(undoStack: UndoStack) {
