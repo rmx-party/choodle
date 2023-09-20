@@ -52,7 +52,7 @@
     <br/>
     <Button on:click={shufflePrompts}>Shuffle</Button>
   </div>
-  <div>
+  <div id="cta">
     <Button variant='primary' on:click={proceed}>Draw</Button>
   </div>
 </main>
@@ -69,5 +69,17 @@
   }
   main > * {
     flex-grow: 0 !important;
+    width: 100%;
+  }
+  input {
+    margin: 1rem 0;
+    padding: 1rem;
+    text-align: center;
+    width: 100%;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+  }
+  #cta {
+    width: 100%; 
   }
 </style>
