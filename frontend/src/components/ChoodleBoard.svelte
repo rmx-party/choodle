@@ -304,7 +304,12 @@
       console.log(`awaiting promises`, promises)
       await Promise.all(promises) // TODO: may need to handle error with user feedback
       console.log(`promises resolved, navigating`)
-      await goto(`/c/${createResult._id}`)
+
+      if($gamePrompt) {
+        await goto(`/game/cwf/guess/${createResult._id}`)
+      } else {
+        await goto(`/c/${createResult._id}`)
+      }
     }
 
     loading.set(false)
