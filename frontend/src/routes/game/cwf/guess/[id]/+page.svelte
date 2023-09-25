@@ -7,23 +7,16 @@
   const currentGuess = writable('')
 
   const {gamePrompt} = data.choodle;
-  let guess = '';
   let winner = false;
   let guessesRemaining = 3;
 
   const check = (event: Event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-    let guess = '';
-    for (const value of formData.values()) {
-      guess = guess.concat(value.toString())
-    }
-
     guessesRemaining--;
     console.log(`checking answer, ${guessesRemaining} guesses left`)
 
-    if (guess.toLowerCase() !== gamePrompt.toLowerCase()) {
+    if ($currentGuess.toLowerCase() !== gamePrompt.toLowerCase()) {
       console.log(`wrong`)
       // FIXME: clear out the form inputs
       return;
