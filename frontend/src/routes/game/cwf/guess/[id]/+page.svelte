@@ -18,7 +18,7 @@
 
     if ($currentGuess.toLowerCase() !== gamePrompt.toLowerCase()) {
       console.log(`wrong`)
-      // FIXME: clear out the form inputs
+      currentGuess.set('')
       return;
     }
 

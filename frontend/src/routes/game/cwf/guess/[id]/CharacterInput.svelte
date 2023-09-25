@@ -18,13 +18,11 @@
             next = target.nextElementSibling.nextElementSibling
         }
         next.focus()
-        console.log(currentGuess)
     }
 
     const onInput = (event: Event) => {
         focusNext(event.target)
         currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), event.target.value))
-        console.log(currentGuess)
     }
 </script>
 
@@ -33,7 +31,7 @@
         {#if formatCharacter === " "}
             <span class="blank"/>
         {:else}
-            <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" on:input={onInput}/>
+            <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''} on:input={onInput}/>
         {/if}
     {/each}
 </div>
