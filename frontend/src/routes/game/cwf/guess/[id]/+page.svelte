@@ -1,5 +1,6 @@
 <script lang="ts">
   import { urlFor } from '$lib/PersistedImagesUtils.js';
+  import CharacterInput from "./CharacterInput.svelte";
 
   export let data;
 
@@ -11,12 +12,18 @@
   const check = (event: Event) => {
     event.preventDefault();
 
+    const formData = new FormData(event.target);
+    let guess = '';
+    for (const value of formData.values()) {
+      guess = guess.concat(value.toString())
+    }
+
     guessesRemaining--;
     console.log(`checking answer, ${guessesRemaining} guesses left`)
 
     if (guess.toLowerCase() !== gamePrompt.toLowerCase()) {
       console.log(`wrong`)
-      guess = '';
+      // FIXME: clear out the form inputs
       return;
     }
 
@@ -39,8 +46,9 @@
       <div class='award'>😞</div>
     {:else}
       <p>guess what this is, {guessesRemaining} chances left</p>
-      <form on:submit={check}>
-        <input type="text" bind:value={guess} /><button on:click={check}>guess</button>
+      <form id="guessForm" on:submit={check}>
+        <CharacterInput format={gamePrompt} />
+        <button>guess</button>
       </form>
     {/if}
   {/if}
