@@ -15,21 +15,22 @@
             return
         }
         if (next.tagName.toLowerCase() !== "input") {
+            currentGuess.set(replaceCharAt($currentGuess, Number(next.dataset.index), ' '))
             next = target.nextElementSibling.nextElementSibling
         }
         next.focus()
     }
 
     const onInput = (event: Event) => {
-        focusNext(event.target)
         currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), event.target.value))
+        focusNext(event.target)
     }
 </script>
 
 <div id="guessInput">
     {#each singleSpacedFormat as formatCharacter, i}
         {#if formatCharacter === " "}
-            <span class="blank"/>
+            <span class="blank" data-index={i}/>
         {:else}
             <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''} on:input={onInput}/>
         {/if}

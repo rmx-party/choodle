@@ -6,7 +6,8 @@
   export let data;
   const currentGuess = writable('')
 
-  const {gamePrompt} = data.choodle;
+  //const {gamePrompt} = data.choodle;
+  let gamePrompt = 'ICE CREAM'
   let winner = false;
   let guessesRemaining = 3;
 
