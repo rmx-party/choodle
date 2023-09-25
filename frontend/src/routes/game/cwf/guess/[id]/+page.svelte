@@ -1,8 +1,10 @@
 <script lang="ts">
   import { urlFor } from '$lib/PersistedImagesUtils.js';
   import CharacterInput from "./CharacterInput.svelte";
+  import {writable} from "svelte/store";
 
   export let data;
+  const currentGuess = writable('')
 
   const {gamePrompt} = data.choodle;
   let guess = '';
@@ -47,7 +49,7 @@
     {:else}
       <p>guess what this is, {guessesRemaining} chances left</p>
       <form id="guessForm" on:submit={check}>
-        <CharacterInput format={gamePrompt} />
+        <CharacterInput format={gamePrompt} {currentGuess} />
         <button>guess</button>
       </form>
     {/if}

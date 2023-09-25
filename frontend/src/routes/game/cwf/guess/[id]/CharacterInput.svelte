@@ -1,7 +1,7 @@
 <script lang="ts">
     export let format
     const singleSpacedFormat = format.replace(/\s+/g,' ').trim()
-    let tempCurrentGuess = '';
+    export let currentGuess;
 
     const replaceCharAt = (originalString: string, index: number, replacement: string) => {
         let left = originalString.slice(0, index);
@@ -18,13 +18,13 @@
             next = target.nextElementSibling.nextElementSibling
         }
         next.focus()
-        console.log(tempCurrentGuess)
+        console.log(currentGuess)
     }
 
     const onInput = (event: Event) => {
         focusNext(event.target)
-        tempCurrentGuess = replaceCharAt(tempCurrentGuess, Number(event.target.dataset.index), event.target.value)
-        console.log(tempCurrentGuess)
+        currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), event.target.value))
+        console.log(currentGuess)
     }
 </script>
 
