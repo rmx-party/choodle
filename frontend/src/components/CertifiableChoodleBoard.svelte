@@ -28,7 +28,6 @@
 
     let isOnline = true;
 
-    const gamePrompt = writable<string | null>(null)
     let creatorEmailInput: string | undefined;
     let creatorEmail: string | undefined;
 
@@ -86,8 +85,6 @@
         if (storedCreatorEmail) {
             creatorEmail = storedCreatorEmail
         }
-
-        gamePrompt.set(await localforage.getItem(choodlePromptKey))
     });
 
     async function sendCreatorCertificate({creatorEmail, choodleId}: { creatorEmail: string, choodleId: string }) {
@@ -109,7 +106,6 @@
         const asyncCreatorId = (async () => await getCreatorId())()
 
         return saveChoodle(undoStack, canvas, {
-            gamePrompt: $gamePrompt || null,
             creatorId: await asyncCreatorId,
         })
     }
@@ -131,16 +127,12 @@
         await Promise.all(promises) // TODO: may need to handle error with user feedback
         console.log(`promises resolved, navigating`)
 
-        if ($gamePrompt) {
-            await goto(`/game/cwf/guess/${result._id}`)
-        } else {
-            await goto(`/c/${result._id}`)
-        }
+        await goto(`/c/${result._id}`)
     }
 </script>
 
 <ChoodleBoard id={id} bind:this={child} performSave={performSave} afterSave={afterSave}>
-    <Prompt prompt={$gamePrompt || prompt.prompt} slot="prompt"/>
+    <Prompt prompt={prompt.prompt} slot="prompt"/>
     <div id="buttons" slot="buttons">
         <Button on:click={child.undo} colour="yellow">Undo</Button>
         <Button on:click={promptForEmailOrSave} isOnline={isOnline} colour="yellow">Done</Button>
