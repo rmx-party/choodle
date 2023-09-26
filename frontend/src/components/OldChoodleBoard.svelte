@@ -158,17 +158,6 @@
     drawImageFromDataURL(dataURL, ctx)
   }
 
-  const redo = async (event: Event) => {
-    event.preventDefault()
-
-    const undoStack = await getUndoStack()
-    undoStack.redo()
-
-    await setUndoStack(undoStack);
-
-    drawImageFromDataURL(undoStack.current, ctx)
-  }
-
   const clear = async (event: Event) => {
     if (!browser) return;
     event.preventDefault()
