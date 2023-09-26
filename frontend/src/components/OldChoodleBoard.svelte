@@ -14,10 +14,8 @@
     import type {Dimensiony} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
     import {goto} from "$app/navigation";
-    import Button from "./Button.svelte"
     import {readWriteClient} from "$lib/CMSUtils";
     import localforage from "localforage";
-    import {dialogState} from "$lib/store";
 
     export let id;
 
