@@ -1,7 +1,7 @@
 <script lang="ts">
     import {loading, loadingMessage} from "$lib/store";
     import LoadingIndicator from "../../components/LoadingIndicator.svelte";
-    import ChoodleBoard from "../../components/OldChoodleBoard.svelte";
+    import OldChoodleBoard from "../../components/OldChoodleBoard.svelte";
     import MetaData from "../../components/MetaData.svelte";
     import {page} from "$app/stores";
     import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-1200x630-2x.jpg';
@@ -20,7 +20,7 @@
 
 {#if !$loading}
     <div id="choodle-box">
-        <ChoodleBoard id="choodle-board" prompt={data.prompt} certificateModal={data.certificateModal}></ChoodleBoard>
+        <OldChoodleBoard id="choodle-board" prompt={data.prompt} certificateModal={data.certificateModal}></OldChoodleBoard>
     </div>
 {:else}
     <LoadingIndicator explanation={$loadingMessage}></LoadingIndicator>
