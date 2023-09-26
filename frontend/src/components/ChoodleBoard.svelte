@@ -67,9 +67,9 @@
         loading.set(true)
         const createResult = await performSave(undoStack, canvas);
 
-        clearCanvas(id)
         await afterSave(createResult)
 
+        clearCanvas(id)
         loading.set(false)
     }
 

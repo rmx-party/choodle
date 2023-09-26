@@ -1,6 +1,6 @@
 <script lang="ts">
     import ChoodleBoard from "../../../../components/ChoodleBoard.svelte";
-    import {UndoStack} from "$lib/UndoStack";
+    import type {UndoStack} from "$lib/UndoStack";
     import Prompt from "../../../../components/Prompt.svelte";
     import {writable} from "svelte/store";
     import {saveChoodle} from "$lib/ChoodleStorage";
@@ -12,12 +12,22 @@
     import localforage from "localforage";
     import {choodlePromptKey} from "$lib/Configuration";
     import Button from "../../../../components/Button.svelte";
+	import { loading } from "$lib/store";
+	import fp from "lodash/fp";
 
     let child;
 
     let isOnline = true;
 
     const gamePrompt = writable<string | null>(null)
+    let gamePromptTiles: string;
+
+    $: {
+      gamePromptTiles = $gamePrompt ? fp.map((char) => {
+        if (char === ' ') return '⬜'
+        return '🟨'
+      }, $gamePrompt.split('')).join('') : ''
+    }
 
     async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
         const asyncCreatorId = (async () => await getCreatorId())()
@@ -29,13 +39,40 @@
     }
 
     const afterSave = async (result) => {
-        if (!browser) return;
-        if (!result._id) return;
+      if (!browser) return;
+      if (!result._id) return;
 
-        await clearStorage()
-
+      const url = `${window.location.origin}/game/cwf/guess/${result._id}`
+      const text = `Can you guess what this is?\n${gamePromptTiles}\n${url}` // TODO: use cms copy, and add the placeholder tiles before url
+      const shareable = {text};
+      if (canShare(shareable)) {
+        await share(shareable, () => {
+          console.log('Thanks for sharing!');
+          goto('/game/cwf/pick')
+        })
+      } else {
         await goto(`/game/cwf/guess/${result._id}`)
+      }
+
+      await clearStorage()
+      loading.set(false)
     }
+
+    const canShare = (shareable?): boolean => {
+        if (!browser) return false;
+        if (!navigator.share) return false;
+
+        return navigator.canShare(shareable)
+    }
+
+    const share = async (shareable, onSuccess) => {
+        if (!browser) return;
+
+        console.log(`sharing:`, shareable)
+
+        navigator.share(shareable).then(onSuccess).catch(console.error);
+    };
+
 
     onMount(async () => {
         if (!browser) return;
@@ -57,7 +94,7 @@
     <Prompt prompt={$gamePrompt} slot="prompt" />
     <div id="buttons" slot="buttons">
         <Button on:click={child.undo} colour="yellow">Undo</Button>
-        <Button on:click={child.save} isOnline={isOnline} colour="yellow">Done</Button>
+        <Button on:click={child.save} isOnline={isOnline} colour="yellow">Share</Button>
     </div>
 </ChoodleBoard>
 
