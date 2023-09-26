@@ -13,11 +13,11 @@
     import type {Dimensiony} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
 
-    export let id;
+    export let id: string;
 
-    export let performSave = () => {};
+    export let performSave = (..._args) => null;
 
-    export let afterSave = () => {};
+    export let afterSave = (..._args) => null;
 
     let isDrawing = false;
     let canvas: HTMLCanvasElement;
@@ -205,7 +205,8 @@
         root.style.setProperty('--page-background-color', 'rgba(20, 21, 24, 0.03)');
 
         canvas = document.getElementById(id) as HTMLCanvasElement;
-        ctx = canvas.getContext('2d', {willReadFrequently: true})
+        const ctx = canvas.getContext('2d', {willReadFrequently: true})
+        if (!canvas || !ctx) return;
 
         ctx.strokeStyle = drawColor
         ctx.lineWidth = lineWidth;
