@@ -1,71 +1,78 @@
 <script lang="ts">
-  import { urlFor } from '$lib/PersistedImagesUtils.js';
-  import CharacterInput from "./CharacterInput.svelte";
-  import {writable} from "svelte/store";
+    import {urlFor} from '$lib/PersistedImagesUtils.js';
+    import CharacterInput from "./CharacterInput.svelte";
+    import {writable} from "svelte/store";
+    import GuessingHUD from "../../../../../components/GuessingHUD.svelte";
+    import Button from "../../../../../components/Button.svelte";
 
-  export let data;
-  const currentGuess = writable('')
+    export let data;
+    const currentGuess = writable('')
 
-  const {gamePrompt} = data.choodle;
-  let winner = false;
-  let guessesRemaining = 3;
+    const {gamePrompt} = data.choodle;
+    let winner = false;
+    let guessesRemaining = 3;
+    let guessesLimit = 3;
 
-  const check = (event: Event) => {
-    event.preventDefault();
+    const check = (event: Event) => {
+        event.preventDefault();
 
-    guessesRemaining--;
-    console.log(`checking answer, ${guessesRemaining} guesses left`)
+        guessesRemaining--;
+        console.log(`checking answer, ${guessesRemaining} guesses left`)
 
-    if ($currentGuess.toLowerCase() !== gamePrompt.toLowerCase()) {
-      console.log(`wrong`)
-      currentGuess.set('')
-      return;
+        if ($currentGuess.toLowerCase() !== gamePrompt.toLowerCase()) {
+            console.log(`wrong`)
+            currentGuess.set('')
+            return;
+        }
+
+        winner = true;
+        console.log(`right answer, you won the thing`)
     }
-
-    winner = true;
-    console.log(`right answer, you won the thing`)
-  }
 </script>
 
-<div class="container">
-  <div class="choodle-container">
-    <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
-      width='390' height='520' alt=''/>
-  </div>
-  {#if winner}
-    <p>nice job guessing <code>{gamePrompt}</code>, you win this:</p>
-    <div class='award'>🏆</div>
-  {:else}
-    {#if guessesRemaining === 0}
-      <p>you didn't recognize <code>{gamePrompt}</code>?</p>
-      <div class='award'>😞</div>
+<div class="flex-container">
+    <GuessingHUD content="guess" {guessesRemaining} {guessesLimit}/>
+    <div class="choodle-container">
+        <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
+             width='390' height='520' alt=''/>
+    </div>
+    {#if winner}
+        <p>nice job guessing <code>{gamePrompt}</code>, you win this:</p>
+        <div class='award'>🏆</div>
     {:else}
-      <p>guess what this is, {guessesRemaining} chances left</p>
-      <form id="guessForm" on:submit={check}>
-        <CharacterInput format={gamePrompt} {currentGuess} />
-        <button>guess</button>
-      </form>
+        {#if guessesRemaining === 0}
+            <p>you didn't recognize <code>{gamePrompt}</code>?</p>
+            <div class='award'>😞</div>
+        {:else}
+            <p>guess what this is, {guessesRemaining} chances left</p>
+            <form id="guessForm" on:submit={check}>
+                <CharacterInput format={gamePrompt} {currentGuess}/>
+                <Button colour="yellow" variant="primary">Submit</Button>
+            </form>
+        {/if}
     {/if}
-  {/if}
 </div>
 
 <style>
-    :root {
-        text-align: center;
+    :global(:root) {
+        --page-background-color: rgba(20, 21, 24, 0.03);
     }
 
-    .container {
-        /* gap: 2rem; */
-        padding: 1rem 1rem;
+    .flex-container {
+        background-color: rgba(20, 21, 24, 0.03);
+
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
-        align-content: stretch;
-        align-items: stretch;
-        justify-content: space-evenly;
-        height: 100dvh;
-        width: 100%;
-        padding: 1.5rem;
+        align-content: center;
+        justify-content: space-between;
+        align-items: center;
+        height: 100vh;
+        height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
+    }
+
+    :root {
+        text-align: center;
     }
 
     .choodle-container {
@@ -80,6 +87,7 @@
         max-width: 100%;
         aspect-ratio: 3/4;
     }
+
     img.choodle {
         flex-shrink: 1;
         flex-grow: 1;
@@ -90,8 +98,9 @@
         border-radius: 0.22175rem;
         box-shadow: 1px 1px 17.74193572998047px 0.8870968222618103px rgba(0, 0, 0, 0.12);
     }
+
     .award {
-      font-size: 5rem;
-      width: 100%;
+        font-size: 5rem;
+        width: 100%;
     }
 </style>
