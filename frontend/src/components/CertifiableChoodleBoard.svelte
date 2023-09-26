@@ -21,6 +21,7 @@
     import type {UndoStack} from "$lib/UndoStack";
     import {upScaledImageUrlBy} from "$lib/ImageUtils";
     import ChoodleBoard from "./ChoodleBoard.svelte";
+    import {saveChoodle} from "$lib/ChoodleStorage";
 
     export let id;
     export let prompt;
@@ -124,56 +125,13 @@
         }
     }
 
-    const uploadImageBlob = (imageBlob: Blob) => {
-        return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
-    }
-
     async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
-        if (!browser) return;
-
         const asyncCreatorId = (async () => await getCreatorId())()
 
-        const upScaledUploadResult = (async () => {
-            const upScaledImage = await upScaledImageUrlBy(canvas, upScaledImageRatio)
-            if (!upScaledImage) return;
-
-            const upScaledImageBlob = await (await fetch(upScaledImage as unknown as
-                URL)).blob()
-            return await uploadImageBlob(upScaledImageBlob)
-        })()
-
-        const uploadResult = (async () => {
-            const imgBlob = await (await fetch(undoStack.current)).blob();
-            return await uploadImageBlob(imgBlob)
-        })()
-
-        console.log(`pending uploads`, uploadResult, upScaledUploadResult, getCreatorId)
-
-        const cmsChoodle = {
-            _type: 'choodle',
-            title: 'Untitled',
-            image: {
-                _type: "image",
-                asset: {
-                    _type: "reference",
-                    _ref: (await uploadResult)?._id,
-                }
-            },
-            upScaledImage: {
-                _type: "image",
-                asset: {
-                    _type: "reference",
-                    _ref: (await upScaledUploadResult)?._id,
-                }
-            },
-            creatorId: await asyncCreatorId,
+        return saveChoodle(undoStack, canvas, {
             gamePrompt: $gamePrompt || null,
-            shouldMint: true
-        }
-        console.log({cmsChoodle})
-        const createResult = await readWriteClient.create(cmsChoodle)
-        console.log({createResult})
-        return createResult;
+            creatorId: await asyncCreatorId,
+        })
     }
 
     const afterSave = async (result) => {
