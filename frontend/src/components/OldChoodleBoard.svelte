@@ -51,17 +51,7 @@
         }
     }
 
-    async function saveCreatorEmail(event) {
-        if (!browser) return;
-        const input = document.getElementById('creator-email') as HTMLInputElement
-        const validity = input.reportValidity()
-        if (validity === false) return;
-
-        console.log(`saving creator email`)
-        creatorEmail = creatorEmailInput
-
-        await localforage.setItem('choodle-creator-email', creatorEmail)
-
+    async function oldSaveCreatorEmail(event) {
         // TODO: maybe also instruct server to remap sanity creator id to email
 
         onDismissEmailPrompt(event)

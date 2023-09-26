@@ -4,7 +4,7 @@
     import {writable} from "svelte/store";
     import localforage from "localforage";
     import {choodlePromptKey} from "$lib/Configuration";
-    import {onMount} from "svelte";
+    import {onMount, SvelteComponent} from "svelte";
     import {browser} from "$app/environment";
     import {urlFor} from "$lib/PersistedImagesUtils";
     import Dialog from "./Dialog.svelte";
@@ -15,11 +15,25 @@
     export let prompt;
     export let certificateModal;
 
-    let child;
+    let child : SvelteComponent<OldChoodleBoard>;
 
     const gamePrompt = writable<string | null>(null)
     let creatorEmailInput: string | undefined;
+    let creatorEmail: string | undefined;
 
+    const saveCreatorEmail = async (event) => {
+        if (!browser) return;
+        const input = document.getElementById('creator-email') as HTMLInputElement
+        const validity = input.reportValidity()
+        if (validity === false) return;
+
+        console.log(`saving creator email`)
+        creatorEmail = creatorEmailInput
+
+        await localforage.setItem('choodle-creator-email', creatorEmail)
+
+        child.oldSaveCreatorEmail()
+    }
 
     onMount(async () => {
         if (!browser) return;
@@ -45,6 +59,7 @@
     1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
         </label>
 
-        <Button on:click={() => {child.saveCreatorEmail()}} variant="primary" colour="yellow">{certificateModal.CTA}</Button>
+        <Button on:click={saveCreatorEmail} variant="primary"
+                colour="yellow">{certificateModal.CTA}</Button>
     </Dialog>
 </OldChoodleBoard>
