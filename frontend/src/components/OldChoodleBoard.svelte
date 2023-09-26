@@ -9,7 +9,6 @@
         lineWidth,
         targetMaxSize,
         upScaledImageRatio,
-        choodlePromptKey
     } from "$lib/Configuration";
     import {maximumSize} from "$lib/Calculations";
     import type {Dimensiony} from "$lib/Calculations";
@@ -18,13 +17,9 @@
     import Button from "./Button.svelte"
     import {readWriteClient} from "$lib/CMSUtils";
     import localforage from "localforage";
-    import Dialog from "./Dialog.svelte";
     import {dialogState} from "$lib/store";
-    import {toHTML} from "@portabletext/to-html";
-    import {urlFor} from "$lib/PersistedImagesUtils";
 
     export let id;
-    export let certificateModal;
 
     export let gamePrompt;
 
@@ -36,7 +31,6 @@
 
     /* FIXME: Email Stuff */
     let creatorEmail: string | undefined;
-    let creatorEmailInput: string | undefined;
 
     const promptForEmailOrSave = async (event: Event) => {
         if (!browser) return;
@@ -435,25 +429,7 @@
     </div>
 </div>
 
-<Dialog id={'email-prompt'}>
-    <header slot="header">{@html toHTML(certificateModal.title)}</header>
-    {#if certificateModal.Image}
-        <img height="100" style="margin: 1.5rem;" src="{urlFor(certificateModal.Image)}" alt="Choodle Certificate"/>
-    {/if}
-    <div>{@html toHTML(certificateModal.body)}</div>
-    <br/>
-
-    <label for="creator-email" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">Email
-        <br/>
-        <input bind:value={creatorEmailInput} type="email" id="creator-email" name="creatorEmail"
-               placeholder="Enter Email"
-               required title="Please enter a valid email address as the creator to attribute this art to" style='width: 100%; padding:
-    1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
-    </label>
-
-    <Button on:click={saveCreatorEmail} variant="primary" colour="yellow">{certificateModal.CTA}</Button>
-    <!-- <span role="button" tabindex="0" on:keydown={onDismissEmailPrompt} on:click={onDismissEmailPrompt}>{certificateModal.DeclineCTA}</span> -->
-</Dialog>
+<slot/>
 
 <style>
     :global(:root) {
