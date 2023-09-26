@@ -10,8 +10,9 @@
     import Dialog from "./Dialog.svelte";
     import Button from "./Button.svelte";
     import {toHTML} from "@portabletext/to-html";
-    import {dialogState, loading} from "$lib/store";
-    import {getUndoStack} from "$lib/StorageStuff";
+    import {dialogState, loading, loadingMessage} from "$lib/store";
+    import {clearStorage, getUndoStack} from "$lib/StorageStuff";
+    import {goto} from "$app/navigation";
 
     export let id;
     export let prompt;
@@ -82,9 +83,49 @@
 
         gamePrompt.set(await localforage.getItem(choodlePromptKey))
     });
+
+    async function sendCreatorCertificate({creatorEmail, choodleId}: { creatorEmail: string, choodleId: string }) {
+        console.log(`sending certificate to ${creatorEmail} for ${choodleId}`)
+        const pendingRequest = fetch(`/api/certificateMail`, {
+            method: 'POST',
+            body: JSON.stringify({creatorEmail, choodleId}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        const json = await (await pendingRequest).json()
+        console.log(`creator certificate result`, json)
+
+        return json
+    }
+
+    const afterSave = async (result) => {
+        if (!browser) return;
+        if (!result._id) return;
+
+        let sendingCertificate;
+        const clearingStorage = clearStorage()
+        const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
+        if (creatorEmail) {
+            sendingCertificate = sendCreatorCertificate({creatorEmail, choodleId: result._id})
+            loadingMessage.set('generating certificate')
+        }
+
+        const promises = [clearingStorage, sendingCertificate]
+        console.log(`awaiting promises`, promises)
+        await Promise.all(promises) // TODO: may need to handle error with user feedback
+        console.log(`promises resolved, navigating`)
+
+        if ($gamePrompt) {
+            await goto(`/game/cwf/guess/${result._id}`)
+        } else {
+            await goto(`/c/${result._id}`)
+        }
+    }
 </script>
 
-<OldChoodleBoard id={id} gamePrompt={$gamePrompt} certificateModal={certificateModal} bind:this={child}>
+<OldChoodleBoard id={id} gamePrompt={$gamePrompt} certificateModal={certificateModal} bind:this={child}
+                 afterSave={afterSave}>
     <Prompt prompt={$gamePrompt || prompt.prompt} slot="prompt"/>
     <div id="buttons" slot="buttons">
         <Button on:click={child.undo} colour="yellow">Undo</Button>

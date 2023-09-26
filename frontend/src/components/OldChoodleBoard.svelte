@@ -21,6 +21,8 @@
 
     export let gamePrompt;
 
+    export let afterSave;
+
     let isDrawing = false;
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
@@ -108,27 +110,8 @@
         const createResult = await readWriteClient.create(cmsChoodle)
         console.log({createResult})
 
-        if (createResult._id) {
-            let sendingCertificate;
-            const clearingStorage = clearStorage()
-            const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
-            if (creatorEmail) {
-                sendingCertificate = sendCreatorCertificate({creatorEmail, choodleId: createResult._id})
-                loadingMessage.set('generating certificate')
-            }
-
-            clearCanvas(id);
-            const promises = [clearingStorage, sendingCertificate]
-            console.log(`awaiting promises`, promises)
-            await Promise.all(promises) // TODO: may need to handle error with user feedback
-            console.log(`promises resolved, navigating`)
-
-            if (gamePrompt) {
-                await goto(`/game/cwf/guess/${createResult._id}`)
-            } else {
-                await goto(`/c/${createResult._id}`)
-            }
-        }
+        clearCanvas(id)
+        await afterSave(createResult)
 
         loading.set(false)
     }
@@ -275,22 +258,7 @@
         return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
     }
 
-    async function sendCreatorCertificate({creatorEmail, choodleId}: { creatorEmail: string, choodleId: string }) {
-        console.log(`sending certificate to ${creatorEmail} for ${choodleId}`)
-        const pendingRequest = fetch(`/api/certificateMail`, {
-            method: 'POST',
-            body: JSON.stringify({creatorEmail, choodleId}),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        const json = await (await pendingRequest).json()
-        console.log(`creator certificate result`, json)
-
-        return json
-    }
-
-    function clearCanvas(id: string) {
+    export function clearCanvas(id: string) {
         if (!browser) return;
 
         const canvas = document.getElementById(id) as HTMLCanvasElement;
