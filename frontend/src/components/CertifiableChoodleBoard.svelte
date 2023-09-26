@@ -6,7 +6,6 @@
         choodleCreatorEmailKey,
         choodleCreatorIdKey,
         choodlePromptKey,
-        upScaledImageRatio
     } from "$lib/Configuration";
     import {onMount, SvelteComponent} from "svelte";
     import {browser} from "$app/environment";
@@ -17,9 +16,7 @@
     import {dialogState, loading, loadingMessage} from "$lib/store";
     import {clearStorage, getUndoStack} from "$lib/StorageStuff";
     import {goto} from "$app/navigation";
-    import {readWriteClient} from "$lib/CMSUtils";
     import type {UndoStack} from "$lib/UndoStack";
-    import {upScaledImageUrlBy} from "$lib/ImageUtils";
     import ChoodleBoard from "./ChoodleBoard.svelte";
     import {saveChoodle} from "$lib/ChoodleStorage";
 
