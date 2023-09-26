@@ -1,19 +1,18 @@
 <script lang="ts">
     import {loading, loadingMessage} from "$lib/store";
     import {browser} from "$app/environment";
-    import {clearStorage, getUndoStack, setUndoStack} from "$lib/StorageStuff";
+    import {getUndoStack, setUndoStack} from "$lib/StorageStuff";
     import {onMount} from "svelte";
     import {
         drawColor,
         backgroundColour,
         lineWidth,
         targetMaxSize,
-        upScaledImageRatio, choodleCreatorEmailKey, choodleCreatorIdKey,
+        upScaledImageRatio, choodleCreatorIdKey,
     } from "$lib/Configuration";
     import {maximumSize} from "$lib/Calculations";
     import type {Dimensiony} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
-    import {goto} from "$app/navigation";
     import {readWriteClient} from "$lib/CMSUtils";
     import localforage from "localforage";
 
