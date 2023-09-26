@@ -8,7 +8,7 @@
         backgroundColour,
         lineWidth,
         targetMaxSize,
-        upScaledImageRatio,
+        upScaledImageRatio, choodleCreatorEmailKey,
     } from "$lib/Configuration";
     import {maximumSize} from "$lib/Calculations";
     import type {Dimensiony} from "$lib/Calculations";
@@ -27,31 +27,6 @@
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
     let lastTouchedPoint: Dimensiony | null;
-    let isOnline = true;
-
-    /* FIXME: Email Stuff */
-    let creatorEmail: string | undefined;
-
-    const promptForEmailOrSave = async (event: Event) => {
-        if (!browser) return;
-
-        const undoStack = await getUndoStack()
-        if (undoStack.current === '') return loading.set(false);
-
-        const asyncCreatorEmail = (async () => creatorEmail = await localforage.getItem('choodle-creator-email'))()
-
-        if (!creatorEmail && !await asyncCreatorEmail) {
-            console.log(`prompting for email...`)
-            dialogState.update(dialogs => {
-                return {...dialogs, ["email-prompt"]: true}
-            })
-        } else {
-            console.log(`saving without email...`)
-            save(event)
-        }
-    }
-
-    /* FIXME: End Email Stuff */
 
     /* Canvas Resizing */
     const resetViewportUnit = async () => {
@@ -279,7 +254,7 @@
         if (createResult._id) {
             let sendingCertificate;
             const clearingStorage = clearStorage()
-
+            const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
             if (creatorEmail) {
                 sendingCertificate = sendCreatorCertificate({creatorEmail, choodleId: createResult._id})
                 loadingMessage.set('generating certificate')
@@ -357,14 +332,6 @@
         ctx.lineCap = 'square';
         ctx.imageSmoothingEnabled = false;
 
-        window.addEventListener('online', () => {
-            console.log('online')
-            isOnline = true
-        })
-        window.addEventListener('offline', () => {
-            console.log('offline')
-            isOnline = false
-        })
         window.addEventListener('resize', () => {
             resizeCanvas() // TODO: debounce
             resetViewportUnit()
@@ -375,12 +342,6 @@
             await resizeCanvas()
             await load()
         }, 50)
-
-        // FIXME: email stuff
-        const storedCreatorEmail = await localforage.getItem('choodle-creator-email');
-        if (storedCreatorEmail) {
-            creatorEmail = storedCreatorEmail
-        }
     });
 </script>
 
@@ -400,10 +361,7 @@
         </canvas>
     </div>
 
-    <div id="buttons">
-        <Button on:click={undo} colour="yellow">Undo</Button>
-        <Button on:click={promptForEmailOrSave} isOnline={isOnline} colour="yellow">Done</Button>
-    </div>
+    <slot name="buttons"/>
 </div>
 
 <slot/>
@@ -455,19 +413,6 @@
         image-rendering: -o-crisp-edges; /* OS X & Windows Opera (12.02+) */
         image-rendering: pixelated; /* Awesome future-browsers */
         -ms-interpolation-mode: nearest-neighbor; /* IE */
-    }
-
-    #buttons {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-evenly;
-        flex-wrap: wrap;
-        flex-direction: row;
-        align-content: center;
-        gap: 1rem;
-        padding: 0 1rem 1rem;
-        margin: 0;
     }
 </style>
 
