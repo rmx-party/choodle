@@ -19,8 +19,9 @@
 	import { writable } from "svelte/store";
 
   export let id;
-  export let prompt;
   export let certificateModal;
+
+  export let gamePrompt;
 
   let isDrawing = false;
   let canvas: HTMLCanvasElement;
@@ -29,7 +30,6 @@
   let isOnline = true;
   let creatorEmail: string | undefined;
   let creatorEmailInput: string | undefined;
-  const gamePrompt = writable<string | null>(null)
 
   const resetViewportUnit = async () => {
     if(!browser) return;
@@ -283,7 +283,7 @@
         }
       },
       creatorId: await asyncCreatorId,
-      gamePrompt: $gamePrompt || null,
+      gamePrompt: gamePrompt || null,
       shouldMint: true
     }
     console.log({cmsChoodle})
@@ -305,7 +305,7 @@
       await Promise.all(promises) // TODO: may need to handle error with user feedback
       console.log(`promises resolved, navigating`)
 
-      if($gamePrompt) {
+      if(gamePrompt) {
         await goto(`/game/cwf/guess/${createResult._id}`)
       } else {
         await goto(`/c/${createResult._id}`)
@@ -415,12 +415,11 @@
     if (storedCreatorEmail) {
       creatorEmail = storedCreatorEmail
     }
-    gamePrompt.set(await localforage.getItem(choodlePromptKey))
   });
 </script>
 
 <div id="flex-container">
-  <Prompt prompt={$gamePrompt || prompt.prompt}/>
+  <slot name="prompt" />
 
   <div class="canvas-container">
     <canvas id={id}
