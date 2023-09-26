@@ -12,6 +12,7 @@
     import {maximumSize} from "$lib/Calculations";
     import type {Dimensiony} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
+	import fp from "lodash/fp";
 
     export let id: string;
 
@@ -26,8 +27,9 @@
 
     /* Actions */
     const load = async () => {
-        const undoStack = await getUndoStack()
+        if (!ctx) throw new Error(`ctx is null`);
 
+        const undoStack = await getUndoStack();
         drawImageFromDataURL(undoStack.current, ctx);
         console.log(`loaded`, undoStack)
     }
@@ -185,6 +187,7 @@
 
     const drawImageFromDataURL = (dataURL: string, context: CanvasRenderingContext2D) => {
         if (!browser) return;
+        if (!context) throw new Error(`context is null`);
         if (dataURL === '') clearCanvas(id)
         const image = new Image;
         image.addEventListener('load', () => {
@@ -205,24 +208,21 @@
         root.style.setProperty('--page-background-color', 'rgba(20, 21, 24, 0.03)');
 
         canvas = document.getElementById(id) as HTMLCanvasElement;
-        const ctx = canvas.getContext('2d', {willReadFrequently: true})
-        if (!canvas || !ctx) return;
+        ctx = canvas.getContext('2d', {willReadFrequently: true})!
 
         ctx.strokeStyle = drawColor
         ctx.lineWidth = lineWidth;
         ctx.lineCap = 'square';
         ctx.imageSmoothingEnabled = false;
 
-        window.addEventListener('resize', () => {
-            resizeCanvas() // TODO: debounce
+        window.addEventListener('resize', 
+          (fp.debounce(100, () => {
+            resizeCanvas() 
             resetViewportUnit()
-        })
+        })))
 
-        setTimeout(async () => {
-            await resetViewportUnit()
-            await resizeCanvas()
-            await load()
-        }, 50)
+        await resetViewportUnit()
+        await resizeCanvas()
     });
 </script>
 
