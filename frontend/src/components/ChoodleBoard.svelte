@@ -10,6 +10,7 @@
     import Dialog from "./Dialog.svelte";
     import Button from "./Button.svelte";
     import {toHTML} from "@portabletext/to-html";
+    import {dialogState} from "$lib/store";
 
     export let id;
     export let prompt;
@@ -32,7 +33,12 @@
 
         await localforage.setItem('choodle-creator-email', creatorEmail)
 
-        child.oldSaveCreatorEmail()
+        // TODO: maybe also instruct server to remap sanity creator id to email
+
+        dialogState.update(dialogs => {
+            return {...dialogs, ["email-prompt"]: false}
+        })
+        child.save(event)
     }
 
     onMount(async () => {

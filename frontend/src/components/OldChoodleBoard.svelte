@@ -51,19 +51,6 @@
         }
     }
 
-    async function oldSaveCreatorEmail(event) {
-        // TODO: maybe also instruct server to remap sanity creator id to email
-
-        onDismissEmailPrompt(event)
-    }
-
-    async function onDismissEmailPrompt(event) {
-        dialogState.update(dialogs => {
-            return {...dialogs, ["email-prompt"]: false}
-        })
-        save(event)
-    }
-
     /* FIXME: End Email Stuff */
 
     /* Canvas Resizing */
@@ -237,7 +224,7 @@
         return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
     }
 
-    const save = async (_event: Event) => {
+    export const save = async (_event: Event) => {
         if (!browser) return;
 
         const undoStack = await getUndoStack()
