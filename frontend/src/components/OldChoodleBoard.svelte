@@ -26,9 +26,53 @@
   let ctx: CanvasRenderingContext2D;
   let lastTouchedPoint: Dimensiony | null;
   let isOnline = true;
+
+  /* FIXME: Email Stuff */
   let creatorEmail: string | undefined;
   let creatorEmailInput: string | undefined;
 
+  const promptForEmailOrSave = async (event: Event) => {
+    if (!browser) return;
+
+    const undoStack = await getUndoStack()
+    if (undoStack.current === '') return loading.set(false);
+
+    const asyncCreatorId = (async () => await getCreatorId())()
+    const asyncCreatorEmail = (async () => creatorEmail = await localforage.getItem('choodle-creator-email'))()
+
+    if (!creatorEmail && !await asyncCreatorEmail) {
+      console.log(`prompting for email...`)
+      dialogState.update(dialogs => {return { ...dialogs, ["email-prompt"]: true }})
+    } else {
+      console.log(`saving without email...`)
+      save(event)
+    }
+  }
+
+  async function saveCreatorEmail(event) {
+    if (!browser) return;
+    const input = document.getElementById('creator-email') as HTMLInputElement
+    const validity = input.reportValidity()
+    if (validity === false) return;
+
+    console.log(`saving creator email`)
+    creatorEmail = creatorEmailInput
+
+    await localforage.setItem('choodle-creator-email', creatorEmail)
+
+    // TODO: maybe also instruct server to remap sanity creator id to email
+
+    onDismissEmailPrompt(event)
+  }
+
+  async function onDismissEmailPrompt(event) {
+    dialogState.update(dialogs => {return { ...dialogs, ["email-prompt"]: false }})
+    save(event)
+  }
+
+  /* FIXME: End Email Stuff */
+
+  /* Canvas Resizing */
   const resetViewportUnit = async () => {
     if(!browser) return;
     // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
@@ -199,24 +243,6 @@
     return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
   }
 
-  const promptForEmailOrSave = async (event: Event) => {
-    if (!browser) return;
-
-    const undoStack = await getUndoStack()
-    if (undoStack.current === '') return loading.set(false);
-
-    const asyncCreatorId = (async () => await getCreatorId())()
-    const asyncCreatorEmail = (async () => creatorEmail = await localforage.getItem('choodle-creator-email'))()
-
-    if (!creatorEmail && !await asyncCreatorEmail) {
-      console.log(`prompting for email...`)
-      dialogState.update(dialogs => {return { ...dialogs, ["email-prompt"]: true }})
-    } else {
-      console.log(`saving without email...`)
-      save(event)
-    }
-  }
-
   const save = async (_event: Event) => {
     if (!browser) return;
 
@@ -309,27 +335,6 @@
     return json
   }
 
-  async function saveCreatorEmail(event) {
-    if (!browser) return;
-    const input = document.getElementById('creator-email') as HTMLInputElement
-    const validity = input.reportValidity()
-    if (validity === false) return;
-
-    console.log(`saving creator email`)
-    creatorEmail = creatorEmailInput
-
-    await localforage.setItem('choodle-creator-email', creatorEmail)
-
-    // TODO: maybe also instruct server to remap sanity creator id to email
-
-    onDismissEmailPrompt(event)
-  }
-
-  async function onDismissEmailPrompt(event) {
-    dialogState.update(dialogs => {return { ...dialogs, ["email-prompt"]: false }})
-    save(event)
-  }
-
   function clearCanvas(id: string) {
     if (!browser) return;
 
@@ -390,6 +395,7 @@
       await load()
     }, 50)
 
+    // FIXME: email stuff
     const storedCreatorEmail = await localforage.getItem('choodle-creator-email');
     if (storedCreatorEmail) {
       creatorEmail = storedCreatorEmail
