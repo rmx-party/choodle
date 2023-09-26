@@ -4,6 +4,7 @@
     import {writable} from "svelte/store";
     import GuessingHUD from "../../../../../components/GuessingHUD.svelte";
     import Button from "../../../../../components/Button.svelte";
+    import {goto} from "$app/navigation";
 
     export let data;
     const currentGuess = writable('')
@@ -27,6 +28,7 @@
 
         winner = true;
         console.log(`right answer, you won the thing`)
+        goto('/game/cwf/success')
     }
 </script>
 
