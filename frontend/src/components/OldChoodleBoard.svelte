@@ -8,7 +8,7 @@
         backgroundColour,
         lineWidth,
         targetMaxSize,
-        upScaledImageRatio, choodleCreatorEmailKey,
+        upScaledImageRatio, choodleCreatorEmailKey, choodleCreatorIdKey,
     } from "$lib/Configuration";
     import {maximumSize} from "$lib/Calculations";
     import type {Dimensiony} from "$lib/Calculations";
@@ -161,13 +161,13 @@
     async function getCreatorId() {
         if (!browser) return;
         try {
-            const existingId = await localforage.getItem('choodle-creator-id');
+            const existingId = await localforage.getItem(choodleCreatorIdKey);
             if (existingId && existingId.length > 1) {
                 return existingId
             }
 
             const uuid = window.crypto.randomUUID()
-            await localforage.setItem('choodle-creator-id', uuid)
+            await localforage.setItem(choodleCreatorIdKey, uuid)
             return uuid
         } catch (e) {
             console.error(`getCreatorId failure, returning 'unknown'`, e)

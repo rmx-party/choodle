@@ -7,5 +7,6 @@ export const backgroundColour = "#ffffff"
 export const choodleUndoKey = 'choodle-undo'
 export const choodlePromptKey = 'choodle-selected-prompt'
 export const choodleCreatorEmailKey = 'choodle-creator-email'
+export const choodleCreatorIdKey = 'choodle-creator-id'
 export const blackWhiteThreshold = 250;
 export const upScaledImageRatio = 8;
