@@ -167,7 +167,7 @@
                 }
             },
             creatorId: await asyncCreatorId,
-            gamePrompt: gamePrompt || null,
+            gamePrompt: $gamePrompt || null,
             shouldMint: true
         }
         console.log({cmsChoodle})
