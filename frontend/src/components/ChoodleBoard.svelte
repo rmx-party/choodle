@@ -31,7 +31,7 @@
         const undoStack = await getUndoStack()
         if (undoStack.current === '') return loading.set(false);
 
-        const asyncCreatorEmail = (async () => creatorEmail = await localforage.getItem('choodle-creator-email'))()
+        const asyncCreatorEmail = (async () => creatorEmail = await localforage.getItem(choodleCreatorEmailKey))()
 
         if (!creatorEmail && !await asyncCreatorEmail) {
             console.log(`prompting for email...`)
@@ -75,7 +75,7 @@
             isOnline = false
         })
 
-        const storedCreatorEmail = await localforage.getItem('choodle-creator-email');
+        const storedCreatorEmail = await localforage.getItem(choodleCreatorEmailKey);
         if (storedCreatorEmail) {
             creatorEmail = storedCreatorEmail
         }
