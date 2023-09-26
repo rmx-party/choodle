@@ -37,7 +37,6 @@
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false);
 
-    const asyncCreatorId = (async () => await getCreatorId())()
     const asyncCreatorEmail = (async () => creatorEmail = await localforage.getItem('choodle-creator-email'))()
 
     if (!creatorEmail && !await asyncCreatorEmail) {
