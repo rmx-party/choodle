@@ -43,7 +43,7 @@
         await setUndoStack(undoStack);
     };
 
-    const undo = async (event: Event) => {
+    export const undo = async (event: Event) => {
         event.preventDefault()
 
         const undoStack = await getUndoStack()
