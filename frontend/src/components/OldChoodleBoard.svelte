@@ -8,17 +8,14 @@
         backgroundColour,
         lineWidth,
         targetMaxSize,
-        upScaledImageRatio, choodleCreatorIdKey,
     } from "$lib/Configuration";
     import {maximumSize} from "$lib/Calculations";
     import type {Dimensiony} from "$lib/Calculations";
     import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
-    import {readWriteClient} from "$lib/CMSUtils";
-    import localforage from "localforage";
 
     export let id;
 
-    export let gamePrompt;
+    export let performSave;
 
     export let afterSave;
 
@@ -57,6 +54,7 @@
         drawImageFromDataURL(dataURL, ctx)
     }
 
+
     export const save = async (_event: Event) => {
         if (!browser) return;
 
@@ -65,49 +63,7 @@
 
         loadingMessage.set('saving your choodle')
         loading.set(true)
-
-        const asyncCreatorId = (async () => await getCreatorId())()
-
-        const upScaledUploadResult = (async () => {
-            const upScaledImage = await upScaledImageUrlBy(canvas, upScaledImageRatio)
-            if (!upScaledImage) return;
-
-            const upScaledImageBlob = await (await fetch(upScaledImage as unknown as
-                URL)).blob()
-            return await uploadImageBlob(upScaledImageBlob)
-        })()
-
-        const uploadResult = (async () => {
-            const imgBlob = await (await fetch(undoStack.current)).blob();
-            return await uploadImageBlob(imgBlob)
-        })()
-
-        console.log(`pending uploads`, uploadResult, upScaledUploadResult, getCreatorId)
-
-        const cmsChoodle = {
-            _type: 'choodle',
-            title: 'Untitled',
-            image: {
-                _type: "image",
-                asset: {
-                    _type: "reference",
-                    _ref: (await uploadResult)?._id,
-                }
-            },
-            upScaledImage: {
-                _type: "image",
-                asset: {
-                    _type: "reference",
-                    _ref: (await upScaledUploadResult)?._id,
-                }
-            },
-            creatorId: await asyncCreatorId,
-            gamePrompt: gamePrompt || null,
-            shouldMint: true
-        }
-        console.log({cmsChoodle})
-        const createResult = await readWriteClient.create(cmsChoodle)
-        console.log({createResult})
+        const createResult = await performSave(undoStack, canvas);
 
         clearCanvas(id)
         await afterSave(createResult)
@@ -214,47 +170,6 @@
 
 
         return [newX, newY];
-    }
-
-    async function getCreatorId() {
-        if (!browser) return;
-        try {
-            const existingId = await localforage.getItem(choodleCreatorIdKey);
-            if (existingId && existingId.length > 1) {
-                return existingId
-            }
-
-            const uuid = window.crypto.randomUUID()
-            await localforage.setItem(choodleCreatorIdKey, uuid)
-            return uuid
-        } catch (e) {
-            console.error(`getCreatorId failure, returning 'unknown'`, e)
-            return 'unknown'
-        }
-    }
-
-    const upScaledImageUrlBy = async (canvas, scale: number) => {
-        if (!browser) return;
-        try { // OffScreenCanvas is not supported well in all browsers, namely older versions of safari
-            const image = await createImageBitmap(canvas, 0, 0, canvas.width, canvas.height, {
-                resizeWidth: canvas.width * scale,
-                resizeHeight: canvas.height * scale,
-                resizeQuality: 'pixelated'
-            })
-            // ctx.drawImage(image, 0, 0) // TODO: ensure this is correct, explain if needed
-
-            const offScreenCanvas = new OffscreenCanvas(canvas.width * scale, canvas.height * scale)
-            const offScreenContext = offScreenCanvas.getContext('2d')!
-            offScreenContext.drawImage(image, 0, 0)
-
-            return await crunchCanvasToUrl(offScreenCanvas, offScreenContext)
-        } catch {
-            return null
-        }
-    }
-
-    const uploadImageBlob = (imageBlob: Blob) => {
-        return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
     }
 
     export function clearCanvas(id: string) {

@@ -3,7 +3,12 @@
     import Prompt from "./Prompt.svelte";
     import {writable} from "svelte/store";
     import localforage from "localforage";
-    import {choodleCreatorEmailKey, choodlePromptKey} from "$lib/Configuration";
+    import {
+        choodleCreatorEmailKey,
+        choodleCreatorIdKey,
+        choodlePromptKey,
+        upScaledImageRatio
+    } from "$lib/Configuration";
     import {onMount, SvelteComponent} from "svelte";
     import {browser} from "$app/environment";
     import {urlFor} from "$lib/PersistedImagesUtils";
@@ -13,6 +18,9 @@
     import {dialogState, loading, loadingMessage} from "$lib/store";
     import {clearStorage, getUndoStack} from "$lib/StorageStuff";
     import {goto} from "$app/navigation";
+    import {readWriteClient} from "$lib/CMSUtils";
+    import type {UndoStack} from "$lib/UndoStack";
+    import {upScaledImageUrlBy} from "$lib/ImageUtils";
 
     export let id;
     export let prompt;
@@ -99,6 +107,75 @@
         return json
     }
 
+    async function getCreatorId() {
+        if (!browser) return;
+        try {
+            const existingId = await localforage.getItem(choodleCreatorIdKey);
+            if (existingId && existingId.length > 1) {
+                return existingId
+            }
+
+            const uuid = window.crypto.randomUUID()
+            await localforage.setItem(choodleCreatorIdKey, uuid)
+            return uuid
+        } catch (e) {
+            console.error(`getCreatorId failure, returning 'unknown'`, e)
+            return 'unknown'
+        }
+    }
+
+    const uploadImageBlob = (imageBlob: Blob) => {
+        return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
+    }
+
+    async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
+        if (!browser) return;
+
+        const asyncCreatorId = (async () => await getCreatorId())()
+
+        const upScaledUploadResult = (async () => {
+            const upScaledImage = await upScaledImageUrlBy(canvas, upScaledImageRatio)
+            if (!upScaledImage) return;
+
+            const upScaledImageBlob = await (await fetch(upScaledImage as unknown as
+                URL)).blob()
+            return await uploadImageBlob(upScaledImageBlob)
+        })()
+
+        const uploadResult = (async () => {
+            const imgBlob = await (await fetch(undoStack.current)).blob();
+            return await uploadImageBlob(imgBlob)
+        })()
+
+        console.log(`pending uploads`, uploadResult, upScaledUploadResult, getCreatorId)
+
+        const cmsChoodle = {
+            _type: 'choodle',
+            title: 'Untitled',
+            image: {
+                _type: "image",
+                asset: {
+                    _type: "reference",
+                    _ref: (await uploadResult)?._id,
+                }
+            },
+            upScaledImage: {
+                _type: "image",
+                asset: {
+                    _type: "reference",
+                    _ref: (await upScaledUploadResult)?._id,
+                }
+            },
+            creatorId: await asyncCreatorId,
+            gamePrompt: gamePrompt || null,
+            shouldMint: true
+        }
+        console.log({cmsChoodle})
+        const createResult = await readWriteClient.create(cmsChoodle)
+        console.log({createResult})
+        return createResult;
+    }
+
     const afterSave = async (result) => {
         if (!browser) return;
         if (!result._id) return;
@@ -124,8 +201,8 @@
     }
 </script>
 
-<OldChoodleBoard id={id} gamePrompt={$gamePrompt} certificateModal={certificateModal} bind:this={child}
-                 afterSave={afterSave}>
+<OldChoodleBoard id={id} certificateModal={certificateModal} bind:this={child}
+                 performSave={performSave} afterSave={afterSave}>
     <Prompt prompt={$gamePrompt || prompt.prompt} slot="prompt"/>
     <div id="buttons" slot="buttons">
         <Button on:click={child.undo} colour="yellow">Undo</Button>

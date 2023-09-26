@@ -1,5 +1,6 @@
 import {PNG} from 'pngjs/browser';
 import {blackWhiteThreshold} from "$lib/Configuration";
+import {browser} from "$app/environment";
 
 export const applyCrunchToCanvas = async (canvas, ctx) => {
     const buffer = await crunchCanvasToBuffer(canvas, ctx)
@@ -84,4 +85,24 @@ export const readBlob = (b) : Promise<string> => {
 
         reader.readAsDataURL(b);
     });
+}
+
+export const upScaledImageUrlBy = async (canvas: HTMLCanvasElement, scale: number) => {
+    if (!browser) return;
+    try { // OffScreenCanvas is not supported well in all browsers, namely older versions of safari
+        const image = await createImageBitmap(canvas, 0, 0, canvas.width, canvas.height, {
+            resizeWidth: canvas.width * scale,
+            resizeHeight: canvas.height * scale,
+            resizeQuality: 'pixelated'
+        })
+        // ctx.drawImage(image, 0, 0) // TODO: ensure this is correct, explain if needed
+
+        const offScreenCanvas = new OffscreenCanvas(canvas.width * scale, canvas.height * scale)
+        const offScreenContext = offScreenCanvas.getContext('2d')!
+        offScreenContext.drawImage(image, 0, 0)
+
+        return await crunchCanvasToUrl(offScreenCanvas, offScreenContext)
+    } catch {
+        return null
+    }
 }
