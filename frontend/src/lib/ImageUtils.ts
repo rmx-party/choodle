@@ -47,12 +47,12 @@ export const crunchCanvasToBuffer = async (canvas: HTMLCanvasElement, ctx: Canva
     const imageDataSize = imageData.data.length;
     const buffer = PNG.sync.write(await png.pack());
 
-    console.table([{
-        action: 'crunch to buffer',
-        imageDataSize,
-        crunchedSize: buffer.length,
-        compression: `${100 - ((buffer.length / imageDataSize) * 100).toFixed(2)}%`
-    }]);
+    // console.table([{
+    //     action: 'crunch to buffer',
+    //     imageDataSize,
+    //     crunchedSize: buffer.length,
+    //     compression: `${100 - ((buffer.length / imageDataSize) * 100).toFixed(2)}%`
+    // }]);
     return buffer
 }
 
@@ -63,12 +63,12 @@ export const crunchCanvasToUrl = async (canvas: HTMLCanvasElement | OffscreenCan
 
     const bufferSize = buffer.length;
     const dataUrlSize = dataUrlResult.length;
-    console.table([{
-        action: 'crunch to url',
-        bufferSize,
-        dataUrlSize,
-        compression: `${(100 - ((dataUrlSize / buffer.length) * 100)).toFixed(2)}%`
-    }]);
+    // console.table([{
+    //     action: 'crunch to url',
+    //     bufferSize,
+    //     dataUrlSize,
+    //     compression: `${(100 - ((dataUrlSize / buffer.length) * 100)).toFixed(2)}%`
+    // }]);
 
     return dataUrlResult;
 }
