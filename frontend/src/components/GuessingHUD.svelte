@@ -1,22 +1,20 @@
 <script lang="ts">
     // tries
-    export let content;
-    export let guessesRemaining;
-    export let guessesLimit;
+    export let content = '';
+    export let guessesRemaining: number;
+    export let guessesLimit: number;
 </script>
 
 {#if content}
     <div class="topBar">
-        <div>
-            {@html content}
-        </div>
-        <div>
-            <div>Tries</div>
-            <div>
-                <div>{guessesLimit - guessesRemaining}</div>
-                /
-                <div>{guessesLimit}</div>
-            </div>
+        <div class="content">{@html content}</div>
+
+        <div class="guessCounter">
+            <span>Tries</span>
+            <br/>
+            <span>
+                <span>{guessesLimit - guessesRemaining}</span>/<span>{guessesLimit}</span>
+            </span>
         </div>
     </div>
 {:else}
@@ -31,6 +29,8 @@
         padding: 1rem 1rem 0.75rem 1rem;
         align-items: center;
         gap: 0.625rem;
+        flex-direction: row;
+        justify-content: space-between;
 
         border-radius: 0rem 0rem 0.75rem 0.75rem;
         background: var(--choodle-yellow, #FEF40A);

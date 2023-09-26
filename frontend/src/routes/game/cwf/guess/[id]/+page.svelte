@@ -10,8 +10,9 @@
     const currentGuess = writable('')
 
     const {gamePrompt} = data.choodle;
-    let winner = false;
-    let guessesRemaining = 3;
+
+    // TODO: CMS manageed
+    let guessesRemaining = 3; 
     let guessesLimit = 3;
 
     const check = (event: Event) => {
@@ -26,7 +27,6 @@
             return;
         }
 
-        winner = true;
         console.log(`right answer, you won the thing`)
         goto('/game/cwf/success')
     }
@@ -38,21 +38,11 @@
         <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
              width='390' height='520' alt=''/>
     </div>
-    {#if winner}
-        <p>nice job guessing <code>{gamePrompt}</code>, you win this:</p>
-        <div class='award'>🏆</div>
-    {:else}
-        {#if guessesRemaining === 0}
-            <p>you didn't recognize <code>{gamePrompt}</code>?</p>
-            <div class='award'>😞</div>
-        {:else}
-            <p>guess what this is, {guessesRemaining} chances left</p>
-            <form id="guessForm" on:submit={check}>
-                <CharacterInput format={gamePrompt} {currentGuess}/>
-                <Button colour="yellow" variant="primary">Submit</Button>
-            </form>
-        {/if}
-    {/if}
+
+    <form id="guessForm" on:submit={check}>
+        <CharacterInput format={gamePrompt} {currentGuess}/>
+        <Button colour="yellow" variant="primary">Submit</Button>
+    </form>
 </div>
 
 <style>
@@ -99,10 +89,5 @@
 
         border-radius: 0.22175rem;
         box-shadow: 1px 1px 17.74193572998047px 0.8870968222618103px rgba(0, 0, 0, 0.12);
-    }
-
-    .award {
-        font-size: 5rem;
-        width: 100%;
     }
 </style>
