@@ -158,14 +158,6 @@
     drawImageFromDataURL(dataURL, ctx)
   }
 
-  const clear = async (event: Event) => {
-    if (!browser) return;
-    event.preventDefault()
-
-    clearCanvas(id);
-    await clearStorage();
-  }
-
   async function getCreatorId() {
     if (!browser) return;
     try {
