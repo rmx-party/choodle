@@ -11,12 +11,10 @@
   import Button from "./Button.svelte"
   import {readWriteClient} from "$lib/CMSUtils";
   import localforage from "localforage";
-  import Prompt from "./Prompt.svelte";
   import Dialog from "./Dialog.svelte";
   import { dialogState } from "$lib/store";
   import {toHTML} from "@portabletext/to-html";
   import {urlFor} from "$lib/PersistedImagesUtils";
-	import { writable } from "svelte/store";
 
   export let id;
   export let certificateModal;
