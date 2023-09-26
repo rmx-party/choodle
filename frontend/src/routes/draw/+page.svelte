@@ -4,7 +4,7 @@
     import MetaData from "../../components/MetaData.svelte";
     import {page} from "$app/stores";
     import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-1200x630-2x.jpg';
-    import ChoodleBoard from "../../components/ChoodleBoard.svelte";
+    import CertifiableChoodleBoard from "../../components/CertifiableChoodleBoard.svelte";
 
     export let data;
 </script>
@@ -20,7 +20,7 @@
 
 {#if !$loading}
     <div id="choodle-box">
-        <ChoodleBoard id="choodle-board" prompt={data.prompt} certificateModal={data.certificateModal}></ChoodleBoard>
+        <CertifiableChoodleBoard id="choodle-board" prompt={data.prompt} certificateModal={data.certificateModal}></CertifiableChoodleBoard>
     </div>
 {:else}
     <LoadingIndicator explanation={$loadingMessage}></LoadingIndicator>
