@@ -26,6 +26,113 @@
     let ctx: CanvasRenderingContext2D;
     let lastTouchedPoint: Dimensiony | null;
 
+    /* Actions */
+    const load = async () => {
+        const undoStack = await getUndoStack()
+
+        drawImageFromDataURL(undoStack.current, ctx);
+        console.log(`loaded`, undoStack)
+    }
+
+    const push = async () => {
+        const undoStack = await getUndoStack()
+
+        const imageDataUrl = await crunchCanvasToUrl(canvas, ctx)
+        undoStack.push(imageDataUrl)
+
+        await setUndoStack(undoStack);
+    };
+
+    const undo = async (event: Event) => {
+        event.preventDefault()
+
+        const undoStack = await getUndoStack()
+        undoStack.undo()
+
+        await setUndoStack(undoStack);
+
+        const dataURL = undoStack.current
+
+        drawImageFromDataURL(dataURL, ctx)
+    }
+
+    export const save = async (_event: Event) => {
+        if (!browser) return;
+
+        const undoStack = await getUndoStack()
+        if (undoStack.current === '') return loading.set(false);
+
+        loadingMessage.set('saving your choodle')
+        loading.set(true)
+
+        const asyncCreatorId = (async () => await getCreatorId())()
+
+        const upScaledUploadResult = (async () => {
+            const upScaledImage = await upScaledImageUrlBy(canvas, upScaledImageRatio)
+            if (!upScaledImage) return;
+
+            const upScaledImageBlob = await (await fetch(upScaledImage as unknown as
+                URL)).blob()
+            return await uploadImageBlob(upScaledImageBlob)
+        })()
+
+        const uploadResult = (async () => {
+            const imgBlob = await (await fetch(undoStack.current)).blob();
+            return await uploadImageBlob(imgBlob)
+        })()
+
+        console.log(`pending uploads`, uploadResult, upScaledUploadResult, getCreatorId)
+
+        const cmsChoodle = {
+            _type: 'choodle',
+            title: 'Untitled',
+            image: {
+                _type: "image",
+                asset: {
+                    _type: "reference",
+                    _ref: (await uploadResult)?._id,
+                }
+            },
+            upScaledImage: {
+                _type: "image",
+                asset: {
+                    _type: "reference",
+                    _ref: (await upScaledUploadResult)?._id,
+                }
+            },
+            creatorId: await asyncCreatorId,
+            gamePrompt: gamePrompt || null,
+            shouldMint: true
+        }
+        console.log({cmsChoodle})
+        const createResult = await readWriteClient.create(cmsChoodle)
+        console.log({createResult})
+
+        if (createResult._id) {
+            let sendingCertificate;
+            const clearingStorage = clearStorage()
+            const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
+            if (creatorEmail) {
+                sendingCertificate = sendCreatorCertificate({creatorEmail, choodleId: createResult._id})
+                loadingMessage.set('generating certificate')
+            }
+
+            clearCanvas(id);
+            const promises = [clearingStorage, sendingCertificate]
+            console.log(`awaiting promises`, promises)
+            await Promise.all(promises) // TODO: may need to handle error with user feedback
+            console.log(`promises resolved, navigating`)
+
+            if (gamePrompt) {
+                await goto(`/game/cwf/guess/${createResult._id}`)
+            } else {
+                await goto(`/c/${createResult._id}`)
+            }
+        }
+
+        loading.set(false)
+    }
+
     /* Canvas Resizing */
     const resetViewportUnit = async () => {
         if (!browser) return;
@@ -127,35 +234,6 @@
         return [newX, newY];
     }
 
-    const load = async () => {
-        const undoStack = await getUndoStack()
-
-        drawImageFromDataURL(undoStack.current, ctx);
-        console.log(`loaded`, undoStack)
-    }
-
-    async function push() {
-        const undoStack = await getUndoStack()
-
-        const imageDataUrl = await crunchCanvasToUrl(canvas, ctx)
-        undoStack.push(imageDataUrl)
-
-        await setUndoStack(undoStack);
-    }
-
-    const undo = async (event: Event) => {
-        event.preventDefault()
-
-        const undoStack = await getUndoStack()
-        undoStack.undo()
-
-        await setUndoStack(undoStack);
-
-        const dataURL = undoStack.current
-
-        drawImageFromDataURL(dataURL, ctx)
-    }
-
     async function getCreatorId() {
         if (!browser) return;
         try {
@@ -197,83 +275,6 @@
         return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
     }
 
-    export const save = async (_event: Event) => {
-        if (!browser) return;
-
-        const undoStack = await getUndoStack()
-        if (undoStack.current === '') return loading.set(false);
-
-        loadingMessage.set('saving your choodle')
-        loading.set(true)
-
-        const asyncCreatorId = (async () => await getCreatorId())()
-
-        const upScaledUploadResult = (async () => {
-            const upScaledImage = await upScaledImageUrlBy(canvas, upScaledImageRatio)
-            if (!upScaledImage) return;
-
-            const upScaledImageBlob = await (await fetch(upScaledImage as unknown as
-                URL)).blob()
-            return await uploadImageBlob(upScaledImageBlob)
-        })()
-
-        const uploadResult = (async () => {
-            const imgBlob = await (await fetch(undoStack.current)).blob();
-            return await uploadImageBlob(imgBlob)
-        })()
-
-        console.log(`pending uploads`, uploadResult, upScaledUploadResult, getCreatorId)
-
-        const cmsChoodle = {
-            _type: 'choodle',
-            title: 'Untitled',
-            image: {
-                _type: "image",
-                asset: {
-                    _type: "reference",
-                    _ref: (await uploadResult)?._id,
-                }
-            },
-            upScaledImage: {
-                _type: "image",
-                asset: {
-                    _type: "reference",
-                    _ref: (await upScaledUploadResult)?._id,
-                }
-            },
-            creatorId: await asyncCreatorId,
-            gamePrompt: gamePrompt || null,
-            shouldMint: true
-        }
-        console.log({cmsChoodle})
-        const createResult = await readWriteClient.create(cmsChoodle)
-        console.log({createResult})
-
-        if (createResult._id) {
-            let sendingCertificate;
-            const clearingStorage = clearStorage()
-            const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
-            if (creatorEmail) {
-                sendingCertificate = sendCreatorCertificate({creatorEmail, choodleId: createResult._id})
-                loadingMessage.set('generating certificate')
-            }
-
-            clearCanvas(id);
-            const promises = [clearingStorage, sendingCertificate]
-            console.log(`awaiting promises`, promises)
-            await Promise.all(promises) // TODO: may need to handle error with user feedback
-            console.log(`promises resolved, navigating`)
-
-            if (gamePrompt) {
-                await goto(`/game/cwf/guess/${createResult._id}`)
-            } else {
-                await goto(`/c/${createResult._id}`)
-            }
-        }
-
-        loading.set(false)
-    }
-
     async function sendCreatorCertificate({creatorEmail, choodleId}: { creatorEmail: string, choodleId: string }) {
         console.log(`sending certificate to ${creatorEmail} for ${choodleId}`)
         const pendingRequest = fetch(`/api/certificateMail`, {
@@ -300,7 +301,7 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    function drawImageFromDataURL(dataURL: string, context: CanvasRenderingContext2D) {
+    const drawImageFromDataURL = (dataURL: string, context: CanvasRenderingContext2D) => {
         if (!browser) return;
         if (dataURL === '') clearCanvas(id)
         const image = new Image;
@@ -312,7 +313,7 @@
             })
         });
         image.src = dataURL;
-    }
+    };
 
     onMount(async () => {
         if (!browser) return;
