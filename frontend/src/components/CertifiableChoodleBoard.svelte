@@ -4,7 +4,6 @@
     import localforage from "localforage";
     import {
         choodleCreatorEmailKey,
-        choodleCreatorIdKey,
         choodlePromptKey,
     } from "$lib/Configuration";
     import {onMount, SvelteComponent} from "svelte";
@@ -19,6 +18,7 @@
     import type {UndoStack} from "$lib/UndoStack";
     import ChoodleBoard from "./ChoodleBoard.svelte";
     import {saveChoodle} from "$lib/ChoodleStorage";
+    import {getCreatorId} from "$lib/CreatorIdUtils";
 
     export let id;
     export let prompt;
@@ -103,23 +103,6 @@
         console.log(`creator certificate result`, json)
 
         return json
-    }
-
-    async function getCreatorId() {
-        if (!browser) return;
-        try {
-            const existingId = await localforage.getItem(choodleCreatorIdKey);
-            if (existingId && existingId.length > 1) {
-                return existingId
-            }
-
-            const uuid = window.crypto.randomUUID()
-            await localforage.setItem(choodleCreatorIdKey, uuid)
-            return uuid
-        } catch (e) {
-            console.error(`getCreatorId failure, returning 'unknown'`, e)
-            return 'unknown'
-        }
     }
 
     async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {

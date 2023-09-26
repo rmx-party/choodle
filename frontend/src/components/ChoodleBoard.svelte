@@ -15,9 +15,9 @@
 
     export let id;
 
-    export let performSave;
+    export let performSave = () => {};
 
-    export let afterSave;
+    export let afterSave = () => {};
 
     let isDrawing = false;
     let canvas: HTMLCanvasElement;
@@ -199,7 +199,6 @@
 
     onMount(async () => {
         if (!browser) return;
-
 
         // Explicitly reset bg color since it sticks after being set on next page and then navigating back
         let root = document.documentElement;
