@@ -30,6 +30,18 @@
     await goto(`/pick`)
   }
 
+  const nudge = (gameId) => {
+    return async (event) => {
+      // TODO: handle nudge for a game awaiting an action from the other player
+    }
+  }
+
+  const draw = (gameId) => {
+    return async (event) => {
+      // TODO: start a new prompt pick to add a drawing to an existing game
+    }
+  }
+
   onMount(async () => {
     if (!browser) return;
 
@@ -56,12 +68,12 @@
               <span class="status">
                 Your turn
               </span>
-              <Button>Draw</Button>
+              <Button on:click={draw(liveGame._id)}>Draw</Button>
             {:else}
               <span class="status">
                 Their turn
               </span>
-              <Button>Nudge</Button>
+              <Button on:click={nudge(liveGame._id)}>Nudge</Button>
             {/if}
           </li>
         {/each}
