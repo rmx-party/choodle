@@ -58,7 +58,7 @@
         if (event.key === "Backspace") {
             event.preventDefault()
             currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), ' '))
-            if($currentGuess[event.target.dataset.index - 1] === ' ') {
+            if ($currentGuess[event.target.dataset.index - 1] === ' ') {
                 currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), ' '))
             }
             focusPrevious(event.target)
