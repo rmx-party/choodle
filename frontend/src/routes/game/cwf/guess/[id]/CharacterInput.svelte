@@ -1,5 +1,7 @@
 <script lang="ts">
-    export let format;
+    import {writable} from "svelte/store";
+
+    export let format
     const singleSpacedFormat = format.replace(/\s+/g, ' ').trim()
     export let currentGuess;
     export let submitEnabled;
