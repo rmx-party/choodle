@@ -1,7 +1,10 @@
 <script lang="ts">
+    import {writable} from "svelte/store";
+
     export let format
     const singleSpacedFormat = format.replace(/\s+/g, ' ').trim()
     export let currentGuess;
+    export let submitEnabled;
 
     const replaceCharAt = (originalString: string, index: number, replacement: string) => {
         let left = originalString.slice(0, index);
@@ -12,6 +15,7 @@
     const focusNext = (target: HTMLElement) => {
         let next = target.nextElementSibling
         if (!next) {
+            submitEnabled.set(true)
             return
         }
         if (next.tagName.toLowerCase() !== "input") {
@@ -37,6 +41,7 @@
         }
         previous.focus()
         previous.value = ''
+        submitEnabled.set(false)
     }
 
     const onKeyUp = (event: KeyboardEvent) => {
