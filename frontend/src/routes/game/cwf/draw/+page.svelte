@@ -43,7 +43,8 @@
       if (!result._id) return;
 
       const url = `${window.location.origin}/game/cwf/guess/${result._id}`
-      const text = `Can you guess what this is?\n${gamePromptTiles}\n${url}` // TODO: use cms copy, and add the placeholder tiles before url
+      const shareCopy = `Can you guess what this is?` // TODO: use cms copy
+      const text = [shareCopy, url, gamePromptTiles].join(`\n`)
       const shareable = {text};
       if (canShare(shareable)) {
         await share(shareable, () => {
