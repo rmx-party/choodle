@@ -51,6 +51,7 @@
           goto('/game/cwf/pick')
         })
       } else {
+        // TODO: copy the share text + url to clipboard instead of navigate
         await goto(`/game/cwf/guess/${result._id}`)
       }
 

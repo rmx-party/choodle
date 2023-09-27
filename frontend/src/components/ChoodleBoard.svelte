@@ -59,12 +59,12 @@
 
     export const save = async (_event: Event) => {
         if (!browser) return;
+        loading.set(true)
 
         const undoStack = await getUndoStack()
         if (undoStack.current === '') return loading.set(false);
 
         loadingMessage.set('saving your choodle')
-        loading.set(true)
         const createResult = await performSave(undoStack, canvas);
 
         await afterSave(createResult)
