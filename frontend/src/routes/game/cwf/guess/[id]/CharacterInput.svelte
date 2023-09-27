@@ -55,7 +55,10 @@
         // FIXME: ignore spacebar
         if (event.key === "Backspace") {
             event.preventDefault()
-            currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), ''))
+            currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), ' '))
+            if($currentGuess[event.target.dataset.index - 1] === '') {
+                currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), ' '))
+            }
             focusPrevious(event.target)
         }
     }
@@ -67,7 +70,7 @@
             <span class="blank" data-index={i}/>
         {:else}
             <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
-                   on:input={onInput} on:keydown={onKeyDown}/>
+                   on:input={onInput} on:keydown={onKeyDown} on:focus={(event) => {event.target.select()}}/>
         {/if}
     {/each}
 </div>
