@@ -15,8 +15,6 @@
     let guessesRemaining = 3; 
     let guessesLimit = 3;
 
-    let submitEnabled = writable(false);
-
     const check = (event: Event) => {
         event.preventDefault();
 
@@ -44,8 +42,8 @@
     </div>
 
     <form id="guessForm" on:submit={check}>
-        <CharacterInput format={gamePrompt} {currentGuess} {submitEnabled} />
-        <Button colour="yellow" variant="primary" isOnline={$submitEnabled}>Submit</Button>
+        <CharacterInput format={gamePrompt} {currentGuess}/>
+        <Button colour="yellow" variant="primary">Submit</Button>
     </form>
 </div>
 
