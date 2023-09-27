@@ -1,6 +1,6 @@
 <script lang="ts">
     export let format
-    const singleSpacedFormat = format.replace(/\s+/g,' ').trim()
+    const singleSpacedFormat = format.replace(/\s+/g, ' ').trim()
     export let currentGuess;
 
     const replaceCharAt = (originalString: string, index: number, replacement: string) => {
@@ -25,6 +25,25 @@
         currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), event.target.value))
         focusNext(event.target)
     }
+
+    const focusPrevious = (target: HTMLElement) => {
+        let previous = target.previousElementSibling
+        if (!previous) {
+            return
+        }
+        if (previous.tagName.toLowerCase() !== "input") {
+            currentGuess.set(replaceCharAt($currentGuess, Number(previous.dataset.index), ' '))
+            previous = target.previousElementSibling.previousElementSibling
+        }
+        previous.focus()
+        previous.value = ''
+    }
+
+    const onKeyUp = (event: KeyboardEvent) => {
+        if (event.key === "Backspace") {
+            focusPrevious(event.target)
+        }
+    }
 </script>
 
 <div id="guessInput">
@@ -32,7 +51,8 @@
         {#if formatCharacter === " "}
             <span class="blank" data-index={i}/>
         {:else}
-            <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''} on:input={onInput}/>
+            <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
+                   on:input={onInput} on:keyup={onKeyUp}/>
         {/if}
     {/each}
 </div>
