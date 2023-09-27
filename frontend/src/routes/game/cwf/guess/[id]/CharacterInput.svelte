@@ -41,6 +41,7 @@
 
     const onKeyUp = (event: KeyboardEvent) => {
         if (event.key === "Backspace") {
+            currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), ''))
             focusPrevious(event.target)
         }
     }
