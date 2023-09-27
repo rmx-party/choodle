@@ -32,7 +32,6 @@
             return
         }
         if (previous.tagName.toLowerCase() !== "input") {
-            currentGuess.set(replaceCharAt($currentGuess, Number(previous.dataset.index), ' '))
             previous = target.previousElementSibling.previousElementSibling
         }
         previous.focus()
