@@ -27,19 +27,27 @@
     }
 
     const focusPrevious = (target: HTMLElement) => {
+        let isLast = Number(target.dataset.index) === singleSpacedFormat.length - 1
+        let isEmpty = target.value === ''
+        console.log('isEmpty', isEmpty)
         let previous = target.previousElementSibling
         if (!previous) {
+            return
+        }
+        if (isLast && !isEmpty) {
             return
         }
         if (previous.tagName.toLowerCase() !== "input") {
             previous = target.previousElementSibling.previousElementSibling
         }
-        previous.focus()
+
         previous.value = ''
+        previous.focus()
     }
 
-    const onKeyUp = (event: KeyboardEvent) => {
+    const onKeyDown = (event: KeyboardEvent) => {
         if (event.key === "Backspace") {
+            event.preventDefault()
             currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), ''))
             focusPrevious(event.target)
         }
@@ -52,7 +60,7 @@
             <span class="blank" data-index={i}/>
         {:else}
             <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
-                   on:input={onInput} on:keyup={onKeyUp}/>
+                   on:input={onInput} on:keydown={onKeyDown}/>
         {/if}
     {/each}
 </div>
