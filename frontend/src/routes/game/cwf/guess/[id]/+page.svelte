@@ -24,8 +24,6 @@
         if ($currentGuess.toLowerCase() !== gamePrompt.toLowerCase()) {
             console.log(`wrong`)
             currentGuess.set('')
-            // focus the first one
-            document.getElementById('guessInput[0]').focus()
             return;
         }
 

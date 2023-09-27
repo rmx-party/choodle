@@ -56,7 +56,7 @@
         {#if formatCharacter === " "}
             <span class="blank" data-index={i}/>
         {:else}
-            <input id={`guessInput[${i}]`} name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
+            <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
                    on:input={onInput} on:keyup={onKeyUp}/>
         {/if}
     {/each}
