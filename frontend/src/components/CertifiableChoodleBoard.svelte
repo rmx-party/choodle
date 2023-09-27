@@ -1,10 +1,8 @@
 <script lang="ts">
     import Prompt from "./Prompt.svelte";
-    import {writable} from "svelte/store";
     import localforage from "localforage";
     import {
         choodleCreatorEmailKey,
-        choodlePromptKey,
     } from "$lib/Configuration";
     import {onMount, SvelteComponent} from "svelte";
     import {browser} from "$app/environment";
