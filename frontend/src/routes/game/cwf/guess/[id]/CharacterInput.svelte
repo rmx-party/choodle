@@ -31,8 +31,13 @@
     }
 
     const focusPrevious = (target: HTMLElement) => {
+        let next = target.nextElementSibling
         let previous = target.previousElementSibling
         if (!previous) {
+            return
+        }
+        if (!next) {
+            target.value = ''
             return
         }
         if (previous.tagName.toLowerCase() !== "input") {
