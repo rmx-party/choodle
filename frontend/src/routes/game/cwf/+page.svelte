@@ -27,7 +27,7 @@
   // TODO: CMS-populate all the copy / non-dynamic html contents
 
   const startGame = async () => {
-    await goto(`/pick`)
+    await goto(`/game/cwf/pick`)
   }
 
   const nudge = (gameId) => {
