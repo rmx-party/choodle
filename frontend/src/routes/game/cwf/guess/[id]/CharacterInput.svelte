@@ -2,6 +2,15 @@
     export let format
     const singleSpacedFormat = format.replace(/\s+/g, ' ').trim()
     export let currentGuess;
+    export let submitEnabled;
+
+    currentGuess.subscribe((newCurrentGuess)=>{
+        if (newCurrentGuess.length === singleSpacedFormat.length) {
+            submitEnabled.set(true)
+        } else {
+            submitEnabled.set(false)
+        }
+    })
 
     const replaceCharAt = (originalString: string, index: number, replacement: string) => {
         let left = originalString.slice(0, index);
@@ -29,7 +38,6 @@
     const focusPrevious = (target: HTMLElement) => {
         let isLast = Number(target.dataset.index) === singleSpacedFormat.length - 1
         let isEmpty = target.value === ''
-        console.log('isEmpty', isEmpty)
         let previous = target.previousElementSibling
         if (!previous) {
             return
@@ -40,12 +48,11 @@
         if (previous.tagName.toLowerCase() !== "input") {
             previous = target.previousElementSibling.previousElementSibling
         }
-
-        previous.value = ''
         previous.focus()
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
+        // FIXME: ignore spacebar
         if (event.key === "Backspace") {
             event.preventDefault()
             currentGuess.set(replaceCharAt($currentGuess, Number(event.target.dataset.index), ''))
