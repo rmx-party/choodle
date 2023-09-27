@@ -42,7 +42,7 @@
 
     <form id="guessForm" on:submit={check}>
         <CharacterInput format={gamePrompt} submitEnabled={submitEnabled} {currentGuess}/>
-        <Button colour="yellow" variant="primary" isOnline={$submitEnabled}>Submit</Button>
+        <Button colour="yellow" variant="primary">Submit</Button>
     </form>
 </div>
 
