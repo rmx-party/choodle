@@ -13,10 +13,5 @@ export default {
       type: 'string',
       title: 'Game Prompt',
     },
-    {
-      name: 'currentPlayerId',
-      type: 'string',
-      title: 'Whose turn is it?',
-    },
   ]
 }
