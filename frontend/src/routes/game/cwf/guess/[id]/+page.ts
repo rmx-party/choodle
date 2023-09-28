@@ -1,15 +1,13 @@
 import {readOnlyClient} from "$lib/CMSUtils";
 
-export const ssr = false;
-
 export async function load({params}) {
   const copy = await readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy"] | order(_createdAt) [0]`)
   const choodle = await readOnlyClient.fetch(`*[_type == "choodle" && _id == "${params.id}"] [0]`);
 
-    if (choodle) return {copy, choodle};
+  if (choodle) return {copy, choodle};
 
-    return {
-        status: 500,
-        body: new Error("Internal Server Error")
-    };
+  return {
+    status: 500,
+    body: new Error("Internal Server Error")
+  };
 }
