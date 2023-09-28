@@ -42,17 +42,17 @@
 />
 
 <div class="flex-container">
-    <GuessingHUD content="guess" {guessesRemaining} {guessesLimit}/>
+    <GuessingHUD content={data.copy.guess_pageTopContent} {guessesRemaining} {guessesLimit}/>
     <div class="choodle-container">
         <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
              width='390' height='520' alt=''/>
     </div>
     {#if guessesRemaining < 1}
-        <p class="failure">Darn it, you're out of tries.</p>
+        <p class="failure">{data.copy.guess_failureMessageText}</p>
     {/if}
     <form id="guessForm" on:submit={check}>
         <CharacterInput {submitEnabled} format={gamePrompt} {currentGuess} focusOnMount/>
-        <Button colour="yellow" variant="primary">Submit</Button>
+        <Button colour="yellow" variant="primary">{data.copy.guess_doneButtonText}</Button>
     </form>
 </div>
 

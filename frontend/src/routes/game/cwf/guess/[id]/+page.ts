@@ -3,9 +3,10 @@ import {readOnlyClient} from "$lib/CMSUtils";
 export const ssr = false;
 
 export async function load({params}) {
-    const choodle = await readOnlyClient.fetch(`*[_type == "choodle" && _id == "${params.id}"] [0]`);
+  const copy = await readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy"] | order(_createdAt) [0]`)
+  const choodle = await readOnlyClient.fetch(`*[_type == "choodle" && _id == "${params.id}"] [0]`);
 
-    if (choodle) return {choodle};
+    if (choodle) return {copy, choodle};
 
     return {
         status: 500,

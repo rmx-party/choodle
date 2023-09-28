@@ -1,5 +1,6 @@
 <script lang="ts">
-    // tries
+    import {toHTML} from "@portabletext/to-html";
+
     export let content = '';
     export let guessesRemaining: number;
     export let guessesLimit: number;
@@ -7,7 +8,7 @@
 
 {#if content}
     <div class="topBar">
-        <div class="content">{@html content}</div>
+        <div class="content">{@html toHTML(content)}</div>
 
         <div class="guessCounter">
             <span>Tries</span>
