@@ -17,7 +17,7 @@ export default {
         {
             name: 'pick_shuffleButtonText',
             type: 'string',
-            title: 'Shuffle Button Text',
+            title: 'Prompt Selection Page Shuffle Button Text',
         },
         {
             name: 'pick_doneButtonText',
@@ -26,7 +26,7 @@ export default {
         },
         {
             name: 'draw_topBarContent',
-            title: 'Draw Page Top Bar Instruction',
+            title: 'Prompt Selection Page Draw Page Top Bar Instruction',
             type: 'string',
         },
         {
