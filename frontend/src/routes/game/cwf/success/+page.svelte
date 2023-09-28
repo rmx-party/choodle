@@ -6,8 +6,6 @@
   import {toHTML} from "@portabletext/to-html";
 
   export let data;
-  // TODO: load content sections from CMS
-  // TODO: load the image from CMS once the data model/routing supports it
 
   onMount(async () => {
     if (!browser) return;
