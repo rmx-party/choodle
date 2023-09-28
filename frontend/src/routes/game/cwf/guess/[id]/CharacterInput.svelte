@@ -1,6 +1,5 @@
 <script lang="ts">
-    export let format
-    const singleSpacedFormat = format.replace(/\s+/g, ' ').trim()
+    export let focusOnMount: boolean;
     export let currentGuess;
     export let submitEnabled;
 
@@ -11,6 +10,8 @@
             submitEnabled.set(false)
         }
     })
+    export let format: string;
+    const singleSpacedFormat = format.replace(/\s+/g,' ').trim()
 
     const replaceCharAt = (originalString: string, index: number, replacement: string) => {
         let left = originalString.slice(0, index);
@@ -27,7 +28,7 @@
             currentGuess.set(replaceCharAt($currentGuess, Number(next.dataset.index), ' '))
             next = target.nextElementSibling.nextElementSibling
         }
-        next.focus()
+        next?.focus()
     }
 
     const onInput = (event: Event) => {
@@ -71,8 +72,15 @@
         {#if formatCharacter === " "}
             <span class="blank" data-index={i}/>
         {:else}
-            <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
-                   on:input={onInput} on:keydown={onKeyDown} on:focus={(event) => {event.target.select()}}/>
+          {#if i == 0}
+              <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
+              on:input={onInput} on:keydown={onKeyDown} autofocus={focusOnMount} />
+              on:input={onInput} on:keydown={onKeyDown} on:focus={(event) => {event.target.select()}}
+              autofocus={focusOnMount}/>
+          {:else}
+              <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
+              on:input={onInput} on:keydown={onKeyDown} on:focus={(event) => {event.target.select()}}/>
+          {/if}
         {/if}
     {/each}
 </div>
@@ -94,3 +102,5 @@
         content: " ";
     }
 </style>
+
+
