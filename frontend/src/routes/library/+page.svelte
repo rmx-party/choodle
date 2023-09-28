@@ -18,7 +18,7 @@
     }
 </style>
 
-<MetaData 
+<MetaData
     title="Choodle Components"
     themeColor="#FFFFFF"
 />

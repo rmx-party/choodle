@@ -55,7 +55,7 @@
             if (sentTo) {
                 await readWriteClient.patch(choodle._id).set({
                     shouldMint: false,
-                    sentAt: new Date().toISOString(), 
+                    sentAt: new Date().toISOString(),
                     sentTo
                 }).commit()
             }

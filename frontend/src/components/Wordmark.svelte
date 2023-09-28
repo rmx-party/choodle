@@ -9,7 +9,7 @@
 </script>
 
 <img class="wordmark" src={wordmark} alt="Choodle" style:font-size={fontSize}
-     srcset={`${wordmark} 88w, ${wordmark140} 140w, ${wordmark420} 420w, ${wordmark1080} 1080w, ${wordmark1920} 1920w`}/>
+    srcset={`${wordmark} 88w, ${wordmark140} 140w, ${wordmark420} 420w, ${wordmark1080} 1080w, ${wordmark1920} 1920w`}/>
 
 <style>
     .wordmark {

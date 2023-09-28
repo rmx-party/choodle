@@ -10,4 +10,3 @@
 
     Bugsnag.start({apiKey: '91931cee1cbae5feec1925a566386158'})
 </script>
-

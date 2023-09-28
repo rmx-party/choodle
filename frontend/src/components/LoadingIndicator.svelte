@@ -13,7 +13,7 @@
     <div class="LoadingIndicator">
         <div class="loading">
             <img class="loading-image" height="263" width="174" src='/choodle-bob-p2.png'
-                 alt="A doodle of the painter Bob Ross, slightly smiling"/>
+                alt="A doodle of the painter Bob Ross, slightly smiling"/>
             <strong>
                 <span>{explanation}<AnimatedEllipses/></span>
             </strong>
@@ -66,4 +66,3 @@
         display: none;
     }
 </style>
-

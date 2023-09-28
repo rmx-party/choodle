@@ -5,7 +5,7 @@
     import Wordmark from "../components/Wordmark.svelte";
     import {goto} from "$app/navigation";
     import MetaData from "../components/MetaData.svelte";
-	import { browser } from "$app/environment";
+  import { browser } from "$app/environment";
 
     function reload() {
         if (!browser) return;
@@ -33,7 +33,7 @@
     </div>
 
     <img class="error-image" height="263" width="174" src='/choodle-bob-p2.png'
-         alt="A doodle of the painter Bob Ross, slightly smiling"/>
+        alt="A doodle of the painter Bob Ross, slightly smiling"/>
 
     <Button variant="big primary yellow" on:click={() => goto('/')}>Back Home</Button>
 

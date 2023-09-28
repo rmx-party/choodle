@@ -82,6 +82,6 @@
     text-transform: uppercase;
   }
   #cta {
-    width: 100%; 
+    width: 100%;
   }
 </style>

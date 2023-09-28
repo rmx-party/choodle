@@ -9,7 +9,7 @@
     import star2 from "$lib/assets/star-2.png";
     import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-1200x630-2x.jpg';
     import {page} from '$app/stores';
-	import { onMount } from 'svelte';
+  import { onMount } from 'svelte';
 
     export let data;
 
@@ -74,5 +74,3 @@
         color: rgba(20, 21, 24, 0.8);
     }
 </style>
-
-

@@ -156,7 +156,7 @@ describe('UndoStack', () => {
             expect(undoStack.current).toBe('bar')
         });
     });
-    
+
     describe('storable', () => {
         it('gives an object with the stack and the cursor for storage', () => {
             const undoStack = new UndoStack(['foo', 'bar', 'baz'])

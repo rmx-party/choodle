@@ -148,8 +148,8 @@
         <label for="creator-email" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">Email
             <br/>
             <input bind:value={creatorEmailInput} type="email" id="creator-email" name="creatorEmail"
-                   placeholder="Enter Email"
-                   required title="Please enter a valid email address as the creator to attribute this art to" style='width: 100%; padding:
+                  placeholder="Enter Email"
+                  required title="Please enter a valid email address as the creator to attribute this art to" style='width: 100%; padding:
     1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
         </label>
 

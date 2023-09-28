@@ -12,8 +12,8 @@
     import localforage from "localforage";
     import {choodlePromptKey} from "$lib/Configuration";
     import Button from "../../../../components/Button.svelte";
-	import { loading } from "$lib/store";
-	import fp from "lodash/fp";
+  import { loading } from "$lib/store";
+  import fp from "lodash/fp";
 
     export let data;
 
