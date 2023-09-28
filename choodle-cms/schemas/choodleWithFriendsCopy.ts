@@ -1,7 +1,7 @@
 export default {
-    name: 'choodleWithFriends',
+    name: 'choodleWithFriendsCopy',
     type: 'document',
-    title: 'Choodle With Friends',
+    title: 'Choodle With Friends Copy',
     fields: [
         {
             name: 'startGameButtonText',
