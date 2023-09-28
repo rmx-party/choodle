@@ -5,6 +5,8 @@
     import GuessingHUD from "../../../../../components/GuessingHUD.svelte";
     import Button from "../../../../../components/Button.svelte";
     import {goto} from "$app/navigation";
+    import {page} from "$app/stores";
+    import MetaData from "../../../../../components/MetaData.svelte";
 
     export let data;
     const currentGuess = writable('')
@@ -32,6 +34,12 @@
         goto('/game/cwf/success')
     }
 </script>
+
+<MetaData url={$page.url}
+          imageUrl={urlFor(data.choodle.upScaledImage)}
+          width="430"
+          height="932"
+/>
 
 <div class="flex-container">
     <GuessingHUD content="guess" {guessesRemaining} {guessesLimit}/>
