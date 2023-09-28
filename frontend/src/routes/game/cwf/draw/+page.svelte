@@ -18,25 +18,18 @@
   export let data;
 
   let child;
-
   let isOnline = true;
 
   const gamePrompt = writable<string | null>(null)
   let gamePromptTiles: string;
-
   $: {
-    gamePromptTiles = $gamePrompt ? fp.map((char) => {
-      if (char === ' ') return '⬜'
-      return '🟨'
-    }, $gamePrompt.split('')).join('') : ''
+    gamePromptTiles = $gamePrompt ? fp.map((char) => (char === ' ') ? '⬜' : '🟨', $gamePrompt.split('')).join('') : ''
   }
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
-    const asyncCreatorId = (async () => await getCreatorId())()
-
     return saveChoodle(undoStack, canvas, {
       gamePrompt: $gamePrompt || null,
-      creatorId: await asyncCreatorId,
+      creatorId: await getCreatorId()
     })
   }
 
