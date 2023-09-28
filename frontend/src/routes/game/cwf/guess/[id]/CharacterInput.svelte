@@ -1,17 +1,17 @@
 <script lang="ts">
     export let focusOnMount: boolean;
+    export let submitEnabled: boolean;
+    export let format: string;
     export let currentGuess;
-    export let submitEnabled;
+
+    const singleSpacedFormat = format.replace(/\s+/g,' ').trim()
 
     currentGuess.subscribe((newCurrentGuess)=>{
-        if (newCurrentGuess.length === singleSpacedFormat.length) {
-            submitEnabled.set(true)
-        } else {
-            submitEnabled.set(false)
-        }
+        const value = (newCurrentGuess.length === singleSpacedFormat.length)
+          ? true
+          : false
+        submitEnabled.set(value)
     })
-    export let format: string;
-    const singleSpacedFormat = format.replace(/\s+/g,' ').trim()
 
     const replaceCharAt = (originalString: string, index: number, replacement: string) => {
         let left = originalString.slice(0, index);
@@ -68,21 +68,20 @@
 </script>
 
 <div id="guessInput">
-    {#each singleSpacedFormat as formatCharacter, i}
-        {#if formatCharacter === " "}
-            <span class="blank" data-index={i}/>
-        {:else}
-          {#if i == 0}
-              <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
-              on:input={onInput} on:keydown={onKeyDown} autofocus={focusOnMount} />
-              on:input={onInput} on:keydown={onKeyDown} on:focus={(event) => {event.target.select()}}
-              autofocus={focusOnMount}/>
-          {:else}
-              <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
-              on:input={onInput} on:keydown={onKeyDown} on:focus={(event) => {event.target.select()}}/>
-          {/if}
-        {/if}
-    {/each}
+  {#each singleSpacedFormat as formatCharacter, i}
+    {#if formatCharacter === " "}
+      <span class="blank" data-index={i}/>
+    {:else}
+      {#if i == 0}
+        <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
+          on:input={onInput} on:keydown={onKeyDown} on:focus={(event) => {event.target.select()}}
+          autofocus={focusOnMount}/>
+      {:else}
+        <input name={`guessInput[${i}]`} data-index={i} type="text" maxlength="1" value={$currentGuess[i] || ''}
+          on:input={onInput} on:keydown={onKeyDown} on:focus={(event) => {event.target.select()}}/>
+      {/if}
+    {/if}
+  {/each}
 </div>
 
 <style>
