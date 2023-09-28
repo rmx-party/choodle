@@ -22,11 +22,11 @@ export default {
         {
             name: 'pick_doneButtonText',
             type: 'string',
-            title: 'Done Button Text',
+            title: 'Prompt Selection Page Done Button Text',
         },
         {
             name: 'draw_topBarContent',
-            title: 'Prompt Selection Page Draw Page Top Bar Instruction',
+            title: 'Draw Page Top Bar Instruction',
             type: 'string',
         },
         {
