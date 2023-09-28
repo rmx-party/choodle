@@ -6,6 +6,7 @@ import certificateEmail from "./certificateEmail";
 import certificateModal from "./certificateModal";
 import gamePrompt from './gamePrompt';
 import choodleWithFriendsCopy from "./choodleWithFriendsCopy";
+import choodleWithFriendsGame from "./choodleWithFriendsGame";
 
 export const schemaTypes = [
   dailyPrompt,
@@ -16,4 +17,5 @@ export const schemaTypes = [
   certificateModal,
   gamePrompt,
   choodleWithFriendsCopy,
+  choodleWithFriendsGame,
 ]
