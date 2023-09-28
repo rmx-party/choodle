@@ -1,12 +1,12 @@
 <script lang="ts">
     export let focusOnMount: boolean;
-    export let submitEnabled: boolean;
+    export let submitEnabled;
     export let format: string;
     export let currentGuess;
 
     const singleSpacedFormat = format.replace(/\s+/g,' ').trim()
 
-    currentGuess.subscribe((newCurrentGuess)=>{
+    currentGuess.subscribe((newCurrentGuess) => {
         const value = (newCurrentGuess.length === singleSpacedFormat.length)
           ? true
           : false
@@ -51,7 +51,7 @@
         if (previous.tagName.toLowerCase() !== "input") {
             previous = target.previousElementSibling.previousElementSibling
         }
-        previous.focus()
+        previous?.focus()
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -101,5 +101,4 @@
         content: " ";
     }
 </style>
-
 
