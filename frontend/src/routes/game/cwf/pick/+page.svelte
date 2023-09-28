@@ -1,19 +1,24 @@
 <script lang="ts">
-  import { writable } from 'svelte/store';
+  import {writable} from 'svelte/store';
   import Button from '../../../../components/Button.svelte';
-  import { goto } from '$app/navigation';
+  import {goto} from '$app/navigation';
   import fp from 'lodash/fp';
-  import { onMount } from 'svelte';
+  import {onMount} from 'svelte';
   import localforage from 'localforage';
-  import { choodlePromptKey } from '$lib/Configuration';
+  import {choodlePromptKey} from '$lib/Configuration';
   import {toHTML} from "@portabletext/to-html";
+  import {readWriteClient} from "$lib/CMSUtils";
+  import {getCreatorId} from "$lib/CreatorIdUtils";
+  import {browser} from "$app/environment";
 
   export let data;
 
   const selectedPrompt = writable(null);
-  selectedPrompt.subscribe((value) => {
-    localforage.setItem(choodlePromptKey, value);
-  })
+  if (browser) {
+    selectedPrompt.subscribe((value) => {
+      localforage.setItem(choodlePromptKey, value);
+    })
+  }
 
   onMount(() => {
     shufflePrompts(new MouseEvent('click'));
@@ -36,9 +41,14 @@
     }
   };
 
-  const proceed = () => {
+  const proceed = async () => {
     const prompt = $selectedPrompt;
     if (prompt) {
+      await readWriteClient.create({
+        _type: 'choodleWithFriendsGame',
+        player1CreatorId: await getCreatorId(),
+        gamePrompt: $selectedPrompt,
+      })
       console.log(`proceeding with prompt ${prompt}`);
       goto(`/game/cwf/draw`)
     }
@@ -49,7 +59,7 @@
   {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
   <div>
-    <input type="text" bind:value={$selectedPrompt} disabled />
+    <input type="text" bind:value={$selectedPrompt} disabled/>
     <br/>
     <Button on:click={shufflePrompts}>{data.copy.pick_shuffleButtonText}</Button>
   </div>
@@ -68,10 +78,12 @@
     justify-content: space-evenly;
     height: 100dvh;
   }
+
   main > * {
     flex-grow: 0 !important;
     width: 100%;
   }
+
   input {
     margin: 1rem 0;
     padding: 1rem;
@@ -81,6 +93,7 @@
     font-size: 1.5rem;
     text-transform: uppercase;
   }
+
   #cta {
     width: 100%;
   }
