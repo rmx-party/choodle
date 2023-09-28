@@ -46,7 +46,7 @@
 
     const url = `${window.location.origin}/game/cwf/guess/${result._id}`
     const shareCopy = `Can you guess what this is?` // TODO: use cms copy
-    const text = [shareCopy, url, gamePromptTiles].join(`\n`)
+    const text = [shareCopy, gamePromptTiles, url].join(`\n`)
     const shareable = {text};
     if (canShare(shareable)) {
       await share(shareable, () => {
