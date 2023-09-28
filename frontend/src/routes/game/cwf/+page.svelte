@@ -1,23 +1,9 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { onMount } from "svelte";
+  import {goto} from "$app/navigation";
+  import {onMount} from "svelte";
   import Button from "../../../components/Button.svelte";
-  import { browser } from "$app/environment";
+  import {browser} from "$app/environment";
 
-  const dummyGames = [ // TODO: speculative data model for page mockup purposes
-    {
-      _id: 1,
-      turn: 'some-player-id',
-      choodles: [], // Choodle association array
-      guesses: [] // Guess entries / counts per choodle perhaps? guesses belong to a particular choodle, and a game, and player
-    },
-    {
-      _id: 2,
-      turn: 'other-player-id',
-      choodles: [],
-      guesses: []
-    }
-  ]
   export let data
 
   let playerId = 'some-player-id' // TODO: fetch creatorId from storage
@@ -62,7 +48,9 @@
         {#each data.liveGames as liveGame}
           <li id={liveGame._id}>
             <div class="img">image</div>
-            {#if liveGame.turn === playerId}
+            {#if !liveGame.currentPlayerId}
+              <Button>Share</Button>
+            {:else if liveGame.turn === playerId}
               <span class="status">
                 Your turn
               </span>
@@ -108,6 +96,7 @@
     margin: 0;
     padding: 0;
   }
+
   .live-games > ul > li {
     list-style-type: none;
     padding: 1rem;
