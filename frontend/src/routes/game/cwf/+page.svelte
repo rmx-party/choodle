@@ -18,9 +18,7 @@
       guesses: []
     }
   ]
-  let data = { liveGames: [...dummyGames] }; // TODO: load data from CMS, set up sanity pubsub to track games live
-  let liveGames: any[] = [] 
-  $: liveGames = data.liveGames
+  export let data
 
   let playerId = 'some-player-id' // TODO: fetch creatorId from storage
 
@@ -52,16 +50,16 @@
 </script>
 
 <div class="container">
-  <Button variant="primary" colour="yellow" on:click={startGame}>Start New Game</Button>
+  <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
 
   <section class="live-games">
     <strong>Live games</strong>
 
-    {#if (0 >= liveGames.length)}
+    {#if (0 >= data.liveGames.length)}
       <p>Start a new game to view them here.</p>
     {:else}
       <ul>
-        {#each liveGames as liveGame}
+        {#each data.liveGames as liveGame}
           <li id={liveGame._id}>
             <div class="img">image</div>
             {#if liveGame.turn === playerId}
