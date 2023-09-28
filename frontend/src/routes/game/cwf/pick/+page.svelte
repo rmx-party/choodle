@@ -6,6 +6,7 @@
   import { onMount } from 'svelte';
   import localforage from 'localforage';
   import { choodlePromptKey } from '$lib/Configuration';
+  import {toHTML} from "@portabletext/to-html";
 
   export let data;
 
@@ -45,15 +46,15 @@
 </script>
 
 <main>
-  <h1>Your Secret Word</h1>
+  {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
   <div>
     <input type="text" bind:value={$selectedPrompt} disabled />
     <br/>
-    <Button on:click={shufflePrompts}>Shuffle</Button>
+    <Button on:click={shufflePrompts}>{data.copy.pick_shuffleButtonText}</Button>
   </div>
   <div id="cta">
-    <Button variant='primary' on:click={proceed}>Draw</Button>
+    <Button variant='primary' on:click={proceed}>{data.copy.pick_doneButtonText}</Button>
   </div>
 </main>
 
