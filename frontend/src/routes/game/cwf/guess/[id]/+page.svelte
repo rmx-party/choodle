@@ -15,7 +15,7 @@
     const {gamePrompt} = data.choodle;
 
     // TODO: CMS manageed
-    let guessesRemaining = 3; 
+    let guessesRemaining = 3;
     let guessesLimit = 3;
 
     const check = (event: Event) => {
@@ -47,9 +47,11 @@
         <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
              width='390' height='520' alt=''/>
     </div>
-
+    {#if guessesRemaining < 1}
+        <p class="failure">Darn it, you're out of tries.</p>
+    {/if}
     <form id="guessForm" on:submit={check}>
-        <CharacterInput {submitEnabled} format={gamePrompt} {currentGuess} focusOnMount />
+        <CharacterInput {submitEnabled} format={gamePrompt} {currentGuess} focusOnMount/>
         <Button colour="yellow" variant="primary">Submit</Button>
     </form>
 </div>
@@ -98,5 +100,9 @@
 
         border-radius: 0.22175rem;
         box-shadow: 1px 1px 17.74193572998047px 0.8870968222618103px rgba(0, 0, 0, 0.12);
+    }
+
+    .failure {
+        color: red;
     }
 </style>
