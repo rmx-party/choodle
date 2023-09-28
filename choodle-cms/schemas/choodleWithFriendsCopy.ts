@@ -25,7 +25,7 @@ export default {
             title: 'Prompt Selection Page Done Button Text',
         },
         {
-            name: 'draw_topBarText',
+            name: 'draw_topBarInstructionText',
             title: 'Draw Page Top Bar Instruction',
             type: 'string',
         },
