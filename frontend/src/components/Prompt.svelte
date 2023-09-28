@@ -2,6 +2,7 @@
     import handDraw from '$lib/assets/hand-draw-filled-40px.svg'
 
     export let prompt;
+    export let instruction = "Draw:"
 </script>
 
 
@@ -9,7 +10,7 @@
     <div class="prompt">
         <img src={handDraw}/>
         <p class="daily-prompt">
-            <span><strong>Draw: </strong>‘{prompt}’</span>
+            <span><strong>{instruction} </strong>‘{prompt}’</span>
         </p>
     </div>
 {:else}

@@ -15,6 +15,8 @@
 	import { loading } from "$lib/store";
 	import fp from "lodash/fp";
 
+    export let data;
+
     let child;
 
     let isOnline = true;
@@ -93,10 +95,10 @@
 </script>
 
 <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
-    <Prompt prompt={$gamePrompt} slot="prompt" />
+    <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="prompt" />
     <div id="buttons" slot="buttons">
-        <Button on:click={child.undo} colour="yellow">Undo</Button>
-        <Button on:click={child.save} isOnline={isOnline} colour="yellow">Share</Button>
+        <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
+        <Button on:click={child.save} isOnline={isOnline} colour="yellow">{data.copy.draw_doneButtonText}</Button>
     </div>
 </ChoodleBoard>
 
