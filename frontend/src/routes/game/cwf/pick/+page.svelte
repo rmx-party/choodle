@@ -7,38 +7,37 @@
   import localforage from 'localforage';
   import {choodlePromptKey} from '$lib/Configuration';
   import {toHTML} from "@portabletext/to-html";
-  import {readWriteClient} from "$lib/CMSUtils";
-  import {getCreatorId} from "$lib/CreatorIdUtils";
   import {browser} from "$app/environment";
 
   export let data;
+  let prompts: any[] = [];
+  let initialPrompt: string | null = null;
 
   const selectedPrompt = writable(null);
   if (browser) {
     selectedPrompt.subscribe((value) => {
+      console.log(`selected prompt: ${value}`);
       localforage.setItem(choodlePromptKey, value);
     })
   }
 
   onMount(() => {
-    shufflePrompts(new MouseEvent('click'));
+    prompts = fp.shuffle(fp.map('prompt')(data.records));
+    initialPrompt = prompts[0];
+    rotatePrompts();
   })
 
-  const shufflePrompts = (event: MouseEvent, tries = 0) => {
-    if (tries > 10) {
-      console.error(`shufflePrompts: too many tries, maybe there aren't any other prompts`);
-      return;
+  const rotatePrompts = () => {
+    const [head, ...tail] = prompts;
+
+    if (head === initialPrompt) {
+      console.log(`reached the beginning of the list again, re-shuffling prompts...`)
+      prompts = fp.shuffle(prompts);
+      return rotatePrompts()
     }
 
-    const prompts = fp.map('prompt')(data.records);
-    const newPrompt = (prompts.sort(() => Math.random() - 0.5))[0];
-
-    if (newPrompt !== $selectedPrompt) {
-      selectedPrompt.set(newPrompt);
-      console.log(`selected prompt: ${newPrompt}`);
-    } else {
-      shufflePrompts(event, tries + 1)
-    }
+    selectedPrompt.set(head);
+    prompts = [...tail, head];
   };
 
   const proceed = async () => {
@@ -56,7 +55,7 @@
   <div>
     <input type="text" bind:value={$selectedPrompt} disabled/>
     <br/>
-    <Button on:click={shufflePrompts}>{data.copy.pick_shuffleButtonText}</Button>
+    <Button on:click={rotatePrompts}>{data.copy.pick_shuffleButtonText}</Button>
   </div>
   <div id="cta">
     <Button variant='primary' on:click={proceed}>{data.copy.pick_doneButtonText}</Button>
