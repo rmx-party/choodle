@@ -61,6 +61,11 @@ export default {
       type: 'string',
     },
     {
+      name: 'guess_failureRightAnswerText',
+      title: 'Guess Page Failure Right Answer Text',
+      type: 'string',
+    },
+    {
       name: 'guess_failureNewGameButtonText',
       title: 'Guess Page New Game Button Text',
       type: 'string',
