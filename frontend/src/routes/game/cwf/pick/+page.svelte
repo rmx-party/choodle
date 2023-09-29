@@ -44,11 +44,6 @@
   const proceed = async () => {
     const prompt = $selectedPrompt;
     if (prompt) {
-      await readWriteClient.create({
-        _type: 'choodleWithFriendsGame',
-        player1CreatorId: await getCreatorId(),
-        gamePrompt: $selectedPrompt,
-      })
       console.log(`proceeding with prompt ${prompt}`);
       goto(`/game/cwf/draw`)
     }
