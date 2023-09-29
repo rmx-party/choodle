@@ -33,25 +33,32 @@
   }
 </script>
 
-<MetaData url={$page.url}
-          imageUrl={urlFor(data.choodle.upScaledImage)}
-          width="430"
-          height="932"
+<MetaData url={$page.url.toString()}
+  imageUrl={urlFor(data.choodle.upScaledImage).url()}
+  width="430"
+  height="932"
 />
 
 <div class="flex-container">
   <GuessingHUD content={data.copy.guess_pageTopContent} {guessesRemaining} {guessesLimit}/>
   <div class="choodle-container">
-    <img class="choodle" src={urlFor(data.choodle.upScaledImage)}
-         width='390' height='520' alt=''/>
+    <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
+      width='390' height='520' alt=''/>
   </div>
   {#if guessesRemaining < 1}
     <p class="failure">{data.copy.guess_failureMessageText}</p>
+    {#if data.copy.guess_failureRightAnswerText}
+      <p>{data.copy.guess_failureRightAnswerText} <code>{data.choodle.gamePrompt}</code></p>
+    {/if}
+    <Button colour="yellow" variant="primary" on:click={() => {goto(`/game/cwf/pick`)}}>
+      {data.copy.guess_failureNewGameButtonText}
+    </Button>
+  {:else}
+    <form id="guessForm" on:submit={check}>
+      <CharacterInput {submitEnabled} format={data.choodle.gamePrompt} {currentGuess} focusOnMount/>
+      <Button colour="yellow" variant="primary">{data.copy.guess_doneButtonText}</Button>
+    </form>
   {/if}
-  <form id="guessForm" on:submit={check}>
-    <CharacterInput {submitEnabled} format={data.choodle.gamePrompt} {currentGuess} focusOnMount/>
-    <Button colour="yellow" variant="primary">{data.copy.guess_doneButtonText}</Button>
-  </form>
 </div>
 
 <style>
