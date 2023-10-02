@@ -7,6 +7,10 @@
   import {goto} from "$app/navigation";
   import {page} from "$app/stores";
   import MetaData from "../../../../../components/MetaData.svelte";
+  import {onMount} from "svelte";
+  import {getCreatorId} from "$lib/CreatorIdUtils";
+  import {browser} from "$app/environment";
+  import fp from "lodash/fp";
 
   export let data;
   const currentGuess = writable('')
@@ -15,6 +19,8 @@
   // TODO: CMS manageed
   let guessesRemaining = 3;
   let guessesLimit = 3;
+
+  let choodleOwner = false;
 
   const check = (event: Event) => {
     event.preventDefault();
@@ -31,38 +37,73 @@
     console.log(`right answer, you won the thing`)
     goto('/game/cwf/success')
   }
+
+  const canShare = (shareable?): boolean => {
+    if (!browser) return false;
+    if (!navigator.share) return false;
+
+    return navigator.canShare(shareable)
+  }
+
+  const share = async () => {
+    if (!browser) return;
+
+    let gamePromptTiles = data.choodle.gamePrompt ? fp.map((char) => (char === ' ') ? '⬜' : '🟨', data.choodle.gamePrompt.split('')).join('') : ''
+
+    const url = `${window.location.origin}/game/cwf/guess/${data.choodle._id}`
+    const shareCopy = `Can you guess what this is?` // TODO: use cms copy
+    const text = [shareCopy, gamePromptTiles, url].join(`\n`)
+    const shareable = {text};
+
+    console.log(`sharing:`, shareable)
+
+    if (canShare(shareable)) {
+      console.log('Thanks for sharing!');
+      navigator.share(shareable).catch(console.error);
+    } else {
+      // TODO: copy to clipboard, and tell the user
+    }
+  }
+
+  onMount(async () => {
+    choodleOwner = data.choodle.creatorId === await getCreatorId()
+  })
 </script>
 
 <MetaData url={$page.url.toString()}
-  imageUrl={urlFor(data.choodle.upScaledImage).url()}
-  width="430"
-  height="932"
+          imageUrl={urlFor(data.choodle.upScaledImage).url()}
+          width="430"
+          height="932"
 />
 
 <div class="flex-container">
   <GuessingHUD content={data.copy.guess_pageTopContent} {guessesRemaining} {guessesLimit}/>
   <div class="choodle-container">
     <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
-      width='390' height='520' alt=''/>
+         width='390' height='520' alt=''/>
   </div>
-  {#if guessesRemaining < 1}
-    {#if data.copy.guess_failureMessageText}
-      <p class="failure">{data.copy.guess_failureMessageText}</p>
-    {/if}
-    {#if data.copy.guess_failureRightAnswerText}
-      <p>{data.copy.guess_failureRightAnswerText} <code>{data.choodle.gamePrompt}</code></p>
-    {/if}
-    <Button colour="yellow" variant="primary" on:click={() => {goto(`/game/cwf/pick`)}}>
-      {data.copy.guess_failureNewGameButtonText}
-    </Button>
-  {:else}
-    <form id="guessForm" on:submit={check}>
-      {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
-        <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
+  {#if !choodleOwner}
+    {#if guessesRemaining < 1}
+      {#if data.copy.guess_failureMessageText}
+        <p class="failure">{data.copy.guess_failureMessageText}</p>
       {/if}
-      <CharacterInput {submitEnabled} format={data.choodle.gamePrompt} {currentGuess} focusOnMount/>
-      <Button colour="yellow" variant="primary">{data.copy.guess_doneButtonText}</Button>
-    </form>
+      {#if data.copy.guess_failureRightAnswerText}
+        <p>{data.copy.guess_failureRightAnswerText} <code>{data.choodle.gamePrompt}</code></p>
+      {/if}
+      <Button colour="yellow" variant="primary" on:click={() => {goto(`/game/cwf/pick`)}}>
+        {data.copy.guess_failureNewGameButtonText}
+      </Button>
+    {:else}
+      <form id="guessForm" on:submit={check}>
+        {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
+          <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
+        {/if}
+        <CharacterInput {submitEnabled} format={data.choodle.gamePrompt} {currentGuess} focusOnMount/>
+        <Button colour="yellow" variant="primary">{data.copy.guess_doneButtonText}</Button>
+      </form>
+    {/if}
+  {:else}
+    <Button colour="yellow" variant="primary" on:click={share}>{data.copy.guess_shareButtonText}</Button>
   {/if}
 </div>
 
@@ -78,7 +119,6 @@
     flex-direction: column;
     flex-wrap: nowrap;
     align-content: center;
-    justify-content: space-between;
     align-items: center;
     height: 100svh;
     height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */

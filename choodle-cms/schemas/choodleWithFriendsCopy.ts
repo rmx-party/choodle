@@ -56,6 +56,11 @@ export default {
       type: 'string',
     },
     {
+      name: 'guess_shareButtonText',
+      title: 'Guess Page Share Button Text',
+      type: 'string',
+    },
+    {
       name: 'guess_incorrectFeedbackText',
       title: 'Guess Page Incorrect Guess Feedback Text',
       type: 'string',

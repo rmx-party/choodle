@@ -13,7 +13,7 @@
   import {choodlePromptKey} from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
   import {loading} from "$lib/store";
-  import fp from "lodash/fp";
+  import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
 
   export let data;
 
@@ -21,12 +21,9 @@
   let isOnline = true;
 
   const gamePrompt = writable<string | null>(null)
-  let gamePromptTiles: string;
-  $: {
-    gamePromptTiles = $gamePrompt ? fp.map((char) => (char === ' ') ? '⬜' : '🟨', $gamePrompt.split('')).join('') : ''
-  }
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
+    loading.set(true)
     return saveChoodle(undoStack, canvas, {
       gamePrompt: $gamePrompt || null,
       creatorId: await getCreatorId()
@@ -37,39 +34,11 @@
     if (!browser) return;
     if (!result._id) return;
 
-    const url = `${window.location.origin}/game/cwf/guess/${result._id}`
-    const shareCopy = `Can you guess what this is?` // TODO: use cms copy
-    const text = [shareCopy, gamePromptTiles, url].join(`\n`)
-    const shareable = {text};
-    if (canShare(shareable)) {
-      await share(shareable, () => {
-        console.log('Thanks for sharing!');
-        goto('/game/cwf/pick')
-      })
-    } else {
-      // TODO: copy the share text + url to clipboard instead of navigate
-      await goto(`/game/cwf/guess/${result._id}`)
-    }
+    await goto(`/game/cwf/guess/${result._id}`)
 
     await clearStorage()
     loading.set(false)
   }
-
-  const canShare = (shareable?): boolean => {
-    if (!browser) return false;
-    if (!navigator.share) return false;
-
-    return navigator.canShare(shareable)
-  }
-
-  const share = async (shareable, onSuccess) => {
-    if (!browser) return;
-
-    console.log(`sharing:`, shareable)
-
-    navigator.share(shareable).then(onSuccess).catch(console.error);
-  };
-
 
   onMount(async () => {
     if (!browser) return;
@@ -87,13 +56,17 @@
   })
 </script>
 
-<ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
-  <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="prompt"/>
-  <div id="buttons" slot="buttons">
-    <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
-    <Button on:click={child.save} isOnline={isOnline} colour="yellow">{data.copy.draw_doneButtonText}</Button>
-  </div>
-</ChoodleBoard>
+{#if !$loading}
+  <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
+    <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="prompt"/>
+    <div id="buttons" slot="buttons">
+      <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
+      <Button on:click={child.save} isOnline={isOnline} colour="yellow">{data.copy.draw_doneButtonText}</Button>
+    </div>
+  </ChoodleBoard>
+{:else}
+  <LoadingIndicator/>
+{/if}
 
 <style>
   #buttons {
