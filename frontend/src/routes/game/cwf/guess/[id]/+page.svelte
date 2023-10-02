@@ -80,7 +80,7 @@
     align-content: center;
     justify-content: space-between;
     align-items: center;
-    height: 100vh;
+    height: 100svh;
     height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
   }
 
@@ -96,7 +96,7 @@
     padding: 0;
     flex-grow: 1;
     flex-shrink: 1;
-    max-height: 50%;
+    max-height: 50dvh;
     max-width: 100%;
     aspect-ratio: 3/4;
   }
