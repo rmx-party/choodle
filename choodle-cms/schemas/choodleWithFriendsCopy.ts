@@ -61,6 +61,11 @@ export default {
       type: 'string',
     },
     {
+      name: 'guess_copiedToClipboard',
+      title: 'Guess Page Copied to Clipboard Text',
+      type: 'string',
+    },
+    {
       name: 'guess_incorrectFeedbackText',
       title: 'Guess Page Incorrect Guess Feedback Text',
       type: 'string',

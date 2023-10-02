@@ -21,6 +21,7 @@
   let guessesLimit = 3;
 
   let choodleOwner = false;
+  let copiedToClipboard = false;
 
   const check = (event: Event) => {
     event.preventDefault();
@@ -45,7 +46,8 @@
     return navigator.canShare(shareable)
   }
 
-  const share = async () => {
+  const share = async (event: Event) => {
+    event.preventDefault()
     if (!browser) return;
 
     let gamePromptTiles = data.choodle.gamePrompt ? fp.map((char) => (char === ' ') ? '⬜' : '🟨', data.choodle.gamePrompt.split('')).join('') : ''
@@ -59,9 +61,11 @@
 
     if (canShare(shareable)) {
       console.log('Thanks for sharing!');
-      navigator.share(shareable).catch(console.error);
+      navigator.share(shareable);
     } else {
-      // TODO: copy to clipboard, and tell the user
+      console.log(`copied "${text}" to clipboard`)
+      await navigator.clipboard.writeText(text);
+      copiedToClipboard = true;
     }
   }
 
@@ -103,7 +107,8 @@
       </form>
     {/if}
   {:else}
-    <Button colour="yellow" variant="primary" on:click={share}>{data.copy.guess_shareButtonText}</Button>
+    <Button colour="yellow" variant="primary"
+            on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
   {/if}
 </div>
 
