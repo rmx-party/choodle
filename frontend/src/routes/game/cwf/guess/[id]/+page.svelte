@@ -46,7 +46,9 @@
       width='390' height='520' alt=''/>
   </div>
   {#if guessesRemaining < 1}
-    <p class="failure">{data.copy.guess_failureMessageText}</p>
+    {#if data.copy.guess_failureMessageText}
+      <p class="failure">{data.copy.guess_failureMessageText}</p>
+    {/if}
     {#if data.copy.guess_failureRightAnswerText}
       <p>{data.copy.guess_failureRightAnswerText} <code>{data.choodle.gamePrompt}</code></p>
     {/if}
@@ -55,6 +57,9 @@
     </Button>
   {:else}
     <form id="guessForm" on:submit={check}>
+      {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
+        <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
+      {/if}
       <CharacterInput {submitEnabled} format={data.choodle.gamePrompt} {currentGuess} focusOnMount/>
       <Button colour="yellow" variant="primary">{data.copy.guess_doneButtonText}</Button>
     </form>

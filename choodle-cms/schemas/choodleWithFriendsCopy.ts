@@ -56,6 +56,11 @@ export default {
       type: 'string',
     },
     {
+      name: 'guess_incorrectFeedbackText',
+      title: 'Guess Page Incorrect Guess Feedback Text',
+      type: 'string',
+    },
+    {
       name: 'guess_failureMessageText',
       title: 'Guess Page Failure Message Text',
       type: 'string',
