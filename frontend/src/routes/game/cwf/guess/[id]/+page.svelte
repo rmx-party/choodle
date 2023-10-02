@@ -81,7 +81,9 @@
 />
 
 <div class="flex-container">
-  <GuessingHUD content={data.copy.guess_pageTopContent} {guessesRemaining} {guessesLimit}/>
+  {#if !choodleOwner}
+    <GuessingHUD content={data.copy.guess_pageTopContent} {guessesRemaining} {guessesLimit}/>
+  {/if}
   <div class="choodle-container">
     <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
          width='390' height='520' alt=''/>
