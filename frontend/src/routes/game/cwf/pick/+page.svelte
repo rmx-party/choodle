@@ -27,7 +27,8 @@
     rotatePrompts();
   })
 
-  const rotatePrompts = () => {
+  const rotatePrompts = (event?: Event) => {
+    event?.preventDefault();
     const [head, ...tail] = prompts;
 
     if (head === initialPrompt) {
