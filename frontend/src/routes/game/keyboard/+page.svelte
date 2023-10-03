@@ -51,7 +51,6 @@
       updateAtCursor(key)
       moveCursorRightHandlingSpace()
     }
-    // handle spaces
 
     if (key === "BACKSPACE") {
       moveCursorLeftHandlingSpace()
