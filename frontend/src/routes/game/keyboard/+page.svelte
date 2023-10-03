@@ -16,7 +16,7 @@
     }
   }
 
-  const moveCursorLeftHandlingspace = () => {
+  const moveCursorLeftHandlingSpace = () => {
     moveCursorLeft()
 
     if (format[$cursorLocation] === " ") {
@@ -54,7 +54,7 @@
     // handle spaces
 
     if (key === "BACKSPACE") {
-      moveCursorLeftHandlingspace()
+      moveCursorLeftHandlingSpace()
       updateAtCursor('')
     }
   }
