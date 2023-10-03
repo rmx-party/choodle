@@ -25,7 +25,7 @@
   let copiedToClipboard = false;
 
   const check = () => {
-    if ($currentGuess.length !== data.choodle.gamePrompt.length) return;
+    if ($currentGuess.length < data.choodle.gamePrompt.length) return;
 
     guessesRemaining--;
     console.log(`checking answer, ${guessesRemaining} guesses left`)
