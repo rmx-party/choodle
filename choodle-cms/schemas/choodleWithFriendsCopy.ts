@@ -45,6 +45,12 @@ export default {
       type: 'string',
     },
     {
+      name: 'guess_pageAuthorTopContent',
+      title: 'Guess Page Top Content For Author',
+      type: 'array',
+      of: [{type: 'block'}]
+    },
+    {
       name: 'guess_pageTopContent',
       title: 'Guess Page Top Content',
       type: 'array',

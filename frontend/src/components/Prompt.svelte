@@ -10,7 +10,7 @@
     <div class="prompt">
         <img src={handDraw}/>
         <p class="daily-prompt">
-            <span><strong>{instruction} </strong>‘{prompt}’</span>
+            <span><strong>{instruction} </strong>{prompt.toUpperCase()}</span>
         </p>
     </div>
 {:else}

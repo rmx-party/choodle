@@ -81,14 +81,22 @@
 />
 
 <div class="flex-container">
-  {#if !choodleOwner}
+  {#if choodleOwner}
+    <GuessingHUD content={data.copy.guess_pageAuthorTopContent}/>
+  {:else}
     <GuessingHUD content={data.copy.guess_pageTopContent} {guessesRemaining} {guessesLimit}/>
   {/if}
   <div class="choodle-container">
     <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
          width='390' height='520' alt=''/>
   </div>
-  {#if !choodleOwner}
+  {#if choodleOwner}
+    <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
+    <div>
+      <Button colour="yellow"
+            on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+    </div>
+  {:else}
     {#if guessesRemaining < 1}
       {#if data.copy.guess_failureMessageText}
         <p class="failure">{data.copy.guess_failureMessageText}</p>
@@ -108,9 +116,6 @@
         <Button colour="yellow" variant="primary">{data.copy.guess_doneButtonText}</Button>
       </form>
     {/if}
-  {:else}
-    <Button colour="yellow" variant="primary"
-            on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
   {/if}
 </div>
 
