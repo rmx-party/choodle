@@ -102,7 +102,8 @@
         <p class="failure">{data.copy.guess_failureMessageText}</p>
       {/if}
       {#if data.copy.guess_failureRightAnswerText}
-        <p>{data.copy.guess_failureRightAnswerText} <code>{data.choodle.gamePrompt}</code></p>
+        <p>{data.copy.guess_failureRightAnswerText}</p>
+        <p><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></p>
       {/if}
       <div>
         <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
