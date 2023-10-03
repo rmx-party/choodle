@@ -40,6 +40,8 @@
   }
 
   const updateAtCursor = (key) => {
+    if ($cursorLocation > format.length) return;
+
     inputDisplay.update(currentInputDisplay => {
       currentInputDisplay[$cursorLocation] = key
       return currentInputDisplay
