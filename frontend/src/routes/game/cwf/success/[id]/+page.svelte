@@ -1,9 +1,10 @@
 <script lang="ts">
-  import Button from "../../../../components/Button.svelte";
+  import Button from "../../../../../components/Button.svelte";
   import {goto} from "$app/navigation";
   import {onMount} from "svelte";
   import {browser} from "$app/environment";
   import {toHTML} from "@portabletext/to-html";
+  import {urlFor} from "$lib/PersistedImagesUtils";
 
   export let data;
 
@@ -21,8 +22,16 @@
     {@html toHTML(data.copy.success_topContent)}
   </div>
 
+  <div class="choodle-container">
+    <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
+         width='390' height='520' alt=''/>
+  </div>
+
+  <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
+
   <div>
-    <Button on:click={() => { goto('/game/cwf/pick')}} colour="yellow">{data.copy.success_continueGameButtonText}</Button>
+    <Button on:click={() => { goto('/game/cwf/pick')}}
+            colour="yellow">{data.copy.success_continueGameButtonText}</Button>
   </div>
 </div>
 

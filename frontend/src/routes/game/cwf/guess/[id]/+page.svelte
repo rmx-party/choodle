@@ -36,7 +36,7 @@
     }
 
     console.log(`right answer, you won the thing`)
-    goto('/game/cwf/success')
+    goto(`/game/cwf/success/${data.choodle._id}`)
   }
 
   const canShare = (shareable?): boolean => {
@@ -94,7 +94,7 @@
     <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
     <div>
       <Button colour="yellow"
-            on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+              on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
     </div>
   {:else}
     {#if guessesRemaining < 1}
