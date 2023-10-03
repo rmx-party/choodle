@@ -42,6 +42,9 @@
   }
 </script>
 
+<strong>{format.join('')}</strong>
+<br/>
+
 <GuessInput format={format} display={$inputDisplay} cursorLocation={$cursorLocation}/>
 <br/>
 <Keyboard onKeyPress={handleKeyPress}/>
