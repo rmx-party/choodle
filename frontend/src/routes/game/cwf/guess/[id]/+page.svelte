@@ -104,16 +104,18 @@
       {#if data.copy.guess_failureRightAnswerText}
         <p>{data.copy.guess_failureRightAnswerText} <code>{data.choodle.gamePrompt}</code></p>
       {/if}
-      <Button colour="yellow" variant="primary" on:click={() => {goto(`/game/cwf/pick`)}}>
-        {data.copy.guess_failureNewGameButtonText}
-      </Button>
+      <div>
+        <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
+          {data.copy.guess_failureNewGameButtonText}
+        </Button>
+      </div>
     {:else}
+      {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
+        <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
+      {/if}
       <form id="guessForm" on:submit={check}>
-        {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
-          <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
-        {/if}
         <CharacterInput {submitEnabled} format={data.choodle.gamePrompt} {currentGuess} focusOnMount/>
-        <Button colour="yellow" variant="primary">{data.copy.guess_doneButtonText}</Button>
+        <Button colour="yellow">{data.copy.guess_doneButtonText}</Button>
       </form>
     {/if}
   {/if}
@@ -132,8 +134,12 @@
     flex-wrap: nowrap;
     align-content: center;
     align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
     height: 100svh;
     height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
+
+    padding-bottom: 1rem;
   }
 
   :root {
