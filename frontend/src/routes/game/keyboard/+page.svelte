@@ -42,5 +42,6 @@
   }
 </script>
 
-<Keyboard onKeyPress={handleKeyPress}/>
 <GuessInput format={format} display={$inputDisplay} cursorLocation={$cursorLocation}/>
+<br/>
+<Keyboard onKeyPress={handleKeyPress}/>

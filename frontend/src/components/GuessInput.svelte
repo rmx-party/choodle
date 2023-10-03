@@ -4,8 +4,6 @@
   export let cursorLocation;
 </script>
 
-<p>{cursorLocation}</p>
-
 <div class="input">
   {#each format as formatCharacter, i}
     <div class="character {i == cursorLocation ? 'cursor' : ''}">
