@@ -65,7 +65,7 @@
     </div>
   </ChoodleBoard>
 {:else}
-  <LoadingIndicator/>
+  <LoadingIndicator explanation={'saving'}/>
 {/if}
 
 <style>
