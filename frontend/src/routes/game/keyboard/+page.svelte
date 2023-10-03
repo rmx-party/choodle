@@ -57,8 +57,6 @@
       moveCursorLeftHandlingspace()
       updateAtCursor('')
     }
-
-    console.log($inputDisplay.join(''))
   }
 </script>
 
