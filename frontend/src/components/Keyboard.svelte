@@ -40,13 +40,19 @@
       window.removeEventListener("keyup", keyUpListener)
     }
   })
+
+  const displayKey = (key) => {
+    if (key === 'BACKSPACE') return '⌫'
+    if (key === 'ENTER') return '⏎'
+    return key
+  }
 </script>
 
 <div class="keyboard">
   {#each keyRows as row}
     <div class="keyboardRow">
       {#each row as key}
-        <div class="keyboardKey" on:click={handleKeyPress} data-key="{key}">{key}</div>
+        <div class="keyboardKey" on:click={handleKeyPress} data-key="{key}">{displayKey(key)}</div>
       {/each}
     </div>
   {/each}
