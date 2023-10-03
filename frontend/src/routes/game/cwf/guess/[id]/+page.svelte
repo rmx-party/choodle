@@ -7,7 +7,7 @@
   import {page} from "$app/stores";
   import MetaData from "../../../../../components/MetaData.svelte";
   import {onMount} from "svelte";
-  import {getCreatorId} from "$lib/CreatorIdUtils";
+  import {getDeviceId} from "$lib/DeviceIdUtils";
   import {browser} from "$app/environment";
   import fp from "lodash/fp";
   import GuessingInterface from "../../GuessingInterface.svelte";
@@ -72,7 +72,7 @@
   }
 
   onMount(async () => {
-    choodleOwner = data.choodle.creatorId === await getCreatorId()
+    choodleOwner = data.choodle.creatorId === await getDeviceId()
   })
 </script>
 

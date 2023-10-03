@@ -16,7 +16,7 @@
   import type {UndoStack} from "$lib/UndoStack";
   import ChoodleBoard from "./ChoodleBoard.svelte";
   import {saveChoodle} from "$lib/ChoodleStorage";
-  import {getCreatorId} from "$lib/CreatorIdUtils";
+  import {getDeviceId} from "$lib/DeviceIdUtils";
 
   export let id;
   export let prompt;
@@ -101,7 +101,7 @@
   }
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
-    const asyncCreatorId = (async () => await getCreatorId())()
+    const asyncCreatorId = (async () => await getDeviceId())()
 
     return saveChoodle(undoStack, canvas, {
       creatorId: await asyncCreatorId,

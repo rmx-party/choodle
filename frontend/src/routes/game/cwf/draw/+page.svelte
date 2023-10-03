@@ -4,7 +4,7 @@
   import Prompt from "../../../../components/Prompt.svelte";
   import {writable} from "svelte/store";
   import {saveChoodle} from "$lib/ChoodleStorage";
-  import {getCreatorId} from "$lib/CreatorIdUtils";
+  import {getDeviceId} from "$lib/DeviceIdUtils";
   import {browser} from "$app/environment";
   import {clearStorage} from "$lib/StorageStuff";
   import {goto} from "$app/navigation";
@@ -26,7 +26,7 @@
     loading.set(true)
     return saveChoodle(undoStack, canvas, {
       gamePrompt: $gamePrompt || null,
-      creatorId: await getCreatorId()
+      creatorId: await getDeviceId()
     })
   }
 
