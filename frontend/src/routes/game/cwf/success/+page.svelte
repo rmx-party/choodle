@@ -21,8 +21,9 @@
     {@html toHTML(data.copy.success_topContent)}
   </div>
 
-  <Button on:click={() => { goto('/game/cwf/pick')}} colour="yellow"
-          variant="primary">{data.copy.success_continueGameButtonText}</Button>
+  <div>
+    <Button on:click={() => { goto('/game/cwf/pick')}} colour="yellow">{data.copy.success_continueGameButtonText}</Button>
+  </div>
 </div>
 
 
