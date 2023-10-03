@@ -7,6 +7,24 @@
   let cursorLocation = writable(0)
   let format = "FOO BAR".split('')
 
+  const moveCursorRightHandlingSpace = () => {
+    moveCursorRight()
+
+    if (format[$cursorLocation] === " ") {
+      updateAtCursor(' ')
+      moveCursorRight()
+    }
+  }
+
+  const moveCursorLeftHandlingspace = () => {
+    moveCursorLeft()
+
+    if (format[$cursorLocation] === " ") {
+      updateAtCursor(' ')
+      moveCursorLeft()
+    }
+  }
+
   const moveCursorRight = () => {
     if ($cursorLocation === format.length) return;
 
@@ -31,14 +49,16 @@
   const handleKeyPress = (key: string) => {
     if (key !== "BACKSPACE" && key !== "ENTER") {
       updateAtCursor(key)
-      moveCursorRight()
+      moveCursorRightHandlingSpace()
     }
     // handle spaces
 
     if (key === "BACKSPACE") {
-      moveCursorLeft()
+      moveCursorLeftHandlingspace()
       updateAtCursor('')
     }
+
+    console.log($inputDisplay.join(''))
   }
 </script>
 
