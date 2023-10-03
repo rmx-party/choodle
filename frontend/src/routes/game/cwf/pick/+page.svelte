@@ -92,4 +92,12 @@
   #cta {
     width: 100%;
   }
+
+  input[disabled] {
+    background-color: white;
+    color: var(--choodle-black);
+    border: 0.15rem solid var(--choodle-black);
+    border-radius: 0.3rem;
+    max-width: 20ch;
+  }
 </style>
