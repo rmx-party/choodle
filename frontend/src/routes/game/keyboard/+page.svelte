@@ -8,7 +8,7 @@
   let format = "FOOBAR".split('')
 
   const moveCursorRight = () => {
-    if ($cursorLocation === format.length - 1) return;
+    if ($cursorLocation === format.length) return;
 
     cursorLocation.update(currentCursorLocation => currentCursorLocation + 1)
   }
@@ -36,11 +36,11 @@
     // handle spaces
 
     if (key === "BACKSPACE") {
-      updateAtCursor('')
       moveCursorLeft()
+      updateAtCursor('')
     }
   }
 </script>
 
 <Keyboard onKeyPress={handleKeyPress}/>
-<GuessInput format={format} display={$inputDisplay.join('')} cursorLocation={$cursorLocation}/>
+<GuessInput format={format} display={$inputDisplay} cursorLocation={$cursorLocation}/>
