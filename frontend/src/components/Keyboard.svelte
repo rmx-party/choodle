@@ -11,7 +11,6 @@
   export let onKeyPress;
 
   const handleKeyInput = (input) => {
-    console.log("pressed: ", input)
     onKeyPress(input)
   }
 

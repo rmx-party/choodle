@@ -1,6 +1,5 @@
 <script lang="ts">
   import {urlFor} from '$lib/PersistedImagesUtils.js';
-  import CharacterInput from "./CharacterInput.svelte";
   import {writable} from "svelte/store";
   import GuessingHUD from "../../../../../components/GuessingHUD.svelte";
   import Button from "../../../../../components/Button.svelte";
@@ -11,10 +10,12 @@
   import {getCreatorId} from "$lib/CreatorIdUtils";
   import {browser} from "$app/environment";
   import fp from "lodash/fp";
+  import GuessingInterface from "../../GuessingInterface.svelte";
 
   export let data;
-  const currentGuess = writable('')
-  const submitEnabled = writable(false)
+  const currentGuess = writable([])
+  const cursorLocation = writable(0)
+
 
   // TODO: CMS manageed
   let guessesRemaining = 3;
@@ -23,15 +24,16 @@
   let choodleOwner = false;
   let copiedToClipboard = false;
 
-  const check = (event: Event) => {
-    event.preventDefault();
+  const check = () => {
+    if ($currentGuess.length !== data.choodle.gamePrompt.length) return;
 
     guessesRemaining--;
     console.log(`checking answer, ${guessesRemaining} guesses left`)
 
-    if ($currentGuess.toLowerCase() !== data.choodle.gamePrompt.toLowerCase()) {
+    if ($currentGuess.join('').toUpperCase() !== data.choodle.gamePrompt.toUpperCase()) {
       console.log(`wrong`)
-      currentGuess.set('')
+      currentGuess.set([])
+      cursorLocation.set(0)
       return;
     }
 
@@ -114,10 +116,8 @@
       {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
         <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
       {/if}
-      <form id="guessForm" on:submit={check}>
-        <CharacterInput {submitEnabled} format={data.choodle.gamePrompt} {currentGuess} focusOnMount/>
-        <Button colour="yellow">{data.copy.guess_doneButtonText}</Button>
-      </form>
+      <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
+                         cursorLocation={cursorLocation} onEnter={check}/>
     {/if}
   {/if}
 </div>

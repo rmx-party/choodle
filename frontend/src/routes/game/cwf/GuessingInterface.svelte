@@ -3,9 +3,12 @@
   import GuessInput from "../../../components/GuessInput.svelte";
   import {writable} from "svelte/store";
 
-  let inputDisplay = writable([])
-  let cursorLocation = writable(0)
-  let format = "FOO BAR".split('')
+  export let format
+  export let inputDisplay = writable([])
+  export let cursorLocation = writable(0)
+  export let onEnter = () => {
+  }
+
 
   const moveCursorRightHandlingSpace = () => {
     moveCursorRight()
@@ -58,7 +61,7 @@
     }
 
     if (key === "ENTER") {
-      // handle Enter
+      onEnter()
     }
   }
 </script>
