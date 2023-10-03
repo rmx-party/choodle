@@ -56,6 +56,10 @@
       moveCursorLeftHandlingSpace()
       updateAtCursor('')
     }
+
+    if (key === "ENTER") {
+      // handle Enter
+    }
   }
 </script>
 
