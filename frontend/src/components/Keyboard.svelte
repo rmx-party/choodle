@@ -52,7 +52,7 @@
   {#each keyRows as row}
     <div class="keyboardRow">
       {#each row as key}
-        <div class="keyboardKey" on:click={handleKeyPress} data-key="{key}">{displayKey(key)}</div>
+        <button class="keyboardKey" on:click={handleKeyPress} data-key="{key}">{displayKey(key)}</button>
       {/each}
     </div>
   {/each}
