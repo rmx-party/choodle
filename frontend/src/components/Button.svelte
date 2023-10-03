@@ -38,7 +38,7 @@
         justify-content: center;
         align-items: center;
         display: inline-flex;
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 3.5rem;
         margin: 0.25rem auto;
         border: none;
 
