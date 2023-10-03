@@ -5,7 +5,7 @@
 
   let inputDisplay = writable([])
   let cursorLocation = writable(0)
-  let format = "FOOBAR".split('')
+  let format = "FOO BAR".split('')
 
   const moveCursorRight = () => {
     if ($cursorLocation === format.length) return;
