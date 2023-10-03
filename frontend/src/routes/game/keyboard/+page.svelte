@@ -26,7 +26,7 @@
   }
 
   const moveCursorRight = () => {
-    if ($cursorLocation === format.length) return;
+    if ($cursorLocation >= format.length) return;
 
     cursorLocation.update(currentCursorLocation => currentCursorLocation + 1)
   }
