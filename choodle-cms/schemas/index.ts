@@ -20,4 +20,5 @@ export const schemaTypes = [
   choodleWithFriendsCopy,
   creator,
   challenge,
+  points
 ]
