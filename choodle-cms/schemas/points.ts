@@ -24,4 +24,5 @@ export default {
       title: 'Reason the points were awarded',
       type: 'string'
     },
+  ]
 }

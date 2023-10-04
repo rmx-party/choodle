@@ -121,6 +121,18 @@
     child.save(event)
   }
 
+  const addPoints = async (creatorId, amount, reason) => {
+    await readWriteClient.create(
+      {
+        _type: "points",
+        creator: {_ref: creatorId},
+        game: 'defcon',
+        amount,
+        reason,
+      }
+    )
+  }
+
   const afterSave = async (result) => {
     if (!browser) return;
     if (!result._id) return;
@@ -131,6 +143,7 @@
     createChallenge({choodle: result, prompt: $gamePrompt, challenger: challenger})
     addChoodleToCreator(result._id, await getDeviceId())
 
+    addPoints(challenger._id, 10, "Creating a challenge.")
     // take us to the home page
     await goto(`/game/defcon/guess/${result._id}`)
 
