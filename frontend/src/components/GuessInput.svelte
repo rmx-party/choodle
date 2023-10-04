@@ -1,10 +1,10 @@
 <script lang="ts">
-  export let format;
-  export let display;
-  export let cursorLocation;
+  export let format: string[];
+  export let display: string[];
+  export let cursorLocation: number;
 </script>
 
-<div class="input">
+<div class="input" {...$$restProps}>
   {#each format as formatCharacter, i}
     <div class="{formatCharacter === ' ' ? 'space' : 'character'} {i === cursorLocation ? 'cursor' : ''}">
       {display[i] || ' '}
@@ -13,16 +13,21 @@
 </div>
 
 <style>
+  :root {
+    --bgcolor: white;
+  }
   .input {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
   }
 
   .character {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: white;
+    background: var(--bgcolor, green);
     border-radius: 0.25rem;
     border: 2px solid black;
     padding: 0.1rem;
