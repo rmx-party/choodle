@@ -4,8 +4,8 @@
 
   const keyRows = [
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-    ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACKSPACE'],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'BACKSPACE'],
+    ['Z', 'X', 'C', 'V', 'B', 'N', 'M', 'ENTER']
   ]
 
   export let onKeyPress;
@@ -40,9 +40,9 @@
     }
   })
 
-  const displayKey = (key) => {
+  const displayKey = (key: string) => {
     if (key === 'BACKSPACE') return '⌫'
-    if (key === 'ENTER') return '⏎'
+    if (key === 'ENTER') return 'ᴇɴᴛᴇʀ'
     return key
   }
 </script>
@@ -58,22 +58,31 @@
 </div>
 
 <style>
-  .keyboard {
+  .keyboard, .keyboardRow, .keyboardKey {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.375rem;
+    text-align: center;
+  }
+  .keyboard {
     flex-direction: column;
+    padding: 0.5rem;
+    max-width: 100%;
   }
 
   .keyboardRow {
-    display: flex;
     flex-direction: row;
   }
 
   .keyboardKey {
-    text-align: center;
-    background: white;
-    border-radius: 0.25rem;
-    width: 2rem;
+    min-width: 2rem;
+    min-height: 2rem;
+
     padding: 0.5rem;
-    margin: 0.1rem;
+    border: none;
+    border-radius: 0.0625rem;
+    background: hsla(0, 0%, 83%, 1);
+    color: var(--choodle-black);
   }
 </style>
