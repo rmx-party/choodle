@@ -4,6 +4,11 @@ export default {
   title: 'Creator',
   fields: [
     {
+      name: 'username',
+      type: 'string',
+      title: 'Username of creator',
+    },
+    {
       name: 'email',
       type: 'string',
       title: 'Email address of creator, not verified',
