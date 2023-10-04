@@ -1,43 +1,31 @@
 <script lang="ts">
-  import {toHTML} from "@portabletext/to-html";
+  import TopBar from "./TopBar.svelte";
 
-  export let content = '';
   export let guessesRemaining: number | undefined = undefined;
   export let guessesLimit: number | undefined = undefined;
 </script>
 
-{#if content}
-  <div class="topBar">
-    <div class="content">{@html toHTML(content)}</div>
+<TopBar>
+  <div slot="topBarContent" class="guessingHUDInner">
+    <slot name="content"/>
 
     {#if guessesRemaining !== undefined && guessesLimit !== undefined}
       <div class="guessCounter">
-        <span>Tries</span>
-        <br/>
         <span>
-          <span>{guessesLimit - guessesRemaining}</span>/<span>{guessesLimit}</span>
+          <span>{guessesRemaining}</span>/<span>{guessesLimit}</span>
         </span>
       </div>
     {/if}
   </div>
-{:else}
-  <span style="display:none;">no prompt</span>
-{/if}
-
+</TopBar>
 
 <style>
-  .topBar {
-    display: flex;
+  .guessingHUDInner {
     width: 100%;
-    padding: 1rem 1rem 0.75rem 1rem;
+    display: flex;
     align-items: center;
     gap: 0.625rem;
     flex-direction: row;
     justify-content: space-between;
-
-    border-radius: 0rem 0rem 0.75rem 0.75rem;
-    background: var(--choodle-yellow, #FEF40A);
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
-    backdrop-filter: blur(71.56488800048828px);
   }
 </style>

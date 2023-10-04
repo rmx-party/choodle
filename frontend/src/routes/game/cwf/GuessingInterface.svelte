@@ -3,12 +3,10 @@
   import GuessInput from "../../../components/GuessInput.svelte";
   import {writable} from "svelte/store";
 
-  export let format
+  export let format: string[] = []
   export let inputDisplay = writable([])
   export let cursorLocation = writable(0)
-  export let onEnter = () => {
-  }
-
+  export let onEnter = () => { return }
 
   const moveCursorRightHandlingSpace = () => {
     moveCursorRight()
@@ -42,12 +40,13 @@
     cursorLocation.update(currentCursorLocation => currentCursorLocation - 1)
   }
 
-  const updateAtCursor = (key) => {
+  const updateAtCursor = (key: string) => {
     if ($cursorLocation > format.length - 1) return;
 
     inputDisplay.update(currentInputDisplay => {
-      currentInputDisplay[$cursorLocation] = key
-      return currentInputDisplay
+      const newInput = [...currentInputDisplay]
+      newInput[$cursorLocation] = key
+      return newInput
     })
   }
 
@@ -68,9 +67,8 @@
   }
 </script>
 
-<strong>{format.join('')}</strong>
-<br/>
-
 <GuessInput format={format} display={$inputDisplay} cursorLocation={$cursorLocation}/>
-<br/>
+
+<slot name="between" />
+
 <Keyboard onKeyPress={handleKeyPress}/>

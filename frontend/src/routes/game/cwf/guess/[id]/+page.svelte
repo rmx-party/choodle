@@ -2,6 +2,7 @@
   import {urlFor} from '$lib/PersistedImagesUtils.js';
   import {writable} from "svelte/store";
   import GuessingHUD from "../../../../../components/GuessingHUD.svelte";
+  import TopBar from "../../../../../components/TopBar.svelte";
   import Button from "../../../../../components/Button.svelte";
   import {goto} from "$app/navigation";
   import {page} from "$app/stores";
@@ -11,11 +12,12 @@
   import {browser} from "$app/environment";
   import fp from "lodash/fp";
   import GuessingInterface from "../../GuessingInterface.svelte";
+  import GuessInput from "../../../../../components/GuessInput.svelte";
+  import {toHTML} from "@portabletext/to-html";
 
   export let data;
   const currentGuess = writable([])
   const cursorLocation = writable(0)
-
 
   // TODO: CMS manageed
   let guessesRemaining = 3;
@@ -72,7 +74,7 @@
   }
 
   onMount(async () => {
-    choodleOwner = data.choodle.creatorId === await getDeviceId()
+    choodleOwner = (data.choodle.creatorId === await getDeviceId())
   })
 </script>
 
@@ -84,14 +86,24 @@
 
 <div class="flex-container">
   {#if choodleOwner}
-    <GuessingHUD content={data.copy.guess_pageAuthorTopContent}/>
+    <TopBar>
+      <div slot="topBarContent">
+        {@html toHTML(data.copy.guess_pageAuthorTopContent)}
+      </div>
+    </TopBar>
   {:else}
-    <GuessingHUD content={data.copy.guess_pageTopContent} {guessesRemaining} {guessesLimit}/>
+    <GuessingHUD {guessesRemaining} {guessesLimit}>
+      <div slot="content">
+        {@html toHTML(data.copy.guess_pageTopContent)}
+      </div>
+    </GuessingHUD>
   {/if}
+
   <div class="choodle-container">
     <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
          width='390' height='520' alt=''/>
   </div>
+
   {#if choodleOwner}
     <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
     <div>
@@ -100,14 +112,14 @@
     </div>
   {:else}
     {#if guessesRemaining < 1}
-      {#if data.copy.guess_failureMessageText}
-        <p class="failure">{data.copy.guess_failureMessageText}</p>
-      {/if}
-      {#if data.copy.guess_failureRightAnswerText}
-        <p>{data.copy.guess_failureRightAnswerText}</p>
-        <p><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></p>
-      {/if}
-      <div>
+      <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
+      <GuessInput
+        format={data.choodle.gamePrompt.split('')}
+        display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
+        cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
+
+      <p><!-- layout placeholder --> </p>
+      <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
         <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
           {data.copy.guess_failureNewGameButtonText}
         </Button>
@@ -115,9 +127,19 @@
     {:else}
       {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
         <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
+      {:else}
+        <p><!-- layout placeholder --> </p>
       {/if}
       <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
-                         cursorLocation={cursorLocation} onEnter={check}/>
+        cursorLocation={cursorLocation} onEnter={check}>
+        <div slot="between">
+          {#if 'hint message data tbd'}
+            <p><a>Need a hint?</a></p>
+          {:else}
+            <p><!-- layout placeholder --> </p>
+          {/if}
+        </div>
+      </GuessingInterface>
     {/if}
   {/if}
 </div>
@@ -149,18 +171,19 @@
 
   .choodle-container {
     flex-grow: 1;
-    margin: 2rem auto;
     display: flex;
     align-items: center;
     padding: 0;
     flex-grow: 1;
     flex-shrink: 1;
-    max-height: 50dvh;
+    /* max-height: calc(100svh - 20rem); */
+    max-height: 15rem; /* TODO: use breakpoints to allow this to scale up based on available screen */
     max-width: 100%;
     aspect-ratio: 3/4;
   }
 
   img.choodle {
+    object-fit: contain;
     flex-shrink: 1;
     flex-grow: 1;
     max-height: 100%;
