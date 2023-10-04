@@ -145,7 +145,7 @@
 
     addPoints(challenger._id, 10, "Creating a challenge.")
     // take us to the home page
-    await goto(`/game/defcon/guess/${result._id}`)
+    await goto(`/game/defcon`)
 
     await clearStorage()
     loading.set(false)

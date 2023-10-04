@@ -40,6 +40,10 @@
     }
   }
 
+  const hasCreatedAChallenge = () => {
+    return false;
+  }
+
   onMount(async () => {
     if (!browser) return;
 
@@ -50,7 +54,9 @@
 </script>
 
 <div class="container">
-  <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
+  {#if !hasCreatedAChallenge()}
+    <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
+  {/if}
 
   <section class="live-games">
     <strong>Live games</strong>
