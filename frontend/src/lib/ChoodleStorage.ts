@@ -10,7 +10,7 @@ const uploadImageBlob = (imageBlob: Blob) => {
   return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
 }
 
-const addChoodleToCreator = async (choodleId, deviceId) => {
+export const addChoodleToCreator = async (choodleId, deviceId) => {
   // find a creator by this creatorId
 
   const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
