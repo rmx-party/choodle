@@ -45,11 +45,13 @@ export async function getUsername(): Promise<string | undefined> {
 }
 
 
-export const locateCreator = async ({username, deviceId, email}: {
-  username: string | undefined,
-  deviceId: string | undefined,
-  email: string | undefined
+export const locateCreator = async ({username, deviceId, email}: { // TODO: make it a find or create so it can be used everywhere we need a reference
+  username?: string | undefined,
+  deviceId?: string | undefined,
+  email?: string | undefined
 }) => {
+  if (!deviceId) { deviceId = await getDeviceId() }
+  console.log(`locateCreator: ${deviceId} ${username} ${email}`)
   let query = `*[_type == "creator"][deviceIds match "${deviceId}"`
   if (email) {
     query += ` || email match "${email}"`
@@ -58,6 +60,8 @@ export const locateCreator = async ({username, deviceId, email}: {
     query += ` || username match "${username}"`
   }
   query += "]"
-  return (await readOnlyClient.fetch(query))[0]
+  const creator = (await readOnlyClient.fetch(query))[0]
+  console.log({creator})
+  return creator
 }
 

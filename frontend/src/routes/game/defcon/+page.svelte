@@ -3,9 +3,11 @@
   import {onMount} from "svelte";
   import Button from "../../../components/Button.svelte";
   import {browser} from "$app/environment";
+	import { getDeviceId, getEmail, getUsername, locateCreator } from "$lib/CreatorUtils";
 
   export let data
-  
+  let playerId
+
   // TODO: CMS-populate all the copy / non-dynamic html contents
 
   const startGame = async () => {
@@ -15,12 +17,6 @@
   const nudge = (gameId) => {
     return async (event) => {
       // TODO: handle nudge for a game awaiting an action from the other player
-    }
-  }
-
-  const draw = (gameId) => {
-    return async (event) => {
-      // TODO: start a new prompt pick to add a drawing to an existing game
     }
   }
 
@@ -34,6 +30,13 @@
     // Explicitly reset bg color since it sticks after being set on next page and then navigating back
     let root = document.documentElement;
     root.style.setProperty('--page-background-color', 'rgba(20, 21, 24, 0.03)');
+
+    playerId = (await locateCreator({
+      email: await getEmail(),
+      username: await getUsername(),
+      deviceId: await getDeviceId()
+    }))._id; // TODO: migrate global creator/player state to a store shared across pages
+
   })
 </script>
 
