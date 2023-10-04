@@ -4,7 +4,7 @@
   import Prompt from "../../../../components/Prompt.svelte";
   import {writable} from "svelte/store";
   import {saveChoodle} from "$lib/ChoodleStorage";
-  import {getDeviceId} from "$lib/DeviceIdUtils";
+  import {getDeviceId} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
   import {clearStorage} from "$lib/StorageStuff";
   import {goto} from "$app/navigation";

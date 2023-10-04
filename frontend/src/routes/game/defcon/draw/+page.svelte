@@ -4,13 +4,16 @@
   import Prompt from "../../../../components/Prompt.svelte";
   import {writable} from "svelte/store";
   import {addChoodleToCreator, saveChoodle} from "$lib/ChoodleStorage";
-  import {getDeviceId} from "$lib/DeviceIdUtils";
+  import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
   import {clearStorage, getUndoStack} from "$lib/StorageStuff";
   import {goto} from "$app/navigation";
   import {onMount, SvelteComponent} from "svelte";
   import localforage from "localforage";
-  import {choodleCreatorEmailKey, choodleCreatorUsernameKey, choodlePromptKey} from "$lib/Configuration";
+  import {
+    choodleCreatorUsernameKey,
+    choodlePromptKey
+  } from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
   import {dialogState, loading} from "$lib/store";
   import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
@@ -33,20 +36,6 @@
       gamePrompt: $gamePrompt || null,
       creatorId: await getDeviceId()
     })
-  }
-
-  const locateCreator = async () => {
-    const deviceId = getDeviceId()
-    const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
-    let query = `*[_type == "creator"][deviceIds match "${deviceId}"`
-    if (creatorEmail) {
-      query += ` || email match "${creatorEmail}"`
-    }
-    if (creatorUsername) {
-      query += ` || username match "${creatorUsername}"`
-    }
-    query += "]"
-    return (await readOnlyClient.fetch(query))[0]
   }
 
   const createChallenge = async ({choodle, prompt, challenger}) => {
@@ -87,7 +76,7 @@
     await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
 
     const deviceId = await getDeviceId()
-    const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
+    const creatorEmail = await getEmail()
     let query = `*[_type == "creator"][deviceIds match "${deviceId}"`
     if (creatorEmail) {
       query += ` || email match "${creatorEmail}"`
@@ -137,8 +126,11 @@
     if (!browser) return;
     if (!result._id) return;
 
-    // create the challenge
-    const challenger = await locateCreator();
+    const deviceId = await getDeviceId()
+    const email = await getEmail()
+    const username = await getUsername()
+
+    const challenger = await locateCreator({username, deviceId, email});
 
     createChallenge({choodle: result, prompt: $gamePrompt, challenger: challenger})
     addChoodleToCreator(result._id, await getDeviceId())

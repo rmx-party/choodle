@@ -3,7 +3,7 @@ import {upScaledImageUrlBy} from "$lib/ImageUtils";
 import {choodleCreatorEmailKey, upScaledImageRatio} from "$lib/Configuration";
 import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
 import type {UndoStack} from "$lib/UndoStack";
-import {getDeviceId} from "$lib/DeviceIdUtils";
+import {getDeviceId} from "$lib/CreatorUtils";
 import localforage from "localforage";
 
 const uploadImageBlob = (imageBlob: Blob) => {

@@ -16,7 +16,7 @@
   import type {UndoStack} from "$lib/UndoStack";
   import ChoodleBoard from "./ChoodleBoard.svelte";
   import {saveChoodle} from "$lib/ChoodleStorage";
-  import {getDeviceId} from "$lib/DeviceIdUtils";
+  import {getDeviceId} from "$lib/CreatorUtils";
 
   export let id;
   export let prompt;

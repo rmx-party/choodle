@@ -8,7 +8,7 @@
   import {page} from "$app/stores";
   import MetaData from "../../../../../components/MetaData.svelte";
   import {onMount} from "svelte";
-  import {getDeviceId} from "$lib/DeviceIdUtils";
+  import {getDeviceId} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
   import fp from "lodash/fp";
   import GuessingInterface from "../../GuessingInterface.svelte";
