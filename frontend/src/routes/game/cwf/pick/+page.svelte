@@ -51,13 +51,14 @@
 </script>
 
 <main>
-  {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
+  <section class="pickPrompt">
+    {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
-  <div>
-    <input type="text" bind:value={$selectedPrompt} disabled/>
+    <output for="shuffle">{$selectedPrompt}</output>
     <br/>
-    <Button on:click={rotatePrompts}>{data.copy.pick_shuffleButtonText}</Button>
-  </div>
+    <Button id="shuffle" on:click={rotatePrompts}>{data.copy.pick_shuffleButtonText}</Button>
+  </section>
+
   <div id="cta">
     <Button variant='primary' on:click={proceed}>{data.copy.pick_doneButtonText}</Button>
   </div>
@@ -79,25 +80,34 @@
     width: 100%;
   }
 
-  input {
-    margin: 1rem 0;
-    padding: 1rem;
+  .pickPrompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  output {
+    display: flex;
+    padding: 1rem 0.5rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
     text-align: center;
+
+    margin: 1rem 0;
     width: 100%;
-    max-width: 20rem;
+    max-width: 15rem;
+
     font-size: 1.5rem;
     text-transform: uppercase;
+    color: var(--choodle-black);
+
+    border-radius: 0.25rem;
+    border: 1px solid var(--choodle-black, #141518);
+    background: var(--colors-greyscale-1, #FCFCFC);
   }
 
   #cta {
     width: 100%;
-  }
-
-  input[disabled] {
-    background-color: white;
-    color: var(--choodle-black);
-    border: 0.15rem solid var(--choodle-black);
-    border-radius: 0.3rem;
-    max-width: 20ch;
   }
 </style>

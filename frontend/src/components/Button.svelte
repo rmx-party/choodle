@@ -8,7 +8,7 @@
 </script>
 
 {#if isOnline}
-    <button class={`btn ${variant} ${colour}`} on:click>
+    <button class={`btn ${variant} ${colour}`} on:click {...$$restProps}>
         {#if icon && iconPosition == 'left'}
             <img class="icon" src={icon} alt=''/>
         {/if}
@@ -18,7 +18,7 @@
         {/if}
     </button>
 {:else}
-    <button disabled class={`btn ${variant}  ${colour} disabled`}>
+    <button disabled class={`btn ${variant}  ${colour} disabled`} {...$$restProps}>
         {#if icon && iconPosition == 'left'}
             <img class="icon" src={icon} alt=''/>
         {/if}
