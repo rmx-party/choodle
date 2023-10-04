@@ -45,7 +45,7 @@
     const prompt = $selectedPrompt;
     if (prompt) {
       console.log(`proceeding with prompt ${prompt}`);
-      goto(`/game/cwf/draw`)
+      goto(`/game/defcon/draw`)
     }
   };
 </script>

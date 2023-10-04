@@ -56,7 +56,7 @@
     // create the challenge
     createChallenge({choodle: result, prompt: $gamePrompt, challenger: await locateCreator()})
 
-    await goto(`/game/cwf/guess/${result._id}`)
+    await goto(`/game/defcon/guess/${result._id}`)
 
     await clearStorage()
     loading.set(false)

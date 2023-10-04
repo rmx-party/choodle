@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { onMount } from "svelte";
+  import {goto} from "$app/navigation";
+  import {onMount} from "svelte";
   import Button from "../../../components/Button.svelte";
-  import { browser } from "$app/environment";
+  import {browser} from "$app/environment";
 
   const dummyGames = [ // TODO: speculative data model for page mockup purposes
     {
@@ -25,7 +25,7 @@
   // TODO: CMS-populate all the copy / non-dynamic html contents
 
   const startGame = async () => {
-    await goto(`/game/cwf/pick`)
+    await goto(`/game/defcon/pick`)
   }
 
   const nudge = (gameId) => {
@@ -108,6 +108,7 @@
     margin: 0;
     padding: 0;
   }
+
   .live-games > ul > li {
     list-style-type: none;
     padding: 1rem;

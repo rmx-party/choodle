@@ -40,7 +40,7 @@
     }
 
     console.log(`right answer, you won the thing`)
-    goto(`/game/cwf/success/${data.choodle._id}`)
+    goto(`/game/defcon/success/${data.choodle._id}`)
   }
 
   const canShare = (shareable?): boolean => {
@@ -131,7 +131,7 @@
         <p><!-- layout placeholder --> </p>
       {/if}
       <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
-        cursorLocation={cursorLocation} onEnter={check}>
+                         cursorLocation={cursorLocation} onEnter={check}>
         <div slot="between">
           {#if 'hint message data tbd'}
             <p><a>Need a hint?</a></p>
