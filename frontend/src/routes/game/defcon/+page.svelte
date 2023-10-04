@@ -4,24 +4,8 @@
   import Button from "../../../components/Button.svelte";
   import {browser} from "$app/environment";
 
-  const dummyGames = [ // TODO: speculative data model for page mockup purposes
-    {
-      _id: 1,
-      turn: 'some-player-id',
-      choodles: [], // Choodle association array
-      guesses: [] // Guess entries / counts per choodle perhaps? guesses belong to a particular choodle, and a game, and player
-    },
-    {
-      _id: 2,
-      turn: 'other-player-id',
-      choodles: [],
-      guesses: []
-    }
-  ]
   export let data
-
-  let playerId = 'some-player-id' // TODO: fetch creatorId from storage
-
+  
   // TODO: CMS-populate all the copy / non-dynamic html contents
 
   const startGame = async () => {
