@@ -138,7 +138,7 @@
         <table>
           <strong>Not guessed</strong>
           {#each challengesToBeGuessed as challenge}
-            <tr on:click={() => {goto(`/game/defcon/guess/${guess.challenge.choodle._id}`)}}>
+            <tr on:click={() => {goto(`/game/defcon/guess/${challenge.choodle._ref}`)}}>
               <td>{challenge._createdAt}</td>
               <td>{challenge.challenger.username}</td>
             </tr>
