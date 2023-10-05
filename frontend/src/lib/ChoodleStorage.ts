@@ -1,30 +1,23 @@
 import {browser} from "$app/environment";
 import {upScaledImageUrlBy} from "$lib/ImageUtils";
-import {choodleCreatorEmailKey, upScaledImageRatio} from "$lib/Configuration";
-import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
+import {upScaledImageRatio} from "$lib/Configuration";
+import {readWriteClient} from "$lib/CMSUtils";
 import type {UndoStack} from "$lib/UndoStack";
 import {getDeviceId, locateCreator} from "$lib/CreatorUtils";
-import localforage from "localforage";
 
 const uploadImageBlob = (imageBlob: Blob) => {
   return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
 }
 
-export const addChoodleToCreator = async (choodleId, deviceId) => {
-  // find a creator by this creatorId
-
-  const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
-  const creator = await locateCreator({email: creatorEmail, deviceId})
-
-  if (!creator) return
-
+export const addChoodleToCreator = async ({choodleId, creatorId}) => {
   const result = await readWriteClient
-    .patch(creator._id)
+    .patch(creatorId)
+    .setIfMissing({choodles: []})
     .append('choodles', [{_ref: choodleId}])
     .commit({
       autoGenerateArrayKeys: true,
     })
-  console.log(result)
+  console.log('addChoodleToCreator', {choodleId, creatorId, result})
   return result
 }
 
@@ -71,7 +64,9 @@ export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElemen
   const createResult = await readWriteClient.create(cmsChoodle)
   console.log({createResult})
 
-  addChoodleToCreator(createResult._id, await getDeviceId())
+  const deviceId = await getDeviceId()
+  const creator = await locateCreator({deviceId})
+  addChoodleToCreator({choodleId: createResult._id, creatorId: creator._id})
 
   return createResult;
 }

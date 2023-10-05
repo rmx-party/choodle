@@ -38,7 +38,7 @@
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loading.set(true)
-    return saveChoodle(undoStack, canvas, {
+    return await saveChoodle(undoStack, canvas, {
       gamePrompt: $gamePrompt || null,
       creatorId: await getDeviceId()
     })
@@ -116,9 +116,9 @@
     creator = await locateCreator({username, deviceId, email});
 
     createChallenge({choodle: result, prompt: $gamePrompt, challenger: creator})
-    addChoodleToCreator(result._id, await getDeviceId())
-
+    addChoodleToCreator({choodleId: result._id, creatorId: creator._id})
     addPoints(creator._id, 10, "Creating a challenge.")
+
     // take us to the home page
     await goto(`/game/defcon`)
 
