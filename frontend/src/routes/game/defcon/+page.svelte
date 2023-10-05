@@ -72,6 +72,7 @@
     return fp.reject(challenge => guessedChallengeIds.includes(challenge._id), challenges)
 
   }
+
   onMount(async () => {
     if (!browser) return;
 
@@ -132,26 +133,23 @@
 
     {#if $activeTab === "my games"}
       <section class="tabContent">
-        <ul>
+        <table>
           <strong>Not guessed</strong>
           {#each challengesToBeGuessed as challenge}
-            <li>
-              <a href="/game/defcon/guess/{challenge.choodle._ref}">
-                {challenge._createdAt} |
-                {challenge.challenger.username}
-              </a>
-            </li>
+            <tr on:click={() => {goto(`/game/defcon/guess/{challenge.choodle._ref}`)}}>
+              <td>{challenge._createdAt}</td>
+              <td>{challenge.challenger.username}</td>
+            </tr>
           {/each}
           <strong>guessed</strong>
           {#each guesses as guess}
-            <li>
-              <a href="/game/defcon/guess/{guess.challenge.choodle._ref}">
-                {guess.guessedCorrectly} | {guess.challenge._createdAt} |
-                {guess.challenge.challenger.username}
-              </a>
-            </li>
+            <tr on:click={() => {goto(`/game/defcon/guess/${guess.challenge.choodle._id}`)}}>
+              <td>{guess.guessedCorrectly ? "won" : "lost"}</td>
+              <td>{guess.challenge._createdAt}</td>
+              <td>{guess.challenge.challenger.username}</td>
+            </tr>
           {/each}
-        </ul>
+        </table>
       </section>
     {/if}
 
