@@ -18,7 +18,7 @@
   import Button from "../../../../components/Button.svelte";
   import {dialogState, loading} from "$lib/store";
   import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
-  import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
+  import {addPoints, readOnlyClient, readWriteClient} from "$lib/CMSUtils";
   import Dialog from "../../../../components/Dialog.svelte";
   import MetaData from "../../../../components/MetaData.svelte";
   import {page} from "$app/stores";
@@ -92,18 +92,6 @@
     })
 
     child.save()
-  }
-
-  const addPoints = async (creatorId, amount, reason) => {
-    await readWriteClient.create(
-      {
-        _type: "points",
-        creator: {_ref: creatorId},
-        game: 'defcon',
-        amount,
-        reason,
-      }
-    )
   }
 
   const afterSave = async (result) => {

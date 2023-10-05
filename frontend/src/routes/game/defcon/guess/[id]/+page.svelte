@@ -14,7 +14,7 @@
   import GuessingInterface from "../../GuessingInterface.svelte";
   import GuessInput from "../../../../../components/GuessInput.svelte";
   import {toHTML} from "@portabletext/to-html";
-  import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
+  import {addPoints, readOnlyClient, readWriteClient} from "$lib/CMSUtils";
 
   export let data;
   const currentGuess = writable([])
@@ -67,8 +67,6 @@
       .append('guesses', [$currentGuess.join('')])
       .commit()
 
-    // do points
-
     if ($currentGuess.length < data.choodle.gamePrompt.length) return;
 
     guessesRemaining--;
@@ -80,6 +78,16 @@
       cursorLocation.set(0)
       return;
     }
+
+    /* Points
+       3 for guessing correctly on first try
+       2 on second
+       1 on third
+    */
+    let amount = guessesRemaining + 1
+    let reason = `Guessed correctly with ${guessesRemaining} remaining.`
+
+    await addPoints(guesser._id, amount, reason)
 
     console.log(`right answer, you won the thing`)
     goto(`/game/defcon/success/${data.choodle._id}`)
