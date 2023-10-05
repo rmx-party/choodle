@@ -13,7 +13,7 @@
   import fp from "lodash/fp";
 
   export let data
-  let creator
+  let currentChoodler
   let hasCreatedAChallenge = false
   let points
   let pointsTotal = 0
@@ -76,23 +76,23 @@
     if (!browser) return;
 
 
-    creator = (await locateCreator({
+    currentChoodler = (await locateCreator({
       email: await getEmail(),
       username: await getUsername(),
       deviceId: await getDeviceId()
     })); // TODO: migrate global creator/player state to a store shared across pages
-    points = await getPointsForUser(creator._id)
+    points = await getPointsForUser(currentChoodler._id)
     pointsTotal = fp.reduce((accumulator, item) => {
       return accumulator + item.amount
     }, 0, points)
 
     leaderboard = await assembleLeaderboard()
 
-    guesses = await getGuessesForUser(creator._id)
-    challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(creator._id, data.challenges, guesses)
+    guesses = await getGuessesForUser(currentChoodler._id)
+    challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(currentChoodler._id, data.challenges, guesses)
 
-    console.log({creator})
-    if (creator?.choodles?.length > 0) { // TODO: figure out the appropriate test for game participation
+    console.log({creator: currentChoodler})
+    if (currentChoodler?.choodles?.length > 0) { // TODO: figure out the appropriate test for game participation
       hasCreatedAChallenge = true;
     }
   })
@@ -105,7 +105,7 @@
 />
 
 <LayoutContainer>
-  {#if !hasCreatedAChallenge || !creator}
+  {#if !hasCreatedAChallenge || !currentChoodler}
     <p>you haven't tried drawing anything yet</p>
     <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
   {:else}
@@ -114,7 +114,7 @@
     </div>
 
     <header>
-      <h3><strong>{creator.username}</strong></h3>
+      <h3><strong>{currentChoodler.username}</strong></h3>
       <h3>{pointsTotal} points</h3>
     </header>
 
@@ -130,37 +130,45 @@
       {/each}
     </nav>
 
-    <section class="tabContent">
-      <ul>
-        <strong>Not guessed</strong>
-        {#each challengesToBeGuessed as challenge}
-          <li>
-            <a href="/game/defcon/guess/{challenge.choodle._ref}">
-              {challenge._createdAt} |
-              {challenge.challenger.username}
-            </a>
-          </li>
-        {/each}
-        <strong>guessed</strong>
-        {#each guesses as guess}
-          <li>
-            <a href="/game/defcon/guess/{guess.challenge.choodle._ref}">
-              {guess.guessedCorrectly} | {guess.challenge._createdAt} |
-              {guess.challenge.challenger.username}
-            </a>
-          </li>
-        {/each}
-      </ul>
-    </section>
-
-    <section class="tabContent">
-      <strong>leaderboard</strong>
-      {#each leaderboard as leaderboardItem}
+    {#if $activeTab === "my games"}
+      <section class="tabContent">
         <ul>
-          <li>{leaderboardItem.totalPoints} {leaderboardItem.creatorUsername}</li>
+          <strong>Not guessed</strong>
+          {#each challengesToBeGuessed as challenge}
+            <li>
+              <a href="/game/defcon/guess/{challenge.choodle._ref}">
+                {challenge._createdAt} |
+                {challenge.challenger.username}
+              </a>
+            </li>
+          {/each}
+          <strong>guessed</strong>
+          {#each guesses as guess}
+            <li>
+              <a href="/game/defcon/guess/{guess.challenge.choodle._ref}">
+                {guess.guessedCorrectly} | {guess.challenge._createdAt} |
+                {guess.challenge.challenger.username}
+              </a>
+            </li>
+          {/each}
         </ul>
-      {/each}
-    </section>
+      </section>
+    {/if}
+
+    {#if $activeTab === "leaderboard"}
+      <section class="tabContent">
+        {#each leaderboard as leaderboardItem}
+          <ul>
+            <li
+              class="{currentChoodler.username === leaderboardItem.creatorUsername ? 'highlight' : ''}">{leaderboardItem.totalPoints} {leaderboardItem.creatorUsername}</li>
+          </ul>
+        {/each}
+      </section>
+    {/if}
+
+    {#if $activeTab === "rules"}
+      <p>put rules here from Sanity</p>
+    {/if}
   {/if}
 </LayoutContainer>
 
@@ -198,5 +206,9 @@
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  .highlight {
+    background: var(--choodle-yellow)
   }
 </style>
