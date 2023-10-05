@@ -8,7 +8,10 @@
   import {choodlePromptKey} from '$lib/Configuration';
   import {toHTML} from "@portabletext/to-html";
   import {browser} from "$app/environment";
-	import LayoutContainer from '../../../../components/LayoutContainer.svelte';
+  import LayoutContainer from '../../../../components/LayoutContainer.svelte';
+  import {choodleYellow} from '$lib/Configuration';
+  import { page } from '$app/stores';
+  import MetaData from '../../../../components/MetaData.svelte';
 
   export let data;
   let prompts: any[] = [];
@@ -50,6 +53,12 @@
     }
   };
 </script>
+
+<MetaData
+  url={$page.url}
+  title="Choodle with Friends"
+  themeColor={choodleYellow}
+/>
 
 <LayoutContainer --layout-justify="space-evenly">
   <section class="pickPrompt">
