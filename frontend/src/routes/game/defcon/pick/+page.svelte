@@ -5,9 +5,12 @@
   import fp from 'lodash/fp';
   import {onMount} from 'svelte';
   import localforage from 'localforage';
-  import {choodlePromptKey} from '$lib/Configuration';
+  import {choodlePromptKey, choodleYellow} from '$lib/Configuration';
   import {toHTML} from "@portabletext/to-html";
   import {browser} from "$app/environment";
+  import LayoutContainer from '../../../../components/LayoutContainer.svelte';
+  import MetaData from '../../../../components/MetaData.svelte';
+  import { page } from '$app/stores';
 
   export let data;
   let prompts: any[] = [];
@@ -50,7 +53,13 @@
   };
 </script>
 
-<main>
+<MetaData 
+  title="Choodle w/ Friends: DEFcon Edition"
+  themeColor={choodleYellow}
+  url={$page.url}
+/>
+
+<LayoutContainer>
   <section class="pickPrompt">
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
@@ -62,24 +71,9 @@
   <div id="cta">
     <Button variant='primary' on:click={proceed}>{data.copy.pick_doneButtonText}</Button>
   </div>
-</main>
+</LayoutContainer>
 
 <style>
-  main {
-    padding: 1rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    height: 100dvh;
-  }
-
-  main > * {
-    flex-grow: 0 !important;
-    width: 100%;
-  }
-
   .pickPrompt {
     display: flex;
     flex-direction: column;

@@ -3,7 +3,11 @@
   import {onMount} from "svelte";
   import Button from "../../../components/Button.svelte";
   import {browser} from "$app/environment";
-	import { getDeviceId, getEmail, getUsername, locateCreator } from "$lib/CreatorUtils";
+  import { getDeviceId, getEmail, getUsername, locateCreator } from "$lib/CreatorUtils";
+  import LayoutContainer from "../../../components/LayoutContainer.svelte";
+  import { page } from "$app/stores";
+  import MetaData from "../../../components/MetaData.svelte";
+  import { pageBackgroundDefault } from "$lib/Configuration";
 
   export let data
   let playerId
@@ -40,7 +44,13 @@
   })
 </script>
 
-<div class="container">
+<MetaData
+  title="Choodle w/ Friends: DEFcon Edition"
+  themeColor={pageBackgroundDefault}
+  url={$page.url}
+/>
+
+<LayoutContainer>
   {#if !hasCreatedAChallenge()}
     <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
   {/if}
@@ -71,21 +81,9 @@
       </ul>
     {/if}
   </section>
-</div>
+</LayoutContainer>
 
 <style>
-  .container {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    padding: 1rem;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 100vh;
-  }
-
   .live-games {
     display: flex;
     flex-direction: column;

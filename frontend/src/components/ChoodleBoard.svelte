@@ -226,45 +226,24 @@
   });
 </script>
 
-<div id="flex-container">
-  <slot name="prompt"/>
-
-  <div class="canvas-container">
-    <canvas id={id}
-      on:mousedown={startDrawing}
-      on:touchstart={startDrawing}
-      on:mouseup={endDrawing}
-      on:touchend={endDrawing}
-      on:mousemove={doDraw}
-      on:touchmove={doDraw}
-      on:click={(event) => {event.preventDefault()}}
-      on:drag={(event) => {event.preventDefault()}}>
-    </canvas>
-  </div>
-
-  <slot name="buttons"/>
+<div class="canvas-container">
+  <canvas id={id}
+    on:mousedown={startDrawing}
+    on:touchstart={startDrawing}
+    on:mouseup={endDrawing}
+    on:touchend={endDrawing}
+    on:mousemove={doDraw}
+    on:touchmove={doDraw}
+    on:click={(event) => {event.preventDefault()}}
+    on:drag={(event) => {event.preventDefault()}}>
+  </canvas>
 </div>
+
+<slot name="buttons"/>
 
 <slot/>
 
 <style>
-  :global(:root) {
-    --page-background-color: rgba(20, 21, 24, 0.03);
-  }
-
-  #flex-container {
-    background-color: rgba(20, 21, 24, 0.03);
-
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-content: center;
-    justify-content: space-between;
-    align-items: center;
-    height: 100vh;
-    height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
-  }
-
   .canvas-container {
     flex-grow: 1;
     aspect-ratio: 3 / 4;
@@ -278,10 +257,7 @@
   canvas {
     flex-grow: 1;
     aspect-ratio: 3 / 4;
-    /* outline: #051BDC 1px dashed; */
     max-width: 95vw;
-    /* max-height: 70vh; */
-    /* max-height: calc(var(--vh, 1vh) * 70); /1* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ *1/ */
 
     background: #FFF;
     box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.12), 1px 1px 1px 0px rgba(0, 0, 0, 0.08);

@@ -11,6 +11,7 @@
   import {onMount, SvelteComponent} from "svelte";
   import localforage from "localforage";
   import {
+    pageBackgroundDefault,
     choodleCreatorUsernameKey,
     choodlePromptKey
   } from "$lib/Configuration";
@@ -19,6 +20,10 @@
   import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
   import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
   import Dialog from "../../../../components/Dialog.svelte";
+  import MetaData from "../../../../components/MetaData.svelte";
+  import { page } from "$app/stores";
+  import LayoutContainer from "../../../../components/LayoutContainer.svelte";
+  import ButtonMenu from "../../../../components/ButtonMenu.svelte";
 
   export let data;
 
@@ -159,43 +164,39 @@
   })
 </script>
 
+
+<MetaData 
+  title="Choodle w/ Friends: DEFcon Edition"
+  themeColor={pageBackgroundDefault}
+  url={$page.url}
+/>
+
 {#if !$loading}
-  <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
-    <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="prompt"/>
-    <div id="buttons" slot="buttons">
-      <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
-      <Button on:click={promptForUsernameOrSave} isOnline={isOnline}
-              colour="yellow">{data.copy.draw_doneButtonText}</Button>
-    </div>
-    <Dialog id={'username-prompt'}>
-      <header slot="header">Placeholder</header>
-      <div>lorem ipsum</div>
-      <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
-        <br/>
-        <input bind:value={creatorUsername} type="username" id="creator-username" name="creatorusername"
-               placeholder="Enter username"
-               style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
-      </label>
-      <Button on:click={saveUsername} variant="primary" colour="yellow">
-        Placeholder Save
-      </Button>
-    </Dialog>
-  </ChoodleBoard>
+  <LayoutContainer>
+    <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>
+
+    <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
+      <ButtonMenu slot="buttons">
+        <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
+        <Button on:click={promptForUsernameOrSave} isOnline={isOnline}
+          colour="yellow">{data.copy.draw_doneButtonText}</Button>
+      </ButtonMenu>
+
+      <Dialog id={'username-prompt'}>
+        <header slot="header">Placeholder</header>
+        <div>lorem ipsum</div>
+        <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
+          <br/>
+          <input bind:value={creatorUsername} type="username" id="creator-username" name="creatorusername"
+            placeholder="Enter username"
+            style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
+        </label>
+        <Button on:click={saveUsername} variant="primary" colour="yellow">
+          Placeholder Save
+        </Button>
+      </Dialog>
+    </ChoodleBoard>
+  </LayoutContainer>
 {:else}
   <LoadingIndicator explanation={'saving'}/>
 {/if}
-
-<style>
-  #buttons {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-content: center;
-    gap: 1rem;
-    padding: 0 1rem 1rem;
-    margin: 0;
-  }
-</style>

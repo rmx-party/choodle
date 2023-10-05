@@ -1,23 +1,10 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { onMount } from "svelte";
+  import { page } from "$app/stores";
+  import { backgroundColour } from "$lib/Configuration";
   import Button from "../../../components/Button.svelte";
-  import { browser } from "$app/environment";
+  import MetaData from "../../../components/MetaData.svelte";
 
-  const dummyGames = [ // TODO: speculative data model for page mockup purposes
-    {
-      _id: 1,
-      turn: 'some-player-id',
-      choodles: [], // Choodle association array
-      guesses: [] // Guess entries / counts per choodle perhaps? guesses belong to a particular choodle, and a game, and player
-    },
-    {
-      _id: 2,
-      turn: 'other-player-id',
-      choodles: [],
-      guesses: []
-    }
-  ]
   export let data
 
   let playerId = 'some-player-id' // TODO: fetch creatorId from storage
@@ -39,15 +26,13 @@
       // TODO: start a new prompt pick to add a drawing to an existing game
     }
   }
-
-  onMount(async () => {
-    if (!browser) return;
-
-    // Explicitly reset bg color since it sticks after being set on next page and then navigating back
-    let root = document.documentElement;
-    root.style.setProperty('--page-background-color', 'rgba(20, 21, 24, 0.03)');
-  })
 </script>
+
+<MetaData 
+  title="Choodle with Friends" 
+  themeColor={backgroundColour}
+  url={$page.url}
+/>
 
 <div class="container">
   <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
