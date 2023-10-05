@@ -57,6 +57,26 @@ export default {
       type: 'string',
     },
     {
+      name: 'draw_usernameHeader',
+      title: 'Header of the Username entry page',
+      type: 'string',
+    },
+    {
+      name: 'draw_usernameInstructions',
+      title: 'Instructions under the header for username input',
+      type: 'string',
+    },
+    {
+      name: 'draw_usernamePlaceholder',
+      title: 'Placeholder text for username entry input',
+      type: 'string',
+    },
+    {
+      name: 'draw_usernameSaveButtonText',
+      title: 'Save username Button Text',
+      type: 'string',
+    },
+    {
       name: 'share_messageText',
       title: 'Share Page Message Text',
       type: 'string',

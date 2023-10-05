@@ -150,16 +150,16 @@
       </ButtonMenu>
 
       <Dialog id={'username-prompt'}>
-        <header slot="header">Placeholder</header>
-        <div>lorem ipsum</div>
+        <header slot="header">{data.copy.draw_usernameHeader}</header>
+        <div>{data.copy.draw_usernameInstructions}</div>
         <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
           <br/>
           <input bind:value={creatorUsername} type="username" id="creator-username" name="creatorusername"
-                 placeholder="Enter username"
+                 placeholder="{data.copy.draw_usernamePlaceholder}"
                  style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
         </label>
         <Button on:click={saveUsername} variant="primary" colour="yellow">
-          Placeholder Save
+          {data.copy.draw_usernameSaveButtonText}
         </Button>
       </Dialog>
     </ChoodleBoard>
