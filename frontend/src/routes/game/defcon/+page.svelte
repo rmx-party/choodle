@@ -9,10 +9,14 @@
   import MetaData from "../../../components/MetaData.svelte";
   import {pageBackgroundDefault} from "$lib/Configuration";
   import {writable} from "svelte/store";
+  import {readOnlyClient} from "$lib/CMSUtils";
+  import fp from "lodash/fp";
 
   export let data
   let creator
   let hasCreatedAChallenge = false
+  let points
+  let pointsTotal = 0
 
   const navItems = [
     'leaderboard',
@@ -27,6 +31,12 @@
     await goto(`/game/defcon/pick`)
   }
 
+  const getPointsForUser = async (creatorId) => {
+    const points = await readOnlyClient.fetch(`*[_type == "points"][creator._ref match "${creatorId}"]`)
+    console.log("points ", points)
+    return points
+  }
+
   onMount(async () => {
     if (!browser) return;
 
@@ -35,6 +45,11 @@
       username: await getUsername(),
       deviceId: await getDeviceId()
     })); // TODO: migrate global creator/player state to a store shared across pages
+
+    points = await getPointsForUser(creator._id)
+    pointsTotal = fp.reduce((accumulator, item) => {
+      return accumulator + item.amount
+    }, 0, points)
 
     console.log({creator})
     if (creator?.choodles?.length > 0) { // TODO: figure out the appropriate test for game participation
@@ -60,7 +75,7 @@
 
     <header>
       <h3><strong>{creator.username}</strong></h3>
-      <h3>42 points</h3>
+      <h3>{pointsTotal} points</h3>
     </header>
 
     <nav>
@@ -79,9 +94,6 @@
       <ul>
         {#each data.challenges as challenge}
           <li>
-            <!--            open / lost / won -->
-            <!--            timestamp-->
-            <!--            challenger username -->
             <a href="/game/defcon/guess/{challenge.choodle._ref}">
               {challenge._createdAt} |
               {challenge.challenger.username}
