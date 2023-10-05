@@ -4,6 +4,11 @@ export default {
   title: 'Choodle With Friends Copy',
   fields: [
     {
+      name: 'gameName',
+      type: 'string',
+      title: 'The game that this copy is for.',
+    },
+    {
       name: 'startGameButtonText',
       type: 'string',
       title: 'Start Game Button Text',
