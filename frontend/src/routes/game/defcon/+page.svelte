@@ -142,20 +142,20 @@
       </nav>
 
       {#if $activeTab === "my games"}
-        <section class="tabContent">
+        <section class="tabContent my-games">
           <table>
             {#each challengesToBeGuessed as challenge}
               <tr on:click={() => {goto(`/game/defcon/guess/${challenge.choodle._ref}`)}}>
-                <td>Open</td>
-                <td>{challenge._createdAt}</td>
-                <td>{challenge.challenger.username}</td>
+                <td class="status">Open</td>
+                <td class="createdAt"><time>{challenge._createdAt}</time></td>
+                <td class="username">{challenge.challenger.username}</td>
               </tr>
             {/each}
             {#each guesses as guess}
               <tr on:click={() => {goto(`/game/defcon/guess/${guess.challenge.choodle._id}`)}}>
-                <td class={guess.guessedCorrectly ? "won" : "lost"}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</td>
-                <td>{guess.challenge._createdAt}</td>
-                <td>{guess.challenge.challenger.username}</td>
+                <td class={`${guess.guessedCorrectly ? "won" : "lost"} status`}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</td>
+                <td class="createdAt"><time>{guess.challenge._createdAt}</time></td>
+                <td class="username">{guess.challenge.challenger.username}</td>
               </tr>
             {/each}
           </table>
@@ -163,13 +163,19 @@
       {/if}
 
       {#if $activeTab === "leaderboard"}
-        <section class="tabContent">
-          {#each leaderboard as leaderboardItem}
-            <ul>
-              <li
-                class="{currentChoodler.username === leaderboardItem.creatorUsername ? 'highlight' : ''}">{leaderboardItem.totalPoints} {leaderboardItem.creatorUsername}</li>
-            </ul>
-          {/each}
+        <section class="tabContent leaderboard">
+          <table>
+            {#each leaderboard as leaderboardItem}
+              <tr class="{currentChoodler.username === leaderboardItem.creatorUsername ? 'highlight' : ''}">
+                <td class="score">
+                  {leaderboardItem.totalPoints}
+                </td>
+                <td class="username">
+                  {leaderboardItem.creatorUsername}
+                </td>
+              </tr>
+            {/each}
+          </table>
         </section>
       {/if}
 
@@ -223,7 +229,7 @@
   table {
     width: 100%;
   }
-  tr {
+  .my-games tr, nav > span {
     cursor: pointer;
   }
   tr .won {
@@ -231,5 +237,8 @@
   }
   tr .lost {
     color: hsla(0, 100%, 21%, 1);
+  }
+  .username {
+    text-align: right;
   }
 </style>
