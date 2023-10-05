@@ -144,17 +144,16 @@
       {#if $activeTab === "my games"}
         <section class="tabContent">
           <table>
-            <strong>Not guessed</strong>
             {#each challengesToBeGuessed as challenge}
               <tr on:click={() => {goto(`/game/defcon/guess/${challenge.choodle._ref}`)}}>
+                <td>Open</td>
                 <td>{challenge._createdAt}</td>
                 <td>{challenge.challenger.username}</td>
               </tr>
             {/each}
-            <strong>guessed</strong>
             {#each guesses as guess}
               <tr on:click={() => {goto(`/game/defcon/guess/${guess.challenge.choodle._id}`)}}>
-                <td>{guess.guessedCorrectly ? "won" : "lost"}</td>
+                <td class={guess.guessedCorrectly ? "won" : "lost"}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</td>
                 <td>{guess.challenge._createdAt}</td>
                 <td>{guess.challenge.challenger.username}</td>
               </tr>
@@ -219,5 +218,18 @@
 
   .highlight {
     background: var(--choodle-yellow)
+  }
+
+  table {
+    width: 100%;
+  }
+  tr {
+    cursor: pointer;
+  }
+  tr .won {
+    color: hsla(108, 90%, 28%, 1);
+  }
+  tr .lost {
+    color: hsla(0, 100%, 21%, 1);
   }
 </style>
