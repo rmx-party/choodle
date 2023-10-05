@@ -21,7 +21,7 @@
   import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
   import Dialog from "../../../../components/Dialog.svelte";
   import MetaData from "../../../../components/MetaData.svelte";
-  import { page } from "$app/stores";
+  import {page} from "$app/stores";
   import LayoutContainer from "../../../../components/LayoutContainer.svelte";
   import ButtonMenu from "../../../../components/ButtonMenu.svelte";
 
@@ -55,7 +55,7 @@
     })
   }
 
-  const promptForUsernameOrSave = async (event: Event) => {
+  const promptForUsernameAndSave = async (event: Event) => {
     if (!browser) return;
 
     const undoStack = await getUndoStack()
@@ -143,7 +143,7 @@
 </script>
 
 
-<MetaData 
+<MetaData
   title="Choodle w/ Friends: DEFcon Edition"
   themeColor={pageBackgroundDefault}
   url={$page.url}
@@ -156,8 +156,8 @@
     <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
       <ButtonMenu slot="buttons">
         <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
-        <Button on:click={promptForUsernameOrSave} isOnline={isOnline}
-          colour="yellow">{data.copy.draw_doneButtonText}</Button>
+        <Button on:click={promptForUsernameAndSave} isOnline={isOnline}
+                colour="yellow">{data.copy.draw_doneButtonText}</Button>
       </ButtonMenu>
 
       <Dialog id={'username-prompt'}>
@@ -166,8 +166,8 @@
         <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
           <br/>
           <input bind:value={creatorUsername} type="username" id="creator-username" name="creatorusername"
-            placeholder="Enter username"
-            style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
+                 placeholder="Enter username"
+                 style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
         </label>
         <Button on:click={saveUsername} variant="primary" colour="yellow">
           Placeholder Save
