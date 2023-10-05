@@ -10,7 +10,8 @@
   import { pageBackgroundDefault } from "$lib/Configuration";
 
   export let data
-  let playerId
+  let creator
+  let hasCreatedAChallenge = false
 
   // TODO: CMS-populate all the copy / non-dynamic html contents
 
@@ -24,23 +25,19 @@
     }
   }
 
-  const hasCreatedAChallenge = () => {
-    return false;
-  }
-
   onMount(async () => {
     if (!browser) return;
 
-    // Explicitly reset bg color since it sticks after being set on next page and then navigating back
-    let root = document.documentElement;
-    root.style.setProperty('--page-background-color', 'rgba(20, 21, 24, 0.03)');
-
-    playerId = (await locateCreator({
+    creator = (await locateCreator({
       email: await getEmail(),
       username: await getUsername(),
       deviceId: await getDeviceId()
-    }))._id; // TODO: migrate global creator/player state to a store shared across pages
+    })); // TODO: migrate global creator/player state to a store shared across pages
 
+    console.log({creator})
+    if (creator?.choodles?.length > 0) { // TODO: figure out the appropriate test for game participation
+      hasCreatedAChallenge = true;
+    }
   })
 </script>
 
@@ -51,36 +48,47 @@
 />
 
 <LayoutContainer>
-  {#if !hasCreatedAChallenge()}
+  {#if !hasCreatedAChallenge}
+    <p>you haven't tried drawing anything yet</p>
     <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
+  {:else}
+    <div>
+      <Button colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
+    </div>
+
+    <header>
+      <h3>myname</h3>
+      <h3>42 points</h3>
+    </header>
   {/if}
 
-  <section class="live-games">
-    <strong>Live games</strong>
+  <nav>
+    <strong>leaderboard</strong>
+    <span>my games</span>
+    <span>rules</span>
+  </nav>
 
-    {#if (0 >= data.liveGames.length)}
-      <p>Start a new game to view them here.</p>
-    {:else}
-      <ul>
-        {#each data.liveGames as liveGame}
-          <li id={liveGame._id}>
-            <div class="img">image</div>
-            {#if liveGame.turn === playerId}
-              <span class="status">
-                Your turn
-              </span>
-              <Button on:click={draw(liveGame._id)}>Draw</Button>
-            {:else}
-              <span class="status">
-                Their turn
-              </span>
-              <Button on:click={nudge(liveGame._id)}>Nudge</Button>
-            {/if}
-          </li>
-        {/each}
-      </ul>
-    {/if}
-  </section>
+  <leaderboard>
+    <h3>leaderboard</h3>
+    <ul>
+      <li>
+        <time>some time ago</time>
+        <span>9001</span>
+        <span>playerhandle</span>
+      </li>
+    </ul>
+  </leaderboard>
+
+  <games-list>
+    <h3>games</h3>
+    <ul>
+      <li>
+        <span>status</span>
+        <time>20:23:00</time>
+        <span>playerhandle</span>
+      </li>
+    </ul>
+  </games-list>
 </LayoutContainer>
 
 <style>
