@@ -30,7 +30,7 @@
   <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
 
   <div>
-    <Button on:click={() => { goto('/game/defcon/pick')}}
+    <Button on:click={() => { goto('/game/defcon')}}
             colour="yellow">{data.copy.success_continueGameButtonText}</Button>
   </div>
 </LayoutContainer>
