@@ -9,6 +9,7 @@ import choodleWithFriendsCopy from "./choodleWithFriendsCopy";
 import creator from './creator';
 import challenge from './challenge';
 import points from "./points";
+import guess from "./guess";
 
 export const schemaTypes = [
   dailyPrompt,
@@ -21,5 +22,6 @@ export const schemaTypes = [
   choodleWithFriendsCopy,
   creator,
   challenge,
+  guess,
   points,
 ]
