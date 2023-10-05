@@ -66,9 +66,9 @@
   const getGuessesForUser = async (creatorId) => {
     const guesses = await readOnlyClient.fetch(`*[_type == "guess"][guesser._ref match "${creatorId}"]{..., challenge->{..., choodle->{...}, challenger->{...}}}`)
     console.log("guesses ", guesses)
-    return guesses
-
+    return fp.reject(guess => guess.guessedCorrectly === undefined, guesses)
   }
+  
   const challengesThatHaveNotBeenGuessed = async (creatorId, challenges, guesses) => {
     const guessedChallengeIds = fp.map(guess => guess.challenge._id, guesses)
     console.log("challenges", challenges)
