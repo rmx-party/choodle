@@ -59,7 +59,7 @@
   url={$page.url}
 />
 
-<LayoutContainer>
+<LayoutContainer --layout-justify="space-evenly">
   <section class="pickPrompt">
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 

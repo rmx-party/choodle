@@ -31,5 +31,7 @@
     width: 100%;
     height: 100%;
     max-width: 500px;
+
+    justify-content: var(--layout-justify, flex-start);
   }
 </style>
