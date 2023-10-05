@@ -152,7 +152,9 @@
     guesser = await locateCreator({email, deviceId, username})
     guess = await locateGuess({guesserId: guesser._id, choodleId: data.choodle._id})
 
-    alreadyGuessed = guess !== undefined
+    alreadyGuessed = guess.guessedCorrectly !== undefined
+
+    guessesRemaining = guessesLimit - guess.guesses.length
 
     loading.set(false)
   })
