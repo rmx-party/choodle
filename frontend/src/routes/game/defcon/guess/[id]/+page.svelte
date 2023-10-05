@@ -76,7 +76,15 @@
       console.log(`wrong`)
       currentGuess.set([])
       cursorLocation.set(0)
-      return;
+
+      if (guessesRemaining < 1) {
+        await readWriteClient
+          .patch(guess._id)
+          .set({guessedCorrectly: false})
+          .commit()
+      }
+
+      return
     }
 
     /* Points
@@ -88,7 +96,11 @@
     let reason = `Guessed correctly with ${guessesRemaining} remaining.`
 
     await addPoints(guesser._id, amount, reason)
-
+    await readWriteClient
+      .patch(guess._id)
+      .set({guessedCorrectly: true})
+      .commit()
+    
     console.log(`right answer, you won the thing`)
     goto(`/game/defcon/success/${data.choodle._id}`)
   }

@@ -25,5 +25,10 @@ export default {
         }
       ],
     },
+    {
+      name: 'guessedCorrectly',
+      title: 'Did the user guess correctly?',
+      type: 'boolean',
+    },
   ]
 }
