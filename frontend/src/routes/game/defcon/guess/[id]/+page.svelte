@@ -26,6 +26,7 @@
 
   let choodleOwner = false;
   let copiedToClipboard = false;
+  let alreadyGuessed = false;
 
   async function locateChallenge(choodleId) {
     let query = `*[_type == "challenge" && game == "defcon"][choodle._ref match "${choodleId}"]`
@@ -138,6 +139,13 @@
 
   onMount(async () => {
     choodleOwner = (data.choodle.creatorId === await getDeviceId())
+
+    const deviceId = await getDeviceId()
+    const email = await getEmail()
+    const username = await getUsername()
+    const guesser = await locateCreator({email, deviceId, username})
+
+    alreadyGuessed = await locateGuess({guesserId: guesser._id, choodleId: data.choodle._id}) !== undefined
   })
 </script>
 
@@ -174,7 +182,7 @@
               on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
     </div>
   {:else}
-    {#if guessesRemaining < 1}
+    {#if guessesRemaining < 1 || alreadyGuessed}
       <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
       <GuessInput
         format={data.choodle.gamePrompt.split('')}
