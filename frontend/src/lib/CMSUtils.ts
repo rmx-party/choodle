@@ -22,11 +22,12 @@ export const getChoodleById = async (choodleId) => {
   return choodles[0];
 }
 
-export const addPoints = async (creatorId, amount, reason) => {
+export const addPoints = async (creatorId, amount, reason, challengeId) => {
   await readWriteClient.create(
     {
       _type: "points",
       creator: {_ref: creatorId},
+      challenge: {_ref: challengeId},
       game: 'defcon',
       amount,
       reason,

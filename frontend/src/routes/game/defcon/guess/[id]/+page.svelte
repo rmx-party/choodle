@@ -60,6 +60,7 @@
 
     const guesser = await locateCreator({email, deviceId, username})
     const guess = await locateGuess({guesserId: guesser._id, choodleId: data.choodle._id})
+    const challenge = await locateChallenge(data.choodle._id)
 
     await readWriteClient
       .patch(guess._id)
@@ -95,12 +96,12 @@
     let amount = guessesRemaining + 1
     let reason = `Guessed correctly with ${guessesRemaining} remaining.`
 
-    await addPoints(guesser._id, amount, reason)
+    await addPoints(guesser._id, amount, reason, challenge._id)
     await readWriteClient
       .patch(guess._id)
       .set({guessedCorrectly: true})
       .commit()
-    
+
     console.log(`right answer, you won the thing`)
     goto(`/game/defcon/success/${data.choodle._id}`)
   }
