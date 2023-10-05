@@ -154,7 +154,9 @@
 
     alreadyGuessed = guess.guessedCorrectly !== undefined
 
-    guessesRemaining = guessesLimit - guess.guesses.length
+    if (guess?.guesses) {
+      guessesRemaining = (guessesLimit - guess?.guesses?.length)
+    }
 
     loading.set(false)
   })
