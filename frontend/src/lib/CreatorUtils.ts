@@ -1,7 +1,7 @@
 import {browser} from "$app/environment";
 import localforage from "localforage";
 import {choodleCreatorEmailKey, choodleCreatorIdKey, choodleCreatorUsernameKey} from "$lib/Configuration";
-import {readOnlyClient} from "$lib/CMSUtils";
+import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
 
 export async function getDeviceId(): Promise<string> {
   if (!browser) return;
@@ -60,8 +60,27 @@ export const locateCreator = async ({username, deviceId, email}: { // TODO: make
     query += ` || username match "${username}"`
   }
   query += "]"
-  const creator = (await readOnlyClient.fetch(query))[0]
-  console.log({creator})
+  let creator = (await readOnlyClient.fetch(query))[0]
+  // TODO: if there are multiple matches, we should consolidate them
+
+  if (creator) {
+    creator = await readWriteClient
+      .patch(creator._id)
+      .setIfMissing({ username, email })
+      .setIfMissing({deviceIds: [deviceId]})
+      .commit({ autoGenerateArrayKeys: true })
+  } else {
+    creator = await readWriteClient.create(
+      {
+        _type: "creator",
+        username,
+        email,
+        deviceIds: [deviceId],
+      },
+      { autoGenerateArrayKeys: true }
+    )
+  }
+  console.log({ creator })
   return creator
 }
 

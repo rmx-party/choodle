@@ -31,7 +31,8 @@
 
   let isOnline = true;
   let creatorUsername: string | undefined;
-  let choodle;
+  let choodle
+  let creator
 
   const gamePrompt = writable<string | null>(null)
 
@@ -68,7 +69,7 @@
         return {...dialogs, ["username-prompt"]: true}
       })
     } else {
-      console.log(`saving without email...`)
+      console.log(`saving without username...`)
       child.save(event)
     }
   }
@@ -77,42 +78,19 @@
     if (!browser) return;
     if (creatorUsername === "") return;
 
-    console.log(`saving creator email`)
+    console.log(`saving creator username`)
     await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
 
     const deviceId = await getDeviceId()
-    const creatorEmail = await getEmail()
-    let query = `*[_type == "creator"][deviceIds match "${deviceId}"`
-    if (creatorEmail) {
-      query += ` || email match "${creatorEmail}"`
-    }
-    if (creatorUsername) {
-      query += ` || username match "${creatorUsername}"`
-    }
-    query += "]"
+    const email = await getEmail()
 
-    const creator = (await readOnlyClient.fetch(query))[0]
-    if (creator) {
-      await readWriteClient
-        .patch(creator._id)
-        .setIfMissing({username: creatorUsername})
-        .commit()
-    } else {
-      await readWriteClient.create({
-        _type: "creator",
-        username: creatorUsername,
-        email: creatorEmail,
-        deviceIds: [deviceId],
-        choodles: [{_ref: choodle._id}]
-      }, {
-        autoGenerateArrayKeys: true,
-      })
-    }
+    creator = await locateCreator({email, deviceId, username: creatorUsername})
+
     dialogState.update(dialogs => {
       return {...dialogs, ["email-prompt"]: false}
     })
 
-    child.save(event)
+    child.save()
   }
 
   const addPoints = async (creatorId, amount, reason) => {
@@ -135,12 +113,12 @@
     const email = await getEmail()
     const username = await getUsername()
 
-    const challenger = await locateCreator({username, deviceId, email});
+    creator = await locateCreator({username, deviceId, email});
 
-    createChallenge({choodle: result, prompt: $gamePrompt, challenger: challenger})
+    createChallenge({choodle: result, prompt: $gamePrompt, challenger: creator})
     addChoodleToCreator(result._id, await getDeviceId())
 
-    addPoints(challenger._id, 10, "Creating a challenge.")
+    addPoints(creator._id, 10, "Creating a challenge.")
     // take us to the home page
     await goto(`/game/defcon`)
 

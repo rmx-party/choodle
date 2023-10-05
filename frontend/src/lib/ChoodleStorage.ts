@@ -3,7 +3,7 @@ import {upScaledImageUrlBy} from "$lib/ImageUtils";
 import {choodleCreatorEmailKey, upScaledImageRatio} from "$lib/Configuration";
 import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
 import type {UndoStack} from "$lib/UndoStack";
-import {getDeviceId} from "$lib/CreatorUtils";
+import {getDeviceId, locateCreator} from "$lib/CreatorUtils";
 import localforage from "localforage";
 
 const uploadImageBlob = (imageBlob: Blob) => {
@@ -14,32 +14,18 @@ export const addChoodleToCreator = async (choodleId, deviceId) => {
   // find a creator by this creatorId
 
   const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
-  const query = `*[_type == "creator"][deviceIds match "${deviceId}" || email match "${creatorEmail}"]`
+  const creator = await locateCreator({email: creatorEmail, deviceId})
 
-  const creator = (await readOnlyClient.fetch(query))[0]
+  if (!creator) return
 
-  if (creator) {
-    const res = readWriteClient
-      .patch(creator._id)
-      .setIfMissing({email: creatorEmail})
-      .append('deviceIds', [deviceId])
-      .append('choodles', [{_ref: choodleId}])
-      .commit({
-        autoGenerateArrayKeys: true,
-      })
-    console.log(res)
-    return res
-  }
-
-  // create the creator and add device id
-  await readWriteClient.create({
-    _type: "creator",
-    email: creatorEmail,
-    deviceIds: [deviceId],
-    choodles: [{_ref: choodleId}]
-  }, {
-    autoGenerateArrayKeys: true,
-  })
+  const result = await readWriteClient
+    .patch(creator._id)
+    .append('choodles', [{_ref: choodleId}])
+    .commit({
+      autoGenerateArrayKeys: true,
+    })
+  console.log(result)
+  return result
 }
 
 export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElement, extraMetadata?: any) {
