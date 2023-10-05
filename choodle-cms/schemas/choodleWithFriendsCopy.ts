@@ -9,6 +9,18 @@ export default {
       title: 'The game that this copy is for.',
     },
     {
+      name: 'landing_content',
+      title: 'Content for the landing page',
+      type: 'array',
+      of: [{type: 'block'}]
+    },
+    {
+      name: 'rules_content',
+      title: 'Rules of the Game',
+      type: 'array',
+      of: [{type: 'block'}]
+    },
+    {
       name: 'startGameButtonText',
       type: 'string',
       title: 'Start Game Button Text',
