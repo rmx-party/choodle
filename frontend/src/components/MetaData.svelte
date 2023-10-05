@@ -11,11 +11,14 @@
   export let height: number | string | undefined = undefined;
   export let description: string | undefined = undefined;
   export let themeColor: string | null = backgroundColour;
+  export let bgColor: string | null = themeColor;
 
   if (browser && themeColor) {
     console.log('setting theme color', themeColor)
     document?.querySelector('meta[name=theme-color]')?.setAttribute('content', `${themeColor}`)
-    setDynamicBackground(themeColor);
+  }
+  if (browser && bgColor) {
+    setDynamicBackground(bgColor);
   }
 </script>
 

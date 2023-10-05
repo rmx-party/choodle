@@ -15,6 +15,8 @@
   import GuessInput from "../../../../../components/GuessInput.svelte";
   import {toHTML} from "@portabletext/to-html";
   import {addPoints, readOnlyClient, readWriteClient} from "$lib/CMSUtils";
+  import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
+  import {pageBackgroundDefault, choodleYellow} from '$lib/Configuration';
 
   export let data;
   const currentGuess = writable([])
@@ -149,26 +151,31 @@
   })
 </script>
 
-<MetaData url={$page.url.toString()}
-          imageUrl={urlFor(data.choodle.upScaledImage).url()}
-          width="430"
-          height="932"
+<MetaData url={$page.url}
+  title="Choodle w/ Friends: DEFcon Edition"
+  themeColor={choodleYellow}
+  bgColor={pageBackgroundDefault}
+  imageUrl={urlFor(data.choodle.upScaledImage).url()}
+  width="430"
+  height="932"
 />
 
-<div class="flex-container">
-  {#if choodleOwner}
-    <TopBar>
-      <div slot="topBarContent">
-        {@html toHTML(data.copy.guess_pageAuthorTopContent)}
-      </div>
-    </TopBar>
-  {:else}
-    <GuessingHUD {guessesRemaining} {guessesLimit}>
-      <div slot="content">
-        {@html toHTML(data.copy.guess_pageTopContent)}
-      </div>
-    </GuessingHUD>
-  {/if}
+<LayoutContainer class="no-pan">
+  <div class="topBar" slot="topBar">
+    {#if choodleOwner}
+      <TopBar>
+        <div slot="topBarContent">
+          {@html toHTML(data.copy.guess_pageAuthorTopContent)}
+        </div>
+      </TopBar>
+    {:else}
+      <GuessingHUD {guessesRemaining} {guessesLimit}>
+        <div slot="content">
+          {@html toHTML(data.copy.guess_pageTopContent)}
+        </div>
+      </GuessingHUD>
+    {/if}
+  </div>
 
   <div class="choodle-container">
     <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
@@ -213,52 +220,25 @@
       </GuessingInterface>
     {/if}
   {/if}
-</div>
+</LayoutContainer>
 
 <style>
-  :global(:root) {
-    --page-background-color: rgba(20, 21, 24, 0.03);
-  }
-
-  .flex-container {
-    background-color: rgba(20, 21, 24, 0.03);
-
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-content: center;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    height: 100svh;
-    height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
-
-    padding-bottom: 1rem;
-  }
-
-  :root {
-    text-align: center;
-  }
-
   .choodle-container {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
     padding: 0;
     flex-grow: 1;
-    flex-shrink: 1;
-    /* max-height: calc(100svh - 20rem); */
-    max-height: 15rem; /* TODO: use breakpoints to allow this to scale up based on available screen */
+    aspect-ratio: 3 / 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.75rem;
     max-width: 100%;
-    aspect-ratio: 3/4;
   }
 
   img.choodle {
-    object-fit: contain;
-    flex-shrink: 1;
+    aspect-ratio: 3 / 4;
     flex-grow: 1;
     max-height: 100%;
-    max-width: 100%;
+    max-width: 95vw;
     image-rendering: pixelated;
 
     border-radius: 0.22175rem;
@@ -267,5 +247,9 @@
 
   .failure {
     color: red;
+  }
+
+  .topBar {
+    width: 100%;
   }
 </style>

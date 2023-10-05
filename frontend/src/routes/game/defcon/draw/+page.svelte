@@ -139,7 +139,7 @@
 />
 
 {#if !$loading}
-  <LayoutContainer>
+  <LayoutContainer class="no-pan">
     <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>
 
     <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>

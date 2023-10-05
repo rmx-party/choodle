@@ -5,7 +5,7 @@
   export let guessesLimit: number | undefined = undefined;
 </script>
 
-<TopBar>
+<TopBar {...$$restProps}>
   <div slot="topBarContent" class="guessingHUDInner">
     <slot name="content"/>
 

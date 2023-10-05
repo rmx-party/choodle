@@ -1,9 +1,9 @@
-<div class="topBar">
+<div class="topBar-layout" {...$$restProps}>
   <slot name="topBarContent"/>
 </div>
 
 <style>
-  .topBar {
+  .topBar-layout {
     min-height: 3.1875rem;
     width: 100%;
 

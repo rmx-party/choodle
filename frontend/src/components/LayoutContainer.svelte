@@ -34,4 +34,9 @@
 
     justify-content: var(--layout-justify, flex-start);
   }
+
+  .no-pan {
+    touch-action: pan-x pan-y;
+    touch-action: none;
+  }
 </style>
