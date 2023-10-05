@@ -17,6 +17,8 @@
   import {addPoints, readOnlyClient, readWriteClient} from "$lib/CMSUtils";
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import {pageBackgroundDefault, choodleYellow} from '$lib/Configuration';
+  import LoadingIndicator from "../../../../../components/LoadingIndicator.svelte";
+  import {loading} from "$lib/store";
 
   export let data;
   const currentGuess = writable([])
@@ -29,6 +31,13 @@
   let choodleOwner = false;
   let copiedToClipboard = false;
   let alreadyGuessed = false;
+
+  let challenge
+  let deviceId
+  let email
+  let username
+  let guesser
+  let guess
 
   async function locateChallenge(choodleId) {
     let query = `*[_type == "challenge" && game == "defcon"][choodle._ref match "${choodleId}"]`
@@ -57,14 +66,6 @@
   }
 
   const check = async () => {
-    const deviceId = await getDeviceId()
-    const email = await getEmail()
-    const username = await getUsername()
-
-    const guesser = await locateCreator({email, deviceId, username})
-    const guess = await locateGuess({guesserId: guesser._id, choodleId: data.choodle._id})
-    const challenge = await locateChallenge(data.choodle._id)
-
     await readWriteClient
       .patch(guess._id)
       .setIfMissing({guesses: []})
@@ -140,87 +141,97 @@
   }
 
   onMount(async () => {
+    loading.set(true)
+
     choodleOwner = (data.choodle.creatorId === await getDeviceId())
+    challenge = await locateChallenge(data.choodle._id)
 
-    const deviceId = await getDeviceId()
-    const email = await getEmail()
-    const username = await getUsername()
-    const guesser = await locateCreator({email, deviceId, username})
+    deviceId = await getDeviceId()
+    email = await getEmail()
+    username = await getUsername()
+    guesser = await locateCreator({email, deviceId, username})
+    guess = await locateGuess({guesserId: guesser._id, choodleId: data.choodle._id})
 
-    alreadyGuessed = await locateGuess({guesserId: guesser._id, choodleId: data.choodle._id}) !== undefined
+    alreadyGuessed = guess !== undefined
+
+    loading.set(false)
   })
 </script>
 
 <MetaData url={$page.url}
-  title="Choodle w/ Friends: DEFcon Edition"
-  themeColor={choodleYellow}
-  bgColor={pageBackgroundDefault}
-  imageUrl={urlFor(data.choodle.upScaledImage).url()}
-  width="430"
-  height="932"
+          title="Choodle w/ Friends: DEFcon Edition"
+          themeColor={choodleYellow}
+          bgColor={pageBackgroundDefault}
+          imageUrl={urlFor(data.choodle.upScaledImage).url()}
+          width="430"
+          height="932"
 />
 
-<LayoutContainer class="no-pan">
-  <div class="topBar" slot="topBar">
-    {#if choodleOwner}
-      <TopBar>
-        <div slot="topBarContent">
-          {@html toHTML(data.copy.guess_pageAuthorTopContent)}
-        </div>
-      </TopBar>
-    {:else}
-      <GuessingHUD {guessesRemaining} {guessesLimit}>
-        <div slot="content">
-          {@html toHTML(data.copy.guess_pageTopContent)}
-        </div>
-      </GuessingHUD>
-    {/if}
-  </div>
-
-  <div class="choodle-container">
-    <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
-         width='390' height='520' alt=''/>
-  </div>
-
-  {#if choodleOwner}
-    <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
-    <div>
-      <Button colour="yellow"
-              on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+{#if $loading}
+  <LoadingIndicator explanation="enhancing happiness"/>
+{:else}
+  <LayoutContainer class="no-pan">
+    <div class="topBar" slot="topBar">
+      {#if choodleOwner}
+        <TopBar>
+          <div slot="topBarContent">
+            {@html toHTML(data.copy.guess_pageAuthorTopContent)}
+          </div>
+        </TopBar>
+      {:else}
+        <GuessingHUD {guessesRemaining} {guessesLimit}>
+          <div slot="content">
+            {@html toHTML(data.copy.guess_pageTopContent)}
+          </div>
+        </GuessingHUD>
+      {/if}
     </div>
-  {:else}
-    {#if guessesRemaining < 1 || alreadyGuessed}
-      <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
-      <GuessInput
-        format={data.choodle.gamePrompt.split('')}
-        display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
-        cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
 
-      <p><!-- layout placeholder --> </p>
-      <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
-        <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
-          {data.copy.guess_failureNewGameButtonText}
-        </Button>
+    <div class="choodle-container">
+      <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
+           width='390' height='520' alt=''/>
+    </div>
+
+    {#if choodleOwner}
+      <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
+      <div>
+        <Button colour="yellow"
+                on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
       </div>
     {:else}
-      {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
-        <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
-      {:else}
+      {#if guessesRemaining < 1 || alreadyGuessed}
+        <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
+        <GuessInput
+          format={data.choodle.gamePrompt.split('')}
+          display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
+          cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
+
         <p><!-- layout placeholder --> </p>
-      {/if}
-      <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
-                         cursorLocation={cursorLocation} onEnter={check}>
-        <div slot="between">
-          {#if 'hint message data tbd'}
-            <p><a>Need a hint?</a></p>
-          {:else}
-            <p><!-- layout placeholder --> </p>
-          {/if}
+        <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
+          <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
+            {data.copy.guess_failureNewGameButtonText}
+          </Button>
         </div>
-      </GuessingInterface>
+      {:else}
+        {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
+          <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
+        {:else}
+          <p><!-- layout placeholder --> </p>
+        {/if}
+        <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
+                           cursorLocation={cursorLocation} onEnter={check}>
+          <div slot="between">
+            {#if 'hint message data tbd'}
+              <p><a>Need a hint?</a></p>
+            {:else}
+              <p><!-- layout placeholder --> </p>
+            {/if}
+          </div>
+        </GuessingInterface>
+      {/if}
     {/if}
-  {/if}
-</LayoutContainer>
+  </LayoutContainer>
+{/if}
 
 <style>
   .choodle-container {
