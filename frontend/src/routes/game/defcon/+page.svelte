@@ -11,6 +11,7 @@
   import {writable} from "svelte/store";
   import {readOnlyClient} from "$lib/CMSUtils";
   import fp from "lodash/fp";
+  import {toHTML} from "@portabletext/to-html";
 
   export let data
   let currentChoodler
@@ -107,7 +108,8 @@
 
 <LayoutContainer>
   {#if !hasCreatedAChallenge || !currentChoodler}
-    <p>you haven't tried drawing anything yet</p>
+    {@html toHTML(data.copy.landing_content)}
+
     <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
   {:else}
     <div>
@@ -165,7 +167,7 @@
     {/if}
 
     {#if $activeTab === "rules"}
-      <p>put rules here from Sanity</p>
+      {@html toHTML(data.copy.rules_content)}
     {/if}
   {/if}
 </LayoutContainer>
