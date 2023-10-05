@@ -78,7 +78,15 @@
     <section class="tabContent">
       <ul>
         {#each data.challenges as challenge}
-          <li><a href="/game/defcon/guess/{challenge.choodle._ref}">{challenge.choodle._ref}</a></li>
+          <li>
+            <!--            open / lost / won -->
+            <!--            timestamp-->
+            <!--            challenger username -->
+            <a href="/game/defcon/guess/{challenge.choodle._ref}">
+              {challenge._createdAt} |
+              {challenge.challenger.username}
+            </a>
+          </li>
         {/each}
       </ul>
     </section>
