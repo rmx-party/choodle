@@ -8,21 +8,23 @@
   import { page } from "$app/stores";
   import MetaData from "../../../components/MetaData.svelte";
   import { pageBackgroundDefault } from "$lib/Configuration";
+  import { writable } from "svelte/store";
 
   export let data
   let creator
   let hasCreatedAChallenge = false
 
+  const navItems = [
+    'leaderboard',
+    'my games',
+    'rules'
+  ]
+  let activeTab = writable(navItems[0])
+
   // TODO: CMS-populate all the copy / non-dynamic html contents
 
   const startGame = async () => {
     await goto(`/game/defcon/pick`)
-  }
-
-  const nudge = (gameId) => {
-    return async (event) => {
-      // TODO: handle nudge for a game awaiting an action from the other player
-    }
   }
 
   onMount(async () => {
@@ -48,7 +50,7 @@
 />
 
 <LayoutContainer>
-  {#if !hasCreatedAChallenge}
+  {#if !hasCreatedAChallenge || !creator}
     <p>you haven't tried drawing anything yet</p>
     <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
   {:else}
@@ -57,79 +59,66 @@
     </div>
 
     <header>
-      <h3>myname</h3>
+      <h3><strong>{creator.username}</strong></h3>
       <h3>42 points</h3>
     </header>
+
+    <nav>
+      {#each navItems as navItem }
+        <span on:click={() => { activeTab.set(navItem)}}>
+          {#if navItem == $activeTab}
+            <strong>{navItem}</strong>
+          {:else}
+            {navItem}
+          {/if}
+        </span>
+      {/each}
+    </nav>
+
+    <section class="tabContent">
+      <ul>
+        <li>
+          <a href="">
+            <time>some time ago</time>
+            <span>9001</span>
+            <span>playerhandle</span>
+          </a>
+        </li>
+      </ul>
+    </section>
   {/if}
-
-  <nav>
-    <strong>leaderboard</strong>
-    <span>my games</span>
-    <span>rules</span>
-  </nav>
-
-  <leaderboard>
-    <h3>leaderboard</h3>
-    <ul>
-      <li>
-        <time>some time ago</time>
-        <span>9001</span>
-        <span>playerhandle</span>
-      </li>
-    </ul>
-  </leaderboard>
-
-  <games-list>
-    <h3>games</h3>
-    <ul>
-      <li>
-        <span>status</span>
-        <time>20:23:00</time>
-        <span>playerhandle</span>
-      </li>
-    </ul>
-  </games-list>
 </LayoutContainer>
 
 <style>
-  .live-games {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.5rem;
 
-    border-radius: 1rem;
-    background: var(--colors-greyscale-50, #F1F1F1);
+  header {
+    display: block;
+    width: 100%;
+    text-align: right;
+  }
+  nav {
+    display: block;
+    width: 100%;
+    margin: 1rem 0;
+    text-align: left;
+  }
+  nav > span {
+    display: block;
+    width: 100%;
+  }
+  nav > span + span {
+    margin-top: 1rem;
   }
 
-  .live-games > ul {
-    list-style-type: none;
+  .tabContent {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+
+  .tabContent ul {
+    list-style: none;
     margin: 0;
     padding: 0;
-  }
-
-  .live-games > ul > li {
-    list-style-type: none;
-    padding: 1rem;
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 1rem;
-
-    justify-content: stretch;
-    align-items: center;
-    width: 100%;
-
-    border-radius: 0.75rem;
-    background: var(--colors-greyscale-1, #FCFCFC);
-  }
-
-  .live-games .img {
-    display: block;
-    height: 100%;
-    aspect-ratio: 1/1;
-    object-fit: cover;
-    border: 1px solid green;
   }
 </style>
