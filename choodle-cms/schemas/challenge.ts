@@ -9,6 +9,11 @@ export default {
       title: 'the prompt this challenge choodle is based on',
     },
     {
+      name: 'game',
+      type: 'string',
+      title: 'the game this challenge is a part of',
+    },
+    {
       name: 'choodle',
       title: 'A choodle drawing based on a word prompt for someone to try to guess',
       type: 'reference',

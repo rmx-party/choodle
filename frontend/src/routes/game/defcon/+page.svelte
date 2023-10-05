@@ -3,12 +3,12 @@
   import {onMount} from "svelte";
   import Button from "../../../components/Button.svelte";
   import {browser} from "$app/environment";
-  import { getDeviceId, getEmail, getUsername, locateCreator } from "$lib/CreatorUtils";
+  import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
   import LayoutContainer from "../../../components/LayoutContainer.svelte";
-  import { page } from "$app/stores";
+  import {page} from "$app/stores";
   import MetaData from "../../../components/MetaData.svelte";
-  import { pageBackgroundDefault } from "$lib/Configuration";
-  import { writable } from "svelte/store";
+  import {pageBackgroundDefault} from "$lib/Configuration";
+  import {writable} from "svelte/store";
 
   export let data
   let creator
@@ -77,13 +77,9 @@
 
     <section class="tabContent">
       <ul>
-        <li>
-          <a href="">
-            <time>some time ago</time>
-            <span>9001</span>
-            <span>playerhandle</span>
-          </a>
-        </li>
+        {#each data.challenges as challenge}
+          <li><a href="/game/defcon/guess/{challenge.choodle._ref}">{challenge.choodle._ref}</a></li>
+        {/each}
       </ul>
     </section>
   {/if}
@@ -96,16 +92,19 @@
     width: 100%;
     text-align: right;
   }
+
   nav {
     display: block;
     width: 100%;
     margin: 1rem 0;
     text-align: left;
   }
+
   nav > span {
     display: block;
     width: 100%;
   }
+
   nav > span + span {
     margin-top: 1rem;
   }

@@ -44,9 +44,10 @@
     })
   }
 
-  const createChallenge = async ({choodle, prompt, challenger}) => {
+  const createChallenge = async ({choodle, prompt, challenger, game}) => {
     await readWriteClient.create({
       _type: "challenge",
+      game,
       choodle: {_ref: choodle._id},
       challenger: {_ref: challenger._id},
       gamePrompt: prompt,
@@ -115,7 +116,7 @@
 
     creator = await locateCreator({username, deviceId, email});
 
-    createChallenge({choodle: result, prompt: $gamePrompt, challenger: creator})
+    createChallenge({choodle: result, prompt: $gamePrompt, challenger: creator, game: 'defcon'})
     addChoodleToCreator({choodleId: result._id, creatorId: creator._id})
     addPoints(creator._id, 10, "Creating a challenge.")
 
