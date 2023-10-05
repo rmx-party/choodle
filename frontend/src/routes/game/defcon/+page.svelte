@@ -12,6 +12,8 @@
   import {readOnlyClient} from "$lib/CMSUtils";
   import fp from "lodash/fp";
   import {toHTML} from "@portabletext/to-html";
+  import {loading} from "$lib/store";
+  import LoadingIndicator from "../../../components/LoadingIndicator.svelte";
 
   export let data
   let currentChoodler
@@ -76,6 +78,7 @@
 
   onMount(async () => {
     if (!browser) return;
+    loading.set(true)
 
 
     currentChoodler = (await locateCreator({
@@ -97,6 +100,8 @@
     if (currentChoodler?.choodles?.length > 0) { // TODO: figure out the appropriate test for game participation
       hasCreatedAChallenge = true;
     }
+
+    loading.set(false)
   })
 </script>
 
@@ -106,23 +111,26 @@
   url={$page.url}
 />
 
-<LayoutContainer>
-  {#if !hasCreatedAChallenge || !currentChoodler}
-    {@html toHTML(data.copy.landing_content)}
+{#if $loading}
+  <LoadingIndicator explanation="enhancing happiness"/>
+{:else}
+  <LayoutContainer>
+    {#if !hasCreatedAChallenge || !currentChoodler}
+      {@html toHTML(data.copy.landing_content)}
 
-    <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
-  {:else}
-    <div>
-      <Button colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
-    </div>
+      <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
+    {:else}
+      <div>
+        <Button colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
+      </div>
 
-    <header>
-      <h3><strong>{currentChoodler.username}</strong></h3>
-      <h3>{pointsTotal} points</h3>
-    </header>
+      <header>
+        <h3><strong>{currentChoodler.username}</strong></h3>
+        <h3>{pointsTotal} points</h3>
+      </header>
 
-    <nav>
-      {#each navItems as navItem }
+      <nav>
+        {#each navItems as navItem }
         <span on:click={() => { activeTab.set(navItem)}}>
           {#if navItem == $activeTab}
             <strong>{navItem}</strong>
@@ -130,47 +138,48 @@
             {navItem}
           {/if}
         </span>
-      {/each}
-    </nav>
-
-    {#if $activeTab === "my games"}
-      <section class="tabContent">
-        <table>
-          <strong>Not guessed</strong>
-          {#each challengesToBeGuessed as challenge}
-            <tr on:click={() => {goto(`/game/defcon/guess/${challenge.choodle._ref}`)}}>
-              <td>{challenge._createdAt}</td>
-              <td>{challenge.challenger.username}</td>
-            </tr>
-          {/each}
-          <strong>guessed</strong>
-          {#each guesses as guess}
-            <tr on:click={() => {goto(`/game/defcon/guess/${guess.challenge.choodle._id}`)}}>
-              <td>{guess.guessedCorrectly ? "won" : "lost"}</td>
-              <td>{guess.challenge._createdAt}</td>
-              <td>{guess.challenge.challenger.username}</td>
-            </tr>
-          {/each}
-        </table>
-      </section>
-    {/if}
-
-    {#if $activeTab === "leaderboard"}
-      <section class="tabContent">
-        {#each leaderboard as leaderboardItem}
-          <ul>
-            <li
-              class="{currentChoodler.username === leaderboardItem.creatorUsername ? 'highlight' : ''}">{leaderboardItem.totalPoints} {leaderboardItem.creatorUsername}</li>
-          </ul>
         {/each}
-      </section>
-    {/if}
+      </nav>
 
-    {#if $activeTab === "rules"}
-      {@html toHTML(data.copy.rules_content)}
+      {#if $activeTab === "my games"}
+        <section class="tabContent">
+          <table>
+            <strong>Not guessed</strong>
+            {#each challengesToBeGuessed as challenge}
+              <tr on:click={() => {goto(`/game/defcon/guess/${challenge.choodle._ref}`)}}>
+                <td>{challenge._createdAt}</td>
+                <td>{challenge.challenger.username}</td>
+              </tr>
+            {/each}
+            <strong>guessed</strong>
+            {#each guesses as guess}
+              <tr on:click={() => {goto(`/game/defcon/guess/${guess.challenge.choodle._id}`)}}>
+                <td>{guess.guessedCorrectly ? "won" : "lost"}</td>
+                <td>{guess.challenge._createdAt}</td>
+                <td>{guess.challenge.challenger.username}</td>
+              </tr>
+            {/each}
+          </table>
+        </section>
+      {/if}
+
+      {#if $activeTab === "leaderboard"}
+        <section class="tabContent">
+          {#each leaderboard as leaderboardItem}
+            <ul>
+              <li
+                class="{currentChoodler.username === leaderboardItem.creatorUsername ? 'highlight' : ''}">{leaderboardItem.totalPoints} {leaderboardItem.creatorUsername}</li>
+            </ul>
+          {/each}
+        </section>
+      {/if}
+
+      {#if $activeTab === "rules"}
+        {@html toHTML(data.copy.rules_content)}
+      {/if}
     {/if}
-  {/if}
-</LayoutContainer>
+  </LayoutContainer>
+{/if}
 
 <style>
 
