@@ -21,6 +21,7 @@
   let guesses
 
   let challengesToBeGuessed
+  let leaderboard
 
   const navItems = [
     'leaderboard',
@@ -35,6 +36,24 @@
     await goto(`/game/defcon/pick`)
   }
 
+  const assembleLeaderboard = async () => {
+    const points = await readOnlyClient.fetch(`*[_type == "points"]{..., creator->{...}}`)
+    const creatorUsernames = fp.uniq(fp.map(point => point.creator.username, points))
+
+
+    return fp.orderBy(['totalPoints'], ['desc'],
+      fp.map(creatorUsername => {
+        let pointsForUser = fp.filter(point => point.creator.username === creatorUsername, points)
+
+        let totalPoints = fp.reduce((accumulator, item) => {
+          return accumulator + item.amount
+        }, 0, pointsForUser)
+
+        return {creatorUsername: creatorUsername || "unknown", totalPoints}
+
+      }, creatorUsernames))
+  }
+
   const getPointsForUser = async (creatorId) => {
     const points = await readOnlyClient.fetch(`*[_type == "points"][creator._ref match "${creatorId}"]`)
     console.log("points ", points)
@@ -45,27 +64,29 @@
     const guesses = await readOnlyClient.fetch(`*[_type == "guess"][guesser._ref match "${creatorId}"]{..., challenge->{..., choodle->{...}, challenger->{...}}}`)
     console.log("guesses ", guesses)
     return guesses
-  }
 
+  }
   const challengesThatHaveNotBeenGuessed = async (creatorId, challenges, guesses) => {
     const guessedChallengeIds = fp.map(guess => guess.challenge._id, guesses)
     console.log("challenges", challenges)
     return fp.reject(challenge => guessedChallengeIds.includes(challenge._id), challenges)
-  }
 
+  }
   onMount(async () => {
     if (!browser) return;
+
 
     creator = (await locateCreator({
       email: await getEmail(),
       username: await getUsername(),
       deviceId: await getDeviceId()
     })); // TODO: migrate global creator/player state to a store shared across pages
-
     points = await getPointsForUser(creator._id)
     pointsTotal = fp.reduce((accumulator, item) => {
       return accumulator + item.amount
     }, 0, points)
+
+    leaderboard = await assembleLeaderboard()
 
     guesses = await getGuessesForUser(creator._id)
     challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(creator._id, data.challenges, guesses)
@@ -130,6 +151,15 @@
           </li>
         {/each}
       </ul>
+    </section>
+
+    <section class="tabContent">
+      <strong>leaderboard</strong>
+      {#each leaderboard as leaderboardItem}
+        <ul>
+          <li>{leaderboardItem.totalPoints} {leaderboardItem.creatorUsername}</li>
+        </ul>
+      {/each}
     </section>
   {/if}
 </LayoutContainer>
