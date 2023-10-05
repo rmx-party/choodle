@@ -8,12 +8,13 @@
   import {page} from "$app/stores";
   import MetaData from "../../../../../components/MetaData.svelte";
   import {onMount} from "svelte";
-  import {getDeviceId} from "$lib/CreatorUtils";
+  import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
   import fp from "lodash/fp";
   import GuessingInterface from "../../GuessingInterface.svelte";
   import GuessInput from "../../../../../components/GuessInput.svelte";
   import {toHTML} from "@portabletext/to-html";
+  import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
 
   export let data;
   const currentGuess = writable([])
@@ -26,7 +27,48 @@
   let choodleOwner = false;
   let copiedToClipboard = false;
 
-  const check = () => {
+  async function locateChallenge(choodleId) {
+    let query = `*[_type == "challenge" && game == "defcon"][choodle._ref match "${choodleId}"]`
+    console.log(query)
+    return (await readOnlyClient.fetch(query))[0]
+  }
+
+  export const locateGuess = async ({guesserId, choodleId}: {
+    guesserId: string | undefined,
+    choodleId: string | undefined,
+  }) => {
+    const challenge = await locateChallenge(choodleId)
+    const query = `*[_type == "guess"][guesser._ref match "${guesserId}" && challenge._ref match "${challenge._id}"]`
+    let guess = (await readOnlyClient.fetch(query))[0]
+    if (!guess) {
+      guess = await readWriteClient.create(
+        {
+          _type: "guess",
+          guesser: {_ref: guesserId},
+          challenge: {_ref: challenge._id}
+        },
+        {autoGenerateArrayKeys: true}
+      )
+    }
+    return guess
+  }
+
+  const check = async () => {
+    const deviceId = await getDeviceId()
+    const email = await getEmail()
+    const username = await getUsername()
+
+    const guesser = await locateCreator({email, deviceId, username})
+    const guess = await locateGuess({guesserId: guesser._id, choodleId: data.choodle._id})
+
+    await readWriteClient
+      .patch(guess._id)
+      .setIfMissing({guesses: []})
+      .append('guesses', [$currentGuess.join('')])
+      .commit()
+
+    // do points
+
     if ($currentGuess.length < data.choodle.gamePrompt.length) return;
 
     guessesRemaining--;

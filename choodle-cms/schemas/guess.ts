@@ -4,10 +4,10 @@ export default {
   title: 'Guess',
   fields: [
     {
-      name: 'challenger',
-      title: 'the person who drew the choodle to be guessed',
+      name: 'challenge',
+      title: 'the challenge to guess',
       type: 'reference',
-      to: {type: 'creator'}
+      to: {type: 'challenge'}
     },
     {
       name: 'guesser',

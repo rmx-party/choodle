@@ -44,13 +44,14 @@ export async function getUsername(): Promise<string | undefined> {
   }
 }
 
-
 export const locateCreator = async ({username, deviceId, email}: { // TODO: make it a find or create so it can be used everywhere we need a reference
   username?: string | undefined,
   deviceId?: string | undefined,
   email?: string | undefined
 }) => {
-  if (!deviceId) { deviceId = await getDeviceId() }
+  if (!deviceId) {
+    deviceId = await getDeviceId()
+  }
   console.log(`locateCreator: ${deviceId} ${username} ${email}`)
   let query = `*[_type == "creator"][deviceIds match "${deviceId}"`
   if (email) {
@@ -66,9 +67,9 @@ export const locateCreator = async ({username, deviceId, email}: { // TODO: make
   if (creator) {
     creator = await readWriteClient
       .patch(creator._id)
-      .setIfMissing({ username, email })
+      .setIfMissing({username, email})
       .setIfMissing({deviceIds: [deviceId]})
-      .commit({ autoGenerateArrayKeys: true })
+      .commit({autoGenerateArrayKeys: true})
   } else {
     creator = await readWriteClient.create(
       {
@@ -77,10 +78,9 @@ export const locateCreator = async ({username, deviceId, email}: { // TODO: make
         email,
         deviceIds: [deviceId],
       },
-      { autoGenerateArrayKeys: true }
+      {autoGenerateArrayKeys: true}
     )
   }
-  console.log({ creator })
+  console.log({creator})
   return creator
 }
-
