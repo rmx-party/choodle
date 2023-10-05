@@ -247,6 +247,8 @@
     justify-content: center;
     margin: 0.75rem;
     max-width: 100%;
+
+    max-height: clamp(300px, 40svh, 800px);
   }
 
   img.choodle {
