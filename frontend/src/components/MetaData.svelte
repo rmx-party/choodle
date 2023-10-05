@@ -1,7 +1,7 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { backgroundColour } from "$lib/Configuration";
-  import { setDynamicBackground } from "$lib/dynamicBackground";
+  import { setDynamicBackground } from "$lib/DynamicBackground";
 
   export let url: URL | string | undefined = undefined;
   export let title: string | undefined = undefined;
