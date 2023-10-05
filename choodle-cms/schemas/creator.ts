@@ -17,7 +17,8 @@ export default {
       name: 'deviceIds',
       title: 'Device IDs associated with this creator',
       type: 'array',
-      of: [{type: 'string'}]
+      of: [{type: 'string'}],
+      validation: Rule => Rule.unique()
     },
     {
       name: 'choodles',
@@ -28,7 +29,8 @@ export default {
           type: 'reference',
           to: [{type: 'choodle'}]
         }
-      ]
+      ],
+      validation: Rule => Rule.unique()
     },
     {
       name: 'games',
@@ -39,7 +41,8 @@ export default {
           type: 'reference',
           to: [{type: 'challenge'}]
         }
-      ]
+      ],
+      validation: Rule => Rule.unique()
     },
   ]
 }
