@@ -18,6 +18,10 @@
   let points
   let pointsTotal = 0
 
+  let guesses
+
+  let challengesToBeGuessed
+
   const navItems = [
     'leaderboard',
     'my games',
@@ -37,6 +41,18 @@
     return points
   }
 
+  const getGuessesForUser = async (creatorId) => {
+    const guesses = await readOnlyClient.fetch(`*[_type == "guess"][guesser._ref match "${creatorId}"]{..., challenge->{..., choodle->{...}, challenger->{...}}}`)
+    console.log("guesses ", guesses)
+    return guesses
+  }
+
+  const challengesThatHaveNotBeenGuessed = async (creatorId, challenges, guesses) => {
+    const guessedChallengeIds = fp.map(guess => guess.challenge._id, guesses)
+    console.log("challenges", challenges)
+    return fp.reject(challenge => guessedChallengeIds.includes(challenge._id), challenges)
+  }
+
   onMount(async () => {
     if (!browser) return;
 
@@ -50,6 +66,9 @@
     pointsTotal = fp.reduce((accumulator, item) => {
       return accumulator + item.amount
     }, 0, points)
+
+    guesses = await getGuessesForUser(creator._id)
+    challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(creator._id, data.challenges, guesses)
 
     console.log({creator})
     if (creator?.choodles?.length > 0) { // TODO: figure out the appropriate test for game participation
@@ -92,11 +111,21 @@
 
     <section class="tabContent">
       <ul>
-        {#each data.challenges as challenge}
+        <strong>Not guessed</strong>
+        {#each challengesToBeGuessed as challenge}
           <li>
             <a href="/game/defcon/guess/{challenge.choodle._ref}">
               {challenge._createdAt} |
               {challenge.challenger.username}
+            </a>
+          </li>
+        {/each}
+        <strong>guessed</strong>
+        {#each guesses as guess}
+          <li>
+            <a href="/game/defcon/guess/{guess.challenge.choodle._ref}">
+              {guess.guessedCorrectly} | {guess.challenge._createdAt} |
+              {guess.challenge.challenger.username}
             </a>
           </li>
         {/each}

@@ -2,7 +2,7 @@ import {readOnlyClient} from "$lib/CMSUtils";
 
 export async function load({params}) {
   const copy = await readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy"] | order(_createdAt) [0]`)
-  const challenges = await readOnlyClient.fetch(`*[_type == "challenge" && game == "defcon"]{_createdAt, choodle, challenger->{username}} | order(_createdAt desc)`)
+  const challenges = await readOnlyClient.fetch(`*[_type == "challenge" && game == "defcon"]{..., choodle, challenger->{username}} | order(_createdAt desc)`)
 
   const
     dummyGames = [ // TODO: speculative data model for page mockup purposes
