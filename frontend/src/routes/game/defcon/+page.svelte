@@ -15,6 +15,8 @@
   import {loading} from "$lib/store";
   import LoadingIndicator from "../../../components/LoadingIndicator.svelte";
 
+  loading.set(true)
+
   export let data
   let currentChoodler
   let hasCreatedAChallenge = false
@@ -68,7 +70,7 @@
     console.log("guesses ", guesses)
     return fp.reject(guess => guess.guessedCorrectly === undefined, guesses)
   }
-  
+
   const challengesThatHaveNotBeenGuessed = async (creatorId, challenges, guesses) => {
     const guessedChallengeIds = fp.map(guess => guess.challenge._id, guesses)
     console.log("challenges", challenges)
@@ -78,8 +80,6 @@
 
   onMount(async () => {
     if (!browser) return;
-    loading.set(true)
-
 
     currentChoodler = (await locateCreator({
       email: await getEmail(),
