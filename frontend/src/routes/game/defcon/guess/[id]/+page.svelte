@@ -20,6 +20,8 @@
   import LoadingIndicator from "../../../../../components/LoadingIndicator.svelte";
   import {loading} from "$lib/store";
 
+  loading.set(true)
+
   export let data;
   const currentGuess = writable([])
   const cursorLocation = writable(0)
@@ -141,8 +143,6 @@
   }
 
   onMount(async () => {
-    loading.set(true)
-
     choodleOwner = (data.choodle.creatorId === await getDeviceId())
     challenge = await locateChallenge(data.choodle._id)
 
@@ -212,7 +212,7 @@
 
         <p><!-- layout placeholder --> </p>
         <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
-          <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
+          <Button colour="yellow" on:click={() => {goto(`/game/defcon`)}}>
             {data.copy.guess_failureNewGameButtonText}
           </Button>
         </div>
