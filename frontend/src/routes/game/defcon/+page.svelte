@@ -20,9 +20,8 @@
   export let data
   let currentChoodler
   let hasCreatedAChallenge = false
+  let points
   let pointsTotal = 0
-  let allPoints
-  let currentChoodlerPoints
 
   let guesses
 
@@ -46,6 +45,7 @@
     const points = await readOnlyClient.fetch(`*[_type == "points"]{..., creator->{...}}`)
     const creatorUsernames = fp.uniq(fp.map(point => point.creator.username, points))
 
+
     return fp.orderBy(['totalPoints'], ['desc'],
       fp.map(creatorUsername => {
         let pointsForUser = fp.filter(point => point.creator.username === creatorUsername, points)
@@ -60,7 +60,7 @@
   }
 
   const getPointsForUser = async (creatorId) => {
-    const points = fp.filter((point) => point.creator._id === creatorId)
+    const points = await readOnlyClient.fetch(`*[_type == "points"][creator._ref match "${creatorId}"]`)
     console.log("user points ", points)
     return points
   }
@@ -100,15 +100,16 @@
       return // Don't load leaderboard stuff if player can't see it anyway
     }
 
-    currentChoodlerPoints = getPointsForUser(currentChoodler._id)
+    points = await getPointsForUser(currentChoodler._id)
     pointsTotal = fp.reduce((accumulator, item) => {
       return accumulator + item.amount
-    }, 0, currentChoodlerPoints)
+    }, 0, points)
 
     leaderboard = await assembleLeaderboard()
 
     guesses = await getGuessesForUser(currentChoodler._id)
     challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(currentChoodler._id, data.challenges, guesses)
+
 
 
     loading.set(false)
@@ -157,19 +158,14 @@
             {#each challengesToBeGuessed as challenge}
               <tr on:click={() => {goto(`/game/defcon/guess/${challenge.choodle._ref}`)}}>
                 <td class="status">Open</td>
-                <td class="createdAt">
-                  <time>{challenge._createdAt}</time>
-                </td>
+                <td class="createdAt"><time>{challenge._createdAt}</time></td>
                 <td class="username">{challenge.challenger.username}</td>
               </tr>
             {/each}
             {#each guesses as guess}
               <tr on:click={() => {goto(`/game/defcon/guess/${guess.challenge.choodle._id}`)}}>
-                <td
-                  class={`${guess.guessedCorrectly ? "won" : "lost"} status`}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</td>
-                <td class="createdAt">
-                  <time>{guess.challenge._createdAt}</time>
-                </td>
+                <td class={`${guess.guessedCorrectly ? "won" : "lost"} status`}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</td>
+                <td class="createdAt"><time>{guess.challenge._createdAt}</time></td>
                 <td class="username">{guess.challenge.challenger.username}</td>
               </tr>
             {/each}
@@ -244,23 +240,18 @@
   table {
     width: 100%;
   }
-
   .my-games tr, nav > span {
     cursor: pointer;
   }
-
   tr .won {
     color: hsla(108, 90%, 28%, 1);
   }
-
   tr .lost {
     color: hsla(0, 100%, 21%, 1);
   }
-
   .status {
     text-align: center;
   }
-
   .username {
     text-align: right;
   }
