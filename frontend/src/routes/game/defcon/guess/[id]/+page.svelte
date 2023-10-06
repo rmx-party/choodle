@@ -20,6 +20,7 @@
   import LoadingIndicator from "../../../../../components/LoadingIndicator.svelte";
   import {loading} from "$lib/store";
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
+  import Keyboard from '../../../../../components/Keyboard.svelte';
 
   loading.set(true)
 
@@ -34,6 +35,7 @@
   let choodleOwner = false;
   let copiedToClipboard = false;
   let alreadyGuessed = false;
+  let success = false;
 
   let challenge
   let deviceId
@@ -69,12 +71,6 @@
   }
 
   const check = async () => {
-    await readWriteClient
-    .patch(guess._id)
-    .setIfMissing({guesses: []})
-    .append('guesses', [$currentGuess.join('')])
-    .commit()
-
     if ($currentGuess.length < data.choodle.gamePrompt.length) return;
 
     guessesRemaining--;
@@ -86,14 +82,19 @@
       cursorLocation.set(0)
 
       if (guessesRemaining < 1) {
-        await readWriteClient
-        .patch(guess._id)
-        .set({guessedCorrectly: false})
-        .commit()
+        readWriteClient
+          .patch(guess._id)
+          .setIfMissing({guesses: []})
+          .append('guesses', [$currentGuess.join('')])
+          .set({guessedCorrectly: false})
+          .commit()
       }
 
       return
     }
+
+    console.log(`right answer, you won the thing`)
+    success = true
 
     /* Points
        3 for guessing correctly on first try
@@ -103,13 +104,14 @@
     let amount = guessesRemaining + 1
     let reason = `Guessed correctly with ${guessesRemaining} remaining.`
 
-    await addPoints(guesser._id, amount, reason, challenge._id)
     await readWriteClient
-    .patch(guess._id)
-    .set({guessedCorrectly: true})
-    .commit()
+      .patch(guess._id)
+      .setIfMissing({guesses: []})
+      .append('guesses', [$currentGuess.join('')])
+      .set({guessedCorrectly: true})
+      .commit()
+    await addPoints(guesser._id, amount, reason, challenge._id)
 
-    console.log(`right answer, you won the thing`)
     goto(`/game/defcon/success/${data.choodle._id}`)
   }
 
@@ -154,6 +156,7 @@
     guess = await locateGuess({guesserId: guesser._id, choodleId: data.choodle._id})
 
     alreadyGuessed = guess.guessedCorrectly !== undefined
+    success = !!guess.guessedCorrectly
 
     if (guess?.guesses) {
       guessesRemaining = (guessesLimit - guess?.guesses?.length)
@@ -203,31 +206,41 @@
           on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
       </div>
     {:else}
-      {#if guessesRemaining < 1 || alreadyGuessed}
-        <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
-        <GuessInput
-          format={data.choodle.gamePrompt.split('')}
-          display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
-          cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
-
-        <p><!-- layout placeholder --> </p>
-        <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
-          <Button colour="yellow" on:click={() => {goto(`/game/defcon`)}}>
-            {data.copy.guess_failureNewGameButtonText}
-          </Button>
-        </div>
-      {:else}
-        {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
-          <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
-        {:else}
+      {#if success}
+          <p class="">{data.copy.guess_successMessageText || "FOOO"}</p>
+          <GuessInput
+            format={data.choodle.gamePrompt.split('')}
+            display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
+            cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
           <p><!-- layout placeholder --> </p>
-        {/if}
-        <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
-          cursorLocation={cursorLocation} onEnter={check}>
-          <div slot="between">
-            <p><!-- layout placeholder --> </p>
+          <Keyboard onKeyPress={() => {}}/>
+      {:else}
+        {#if guessesRemaining < 1 || alreadyGuessed}
+          <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
+          <GuessInput
+            format={data.choodle.gamePrompt.split('')}
+            display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
+            cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
+
+          <p><!-- layout placeholder --> </p>
+          <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
+            <Button colour="yellow" on:click={() => {goto(`/game/defcon`)}}>
+              {data.copy.guess_failureNewGameButtonText}
+            </Button>
           </div>
-        </GuessingInterface>
+        {:else}
+          {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
+            <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
+          {:else}
+            <p><!-- layout placeholder --> </p>
+          {/if}
+          <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
+            cursorLocation={cursorLocation} onEnter={check}>
+            <div slot="between">
+              <p><!-- layout placeholder --> </p>
+            </div>
+          </GuessingInterface>
+        {/if}
       {/if}
     {/if}
   </LayoutContainer>
