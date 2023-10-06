@@ -111,8 +111,6 @@
       .set({guessedCorrectly: true})
       .commit()
     await addPoints(guesser._id, amount, reason, challenge._id)
-
-    goto(`/game/defcon/success/${data.choodle._id}`)
   }
 
   const canShare = (shareable?): boolean => {
@@ -167,12 +165,12 @@
 </script>
 
 <MetaData url={$page.url}
-  title="Choodle w/ Friends: DEFcon Edition"
-  themeColor={choodleYellow}
-  bgColor={pageBackgroundDefault}
-  imageUrl={urlFor(data.choodle.upScaledImage).url()}
-  width="430"
-  height="932"
+          title="Choodle w/ Friends: DEFcon Edition"
+          themeColor={choodleYellow}
+          bgColor={pageBackgroundDefault}
+          imageUrl={urlFor(data.choodle.upScaledImage).url()}
+          width="430"
+          height="932"
 />
 
 {#if $loading}
@@ -203,17 +201,18 @@
       <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
       <div>
         <Button colour="yellow"
-          on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+                on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
       </div>
     {:else}
       {#if success}
-          <p class="">{data.copy.guess_successMessageText}</p>
-          <GuessInput
-            format={data.choodle.gamePrompt.split('')}
-            display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
-            cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
-          <p><!-- layout placeholder --> </p>
-          <Keyboard onKeyPress={() => {}}/>
+        <p class="">{data.copy.guess_successMessageText}</p>
+        <GuessInput
+          format={data.choodle.gamePrompt.split('')}
+          display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
+          cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
+        <p><!-- layout placeholder --> </p>
+        <Button on:click={() => { goto('/game/defcon')}}
+                colour="yellow">{data.copy.success_continueGameButtonText}</Button>
       {:else}
         {#if guessesRemaining < 1 || alreadyGuessed}
           <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
@@ -235,7 +234,7 @@
             <p><!-- layout placeholder --> </p>
           {/if}
           <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
-            cursorLocation={cursorLocation} onEnter={check}>
+                             cursorLocation={cursorLocation} onEnter={check}>
             <div slot="between">
               <p><!-- layout placeholder --> </p>
             </div>
@@ -250,6 +249,7 @@
   .failure {
     color: red;
   }
+
   p {
     margin: 0.5rem;
   }
