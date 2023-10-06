@@ -12,7 +12,8 @@
   import {onMount} from "svelte";
   import {browser} from "$app/environment";
   import ChoodleContainer from "../../../components/ChoodleContainer.svelte";
-	import ButtonMenu from "../../../components/ButtonMenu.svelte";
+  import ButtonMenu from "../../../components/ButtonMenu.svelte";
+  import LayoutContainer from "../../../components/LayoutContainer.svelte";
 
   export let data = {};
   let imgBlob;
@@ -107,7 +108,7 @@
   height="932"
 />
 
-<div class="container">
+<LayoutContainer>
   <div id="top-box">
     <a href="/">
       <Wordmark fontSize="4.25rem"/>
@@ -131,28 +132,9 @@
       <Button on:click={share} icon={send} iconPosition='right'>Share</Button>
     {/if}
   </ButtonMenu>
-</div>
+</LayoutContainer>
 
 <style>
-  :root {
-    text-align: center;
-  }
-
-  .container {
-    /* gap: 2rem; */
-    padding: 1rem 1rem;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-content: stretch;
-    align-items: stretch;
-    justify-content: space-between;
-    height: 100vh;
-    height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
-    width: 100%;
-    padding: 1.5rem;
-  }
-
   .tagline {
     margin-top: 0rem;
   }
