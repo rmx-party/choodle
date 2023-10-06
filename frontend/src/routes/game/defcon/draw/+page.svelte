@@ -62,9 +62,7 @@
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false);
 
-    const storedName = await localforage.getItem(choodleCreatorUsernameKey)
-
-    if (!(creatorUsername.length > 0) && !(`${storedName}`.length > 0)) return;
+    if (creatorUsername.length > 0) return await saveUsername();
 
     console.log(`prompting for username...`)
     dialogState.update(dialogs => {
