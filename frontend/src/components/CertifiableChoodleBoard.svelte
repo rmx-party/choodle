@@ -157,18 +157,3 @@
       colour="yellow">{certificateModal.CTA}</Button>
   </Dialog>
 </ChoodleBoard>
-
-<style>
-  #buttons {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-content: center;
-    gap: 1rem;
-    padding: 0 1rem 1rem;
-    margin: 0;
-  }
-</style>
