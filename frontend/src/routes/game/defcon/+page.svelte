@@ -31,8 +31,8 @@
   let leaderboard = []
 
   const navItems = [
-    'leaderboard',
     'my games',
+    'leaderboard',
     'rules'
   ]
   let activeTab = writable(navItems[0])
