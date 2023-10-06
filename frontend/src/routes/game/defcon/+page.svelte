@@ -141,12 +141,8 @@
 
       <nav>
         {#each navItems as navItem }
-        <span on:click={() => { activeTab.set(navItem)}}>
-          {#if navItem == $activeTab}
-            <strong>{navItem}</strong>
-          {:else}
+        <span on:click={() => { activeTab.set(navItem)}} class={`${navItem == $activeTab ? 'active' : ''}`}>
             {navItem}
-          {/if}
         </span>
         {/each}
       </nav>
@@ -215,13 +211,22 @@
   nav {
     display: block;
     width: 100%;
-    margin: 1rem 0;
+    margin: 1rem 0 2rem;
     text-align: left;
+
+    text-transform: capitalize;
+    font-size: 18px;
+    font-family: 'DejaVu Sans Bold';
+    color: darkgrey;
   }
 
   nav > span {
     display: block;
     width: 100%;
+  }
+
+  nav > .active {
+    color: var(--choodle-black);
   }
 
   nav > span + span {
