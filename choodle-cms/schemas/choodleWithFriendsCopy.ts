@@ -9,6 +9,11 @@ export default {
       title: 'The game that this copy is for.',
     },
     {
+      name: 'logo',
+      type: 'image',
+      title: 'Choodle Logo'
+    },
+    {
       name: 'landing_content',
       title: 'Content for the landing page',
       type: 'array',
