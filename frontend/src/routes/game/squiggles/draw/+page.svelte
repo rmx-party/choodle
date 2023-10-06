@@ -1,0 +1,106 @@
+<script lang="ts">
+  import ChoodleBoard from "../../../../components/ChoodleBoard.svelte";
+  import type {UndoStack} from "$lib/UndoStack";
+  import Prompt from "../../../../components/Prompt.svelte";
+  import {writable} from "svelte/store";
+  import {addChoodleToCreator, saveChoodle} from "$lib/ChoodleStorage";
+  import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
+  import {browser} from "$app/environment";
+  import {clearStorage} from "$lib/StorageStuff";
+  import {goto} from "$app/navigation";
+  import {onMount, SvelteComponent} from "svelte";
+  import localforage from "localforage";
+  import {
+    pageBackgroundDefault,
+    choodlePromptKey,
+
+    choodleYellow
+
+  } from "$lib/Configuration";
+  import Button from "../../../../components/Button.svelte";
+  import {loading} from "$lib/store";
+  import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
+  import MetaData from "../../../../components/MetaData.svelte";
+  import {page} from "$app/stores";
+  import LayoutContainer from "../../../../components/LayoutContainer.svelte";
+  import ButtonMenu from "../../../../components/ButtonMenu.svelte";
+
+  export let data;
+
+  let child: SvelteComponent<ChoodleBoard>;
+
+  let isOnline = true;
+  let creator
+
+  const gamePrompt = writable<string | null>(null)
+
+  async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
+    loading.set(true)
+    return await saveChoodle(undoStack, canvas, {
+      gamePrompt: $gamePrompt || null,
+      creatorId: await getDeviceId()
+    })
+  }
+
+  const afterSave = async (result) => {
+    if (!browser) return;
+    if (!result._id) return;
+
+    const deviceId = await getDeviceId()
+    const email = await getEmail()
+    const username = await getUsername()
+
+    creator = await locateCreator({username, deviceId, email});
+
+    addChoodleToCreator({choodleId: result._id, creatorId: creator._id})
+
+    // take us to the home page
+    await goto(`/c/${result._id}`)
+
+    await clearStorage()
+    loading.set(false)
+  }
+
+  onMount(async () => {
+    if (!browser) return;
+
+    window.addEventListener('online', () => {
+      console.log('online')
+      isOnline = true
+    })
+    window.addEventListener('offline', () => {
+      console.log('offline')
+      isOnline = false
+    })
+
+    gamePrompt.set(await localforage.getItem(choodlePromptKey))
+  })
+</script>
+
+
+<MetaData
+  title="Squiggles"
+  themeColor={choodleYellow}
+  bgColor={pageBackgroundDefault}
+  url={$page.url}
+/>
+
+{#if !$loading}
+  <LayoutContainer class="no-pan">
+    <div slot="topBar" style="width: 100%;">
+      <Prompt prompt={`Add just one line to create your own doodle!`} instruction={`Draw:`} />
+    </div>
+
+    <ChoodleBoard id="squiggles-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
+      <ButtonMenu slot="buttons">
+        <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
+        <Button on:click={child.save} isOnline={isOnline}
+          colour="yellow">{data.copy.draw_doneButtonText}</Button>
+      </ButtonMenu>
+    </ChoodleBoard>
+  </LayoutContainer>
+{:else}
+  <LoadingIndicator explanation={'saving'}/>
+{/if}
+
+

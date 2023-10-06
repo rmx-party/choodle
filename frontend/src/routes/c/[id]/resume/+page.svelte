@@ -20,7 +20,7 @@
     const undoStack = await getUndoStack()
     undoStack.push(imgUrl)
     await setUndoStack(undoStack);
-    await goto('/draw')
+    await goto('/game/squiggles/draw')
   }
 </script>
 
