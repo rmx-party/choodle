@@ -1,6 +1,6 @@
 
 <div class="choodle-container" {...$$restProps}>
-  <slot class="choodle" name="choodle" />
+  <slot />
 </div>
 
 <style>

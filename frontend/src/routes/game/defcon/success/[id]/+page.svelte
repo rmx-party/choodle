@@ -7,6 +7,7 @@
   import MetaData from "../../../../../components/MetaData.svelte";
   import { page } from "$app/stores";
   import {pageBackgroundDefault} from '$lib/Configuration';
+  import ChoodleContainer from "../../../../../components/ChoodleContainer.svelte";
 
   export let data;
 </script>
@@ -22,10 +23,9 @@
     {@html toHTML(data.copy.success_topContent)}
   </div>
 
-  <div class="choodle-container">
-    <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
-         width='390' height='520' alt=''/>
-  </div>
+  <ChoodleContainer>
+    <img src={urlFor(data.choodle.upScaledImage).url()} width='390' height='520' alt=''/>
+  </ChoodleContainer>
 
   <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
 

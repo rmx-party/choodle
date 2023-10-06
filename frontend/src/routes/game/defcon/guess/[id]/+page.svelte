@@ -19,6 +19,7 @@
   import {pageBackgroundDefault, choodleYellow} from '$lib/Configuration';
   import LoadingIndicator from "../../../../../components/LoadingIndicator.svelte";
   import {loading} from "$lib/store";
+	import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
 
   loading.set(true)
 
@@ -191,10 +192,9 @@
       {/if}
     </div>
 
-    <div class="choodle-container">
-      <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
-           width='390' height='520' alt=''/>
-    </div>
+    <ChoodleContainer>
+      <img src={urlFor(data.choodle.upScaledImage).url()} width='390' height='520' alt=''/>
+    </ChoodleContainer>
 
     {#if choodleOwner}
       <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
@@ -238,30 +238,6 @@
 {/if}
 
 <style>
-  .choodle-container {
-    padding: 0;
-    flex-grow: 1;
-    aspect-ratio: 3 / 4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0.75rem;
-    max-width: 100%;
-
-    max-height: clamp(300px, 40svh, 800px);
-  }
-
-  img.choodle {
-    aspect-ratio: 3 / 4;
-    flex-grow: 1;
-    max-height: 100%;
-    max-width: 95vw;
-    image-rendering: pixelated;
-
-    border-radius: 0.22175rem;
-    box-shadow: 1px 1px 17.74193572998047px 0.8870968222618103px rgba(0, 0, 0, 0.12);
-  }
-
   .failure {
     color: red;
   }
