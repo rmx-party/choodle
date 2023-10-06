@@ -69,16 +69,12 @@
       dialogState.update(dialogs => {
         return {...dialogs, ["username-prompt"]: true}
       })
-    } else {
-      console.log(`saving without username...`)
-      child.save(event)
     }
   }
 
   const saveUsername = async () => {
     if (!browser) return;
-    if (!creatorUsername) return;
-    if (creatorUsername?.length <= 1) return;
+    if (creatorUsername === "") return;
 
     console.log(`saving creator username`)
     await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
@@ -168,3 +164,5 @@
 {:else}
   <LoadingIndicator explanation={'saving'}/>
 {/if}
+
+
