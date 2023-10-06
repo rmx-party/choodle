@@ -19,7 +19,7 @@
   import {pageBackgroundDefault, choodleYellow} from '$lib/Configuration';
   import LoadingIndicator from "../../../../../components/LoadingIndicator.svelte";
   import {loading} from "$lib/store";
-	import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
+  import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
 
   loading.set(true)
 
@@ -70,10 +70,10 @@
 
   const check = async () => {
     await readWriteClient
-      .patch(guess._id)
-      .setIfMissing({guesses: []})
-      .append('guesses', [$currentGuess.join('')])
-      .commit()
+    .patch(guess._id)
+    .setIfMissing({guesses: []})
+    .append('guesses', [$currentGuess.join('')])
+    .commit()
 
     if ($currentGuess.length < data.choodle.gamePrompt.length) return;
 
@@ -87,9 +87,9 @@
 
       if (guessesRemaining < 1) {
         await readWriteClient
-          .patch(guess._id)
-          .set({guessedCorrectly: false})
-          .commit()
+        .patch(guess._id)
+        .set({guessedCorrectly: false})
+        .commit()
       }
 
       return
@@ -105,9 +105,9 @@
 
     await addPoints(guesser._id, amount, reason, challenge._id)
     await readWriteClient
-      .patch(guess._id)
-      .set({guessedCorrectly: true})
-      .commit()
+    .patch(guess._id)
+    .set({guessedCorrectly: true})
+    .commit()
 
     console.log(`right answer, you won the thing`)
     goto(`/game/defcon/success/${data.choodle._id}`)
@@ -164,12 +164,12 @@
 </script>
 
 <MetaData url={$page.url}
-          title="Choodle w/ Friends: DEFcon Edition"
-          themeColor={choodleYellow}
-          bgColor={pageBackgroundDefault}
-          imageUrl={urlFor(data.choodle.upScaledImage).url()}
-          width="430"
-          height="932"
+  title="Choodle w/ Friends: DEFcon Edition"
+  themeColor={choodleYellow}
+  bgColor={pageBackgroundDefault}
+  imageUrl={urlFor(data.choodle.upScaledImage).url()}
+  width="430"
+  height="932"
 />
 
 {#if $loading}
@@ -200,7 +200,7 @@
       <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
       <div>
         <Button colour="yellow"
-                on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+          on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
       </div>
     {:else}
       {#if guessesRemaining < 1 || alreadyGuessed}
@@ -223,7 +223,7 @@
           <p><!-- layout placeholder --> </p>
         {/if}
         <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
-                           cursorLocation={cursorLocation} onEnter={check}>
+          cursorLocation={cursorLocation} onEnter={check}>
           <div slot="between">
             {#if 'hint message data tbd'}
               <p><a>Need a hint?</a></p>
