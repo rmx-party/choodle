@@ -225,11 +225,7 @@
         <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
           cursorLocation={cursorLocation} onEnter={check}>
           <div slot="between">
-            {#if 'hint message data tbd'}
-              <p><a>Need a hint?</a></p>
-            {:else}
-              <p><!-- layout placeholder --> </p>
-            {/if}
+            <p><!-- layout placeholder --> </p>
           </div>
         </GuessingInterface>
       {/if}
@@ -240,6 +236,9 @@
 <style>
   .failure {
     color: red;
+  }
+  p {
+    margin: 0.5rem;
   }
 
   .topBar {

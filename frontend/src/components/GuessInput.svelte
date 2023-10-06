@@ -21,13 +21,14 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    margin: 0.5rem auto;
   }
 
   .character {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bgcolor, green);
+    background: var(--bgcolor, white);
     border-radius: 0.25rem;
     border: 2px solid black;
     padding: 0.1rem;
