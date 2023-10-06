@@ -8,17 +8,20 @@
     flex-grow: 1;
     display: flex;
     align-items: center;
+    justify-content: center;
     padding: 0;
-    flex-grow: 1;
-    max-width: 100%;
-    aspect-ratio: 3/4;
+    margin: 1rem;
+    max-height: min(100%, 60svh);
+    max-width: min(100%, 100svw);
   }
 
   .choodle-container > :global(*) {
     flex-grow: 1;
-    max-height: 100%;
-    max-width: 100%;
     aspect-ratio: 3/4;
+    height: auto;
+    width: auto;
+    max-height: min(100%, 60svh);
+    max-width: min(100%, 100svw);
     image-rendering: pixelated;
 
     border-radius: 0.22175rem;
