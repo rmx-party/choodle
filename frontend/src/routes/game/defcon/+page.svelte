@@ -156,27 +156,30 @@
 
       {#if $activeTab === "my games"}
         <section class="tabContent my-games">
-          <table>
+          <ul>
             {#each challengesToBeGuessed as challenge}
-              <tr on:click={() => {goto(`/game/defcon/guess/${challenge.choodle._ref}`)}}>
-                <td class="status">Open</td>
-                <td class="createdAt">
-                  <time>{challenge._createdAt}</time>
-                </td>
-                <td class="username">{challenge.challenger.username}</td>
-              </tr>
+              <li>
+                <a href="{`/game/defcon/guess/${challenge.choodle._ref}`}"
+                   on:click={() => goto(`/game/defcon/guess/${challenge.choodle._ref}`)}>
+                  <span class="status">Open</span>
+                  <span class="createdAt">
+                    <time>{challenge._createdAt}</time>
+                  </span>
+                  <span class="username">{challenge.challenger.username}</span>
+                </a>
+              </li>
             {/each}
             {#each guesses as guess}
-              <tr on:click={() => {goto(`/game/defcon/guess/${guess.challenge.choodle._id}`)}}>
-                <td
-                  class={`${guess.guessedCorrectly ? "won" : "lost"} status`}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</td>
-                <td class="createdAt">
-                  <time>{guess.challenge._createdAt}</time>
-                </td>
-                <td class="username">{guess.challenge.challenger.username}</td>
-              </tr>
+              <li>
+                <span
+                  class={`${guess.guessedCorrectly ? "won" : "lost"} status`}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</span>
+                <span class="createdAt">
+                    <time>{guess.challenge._createdAt}</time>
+                  </span>
+                <span class="username">{guess.challenge.challenger.username}</span>
+              </li>
             {/each}
-          </table>
+          </ul>
         </section>
       {/if}
 
@@ -252,11 +255,11 @@
     cursor: pointer;
   }
 
-  tr .won {
+  .won {
     color: hsla(108, 90%, 28%, 1);
   }
 
-  tr .lost {
+  .lost {
     color: hsla(0, 100%, 21%, 1);
   }
 
