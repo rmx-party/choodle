@@ -42,7 +42,7 @@
 
   const displayKey = (key: string) => {
     if (key === 'BACKSPACE') return '⌫'
-    if (key === 'ENTER') return 'ᴇɴᴛᴇʀ'
+    if (key === 'ENTER') return 'ENTER'
     return key
   }
 </script>
@@ -51,7 +51,7 @@
   {#each keyRows as row}
     <div class="keyboardRow">
       {#each row as key}
-        <button class="keyboardKey" on:click={handleKeyPress} data-key="{key}">{displayKey(key)}</button>
+        <button class={`keyboardKey ${key.toLowerCase()}`} on:click={handleKeyPress} data-key="{key}">{displayKey(key)}</button>
       {/each}
     </div>
   {/each}
@@ -62,7 +62,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.375rem;
+    gap: 0.3rem;
     text-align: center;
   }
   .keyboard {
@@ -76,13 +76,29 @@
   }
 
   .keyboardKey {
-    min-width: 2rem;
-    min-height: 2rem;
+    vertical-align: center;
+    display: flex;
+    padding: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
 
-    padding: 0.5rem;
+    width: 1.8rem;
+    height: 2.5rem;
     border: none;
     border-radius: 0.0625rem;
     background: hsla(0, 0%, 83%, 1);
     color: var(--choodle-black);
+    font-size: 1.3rem;
+  }
+
+  .backspace {
+    width: 2.5rem;
+    padding: 0.625rem 1rem;
+  }
+  .enter {
+    width: 5rem;
+    font-size: 1.1rem;
   }
 </style>
