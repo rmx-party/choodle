@@ -61,13 +61,13 @@
 
   const getPointsForUser = async (creatorId) => {
     const points = await readOnlyClient.fetch(`*[_type == "points"][creator._ref match "${creatorId}"]`)
-    console.log("points ", points)
+    console.log("user points ", points)
     return points
   }
 
   const getGuessesForUser = async (creatorId) => {
     const guesses = await readOnlyClient.fetch(`*[_type == "guess"][guesser._ref match "${creatorId}"]{..., challenge->{..., choodle->{...}, challenger->{...}}}`)
-    console.log("guesses ", guesses)
+    console.log("user guesses ", guesses)
     return fp.reject(guess => guess.guessedCorrectly === undefined, guesses)
   }
 
@@ -81,11 +81,25 @@
   onMount(async () => {
     if (!browser) return;
 
-    currentChoodler = (await locateCreator({
-      email: await getEmail(),
-      username: await getUsername(),
-      deviceId: await getDeviceId()
-    })); // TODO: migrate global creator/player state to a store shared across pages
+    const emailFetch = getEmail()
+    const usernameFetch = getUsername()
+    const deviceIdFetch = getDeviceId()
+    const creatorFetch = locateCreator({
+      email: await emailFetch,
+      username: await usernameFetch,
+      deviceId: await deviceIdFetch
+    }); // TODO: migrate global creator/player state to a store shared across pages
+
+    currentChoodler = await creatorFetch;
+    console.log({creator: currentChoodler})
+
+    if (currentChoodler?.choodles?.length > 0) { // TODO: figure out the appropriate test for game participation
+      hasCreatedAChallenge = true;
+    } else {
+      loading.set(false)
+      return // Don't load leaderboard stuff if player can't see it anyway
+    }
+
     points = await getPointsForUser(currentChoodler._id)
     pointsTotal = fp.reduce((accumulator, item) => {
       return accumulator + item.amount
@@ -96,10 +110,7 @@
     guesses = await getGuessesForUser(currentChoodler._id)
     challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(currentChoodler._id, data.challenges, guesses)
 
-    console.log({creator: currentChoodler})
-    if (currentChoodler?.choodles?.length > 0) { // TODO: figure out the appropriate test for game participation
-      hasCreatedAChallenge = true;
-    }
+
 
     loading.set(false)
   })
