@@ -40,9 +40,3 @@
 
   <Button variant="big primary" on:click={resume}>Resume This Choodle</Button>
 </LayoutContainer>
-
-<style>
-  .tagline {
-    margin-top: 0rem;
-  }
-</style>
