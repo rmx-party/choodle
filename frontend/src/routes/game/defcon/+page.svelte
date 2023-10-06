@@ -22,13 +22,13 @@
   let currentChoodler
   let hasCreatedAChallenge = false
   let pointsTotal = 0
-  let allPoints
-  let currentChoodlerPoints
+  let allPoints = []
+  let currentChoodlerPoints = []
 
-  let guesses
+  let guesses = []
 
-  let challengesToBeGuessed
-  let leaderboard
+  let challengesToBeGuessed = []
+  let leaderboard = []
 
   const navItems = [
     'leaderboard',
