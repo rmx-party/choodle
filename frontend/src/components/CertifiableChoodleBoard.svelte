@@ -17,6 +17,7 @@
   import ChoodleBoard from "./ChoodleBoard.svelte";
   import {saveChoodle} from "$lib/ChoodleStorage";
   import {getDeviceId} from "$lib/CreatorUtils";
+  import ButtonMenu from "./ButtonMenu.svelte";
 
   export let id;
   export let prompt;
@@ -129,12 +130,13 @@
   }
 </script>
 
+<Prompt prompt={prompt.prompt} slot="topBar"/>
 <ChoodleBoard id={id} bind:this={child} performSave={performSave} afterSave={afterSave}>
-  <Prompt prompt={prompt.prompt} slot="prompt"/>
-  <div id="buttons" slot="buttons">
+
+  <ButtonMenu slot="buttons">
     <Button on:click={child.undo} colour="yellow">Undo</Button>
     <Button on:click={promptForEmailOrSave} isOnline={isOnline} colour="yellow">Done</Button>
-  </div>
+  </ButtonMenu>
   <Dialog id={'email-prompt'}>
     <header slot="header">{@html toHTML(certificateModal.title)}</header>
     {#if certificateModal.Image}
@@ -146,13 +148,13 @@
     <label for="creator-email" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">Email
       <br/>
       <input bind:value={creatorEmailInput} type="email" id="creator-email" name="creatorEmail"
-             placeholder="Enter Email"
-             required title="Please enter a valid email address as the creator to attribute this art to" style='width: 100%; padding:
-    1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
+        placeholder="Enter Email"
+        required title="Please enter a valid email address as the creator to attribute this art to" style='width: 100%; padding:
+          1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
     </label>
 
     <Button on:click={saveCreatorEmail} variant="primary"
-            colour="yellow">{certificateModal.CTA}</Button>
+      colour="yellow">{certificateModal.CTA}</Button>
   </Dialog>
 </ChoodleBoard>
 
