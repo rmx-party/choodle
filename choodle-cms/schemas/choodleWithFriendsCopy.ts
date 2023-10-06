@@ -114,6 +114,11 @@ export default {
       type: 'string',
     },
     {
+      name: 'guess_successMessageText',
+      title: 'Guess Page Success Message Text',
+      type: 'string',
+    },
+    {
       name: 'guess_failureMessageText',
       title: 'Guess Page Failure Message Text',
       type: 'string',
