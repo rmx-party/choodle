@@ -43,12 +43,12 @@
   }
 
   const assembleLeaderboard = async () => {
-    allPoints = await readOnlyClient.fetch(`*[_type == "points"]{..., creator->{...}}`)
-    const creatorUsernames = fp.uniq(fp.map(point => point.creator.username, allPoints))
+    const points = await readOnlyClient.fetch(`*[_type == "points"]{..., creator->{...}}`)
+    const creatorUsernames = fp.uniq(fp.map(point => point.creator.username, points))
 
     return fp.orderBy(['totalPoints'], ['desc'],
       fp.map(creatorUsername => {
-        let pointsForUser = fp.filter(point => point.creator.username === creatorUsername, allPoints)
+        let pointsForUser = fp.filter(point => point.creator.username === creatorUsername, points)
 
         let totalPoints = fp.reduce((accumulator, item) => {
           return accumulator + item.amount
@@ -59,7 +59,7 @@
       }, creatorUsernames))
   }
 
-  const getPointsForUser = (creatorId) => {
+  const getPointsForUser = async (creatorId) => {
     const points = fp.filter((point) => point.creator._id === creatorId)
     console.log("user points ", points)
     return points
@@ -100,17 +100,16 @@
       return // Don't load leaderboard stuff if player can't see it anyway
     }
 
-    assembleLeaderboard().then((assembledLeaderboard) => {
-      leaderboard = assembledLeaderboard
+    currentChoodlerPoints = getPointsForUser(currentChoodler._id)
+    pointsTotal = fp.reduce((accumulator, item) => {
+      return accumulator + item.amount
+    }, 0, currentChoodlerPoints)
 
-      currentChoodlerPoints = getPointsForUser(currentChoodler._id)
-      pointsTotal = fp.reduce((accumulator, item) => {
-        return accumulator + item.amount
-      }, 0, currentChoodlerPoints)
-    })
+    leaderboard = await assembleLeaderboard()
 
     guesses = await getGuessesForUser(currentChoodler._id)
     challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(currentChoodler._id, data.challenges, guesses)
+
 
     loading.set(false)
   })
