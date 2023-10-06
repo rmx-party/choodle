@@ -77,7 +77,8 @@
 
   const saveUsername = async () => {
     if (!browser) return;
-    if (creatorUsername === "") return;
+    if (!creatorUsername) return;
+    if (creatorUsername?.length <= 1) return;
 
     console.log(`saving creator username`)
     await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
