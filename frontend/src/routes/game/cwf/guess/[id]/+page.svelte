@@ -14,6 +14,8 @@
   import GuessingInterface from "../../GuessingInterface.svelte";
   import GuessInput from "../../../../../components/GuessInput.svelte";
   import {toHTML} from "@portabletext/to-html";
+  import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration';
+  import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
 
   export let data;
   const currentGuess = writable([])
@@ -79,36 +81,40 @@
 </script>
 
 <MetaData url={$page.url.toString()}
-          imageUrl={urlFor(data.choodle.upScaledImage).url()}
-          width="430"
-          height="932"
+  imageUrl={urlFor(data.choodle.upScaledImage).url()}
+  width="430"
+  height="932"
+  themeColor={choodleYellow}
+  bgColor={pageBackgroundDefault}
 />
 
-<div class="flex-container">
-  {#if choodleOwner}
-    <TopBar>
-      <div slot="topBarContent">
-        {@html toHTML(data.copy.guess_pageAuthorTopContent)}
-      </div>
-    </TopBar>
-  {:else}
-    <GuessingHUD {guessesRemaining} {guessesLimit}>
-      <div slot="content">
-        {@html toHTML(data.copy.guess_pageTopContent)}
-      </div>
-    </GuessingHUD>
-  {/if}
+<LayoutContainer --layout-justify="space-evenly">
+  <div class="topBar" slot="topBar">
+    {#if choodleOwner}
+      <TopBar>
+        <div slot="topBarContent">
+          {@html toHTML(data.copy.guess_pageAuthorTopContent)}
+        </div>
+      </TopBar>
+    {:else}
+      <GuessingHUD {guessesRemaining} {guessesLimit}>
+        <div slot="content">
+          {@html toHTML(data.copy.guess_pageTopContent)}
+        </div>
+      </GuessingHUD>
+    {/if}
+  </div>
 
   <div class="choodle-container">
     <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
-         width='390' height='520' alt=''/>
+      width='390' height='520' alt=''/>
   </div>
 
   {#if choodleOwner}
     <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
     <div>
       <Button colour="yellow"
-              on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+        on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
     </div>
   {:else}
     {#if guessesRemaining < 1}
@@ -131,7 +137,7 @@
         <p><!-- layout placeholder --> </p>
       {/if}
       <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
-                         cursorLocation={cursorLocation} onEnter={check}>
+        cursorLocation={cursorLocation} onEnter={check}>
         <div slot="between">
           {#if 'hint message data tbd'}
             <p><a>Need a hint?</a></p>
@@ -142,33 +148,10 @@
       </GuessingInterface>
     {/if}
   {/if}
-</div>
+</LayoutContainer>
 
 <style>
-  :global(:root) {
-    --page-background-color: rgba(20, 21, 24, 0.03);
-  }
-
-  .flex-container {
-    background-color: rgba(20, 21, 24, 0.03);
-
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-content: center;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    height: 100svh;
-    height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
-
-    padding-bottom: 1rem;
-  }
-
-  :root {
-    text-align: center;
-  }
-
+  .topBar { width: 100%; }
   .choodle-container {
     flex-grow: 1;
     display: flex;
