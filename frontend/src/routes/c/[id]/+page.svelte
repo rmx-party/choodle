@@ -14,6 +14,7 @@
   import ChoodleContainer from "../../../components/ChoodleContainer.svelte";
   import ButtonMenu from "../../../components/ButtonMenu.svelte";
   import LayoutContainer from "../../../components/LayoutContainer.svelte";
+  import { choodleYellow } from "$lib/Configuration";
 
   export let data = {};
   let imgBlob;
@@ -104,6 +105,7 @@
 <MetaData url={$page.url}
   title="Look, it's a Choodle"
   imageUrl={urlFor(data.choodle.upScaledImage).url()}
+  themeColor={choodleYellow}
   width="430"
   height="932"
 />
