@@ -131,6 +131,8 @@
 {:else}
   <LayoutContainer>
     {#if !hasCreatedAChallenge || !currentChoodler}
+      <img src={urlFor(data.copy.logo).url()} width="80%" alt=''/>
+
       {@html toHTML(data.copy.landing_content)}
 
       <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
