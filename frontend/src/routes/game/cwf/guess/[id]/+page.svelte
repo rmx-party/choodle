@@ -16,6 +16,7 @@
   import {toHTML} from "@portabletext/to-html";
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration';
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
+  import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
 
   export let data;
   const currentGuess = writable([])
@@ -105,10 +106,9 @@
     {/if}
   </div>
 
-  <div class="choodle-container">
-    <img class="choodle" src={urlFor(data.choodle.upScaledImage).url()}
-      width='390' height='520' alt=''/>
-  </div>
+  <ChoodleContainer>
+    <img slot="choodle" src={urlFor(data.choodle.upScaledImage).url()} width='390' height='520' alt=''/>
+  </ChoodleContainer>
 
   {#if choodleOwner}
     <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
@@ -158,19 +158,15 @@
     align-items: center;
     padding: 0;
     flex-grow: 1;
-    flex-shrink: 1;
-    /* max-height: calc(100svh - 20rem); */
-    max-height: 15rem; /* TODO: use breakpoints to allow this to scale up based on available screen */
     max-width: 100%;
     aspect-ratio: 3/4;
   }
 
   img.choodle {
-    object-fit: contain;
-    flex-shrink: 1;
     flex-grow: 1;
     max-height: 100%;
     max-width: 100%;
+    aspect-ratio: 3/4;
     image-rendering: pixelated;
 
     border-radius: 0.22175rem;
