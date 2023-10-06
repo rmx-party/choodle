@@ -158,7 +158,7 @@
               <li>
                 <a href="{`/game/defcon/guess/${challenge.choodle._ref}`}"
                    on:click={() => goto(`/game/defcon/guess/${challenge.choodle._ref}`)}>
-                  <span class="status">Open</span>
+                  <span class="status">Guess</span>
                   <span class="createdAt">
                     <time>{challenge._createdAt}</time>
                   </span>
