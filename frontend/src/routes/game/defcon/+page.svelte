@@ -159,9 +159,9 @@
                 <a href="{`/game/defcon/guess/${challenge.choodle._ref}`}"
                    on:click={() => goto(`/game/defcon/guess/${challenge.choodle._ref}`)}>
                   <span class="status">Guess</span>
-                  <span class="createdAt">
-                    <time>{challenge._createdAt}</time>
-                  </span>
+                  <!--                  <span class="createdAt">-->
+                  <!--                    <time>{challenge._createdAt}</time>-->
+                  <!--                  </span>-->
                   <span class="username">{challenge.challenger.username}</span>
                 </a>
               </li>
@@ -170,9 +170,9 @@
               <li>
                 <span
                   class={`${guess.guessedCorrectly ? "won" : "lost"} status`}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</span>
-                <span class="createdAt">
-                    <time>{guess.challenge._createdAt}</time>
-                  </span>
+                <!--                <span class="createdAt">-->
+                <!--                    <time>{guess.challenge._createdAt}</time>-->
+                <!--                  </span>-->
                 <span class="username">{guess.challenge.challenger.username}</span>
               </li>
             {/each}
