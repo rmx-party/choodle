@@ -111,6 +111,9 @@
       .set({guessedCorrectly: true})
       .commit()
     await addPoints(guesser._id, amount, reason, challenge._id)
+
+    // Points to the creator for having a drawing guessed correctly.
+    await addPoints(challenge.challenger._ref, 5, `${guesser.username} guessed your drawing correctly.`, challenge._id)
   }
 
   const canShare = (shareable?): boolean => {
@@ -211,8 +214,10 @@
           display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
           cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
         <p><!-- layout placeholder --> </p>
-        <Button on:click={() => { goto('/game/defcon')}}
-                colour="yellow">{data.copy.success_continueGameButtonText}</Button>
+        <div>
+          <Button on:click={() => { goto('/game/defcon')}}
+                  colour="yellow">{data.copy.success_continueGameButtonText}</Button>
+        </div>
       {:else}
         {#if guessesRemaining < 1 || alreadyGuessed}
           <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
