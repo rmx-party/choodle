@@ -13,37 +13,34 @@
 </div>
 
 <style>
-  :root {
-    --bgcolor: white;
-  }
   .input {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     margin: 0.5rem auto;
+    line-height: 100%;
+    gap: 0.125rem;
   }
 
+  .character, .space {
+    width: 2rem;
+    aspect-ratio: 1/1;
+  }
   .character {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bgcolor, white);
     border-radius: 0.25rem;
     border: 2px solid black;
     padding: 0.1rem;
-    margin: 0.1rem;
-    width: 2rem;
-    aspect-ratio: 1/1;
+
+    border-radius: 0.125rem;
+    border: 1px solid var(--colors-greyscale-600, #7C7C77);
+    background: var(--bgcolor, white);
   }
 
   .cursor {
-    background: lightgrey;
-  }
-
-  .space {
-    margin: 0.1rem;
-    width: 2rem;
-    aspect-ratio: 1/1;
+    background: var(--choodle-yellow, lightgrey);
   }
 </style>
