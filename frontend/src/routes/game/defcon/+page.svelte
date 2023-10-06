@@ -14,6 +14,7 @@
   import {toHTML} from "@portabletext/to-html";
   import {loading} from "$lib/store";
   import LoadingIndicator from "../../../components/LoadingIndicator.svelte";
+  import {urlFor} from "$lib/PersistedImagesUtils";
 
   loading.set(true)
 
@@ -135,9 +136,8 @@
       <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
     {:else}
       <div>
-        <Button colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
+        <img src={urlFor(data.copy.logo).url()} alt=''/>
       </div>
-
       <header>
         <h3><strong>{currentChoodler.username}</strong></h3>
         <h3>{pointsTotal} points</h3>
