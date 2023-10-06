@@ -77,6 +77,7 @@ export const locateCreator = async ({username, deviceId, email}: { // TODO: make
         username,
         email,
         deviceIds: [deviceId],
+        choodles: [],
       },
       {autoGenerateArrayKeys: true}
     )
