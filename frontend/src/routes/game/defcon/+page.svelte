@@ -74,8 +74,9 @@
   const challengesThatHaveNotBeenGuessed = async (creatorId, challenges, guesses) => {
     const guessedChallengeIds = fp.map(guess => guess.challenge._id, guesses)
     console.log("challenges", challenges)
-    return fp.reject(challenge => guessedChallengeIds.includes(challenge._id), challenges)
 
+    return fp.reject(challenge => challenge.challenger.username === currentChoodler.username,
+      fp.reject(challenge => guessedChallengeIds.includes(challenge._id), challenges))
   }
 
   onMount(async () => {
