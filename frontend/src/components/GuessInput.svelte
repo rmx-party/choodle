@@ -21,6 +21,15 @@
     margin: 0.5rem auto;
     line-height: 100%;
     gap: 0.125rem;
+
+    color: var(--text-text-primary, #141518);
+    text-align: center;
+
+    /* mobile/h3-bold */
+    font-family: DejaVu Sans Bold;
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 700;
   }
 
   .character, .space {
