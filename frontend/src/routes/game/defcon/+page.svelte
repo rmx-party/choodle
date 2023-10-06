@@ -136,7 +136,7 @@
       <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
     {:else}
       <div>
-        <img src={urlFor(data.copy.logo).url()} alt=''/>
+        <img src={urlFor(data.copy.logo).url()} width="80%" alt=''/>
       </div>
       <header>
         <h3><strong>{currentChoodler.username}</strong></h3>
