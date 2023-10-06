@@ -207,7 +207,7 @@
       </div>
     {:else}
       {#if success}
-          <p class="">{data.copy.guess_successMessageText || "FOOO"}</p>
+          <p class="">{data.copy.guess_successMessageText}</p>
           <GuessInput
             format={data.choodle.gamePrompt.split('')}
             display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}

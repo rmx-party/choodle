@@ -17,6 +17,10 @@
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration';
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
+  import { loading } from '$lib/store';
+  import Keyboard from '../../../../../components/Keyboard.svelte';
+
+  loading.set(true)
 
   export let data;
   const currentGuess = writable([])
@@ -28,6 +32,7 @@
 
   let choodleOwner = false;
   let copiedToClipboard = false;
+  let success = false;
 
   const check = () => {
     if ($currentGuess.length < data.choodle.gamePrompt.length) return;
@@ -43,6 +48,8 @@
     }
 
     console.log(`right answer, you won the thing`)
+    success = true
+
     goto(`/game/cwf/success/${data.choodle._id}`)
   }
 
@@ -78,10 +85,12 @@
 
   onMount(async () => {
     choodleOwner = (data.choodle.creatorId === await getDeviceId())
+    loading.set(false)
   })
 </script>
 
-<MetaData url={$page.url.toString()}
+<MetaData url={$page.url}
+  title="Choodle with Friends"
   imageUrl={urlFor(data.choodle.upScaledImage).url()}
   width="430"
   height="932"
@@ -117,35 +126,45 @@
         on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
     </div>
   {:else}
-    {#if guessesRemaining < 1}
-      <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
+    {#if success}
+      <p class="">{data.copy.guess_successMessageText}</p>
       <GuessInput
         format={data.choodle.gamePrompt.split('')}
         display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
         cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
-
       <p><!-- layout placeholder --> </p>
-      <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
-        <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
-          {data.copy.guess_failureNewGameButtonText}
-        </Button>
-      </div>
+      <Keyboard onKeyPress={() => {}}/>
     {:else}
-      {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
-        <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
-      {:else}
+      {#if guessesRemaining < 1}
+        <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
+        <GuessInput
+          format={data.choodle.gamePrompt.split('')}
+          display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
+          cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
+
         <p><!-- layout placeholder --> </p>
-      {/if}
-      <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
-        cursorLocation={cursorLocation} onEnter={check}>
-        <div slot="between">
-          {#if 'hint message data tbd'}
-            <p><a>Need a hint?</a></p>
-          {:else}
-            <p><!-- layout placeholder --> </p>
-          {/if}
+        <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
+          <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
+            {data.copy.guess_failureNewGameButtonText}
+          </Button>
         </div>
-      </GuessingInterface>
+      {:else}
+        {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
+          <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
+        {:else}
+          <p><!-- layout placeholder --> </p>
+        {/if}
+        <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
+          cursorLocation={cursorLocation} onEnter={check}>
+          <div slot="between">
+            {#if 'hint message data tbd'}
+              <p><a>Need a hint?</a></p>
+            {:else}
+              <p><!-- layout placeholder --> </p>
+            {/if}
+          </div>
+        </GuessingInterface>
+      {/if}
     {/if}
   {/if}
 </LayoutContainer>
