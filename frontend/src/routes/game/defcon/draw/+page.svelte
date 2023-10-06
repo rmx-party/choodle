@@ -30,7 +30,7 @@
   let child: SvelteComponent<ChoodleBoard>;
 
   let isOnline = true;
-  let creatorUsername: string | undefined;
+  let creatorUsername: string;
   let choodle
   let creator
 
@@ -62,19 +62,19 @@
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false);
 
-    const asyncCreatorUsername = (async () => creatorUsername = await localforage.getItem(choodleCreatorUsernameKey))()
+    const storedName = await localforage.getItem(choodleCreatorUsernameKey)
 
-    if (!creatorUsername && !await asyncCreatorUsername) {
-      console.log(`prompting for username...`)
-      dialogState.update(dialogs => {
-        return {...dialogs, ["username-prompt"]: true}
-      })
-    }
+    if (!(creatorUsername.length > 0) && !(`${storedName}`.length > 0)) return;
+
+    console.log(`prompting for username...`)
+    dialogState.update(dialogs => {
+      return {...dialogs, ["username-prompt"]: true}
+    })
   }
 
   const saveUsername = async () => {
     if (!browser) return;
-    if (creatorUsername === "") return;
+    if (!(creatorUsername.length > 0)) return;
 
     console.log(`saving creator username`)
     await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
@@ -94,10 +94,11 @@
   const afterSave = async (result) => {
     if (!browser) return;
     if (!result._id) return;
+    if (!(creatorUsername.length > 0)) return;
 
     const deviceId = await getDeviceId()
     const email = await getEmail()
-    const username = await getUsername()
+    const username = creatorUsername
 
     creator = await locateCreator({username, deviceId, email});
 
@@ -125,6 +126,7 @@
     })
 
     gamePrompt.set(await localforage.getItem(choodlePromptKey))
+    creatorUsername = (await getUsername()) || ''
   })
 </script>
 
@@ -164,5 +166,3 @@
 {:else}
   <LoadingIndicator explanation={'saving'}/>
 {/if}
-
-
