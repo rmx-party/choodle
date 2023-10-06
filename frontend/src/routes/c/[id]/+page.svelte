@@ -103,7 +103,7 @@
 
 <MetaData url={$page.url}
   title="Look, it's a Choodle"
-  imageUrl={urlFor(data.choodle.upScaledImage)}
+  imageUrl={urlFor(data.choodle.upScaledImage).url()}
   width="430"
   height="932"
 />
@@ -119,7 +119,7 @@
   </div>
 
   <ChoodleContainer>
-    <img src={urlFor(data.choodle.upScaledImage)} width='390' height='520' alt=''/>
+    <img src={urlFor(data.choodle.upScaledImage).url()} width='390' height='520' alt=''/>
   </ChoodleContainer>
 
   <section class="content">
