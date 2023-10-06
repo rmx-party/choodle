@@ -12,6 +12,7 @@
   import {onMount} from "svelte";
   import {browser} from "$app/environment";
   import ChoodleContainer from "../../../components/ChoodleContainer.svelte";
+	import ButtonMenu from "../../../components/ButtonMenu.svelte";
 
   export let data = {};
   let imgBlob;
@@ -124,12 +125,12 @@
     {@html bottomContent()}
   </section>
 
-  <menu>
+  <ButtonMenu>
     <Button on:click={clearAndStartOver} icon={handDraw}>New</Button>
     {#if canShare()}
       <Button on:click={share} icon={send} iconPosition='right'>Share</Button>
     {/if}
-  </menu>
+  </ButtonMenu>
 </div>
 
 <style>
@@ -150,14 +151,6 @@
     height: calc(var(--vh, 1vh) * 100); /* https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
     width: 100%;
     padding: 1.5rem;
-  }
-
-  menu {
-    display: flex;
-    flex-direction: row;
-    margin: 1rem 0;
-    padding: 0;
-    gap: 1rem;
   }
 
   .tagline {
