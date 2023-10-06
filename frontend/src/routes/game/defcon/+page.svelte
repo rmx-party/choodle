@@ -238,6 +238,9 @@
   tr .lost {
     color: hsla(0, 100%, 21%, 1);
   }
+  .status {
+    text-align: center;
+  }
   .username {
     text-align: right;
   }

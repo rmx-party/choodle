@@ -1,8 +1,9 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-  import { backgroundColour } from "$lib/Configuration";
+  import { pageBackgroundDefault } from "$lib/Configuration";
   import Button from "../../../components/Button.svelte";
+  import LayoutContainer from "../../../components/LayoutContainer.svelte";
   import MetaData from "../../../components/MetaData.svelte";
 
   export let data
@@ -30,11 +31,11 @@
 
 <MetaData 
   title="Choodle with Friends" 
-  themeColor={backgroundColour}
+  themeColor={pageBackgroundDefault}
   url={$page.url}
 />
 
-<div class="container">
+<LayoutContainer --layout-justify="space-evenly">
   <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
 
   <section class="live-games">
@@ -63,21 +64,9 @@
       </ul>
     {/if}
   </section>
-</div>
+</LayoutContainer>
 
 <style>
-  .container {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    padding: 1rem;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 100vh;
-  }
-
   .live-games {
     display: flex;
     flex-direction: column;
