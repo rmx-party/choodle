@@ -15,6 +15,8 @@
   import {loading} from "$lib/store";
   import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
   import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
+  import LayoutContainer from "../../../../components/LayoutContainer.svelte";
+  import ButtonMenu from "../../../../components/ButtonMenu.svelte";
 
   export let data;
 
@@ -45,8 +47,8 @@
       challenger: {_ref: challenger._id},
       gamePrompt: prompt,
     }, {
-      autoGenerateArrayKeys: true,
-    })
+        autoGenerateArrayKeys: true,
+      })
   }
 
   const afterSave = async (result) => {
@@ -79,28 +81,15 @@
 </script>
 
 {#if !$loading}
-  <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
-    <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="prompt"/>
-    <div id="buttons" slot="buttons">
-      <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
-      <Button on:click={child.save} isOnline={isOnline} colour="yellow">{data.copy.draw_doneButtonText}</Button>
-    </div>
-  </ChoodleBoard>
+  <LayoutContainer>
+    <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>
+    <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
+      <ButtonMenu slot="buttons">
+        <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
+        <Button on:click={child.save} isOnline={isOnline} colour="yellow">{data.copy.draw_doneButtonText}</Button>
+      </ButtonMenu>
+    </ChoodleBoard>
+  </LayoutContainer>
 {:else}
   <LoadingIndicator explanation={'saving'}/>
 {/if}
-
-<style>
-  #buttons {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-content: center;
-    gap: 1rem;
-    padding: 0 1rem 1rem;
-    margin: 0;
-  }
-</style>
