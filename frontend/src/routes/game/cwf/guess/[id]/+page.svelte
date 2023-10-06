@@ -89,7 +89,7 @@
   bgColor={pageBackgroundDefault}
 />
 
-<LayoutContainer --layout-justify="space-evenly">
+<LayoutContainer class="no-pan">
   <div class="topBar" slot="topBar">
     {#if choodleOwner}
       <TopBar>
