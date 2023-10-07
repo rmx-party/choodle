@@ -108,7 +108,7 @@ devDependencies:
     version: 4.0.5
   svelte-check:
     specifier: ^3.4.6
-    version: 3.4.6(postcss@8.4.25)(svelte@4.0.5)
+    version: 3.4.6(postcss@8.4.31)(svelte@4.0.5)
   tslib:
     specifier: ^2.6.0
     version: 2.6.0
@@ -2382,9 +2382,9 @@ packages:
       eslint: 8.44.0
       esutils: 2.0.3
       known-css-properties: 0.27.0
-      postcss: 8.4.25
-      postcss-load-config: 3.1.4(postcss@8.4.25)
-      postcss-safe-parser: 6.0.0(postcss@8.4.25)
+      postcss: 8.4.31
+      postcss-load-config: 3.1.4(postcss@8.4.31)
+      postcss-safe-parser: 6.0.0(postcss@8.4.31)
       postcss-selector-parser: 6.0.13
       semver: 7.5.4
       svelte: 4.0.5
@@ -3705,7 +3705,7 @@ packages:
     engines: {node: '>=14.19.0'}
     dev: false
 
-  /postcss-load-config@3.1.4(postcss@8.4.25):
+  /postcss-load-config@3.1.4(postcss@8.4.31):
     resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
     engines: {node: '>= 10'}
     peerDependencies:
@@ -3718,26 +3718,26 @@ packages:
         optional: true
     dependencies:
       lilconfig: 2.1.0
-      postcss: 8.4.25
+      postcss: 8.4.31
       yaml: 1.10.2
     dev: true
 
-  /postcss-safe-parser@6.0.0(postcss@8.4.25):
+  /postcss-safe-parser@6.0.0(postcss@8.4.31):
     resolution: {integrity: sha512-FARHN8pwH+WiS2OPCxJI8FuRJpTVnn6ZNFiqAM2aeW2LwTHWWmWgIyKC6cUo0L8aeKiF/14MNvnpls6R2PBeMQ==}
     engines: {node: '>=12.0'}
     peerDependencies:
       postcss: ^8.3.3
     dependencies:
-      postcss: 8.4.25
+      postcss: 8.4.31
     dev: true
 
-  /postcss-scss@4.0.6(postcss@8.4.25):
+  /postcss-scss@4.0.6(postcss@8.4.31):
     resolution: {integrity: sha512-rLDPhJY4z/i4nVFZ27j9GqLxj1pwxE80eAzUNRMXtcpipFYIeowerzBgG3yJhMtObGEXidtIgbUpQ3eLDsf5OQ==}
     engines: {node: '>=12.0'}
     peerDependencies:
       postcss: ^8.4.19
     dependencies:
-      postcss: 8.4.25
+      postcss: 8.4.31
     dev: true
 
   /postcss-selector-parser@6.0.13:
@@ -3748,8 +3748,8 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
-  /postcss@8.4.25:
-    resolution: {integrity: sha512-7taJ/8t2av0Z+sQEvNzCkpDynl0tX3uJMCODi6nT3PfASC7dYCWV9aQ+uiCf+KBD4SEFcu+GvJdGdwzQ6OSjCw==}
+  /postcss@8.4.31:
+    resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.6
@@ -4196,7 +4196,7 @@ packages:
     resolution: {integrity: sha512-W3JVaPgLznHn297uTF32Ybp5FUYr7Mm9Geiu8zhQvOTIkLdo/iLpOeytTaD7U/8CdNFx8YWJayBCnAXJvxdLew==}
     dev: false
 
-  /svelte-check@3.4.6(postcss@8.4.25)(svelte@4.0.5):
+  /svelte-check@3.4.6(postcss@8.4.31)(svelte@4.0.5):
     resolution: {integrity: sha512-OBlY8866Zh1zHQTkBMPS6psPi7o2umTUyj6JWm4SacnIHXpWFm658pG32m3dKvKFL49V4ntAkfFHKo4ztH07og==}
     hasBin: true
     peerDependencies:
@@ -4209,7 +4209,7 @@ packages:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 4.0.5
-      svelte-preprocess: 5.0.4(postcss@8.4.25)(svelte@4.0.5)(typescript@5.1.6)
+      svelte-preprocess: 5.0.4(postcss@8.4.31)(svelte@4.0.5)(typescript@5.1.6)
       typescript: 5.1.6
     transitivePeerDependencies:
       - '@babel/core'
@@ -4235,8 +4235,8 @@ packages:
       eslint-scope: 7.2.0
       eslint-visitor-keys: 3.4.1
       espree: 9.6.0
-      postcss: 8.4.25
-      postcss-scss: 4.0.6(postcss@8.4.25)
+      postcss: 8.4.31
+      postcss-scss: 4.0.6(postcss@8.4.31)
       svelte: 4.0.5
     dev: true
 
@@ -4248,7 +4248,7 @@ packages:
     dependencies:
       svelte: 4.0.5
 
-  /svelte-preprocess@5.0.4(postcss@8.4.25)(svelte@4.0.5)(typescript@5.1.6):
+  /svelte-preprocess@5.0.4(postcss@8.4.31)(svelte@4.0.5)(typescript@5.1.6):
     resolution: {integrity: sha512-ABia2QegosxOGsVlsSBJvoWeXy1wUKSfF7SWJdTjLAbx/Y3SrVevvvbFNQqrSJw89+lNSsM58SipmZJ5SRi5iw==}
     engines: {node: '>= 14.10.0'}
     requiresBuild: true
@@ -4289,7 +4289,7 @@ packages:
       '@types/pug': 2.0.6
       detect-indent: 6.1.0
       magic-string: 0.27.0
-      postcss: 8.4.25
+      postcss: 8.4.31
       sorcery: 0.11.0
       strip-indent: 3.0.0
       svelte: 4.0.5
@@ -4586,7 +4586,7 @@ packages:
     dependencies:
       '@types/node': 20.4.2
       esbuild: 0.18.12
-      postcss: 8.4.25
+      postcss: 8.4.31
       rollup: 3.26.2
     optionalDependencies:
       fsevents: 2.3.2
