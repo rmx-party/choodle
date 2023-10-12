@@ -60,6 +60,12 @@ export default {
       type: 'string',
       title: 'Selected Game Prompt',
       readOnly: true
+    },
+    {
+      name: 'gameHint',
+      type: 'string',
+      title: 'Hint for Selected Game Prompt',
+      readOnly: true
     }
   ]
 }
