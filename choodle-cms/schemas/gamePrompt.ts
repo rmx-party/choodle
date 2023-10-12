@@ -11,6 +11,13 @@ export default {
       description: 'Max 60 characters.'
     },
     {
+      name: 'hint',
+      type: 'string',
+      title: 'Hint',
+      validation: Rule => Rule.required().max(60),
+      description: 'Max 60 characters.'
+    },
+    {
       name: 'promptType',
       type: 'string',
       title: 'Prompt Type',
