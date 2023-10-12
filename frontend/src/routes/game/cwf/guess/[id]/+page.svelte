@@ -14,11 +14,12 @@
   import GuessingInterface from "../../GuessingInterface.svelte";
   import GuessInput from "../../../../../components/GuessInput.svelte";
   import {toHTML} from "@portabletext/to-html";
-  import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration';
+  import {choodleYellow, pageBackgroundDefault} from '$lib/Configuration';
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
-  import { loading } from '$lib/store';
+  import {loading} from '$lib/store';
   import Keyboard from '../../../../../components/Keyboard.svelte';
+  import Dialog from "../../../../../components/Dialog.svelte";
 
   loading.set(true)
 
@@ -90,12 +91,12 @@
 </script>
 
 <MetaData url={$page.url}
-  title="Choodle with Friends"
-  imageUrl={urlFor(data.choodle.upScaledImage).url()}
-  width="430"
-  height="932"
-  themeColor={choodleYellow}
-  bgColor={pageBackgroundDefault}
+          title="Choodle with Friends"
+          imageUrl={urlFor(data.choodle.upScaledImage).url()}
+          width="430"
+          height="932"
+          themeColor={choodleYellow}
+          bgColor={pageBackgroundDefault}
 />
 
 <LayoutContainer class="no-pan">
@@ -123,7 +124,7 @@
     <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
     <div>
       <Button colour="yellow"
-        on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+              on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
     </div>
   {:else}
     {#if success}
@@ -155,7 +156,7 @@
           <p><!-- layout placeholder --> </p>
         {/if}
         <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
-          cursorLocation={cursorLocation} onEnter={check}>
+                           cursorLocation={cursorLocation} onEnter={check}>
           <div slot="between">
             {#if 'hint message data tbd'}
               <p><a>Need a hint?</a></p>
@@ -167,12 +168,22 @@
       {/if}
     {/if}
   {/if}
+  <Dialog id={'hint'}>
+    <h1 slot="header">Hint</h1>
+    <br/>
+    <p>{data.choodle.gameHint}</p>
+    <br/>
+  </Dialog>
 </LayoutContainer>
 
 <style>
-  .topBar { width: 100%; }
+  .topBar {
+    width: 100%;
+  }
 
-  p { margin: 0.5rem; }
+  p {
+    margin: 0.5rem;
+  }
 
   .failure {
     color: red;

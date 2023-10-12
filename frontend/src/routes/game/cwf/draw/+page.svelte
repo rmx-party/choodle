@@ -4,7 +4,7 @@
   import Prompt from "../../../../components/Prompt.svelte";
   import {writable} from "svelte/store";
   import {saveChoodle} from "$lib/ChoodleStorage";
-  import {getDeviceId} from "$lib/CreatorUtils";
+  import {getDeviceId, getEmail, locateCreator} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
   import {clearStorage} from "$lib/StorageStuff";
   import {goto} from "$app/navigation";
@@ -34,13 +34,6 @@
     })
   }
 
-  const locateCreator = async () => {
-    const deviceId = getDeviceId()
-    const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
-    const query = `*[_type == "creator"][deviceIds match "${deviceId}" || email match "${creatorEmail}"]`
-    return (await readOnlyClient.fetch(query))[0]
-  }
-
   const createChallenge = async ({choodle, prompt, hint, challenger}) => {
     const challenge = await readWriteClient.create({
       _type: "challenge",
@@ -59,8 +52,16 @@
     if (!browser) return;
     if (!result._id) return;
 
+    const deviceId = await getDeviceId()
+    const email = await getEmail()
+
     // create the challenge
-    createChallenge({choodle: result, prompt: $gamePrompt, hint: prompt.hint, challenger: await locateCreator()})
+    createChallenge({
+      choodle: result,
+      prompt: $gamePrompt,
+      hint: prompt.hint,
+      challenger: await locateCreator({deviceId, email})
+    })
 
     await goto(`/game/cwf/guess/${result._id}`)
 
