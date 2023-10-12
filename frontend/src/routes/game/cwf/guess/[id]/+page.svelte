@@ -17,7 +17,7 @@
   import {choodleYellow, pageBackgroundDefault} from '$lib/Configuration';
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
-  import {loading} from '$lib/store';
+  import {dialogState, loading} from '$lib/store';
   import Keyboard from '../../../../../components/Keyboard.svelte';
   import Dialog from "../../../../../components/Dialog.svelte";
 
@@ -82,6 +82,12 @@
       await navigator.clipboard.writeText(text);
       copiedToClipboard = true;
     }
+  }
+
+  const showHint = () => {
+    dialogState.update(dialogs => {
+      return {...dialogs, ["hint"]: true}
+    })
   }
 
   onMount(async () => {
@@ -159,7 +165,7 @@
                            cursorLocation={cursorLocation} onEnter={check}>
           <div slot="between">
             {#if 'hint message data tbd'}
-              <p><a>Need a hint?</a></p>
+              <p><a on:click={showHint}>Need a hint?</a></p>
             {:else}
               <p><!-- layout placeholder --> </p>
             {/if}
