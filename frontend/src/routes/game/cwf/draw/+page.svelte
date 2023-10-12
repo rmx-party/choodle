@@ -22,6 +22,7 @@
 
   let child;
   let isOnline = true;
+  let prompt;
 
   const gamePrompt = writable<string | null>(null)
 
@@ -40,15 +41,18 @@
     return (await readOnlyClient.fetch(query))[0]
   }
 
-  const createChallenge = async ({choodle, prompt, challenger}) => {
-    await readWriteClient.create({
+  const createChallenge = async ({choodle, prompt, hint, challenger}) => {
+    const challenge = await readWriteClient.create({
       _type: "challenge",
       choodle: {_ref: choodle._id},
       challenger: {_ref: challenger._id},
       gamePrompt: prompt,
+      gameHint: hint,
     }, {
-        autoGenerateArrayKeys: true,
-      })
+      autoGenerateArrayKeys: true,
+    })
+    console.log(challenge)
+    return challenge
   }
 
   const afterSave = async (result) => {
@@ -56,7 +60,7 @@
     if (!result._id) return;
 
     // create the challenge
-    createChallenge({choodle: result, prompt: $gamePrompt, challenger: await locateCreator()})
+    createChallenge({choodle: result, prompt: $gamePrompt, hint: prompt.hint, challenger: await locateCreator()})
 
     await goto(`/game/cwf/guess/${result._id}`)
 
@@ -77,6 +81,8 @@
     })
 
     gamePrompt.set(await localforage.getItem(choodlePromptKey))
+
+    prompt = await readOnlyClient.fetch(`*[_type == "gamePrompt" && prompt == "${$gamePrompt}"]`)
   })
 </script>
 
