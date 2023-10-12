@@ -10,11 +10,7 @@
   import {goto} from "$app/navigation";
   import {onMount, SvelteComponent} from "svelte";
   import localforage from "localforage";
-  import {
-    pageBackgroundDefault,
-    choodleCreatorUsernameKey,
-    choodlePromptKey
-  } from "$lib/Configuration";
+  import {choodleCreatorUsernameKey, choodlePromptKey, pageBackgroundDefault} from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
   import {dialogState, loading} from "$lib/store";
   import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
@@ -34,6 +30,8 @@
   let choodle
   let creator
 
+  let prompt
+
   const gamePrompt = writable<string | null>(null)
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
@@ -44,13 +42,14 @@
     })
   }
 
-  const createChallenge = async ({choodle, prompt, challenger, game}) => {
+  const createChallenge = async ({choodle, prompt, hint, challenger, game}) => {
     return await readWriteClient.create({
       _type: "challenge",
       game,
       choodle: {_ref: choodle._id},
       challenger: {_ref: challenger._id},
       gamePrompt: prompt,
+      gameHint: hint,
     }, {
       autoGenerateArrayKeys: true,
     })
@@ -100,7 +99,13 @@
 
     creator = await locateCreator({username, deviceId, email});
 
-    const challenge = await createChallenge({choodle: result, prompt: $gamePrompt, challenger: creator, game: 'defcon'})
+    const challenge = await createChallenge({
+      choodle: result,
+      prompt: $gamePrompt,
+      hint: prompt.hint,
+      challenger: creator,
+      game: 'defcon'
+    })
     addChoodleToCreator({choodleId: result._id, creatorId: creator._id})
     addPoints(creator._id, 10, "Creating a challenge.", challenge._id)
 
@@ -125,6 +130,8 @@
 
     gamePrompt.set(await localforage.getItem(choodlePromptKey))
     creatorUsername = (await getUsername()) || ''
+
+    prompt = await readOnlyClient.fetch(`*[_type == "gamePrompt" && prompt == "${$gamePrompt}"]`)
   })
 </script>
 
