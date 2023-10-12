@@ -79,6 +79,8 @@
   onMount(async () => {
     if (!browser) return;
 
+    loading.set(true)
+
     const emailFetch = getEmail()
     const usernameFetch = getUsername()
     const deviceIdFetch = getDeviceId()

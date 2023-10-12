@@ -9,6 +9,11 @@ export default {
       title: 'the prompt this challenge choodle is based on',
     },
     {
+      name: 'gameHint',
+      type: 'string',
+      title: 'the hint for the guesser',
+    },
+    {
       name: 'game',
       type: 'string',
       title: 'the game this challenge is a part of',

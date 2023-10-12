@@ -4,7 +4,7 @@ export async function load({params}) {
   const copy = await readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy" && gameName  == "defcon"] | order(_createdAt) [0]`)
 
   if (copy) {
-    return {copy: copy};
+    return {copy};
   }
   return {
     status: 500,

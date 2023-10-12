@@ -18,9 +18,10 @@
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import {pageBackgroundDefault, choodleYellow} from '$lib/Configuration';
   import LoadingIndicator from "../../../../../components/LoadingIndicator.svelte";
-  import {loading} from "$lib/store";
+  import {dialogState, loading} from "$lib/store";
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
   import Keyboard from '../../../../../components/Keyboard.svelte';
+  import Dialog from "../../../../../components/Dialog.svelte";
 
   loading.set(true)
 
@@ -146,6 +147,12 @@
     }
   }
 
+  const showHint = () => {
+    dialogState.update(dialogs => {
+      return {...dialogs, ["hint"]: true}
+    })
+  }
+
   onMount(async () => {
     choodleOwner = (data.choodle.creatorId === await getDeviceId())
     challenge = await locateChallenge(data.choodle._id)
@@ -238,6 +245,7 @@
           {:else}
             <p><!-- layout placeholder --> </p>
           {/if}
+          <a on:click={showHint}>Need a hint?</a>
           <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
                              cursorLocation={cursorLocation} onEnter={check}>
             <div slot="between">
@@ -247,6 +255,12 @@
         {/if}
       {/if}
     {/if}
+    <Dialog id={'hint'}>
+      <h1 slot="header">Hint</h1>
+      <br/>
+      <p>{data.choodle.gameHint}</p>
+      <br/>
+    </Dialog>
   </LayoutContainer>
 {/if}
 
