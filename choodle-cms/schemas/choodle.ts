@@ -60,12 +60,6 @@ export default {
       type: 'string',
       title: 'Selected Game Prompt',
       readOnly: true
-    },
-    {
-      name: 'gameHint',
-      type: 'string',
-      title: 'A crossword-style hint for guessing the prompt.',
-      readOnly: true
     }
   ]
 }
