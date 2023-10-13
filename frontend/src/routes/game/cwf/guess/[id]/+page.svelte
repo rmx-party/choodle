@@ -164,11 +164,7 @@
         <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
                            cursorLocation={cursorLocation} onEnter={check}>
           <div slot="between">
-            {#if 'hint message data tbd'}
-              <p><a on:click={showHint}>Need a hint?</a></p>
-            {:else}
-              <p><!-- layout placeholder --> </p>
-            {/if}
+            <a on:click={showHint}>Need a hint?</a>
           </div>
         </GuessingInterface>
       {/if}
