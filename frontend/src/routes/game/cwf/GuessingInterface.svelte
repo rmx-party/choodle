@@ -6,7 +6,26 @@
   export let format: string[] = []
   export let inputDisplay = writable([])
   export let cursorLocation = writable(0)
-  export let onEnter = () => { return }
+  export let reveal = []
+  export let onEnter = () => {
+    return
+  }
+
+  const moveCursorRightHandlingRevealAndSpace = () => {
+    moveCursorRightHandlingSpace()
+
+    if (reveal.includes($cursorLocation)) {
+      moveCursorRight();
+    }
+  }
+
+  const moveCursorLeftHandlingRevealAndSpace = () => {
+    moveCursorLeftHandlingSpace()
+
+    if (reveal.includes($cursorLocation)) {
+      moveCursorLeft();
+    }
+  }
 
   const moveCursorRightHandlingSpace = () => {
     moveCursorRight()
@@ -53,11 +72,11 @@
   const handleKeyPress = (key: string) => {
     if (key !== "BACKSPACE" && key !== "ENTER") {
       updateAtCursor(key)
-      moveCursorRightHandlingSpace()
+      moveCursorRightHandlingRevealAndSpace()
     }
 
     if (key === "BACKSPACE") {
-      moveCursorLeftHandlingSpace()
+      moveCursorLeftHandlingRevealAndSpace()
       updateAtCursor('')
     }
 
@@ -67,8 +86,8 @@
   }
 </script>
 
-<GuessInput format={format} display={$inputDisplay} cursorLocation={$cursorLocation}/>
+<GuessInput format={format} display={$inputDisplay} cursorLocation={$cursorLocation} reveal={reveal}/>
 
-<slot name="between" />
+<slot name="between"/>
 
 <Keyboard onKeyPress={handleKeyPress}/>
