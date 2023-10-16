@@ -2,7 +2,7 @@
   export let format: string[];
   export let display: string[];
   export let cursorLocation: number;
-  export let reveal: number[]
+  export let reveal: number[] = [];
 </script>
 
 <div class="input" {...$$restProps}>
