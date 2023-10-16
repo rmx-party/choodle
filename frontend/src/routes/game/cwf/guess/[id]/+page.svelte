@@ -176,7 +176,7 @@
   <Dialog id={'hint'}>
     <h1 slot="header">Hint</h1>
     <br/>
-    <p>{data.choodle.gameHint}</p>
+    <p>{data.gamePrompt.hint}</p>
     <br/>
   </Dialog>
 </LayoutContainer>
