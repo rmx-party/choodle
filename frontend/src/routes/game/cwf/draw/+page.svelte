@@ -35,13 +35,14 @@
     })
   }
 
-  const createChallenge = async ({choodle, prompt, hint, challenger}) => {
+  const createChallenge = async ({choodle, promptText, hint, challenger}) => {
     const challenge = await readWriteClient.create({
       _type: "challenge",
       choodle: {_ref: choodle._id},
       challenger: {_ref: challenger._id},
-      gamePrompt: prompt,
+      gamePrompt: promptText,
       gameHint: hint,
+      gamePromptRef: {_ref: prompt._id},
     }, {
       autoGenerateArrayKeys: true,
     })
@@ -59,7 +60,7 @@
     // create the challenge
     createChallenge({
       choodle: result,
-      prompt: $gamePrompt,
+      promptText: $gamePrompt,
       hint: prompt.hint,
       challenger: await locateCreator({deviceId, email})
     })
