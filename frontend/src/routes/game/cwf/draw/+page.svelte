@@ -10,7 +10,7 @@
   import {goto} from "$app/navigation";
   import {onMount} from "svelte";
   import localforage from "localforage";
-  import {choodleCreatorEmailKey, choodlePromptKey} from "$lib/Configuration";
+  import {choodlePromptKey} from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
   import {loading} from "$lib/store";
   import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
