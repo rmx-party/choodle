@@ -67,7 +67,7 @@
 
     let gamePromptTiles = data.choodle.gamePrompt ? fp.map((char) => (char === ' ') ? '⬜' : '🟨', data.choodle.gamePrompt.split('')).join('') : ''
 
-    const url = `${window.location.origin}/game/cwf/guess/${data.choodle._id}`
+    const url = `${window.location.origin}/game/cwf/guess/${data.challenge._id}`
     const shareCopy = data.copy.share_messageText || ''
     const text = [shareCopy, gamePromptTiles, url].join(`\n`)
     const shareable = {text};
