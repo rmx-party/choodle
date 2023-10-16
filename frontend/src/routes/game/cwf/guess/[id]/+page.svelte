@@ -8,7 +8,7 @@
   import {page} from "$app/stores";
   import MetaData from "../../../../../components/MetaData.svelte";
   import {onMount} from "svelte";
-  import {getDeviceId} from "$lib/CreatorUtils";
+  import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
   import fp from "lodash/fp";
   import GuessingInterface from "../../GuessingInterface.svelte";
@@ -20,6 +20,7 @@
   import {dialogState, loading} from '$lib/store';
   import Keyboard from '../../../../../components/Keyboard.svelte';
   import Dialog from "../../../../../components/Dialog.svelte";
+  import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
 
   loading.set(true)
 
@@ -35,23 +36,56 @@
   let copiedToClipboard = false;
   let success = false;
 
+  let deviceId
+  let email
+  let username
+  let guesser
+  let guess
+
+  export const locateGuess = async ({guesserId, challengeId}: {
+    guesserId: string | undefined,
+    challengeId: string | undefined,
+  }) => {
+    const query = `*[_type == "guess"][guesser._ref match "${guesserId}" && challenge._ref match "${challengeId}"]`
+    let guess = (await readOnlyClient.fetch(query))[0]
+    if (!guess) {
+      guess = await readWriteClient.create(
+        {
+          _type: "guess",
+          guesser: {_ref: guesserId},
+          challenge: {_ref: data.challenge._id},
+          numberOfHintsUsed: 0,
+        },
+        {autoGenerateArrayKeys: true}
+      )
+    }
+    return guess
+  }
+
+  const isCorrect = (guess, answer): boolean => {
+    return guess.join('').toUpperCase() === answer.toUpperCase()
+  }
+
+  const handleCorrectGuess = () => {
+    console.log(`right answer, you won the thing`)
+    success = true
+
+    goto(`/game/cwf/success/${data.choodle._id}`)
+  }
+
+  const handleIncorrectGuess = () => {
+    console.log(`wrong`)
+    currentGuess.set([])
+    cursorLocation.set(0)
+  }
+
   const check = () => {
     if ($currentGuess.length < data.gamePrompt.prompt.length) return;
 
     guessesRemaining--;
     console.log(`checking answer, ${guessesRemaining} guesses left`)
 
-    if ($currentGuess.join('').toUpperCase() !== data.gamePrompt.prompt.toUpperCase()) {
-      console.log(`wrong`)
-      currentGuess.set([])
-      cursorLocation.set(0)
-      return;
-    }
-
-    console.log(`right answer, you won the thing`)
-    success = true
-
-    goto(`/game/cwf/success/${data.choodle._id}`)
+    isCorrect($currentGuess, data.gamePrompt.prompt) ? handleCorrectGuess() : handleIncorrectGuess()
   }
 
   const canShare = (shareable?): boolean => {
@@ -85,6 +119,8 @@
   }
 
   const showHint = () => {
+    // increment the number of hints used
+
     dialogState.update(dialogs => {
       return {...dialogs, ["hint"]: true}
     })
@@ -92,6 +128,13 @@
 
   onMount(async () => {
     choodleOwner = (data.choodle.creatorId === await getDeviceId())
+
+    deviceId = await getDeviceId()
+    email = await getEmail()
+    username = await getUsername()
+    guesser = await locateCreator({email, deviceId, username})
+    guess = await locateGuess({guesserId: guesser._id, challengeId: data.challenge._id})
+
     loading.set(false)
   })
 </script>
