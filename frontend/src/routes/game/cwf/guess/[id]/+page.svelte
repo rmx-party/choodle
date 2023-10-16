@@ -21,8 +21,17 @@
   import Keyboard from '../../../../../components/Keyboard.svelte';
   import Dialog from "../../../../../components/Dialog.svelte";
   import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
+	import Hints from '../../Hints.svelte';
 
   loading.set(true)
+
+  const newHints = false;
+  const hints = [
+    {text: 'hint 1', used: false},
+    {text: 'hint 2', used: false},
+    {text: 'hint 3', used: true},
+  ]
+  const hintCta = "Need a hint?"
 
   export let data;
   const currentGuess = writable([])
@@ -210,7 +219,11 @@
         <GuessingInterface format={data.gamePrompt.prompt.split('')} inputDisplay={currentGuess}
                            cursorLocation={cursorLocation} onEnter={check}>
           <div slot="between">
-            <a on:click={showHint}>Need a hint?</a>
+            {#if newHints}
+              <Hints {hints} {hintCta} />
+            {:else}
+              <a on:click={showHint}>{hintCta}</a>
+            {/if}
           </div>
         </GuessingInterface>
       {/if}
