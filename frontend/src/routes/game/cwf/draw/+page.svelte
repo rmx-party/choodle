@@ -28,8 +28,6 @@
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loading.set(true)
-    console.log("%%%%%%%%%")
-    console.log(JSON.stringify(prompt))
     return saveChoodle(undoStack, canvas, {
       gamePrompt: $gamePrompt || null,
       gameHint: prompt.hint,
