@@ -58,14 +58,14 @@
     const email = await getEmail()
 
     // create the challenge
-    createChallenge({
+    const challenge = await createChallenge({
       choodle: result,
       promptText: $gamePrompt,
       hint: prompt.hint,
       challenger: await locateCreator({deviceId, email})
     })
 
-    await goto(`/game/cwf/guess/${result._id}`)
+    await goto(`/game/cwf/guess/${challenge._id}`)
 
     await clearStorage()
     loading.set(false)
