@@ -36,12 +36,12 @@
   let success = false;
 
   const check = () => {
-    if ($currentGuess.length < data.choodle.gamePrompt.length) return;
+    if ($currentGuess.length < data.gamePrompt.prompt.length) return;
 
     guessesRemaining--;
     console.log(`checking answer, ${guessesRemaining} guesses left`)
 
-    if ($currentGuess.join('').toUpperCase() !== data.choodle.gamePrompt.toUpperCase()) {
+    if ($currentGuess.join('').toUpperCase() !== data.gamePrompt.prompt.toUpperCase()) {
       console.log(`wrong`)
       currentGuess.set([])
       cursorLocation.set(0)
@@ -65,7 +65,7 @@
     event.preventDefault()
     if (!browser) return;
 
-    let gamePromptTiles = data.choodle.gamePrompt ? fp.map((char) => (char === ' ') ? '⬜' : '🟨', data.choodle.gamePrompt.split('')).join('') : ''
+    let gamePromptTiles = data.choodle.gamePrompt ? fp.map((char) => (char === ' ') ? '⬜' : '🟨', data.gamePrompt.prompt.split('')).join('') : ''
 
     const url = `${window.location.origin}/game/cwf/guess/${data.challenge._id}`
     const shareCopy = data.copy.share_messageText || ''
@@ -127,7 +127,7 @@
   </ChoodleContainer>
 
   {#if choodleOwner}
-    <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
+    <h3><strong>{data.gamePrompt.prompt.toUpperCase()}</strong></h3>
     <div>
       <Button colour="yellow"
               on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
@@ -139,8 +139,8 @@
     {#if success}
       <p class="">{data.copy.guess_successMessageText}</p>
       <GuessInput
-        format={data.choodle.gamePrompt.split('')}
-        display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
+        format={data.gamePrompt.prompt.split('')}
+        display={data.gamePrompt.prompt.split('').map(str => str.toUpperCase())}
         cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
       <p><!-- layout placeholder --> </p>
       <Keyboard onKeyPress={() => {}}/>
@@ -148,8 +148,8 @@
       {#if guessesRemaining < 1}
         <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
         <GuessInput
-          format={data.choodle.gamePrompt.split('')}
-          display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
+          format={data.gamePrompt.prompt.split('')}
+          display={data.gamePrompt.prompt.split('').map(str => str.toUpperCase())}
           cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
 
         <p><!-- layout placeholder --> </p>
@@ -164,7 +164,7 @@
         {:else}
           <p><!-- layout placeholder --> </p>
         {/if}
-        <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
+        <GuessingInterface format={data.gamePrompt.prompt.split('')} inputDisplay={currentGuess}
                            cursorLocation={cursorLocation} onEnter={check}>
           <div slot="between">
             <a on:click={showHint}>Need a hint?</a>
