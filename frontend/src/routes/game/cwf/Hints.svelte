@@ -24,7 +24,6 @@
 
 <div class="hintsContainer">
   {#if hints?.length > 0}
-    <p>Hints</p>
     <div class="hintButtons">
       {#each hints as hint, index}
         <button on:click={activateHint(index)}
@@ -75,8 +74,8 @@
     gap: 0.5rem;
     border-radius: 0.125rem;
     background: var(--colors-greyscale-200, #D3D3D3);
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
     border: none;
   }
 
@@ -88,8 +87,8 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 4.375rem;
-    padding: 1rem;
+    height: 3.375rem;
+    padding: 0.5rem;
     align-items: center;
     gap: 0.5rem;
     background: var(--choodle-yellow);
