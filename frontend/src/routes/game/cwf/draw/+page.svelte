@@ -3,7 +3,7 @@
   import type {UndoStack} from "$lib/UndoStack";
   import Prompt from "../../../../components/Prompt.svelte";
   import {writable} from "svelte/store";
-  import {saveChoodle} from "$lib/ChoodleStorage";
+  import {createUncommittedChoodle, saveChoodle} from "$lib/ChoodleStorage";
   import {getDeviceId, getEmail, locateCreator} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
   import {clearStorage} from "$lib/StorageStuff";
@@ -29,43 +29,33 @@
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loading.set(true)
-    const choodleId = await saveChoodle(undoStack, canvas, {
+
+    const {transaction, choodleId} = await createUncommittedChoodle(undoStack, canvas, {
         gamePrompt: $gamePrompt || null,
         gameHint: prompt.hint,
         creatorId: await getDeviceId()
       },
       challenger._id)
 
-    console.log("fuck")
-    console.log(choodleId)
-
-    const challenge = await createChallenge({
-      choodleId: choodleId,
-      promptText: $gamePrompt,
-      hint: prompt.hint,
-      challenger: challenger
-    })
-
-    await goto(`/game/cwf/guess/${challenge._id}`)
-
-    await clearStorage()
-    loading.set(false)
-
-  }
-
-  const createChallenge = async ({choodleId, promptText, hint, challenger}) => {
-    const challenge = await readWriteClient.create({
+    let challengeId = `challenge-${window.crypto.randomUUID()}`;
+    transaction.create({
+      _id: challengeId,
       _type: "challenge",
       choodle: {_ref: choodleId},
       challenger: {_ref: challenger._id},
-      gamePrompt: promptText,
-      gameHint: hint,
+      gamePrompt: $gamePrompt,
+      gameHint: prompt.hint,
       gamePromptRef: {_ref: prompt._id},
-    }, {
+    })
+
+    await transaction.commit({
       autoGenerateArrayKeys: true,
     })
-    console.log(challenge)
-    return challenge
+
+    await goto(`/game/cwf/guess/${challengeId}`)
+
+    await clearStorage()
+    loading.set(false)
   }
 
   onMount(async () => {
