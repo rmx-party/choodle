@@ -44,7 +44,7 @@ export async function getUsername(): Promise<string | undefined> {
   }
 }
 
-export const locateCreator = async ({username, deviceId, email}: { // TODO: make it a find or create so it can be used everywhere we need a reference
+export const locateCreator = async ({username, deviceId, email}: {
   username?: string | undefined,
   deviceId?: string | undefined,
   email?: string | undefined
@@ -63,6 +63,7 @@ export const locateCreator = async ({username, deviceId, email}: { // TODO: make
   query += "]"
   let creator = (await readOnlyClient.fetch(query))[0]
   // TODO: if there are multiple matches, we should consolidate them
+  // TODO: if creator is in the backend, store the ID in browser so we don't have to keep asking on every page
 
   if (creator) {
     readWriteClient
