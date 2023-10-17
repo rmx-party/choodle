@@ -17,12 +17,14 @@
   import {choodleYellow, pageBackgroundDefault} from '$lib/Configuration';
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
-  import {loading} from '$lib/store';
   import Keyboard from '../../../../../components/Keyboard.svelte';
   import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
   import Hints from '../../Hints.svelte';
+  import {loading, loadingMessage} from "$lib/store";
+  import LoadingIndicator from '../../../../../components/LoadingIndicator.svelte';
 
   loading.set(true)
+  loadingMessage.set('loading')
 
   export let data;
   const currentGuess = writable([])
@@ -184,6 +186,9 @@
           bgColor={pageBackgroundDefault}
 />
 
+{#if $loading}
+  <LoadingIndicator explanation={$loadingMessage} />
+{:else}
 <LayoutContainer class="no-pan">
   <div class="topBar" slot="topBar">
     {#if choodleOwner}
@@ -253,6 +258,7 @@
     {/if}
   {/if}
 </LayoutContainer>
+{/if}
 
 <style>
   .topBar {
