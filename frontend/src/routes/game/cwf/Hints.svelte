@@ -87,11 +87,13 @@
   .hintCopy {
     display: flex;
     justify-content: center;
-    width: 100%;
+    width: calc(100% + 2rem);
     height: 4.375rem;
     padding: 1rem;
     align-items: center;
     gap: 0.5rem;
     background: var(--choodle-yellow);
+    margin: 0 -1rem;
+    overflow: visible;
   }
 </style>
