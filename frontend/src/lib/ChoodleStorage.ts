@@ -21,7 +21,7 @@ export const addChoodleToCreator = async ({choodleId, creatorId}) => {
   return result
 }
 
-export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElement, extraMetadata?: any) {
+export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElement, extraMetadata?: any, creatorId?: string) {
   if (!browser) return;
 
   const upScaledUploadResult = (async () => {
@@ -40,7 +40,7 @@ export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElemen
 
   console.log(`pending uploads`, uploadResult, upScaledUploadResult)
 
-  let choodleId = `choodle-${window.crypto.randomUUID()}`;
+  const choodleId = `choodle-${window.crypto.randomUUID()}`;
   const cmsChoodle = {
     _id: choodleId,
     _type: 'choodle',
@@ -67,8 +67,11 @@ export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElemen
   console.log({createResult})
 
   const deviceId = await getDeviceId()
-  const creator = await locateCreator({deviceId})
-  addChoodleToCreator({choodleId: choodleId, creatorId: creator._id})
+  if (!creatorId) {
+    const creator = await locateCreator({deviceId})
+    creatorId = creator._id
+  }
+  addChoodleToCreator({choodleId: choodleId, creatorId: creatorId})
 
   return createResult;
 }
