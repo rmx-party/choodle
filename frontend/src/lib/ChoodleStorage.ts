@@ -73,5 +73,5 @@ export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElemen
   }
   addChoodleToCreator({choodleId: choodleId, creatorId: creatorId})
 
-  return createResult._id;
+  return choodleId;
 }
