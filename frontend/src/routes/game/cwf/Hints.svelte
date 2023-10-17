@@ -2,10 +2,13 @@
   import lifeSaverIcon from '$lib/assets/mdi_lifebuoy.svg';
   import redX from '$lib/assets/red_x.svg';
 
-  export let hints = [];
+  type hint = {
+    used: boolean;
+    text: string;
+  }
+  export let hints: hint[] = [];
   export let hintCta = '';
   export let activeHint = -1;
-
 
   const activateHint = (index) => () => {
     activeHint = index;
