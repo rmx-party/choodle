@@ -17,9 +17,8 @@
   import {choodleYellow, pageBackgroundDefault} from '$lib/Configuration';
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
-  import {dialogState, loading} from '$lib/store';
+  import {loading} from '$lib/store';
   import Keyboard from '../../../../../components/Keyboard.svelte';
-  import Dialog from "../../../../../components/Dialog.svelte";
   import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
   import Hints from '../../Hints.svelte';
 
