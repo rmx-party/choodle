@@ -54,9 +54,10 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    width: 100%;
+    width: calc(100% - 1rem);
     padding: 0.5rem 0;
     text-align: center;
+    overflow: visible;
   }
 
   .hintButtons {
@@ -94,6 +95,5 @@
     gap: 0.5rem;
     background: var(--choodle-yellow);
     margin: 0 -1rem;
-    overflow: visible;
   }
 </style>
