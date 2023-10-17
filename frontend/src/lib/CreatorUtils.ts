@@ -65,7 +65,7 @@ export const locateCreator = async ({username, deviceId, email}: { // TODO: make
   // TODO: if there are multiple matches, we should consolidate them
 
   if (creator) {
-    creator = await readWriteClient
+    readWriteClient
       .patch(creator._id)
       .setIfMissing({username, email})
       .setIfMissing({deviceIds: [deviceId]})
