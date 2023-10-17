@@ -249,4 +249,8 @@
   .failure {
     color: red;
   }
+
+  [slot='between'] {
+    width: 100%;
+  }
 </style>

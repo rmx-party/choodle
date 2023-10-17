@@ -9,42 +9,54 @@
 
   const activateHint = (index) => () => {
     activeHint = index;
-    // TODO: mark hint as used
+    hints[index].used = true;
+    // TODO: mark hint as used in backend
   }
 </script>
 
 
-{#if hints?.length > 0}
-  <p>Hints</p>
-  <div class="hintButtons">
-    {#each hints as hint, index}
-      <button on:click={activateHint(index)} class={`hintButton ${index == activeHint ? 'active' : '' }`} disabled={hint.used}>
-        {#if hint.used}
-          <img src={lifeSaverIcon} alt="reveal a hint" />
-          <img src={redX} alt="hint used" style="position: absolute;"/>
-        {:else}
-          <img src={lifeSaverIcon} alt="reveal a hint" />
-        {/if}
-      </button>
-    {/each}
-  </div>
-{/if}
-
-<div class="hintCopy">
-  {#if activeHint >= 0}
-    <p>{hints[activeHint].text}</p>
-  {:else}
-    <p>{hintCta}</p>
+<div class="hintsContainer">
+  {#if hints?.length > 0}
+    <p>Hints</p>
+    <div class="hintButtons">
+      {#each hints as hint, index}
+        <button on:click={activateHint(index)} class={`hintButton ${index == activeHint ? 'active' : '' }`} disabled={hint.used}>
+          {#if hint.used}
+            <img src={lifeSaverIcon} alt="reveal a hint" />
+            <img src={redX} alt="hint used" style="position: absolute;"/>
+          {:else}
+            <img src={lifeSaverIcon} alt="reveal a hint" />
+          {/if}
+        </button>
+      {/each}
+    </div>
   {/if}
+
+  <div class="hintCopy">
+    {#if activeHint >= 0}
+      <p>{hints[activeHint].text}</p>
+    {:else}
+      <p>{hintCta}</p>
+    {/if}
+  </div>
 </div>
 
 <style>
+  .hintsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.5rem 0;
+    text-align: center;
+  }
   .hintButtons {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     gap: 0.5rem;
+    justify-content: center;
   }
 
   .hintButton {
@@ -64,6 +76,7 @@
 
   .hintCopy {
     display: flex;
+    justify-content: center;
     width: 100%;
     height: 4.375rem;
     padding: 1rem;
