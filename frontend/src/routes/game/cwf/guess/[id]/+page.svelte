@@ -159,9 +159,9 @@
   }
 
   onMount(async () => {
-    choodleOwner = (data.choodle.creatorId === await getDeviceId())
-
     deviceId = await getDeviceId()
+    choodleOwner = (data.choodle.creatorId === deviceId)
+
     email = await getEmail()
     username = await getUsername()
     guesser = await locateCreator({email, deviceId, username})
