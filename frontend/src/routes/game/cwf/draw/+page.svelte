@@ -23,16 +23,18 @@
   let child;
   let isOnline = true;
   let prompt;
+  let challenger;
 
   const gamePrompt = writable<string | null>(null)
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loading.set(true)
     return saveChoodle(undoStack, canvas, {
-      gamePrompt: $gamePrompt || null,
-      gameHint: prompt.hint,
-      creatorId: await getDeviceId()
-    })
+        gamePrompt: $gamePrompt || null,
+        gameHint: prompt.hint,
+        creatorId: await getDeviceId()
+      },
+      challenger._id)
   }
 
   const createChallenge = async ({choodle, promptText, hint, challenger}) => {
@@ -54,15 +56,12 @@
     if (!browser) return;
     if (!result._id) return;
 
-    const deviceId = await getDeviceId()
-    const email = await getEmail()
-
     // create the challenge
     const challenge = await createChallenge({
       choodle: result,
       promptText: $gamePrompt,
       hint: prompt.hint,
-      challenger: await locateCreator({deviceId, email})
+      challenger: challenger
     })
 
     await goto(`/game/cwf/guess/${challenge._id}`)
@@ -86,6 +85,10 @@
     gamePrompt.set(await localforage.getItem(choodlePromptKey))
 
     prompt = await readOnlyClient.fetch(`*[_type == "gamePrompt" && prompt == "${$gamePrompt}"][0]`)
+
+    const deviceId = await getDeviceId()
+    const email = await getEmail()
+    challenger = await locateCreator({deviceId, email})
   })
 </script>
 
