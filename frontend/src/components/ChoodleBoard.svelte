@@ -18,8 +18,6 @@
 
   export let performSave = (..._args) => null;
 
-  export let afterSave = (..._args) => null;
-
   let isDrawing = false;
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
@@ -65,9 +63,7 @@
     if (undoStack.current === '') return loading.set(false);
 
     loadingMessage.set('saving your choodle')
-    const createResult = await performSave(undoStack, canvas);
-
-    await afterSave(createResult)
+    await performSave(undoStack, canvas);
 
     clearCanvas(id)
     loading.set(false)
@@ -228,14 +224,14 @@
 
 <div class="canvas-container">
   <canvas id={id}
-    on:mousedown={startDrawing}
-    on:touchstart={startDrawing}
-    on:mouseup={endDrawing}
-    on:touchend={endDrawing}
-    on:mousemove={doDraw}
-    on:touchmove={doDraw}
-    on:click={(event) => {event.preventDefault()}}
-    on:drag={(event) => {event.preventDefault()}}>
+          on:mousedown={startDrawing}
+          on:touchstart={startDrawing}
+          on:mouseup={endDrawing}
+          on:touchend={endDrawing}
+          on:mousemove={doDraw}
+          on:touchmove={doDraw}
+          on:click={(event) => {event.preventDefault()}}
+          on:drag={(event) => {event.preventDefault()}}>
   </canvas>
 </div>
 

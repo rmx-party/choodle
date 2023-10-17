@@ -29,36 +29,18 @@
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loading.set(true)
-    return saveChoodle(undoStack, canvas, {
+    const choodleId = await saveChoodle(undoStack, canvas, {
         gamePrompt: $gamePrompt || null,
         gameHint: prompt.hint,
         creatorId: await getDeviceId()
       },
       challenger._id)
-  }
 
-  const createChallenge = async ({choodle, promptText, hint, challenger}) => {
-    const challenge = await readWriteClient.create({
-      _type: "challenge",
-      choodle: {_ref: choodle._id},
-      challenger: {_ref: challenger._id},
-      gamePrompt: promptText,
-      gameHint: hint,
-      gamePromptRef: {_ref: prompt._id},
-    }, {
-      autoGenerateArrayKeys: true,
-    })
-    console.log(challenge)
-    return challenge
-  }
+    console.log("fuck")
+    console.log(choodleId)
 
-  const afterSave = async (result) => {
-    if (!browser) return;
-    if (!result._id) return;
-
-    // create the challenge
     const challenge = await createChallenge({
-      choodle: result,
+      choodleId: choodleId,
       promptText: $gamePrompt,
       hint: prompt.hint,
       challenger: challenger
@@ -68,6 +50,22 @@
 
     await clearStorage()
     loading.set(false)
+
+  }
+
+  const createChallenge = async ({choodleId, promptText, hint, challenger}) => {
+    const challenge = await readWriteClient.create({
+      _type: "challenge",
+      choodle: {_ref: choodleId},
+      challenger: {_ref: challenger._id},
+      gamePrompt: promptText,
+      gameHint: hint,
+      gamePromptRef: {_ref: prompt._id},
+    }, {
+      autoGenerateArrayKeys: true,
+    })
+    console.log(challenge)
+    return challenge
   }
 
   onMount(async () => {
@@ -95,7 +93,7 @@
 {#if !$loading}
   <LayoutContainer>
     <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>
-    <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
+    <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave}>
       <ButtonMenu slot="buttons">
         <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
         <Button on:click={child.save} isOnline={isOnline} colour="yellow">{data.copy.draw_doneButtonText}</Button>

@@ -63,7 +63,7 @@ export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElemen
     ...extraMetadata
   }
   console.log({cmsChoodle})
-  const createResult = readWriteClient.create(cmsChoodle)
+  const createResult = await readWriteClient.create(cmsChoodle)
   console.log({createResult})
 
   const deviceId = await getDeviceId()
@@ -73,5 +73,5 @@ export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElemen
   }
   addChoodleToCreator({choodleId: choodleId, creatorId: creatorId})
 
-  return createResult;
+  return createResult._id;
 }
