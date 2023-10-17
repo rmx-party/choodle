@@ -3,7 +3,7 @@
   import type {UndoStack} from "$lib/UndoStack";
   import Prompt from "../../../../components/Prompt.svelte";
   import {writable} from "svelte/store";
-  import {addChoodleToCreator, saveChoodle} from "$lib/ChoodleStorage";
+  import {saveChoodle} from "$lib/ChoodleStorage";
   import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
   import {clearStorage, getUndoStack} from "$lib/StorageStuff";
@@ -36,10 +36,33 @@
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loading.set(true)
-    return await saveChoodle(undoStack, canvas, {
+    const choodleId = await saveChoodle(undoStack, canvas, {
       gamePrompt: $gamePrompt || null,
       creatorId: await getDeviceId()
     })
+
+    if (!(creatorUsername.length > 0)) return;
+
+    const deviceId = await getDeviceId()
+    const email = await getEmail()
+    const username = creatorUsername
+
+    creator = await locateCreator({username, deviceId, email});
+
+    const challenge = await createChallenge({
+      choodle: {_ref: choodleId},
+      prompt: $gamePrompt,
+      hint: prompt.hint,
+      challenger: creator,
+      game: 'defcon'
+    })
+    addPoints(creator._id, 10, "Creating a challenge.", challenge._id)
+
+    // take us to the home page
+    await goto(`/game/defcon`)
+
+    await clearStorage()
+    loading.set(false)
   }
 
   const createChallenge = async ({choodle, prompt, hint, challenger, game}) => {
@@ -88,34 +111,6 @@
     child.save()
   }
 
-  const afterSave = async (result) => {
-    if (!browser) return;
-    if (!result._id) return;
-    if (!(creatorUsername.length > 0)) return;
-
-    const deviceId = await getDeviceId()
-    const email = await getEmail()
-    const username = creatorUsername
-
-    creator = await locateCreator({username, deviceId, email});
-
-    const challenge = await createChallenge({
-      choodle: result,
-      prompt: $gamePrompt,
-      hint: prompt.hint,
-      challenger: creator,
-      game: 'defcon'
-    })
-    addChoodleToCreator({choodleId: result._id, creatorId: creator._id})
-    addPoints(creator._id, 10, "Creating a challenge.", challenge._id)
-
-    // take us to the home page
-    await goto(`/game/defcon`)
-
-    await clearStorage()
-    loading.set(false)
-  }
-
   onMount(async () => {
     if (!browser) return;
 
@@ -146,7 +141,7 @@
   <LayoutContainer class="no-pan">
     <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>
 
-    <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
+    <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave}>
       <ButtonMenu slot="buttons">
         <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
         <Button on:click={promptForUsernameAndSave} isOnline={isOnline}

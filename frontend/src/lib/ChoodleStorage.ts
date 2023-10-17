@@ -9,18 +9,6 @@ const uploadImageBlob = (imageBlob: Blob) => {
   return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
 }
 
-export const addChoodleToCreator = async ({choodleId, creatorId}) => {
-  const result = await readWriteClient
-    .patch(creatorId)
-    .setIfMissing({choodles: []})
-    .append('choodles', [{_ref: choodleId}])
-    .commit({
-      autoGenerateArrayKeys: true,
-    })
-  console.log('addChoodleToCreator', {choodleId, creatorId, result})
-  return result
-}
-
 export async function createUncommittedChoodle(undoStack: UndoStack, canvas: HTMLCanvasElement, extraMetadata?: any, creatorId?: string) {
   if (!browser) return;
 
