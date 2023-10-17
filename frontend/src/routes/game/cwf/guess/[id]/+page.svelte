@@ -21,11 +21,10 @@
   import Keyboard from '../../../../../components/Keyboard.svelte';
   import Dialog from "../../../../../components/Dialog.svelte";
   import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
-	import Hints from '../../Hints.svelte';
+  import Hints from '../../Hints.svelte';
 
   loading.set(true)
 
-  const newHints = false;
   const hints = [
     {text: 'hint 1', used: false},
     {text: 'hint 2', used: false},
@@ -127,14 +126,6 @@
     }
   }
 
-  const showHint = () => {
-    // increment the number of hints used
-
-    dialogState.update(dialogs => {
-      return {...dialogs, ["hint"]: true}
-    })
-  }
-
   onMount(async () => {
     choodleOwner = (data.choodle.creatorId === await getDeviceId())
 
@@ -219,22 +210,12 @@
         <GuessingInterface format={data.gamePrompt.prompt.split('')} inputDisplay={currentGuess}
                            cursorLocation={cursorLocation} onEnter={check}>
           <div slot="between">
-            {#if newHints}
-              <Hints {hints} {hintCta} />
-            {:else}
-              <a on:click={showHint}>{hintCta}</a>
-            {/if}
+            <Hints {hints} {hintCta}/>
           </div>
         </GuessingInterface>
       {/if}
     {/if}
   {/if}
-  <Dialog id={'hint'}>
-    <h1 slot="header">Hint</h1>
-    <br/>
-    <p>{data.gamePrompt.hint}</p>
-    <br/>
-  </Dialog>
 </LayoutContainer>
 
 <style>
