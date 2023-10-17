@@ -54,10 +54,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    width: calc(100% - 1rem);
+    width: 100%;
     padding: 0.5rem 0;
     text-align: center;
-    overflow: visible;
   }
 
   .hintButtons {
@@ -88,12 +87,11 @@
   .hintCopy {
     display: flex;
     justify-content: center;
-    width: calc(100% + 2rem);
+    width: 100%;
     height: 4.375rem;
     padding: 1rem;
     align-items: center;
     gap: 0.5rem;
     background: var(--choodle-yellow);
-    margin: 0 -1rem;
   }
 </style>
