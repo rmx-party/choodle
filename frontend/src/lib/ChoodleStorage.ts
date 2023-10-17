@@ -40,7 +40,9 @@ export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElemen
 
   console.log(`pending uploads`, uploadResult, upScaledUploadResult)
 
+  let choodleId = `choodle-${window.crypto.randomUUID()}`;
   const cmsChoodle = {
+    _id: choodleId,
     _type: 'choodle',
     title: 'Untitled',
     image: {
@@ -61,12 +63,12 @@ export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElemen
     ...extraMetadata
   }
   console.log({cmsChoodle})
-  const createResult = await readWriteClient.create(cmsChoodle)
+  const createResult = readWriteClient.create(cmsChoodle)
   console.log({createResult})
 
   const deviceId = await getDeviceId()
   const creator = await locateCreator({deviceId})
-  addChoodleToCreator({choodleId: createResult._id, creatorId: creator._id})
+  addChoodleToCreator({choodleId: choodleId, creatorId: creator._id})
 
   return createResult;
 }
