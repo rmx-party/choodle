@@ -17,13 +17,12 @@
   }
 </script>
 
-
 <div class="hintsContainer">
   {#if hints?.length > 0}
     <p>Hints</p>
     <div class="hintButtons">
       {#each hints as hint, index}
-        <button on:click={activateHint(index)} class={`hintButton ${index == activeHint ? 'active' : '' }`} disabled={hint.used}>
+        <button on:click={activateHint(index)} class={`hintButton ${index == activeHint ? 'active' : '' } ${hint.used ? 'used' : ''}`}>
           {#if hint.used}
             <img src={lifeSaverIcon} alt="reveal a hint" />
             <img src={redX} alt="hint used" style="position: absolute;"/>
