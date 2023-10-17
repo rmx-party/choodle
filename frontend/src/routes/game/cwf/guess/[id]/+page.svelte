@@ -207,7 +207,7 @@
   </div>
 
   <ChoodleContainer --choodle-max-height-offset='34rem'>
-    <img src={urlFor(data.choodle.upScaledImage).url()} width='390' height='520' alt=''/>
+    <img src={urlFor(data.choodle.upScaledImage).url()} alt=''/>
   </ChoodleContainer>
 
   {#if choodleOwner}
