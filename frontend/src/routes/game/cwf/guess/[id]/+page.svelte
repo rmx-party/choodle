@@ -24,13 +24,6 @@
 
   loading.set(true)
 
-  const hints = [
-    {text: 'hint 1', used: false},
-    {text: 'hint 2', used: false},
-    {text: 'hint 3', used: true},
-  ]
-  const hintCta = "Need a hint?"
-
   export let data;
   const currentGuess = writable([])
   const cursorLocation = writable(0)
@@ -49,6 +42,9 @@
   let guesser
   let guess
 
+  let hints = []
+  const hintCta = "Need a hint?"
+
   export const locateGuess = async ({guesserId, challengeId}: {
     guesserId: string | undefined,
     challengeId: string | undefined,
@@ -61,7 +57,6 @@
           _type: "guess",
           guesser: {_ref: guesserId},
           challenge: {_ref: data.challenge._id},
-          numberOfHintsUsed: 0,
         },
         {autoGenerateArrayKeys: true}
       )
@@ -82,6 +77,18 @@
 
   const handleIncorrectGuess = () => {
     console.log(`wrong`)
+
+    const client = readWriteClient
+      .patch(guess._id)
+      .setIfMissing({guesses: []})
+      .append('guesses', [$currentGuess.join('')])
+
+    if (guessesRemaining < 1) {
+      client.set({guessedCorrectly: false})
+    }
+
+    client.commit()
+
     currentGuess.set([])
     cursorLocation.set(0)
   }
@@ -125,6 +132,30 @@
     }
   }
 
+  const afterHint = (hint) => {
+    if (hintUsedInGuess(guess, hint.text)) {
+      console.log(`hint already used ${hint.text}`)
+      return
+    }
+
+    console.log(`adding ${hint.text} to the used hints on ${guess._id}`)
+
+    readWriteClient.patch(guess._id)
+      .setIfMissing({hintsUsed: []})
+      .append('hintsUsed', [hint.text])
+      .commit()
+  }
+
+  const hintUsedInGuess = (guess, hintText) => {
+    console.log(`hintUsedInGuess, ${guess._id}, ${hintText}`)
+    if (!guess.hintsUsed) {
+      console.log('no hints used')
+      return false
+    }
+
+    return guess.hintsUsed.includes(hintText);
+  }
+
   onMount(async () => {
     choodleOwner = (data.choodle.creatorId === await getDeviceId())
 
@@ -133,6 +164,12 @@
     username = await getUsername()
     guesser = await locateCreator({email, deviceId, username})
     guess = await locateGuess({guesserId: guesser._id, challengeId: data.challenge._id})
+
+    hints = [
+      {text: data.gamePrompt.hint, used: hintUsedInGuess(guess, data.gamePrompt.hint)},
+      {text: data.gamePrompt.hint_2, used: hintUsedInGuess(guess, data.gamePrompt.hint_2)},
+      {text: data.gamePrompt.hint_3, used: hintUsedInGuess(guess, data.gamePrompt.hint_3)},
+    ]
 
     loading.set(false)
   })
@@ -209,7 +246,7 @@
         <GuessingInterface format={data.gamePrompt.prompt.split('')} inputDisplay={currentGuess}
                            cursorLocation={cursorLocation} onEnter={check}>
           <div slot="between">
-            <Hints {hints} {hintCta}/>
+            <Hints {hints} {hintCta} {afterHint}/>
           </div>
         </GuessingInterface>
       {/if}

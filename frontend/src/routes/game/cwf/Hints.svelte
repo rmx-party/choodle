@@ -2,7 +2,7 @@
   import lifeSaverIcon from '$lib/assets/mdi_lifebuoy.svg';
   import redX from '$lib/assets/red_x.svg';
 
-  type hint = {
+  export type hint = {
     used: boolean;
     text: string;
   }
@@ -10,10 +10,15 @@
   export let hintCta = '';
   export let activeHint = -1;
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  export let afterHint = (hint: hint) => {
+  }
+
   const activateHint = (index) => () => {
     activeHint = index;
     hints[index].used = true;
-    // TODO: mark hint as used in backend
+
+    afterHint(hints[index])
   }
 </script>
 
@@ -22,12 +27,13 @@
     <p>Hints</p>
     <div class="hintButtons">
       {#each hints as hint, index}
-        <button on:click={activateHint(index)} class={`hintButton ${index == activeHint ? 'active' : '' } ${hint.used ? 'used' : ''}`}>
+        <button on:click={activateHint(index)}
+                class={`hintButton ${index == activeHint ? 'active' : '' } ${hint.used ? 'used' : ''}`}>
           {#if hint.used}
-            <img src={lifeSaverIcon} alt="reveal a hint" />
+            <img src={lifeSaverIcon} alt="reveal a hint"/>
             <img src={redX} alt="hint used" style="position: absolute;"/>
           {:else}
-            <img src={lifeSaverIcon} alt="reveal a hint" />
+            <img src={lifeSaverIcon} alt="reveal a hint"/>
           {/if}
         </button>
       {/each}
@@ -52,6 +58,7 @@
     padding: 0.5rem 0;
     text-align: center;
   }
+
   .hintButtons {
     width: 100%;
     display: flex;
@@ -72,6 +79,7 @@
     height: 2.5rem;
     border: none;
   }
+
   .hintButton.active {
     background: var(--choodle-yellow);
   }

@@ -26,14 +26,18 @@ export default {
       ],
     },
     {
-      name: 'numberOfHintsUsed',
-      title: 'number of hints the guesser used',
-      type: 'number',
-      initialValue: 0,
+      name: 'hintsUsed',
+      title: 'Which hints did the guesser use?',
+      type: 'array',
+      of: [
+        {
+          type: 'string',
+        }
+      ],
     },
     {
       name: 'guessedCorrectly',
-      title: 'Did the user guess correctly?',
+      title: 'Did the  ser guess correctly?',
       type: 'boolean',
     },
   ]
