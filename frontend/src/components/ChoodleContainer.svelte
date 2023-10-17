@@ -11,7 +11,7 @@
     justify-content: center;
     padding: 0;
     margin: 1rem;
-    max-height: clamp(100px, 100%, 40svh);
+    max-height: clamp(100px, 100%, calc(100svh - var(--choodle-max-height-offset, 60svh)));
     max-width: min(100%, 100svw);
   }
 
@@ -20,7 +20,7 @@
     aspect-ratio: 3/4;
     height: auto;
     width: auto;
-    max-height: clamp(100px, 100%, 50svh);
+    max-height: clamp(100px, 100%, calc(100svh - var(--choodle-max-height-offset, 60svh)));
     max-width: min(100%, 100svw);
     image-rendering: pixelated;
 

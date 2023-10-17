@@ -6,6 +6,8 @@
     --choodle-black: #141518;
     --color-link: #051BDC;
     --page-background-color: var(--choodle-yellow);
+
+    --choodle-max-height-offset: 60svh;
 }
 
 html, button, input, label {
