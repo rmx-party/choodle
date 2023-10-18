@@ -59,8 +59,7 @@
   const getPointsForUser = (username, pointRecords) => {
     return fp.filter(point => point.creator.username === username, pointRecords)
   }
-
-
+  
   const getGuessesForUser = async (creatorId) => {
     const guesses = await readOnlyClient.fetch(`*[_type == "guess"][guesser._ref match "${creatorId}"]{..., challenge->{..., choodle->{...}, challenger->{...}}}`)
     console.log("user guesses ", guesses)
@@ -153,6 +152,7 @@
 
       {#if $activeTab === "my games"}
         <section class="tabContent my-games">
+          <p>My turn</p>
           <ul>
             {#each challengesToBeGuessed as challenge}
               <li>
@@ -163,6 +163,11 @@
                 </a>
               </li>
             {/each}
+          </ul>
+        </section>
+        <section class="tabContent my-games">
+          <p>Their turn</p>
+          <ul>
             {#each guesses as guess}
               <li>
                 <span
