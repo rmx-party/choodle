@@ -1,14 +1,41 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
-  import { pageBackgroundDefault } from "$lib/Configuration";
+  import {goto} from "$app/navigation";
+  import {onMount} from "svelte";
   import Button from "../../../components/Button.svelte";
+  import {browser} from "$app/environment";
+  import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
   import LayoutContainer from "../../../components/LayoutContainer.svelte";
+  import {page} from "$app/stores";
   import MetaData from "../../../components/MetaData.svelte";
+  import {pageBackgroundDefault} from "$lib/Configuration";
+  import {writable} from "svelte/store";
+  import {readOnlyClient} from "$lib/CMSUtils";
+  import fp from "lodash/fp";
+  import {toHTML} from "@portabletext/to-html";
+  import {loading} from "$lib/store";
+  import LoadingIndicator from "../../../components/LoadingIndicator.svelte";
+  import {urlFor} from "$lib/PersistedImagesUtils";
+
+  loading.set(true)
 
   export let data
+  let currentChoodler
+  let hasCreatedAChallenge = false
+  let pointsTotal = 0
+  let allPoints = []
+  let currentChoodlerPoints = []
 
-  let playerId = 'some-player-id' // TODO: fetch creatorId from storage
+  let guesses = []
+
+  let challengesToBeGuessed = []
+  let leaderboard = []
+
+  const navItems = [
+    'my games',
+    'leaderboard',
+    'rules'
+  ]
+  let activeTab = writable(navItems[0])
 
   // TODO: CMS-populate all the copy / non-dynamic html contents
 
@@ -16,94 +43,229 @@
     await goto(`/game/cwf/pick`)
   }
 
-  const nudge = (gameId) => {
-    return async (event) => {
-      // TODO: handle nudge for a game awaiting an action from the other player
-    }
+  const assembleLeaderboard = async () => {
+    allPoints = await readOnlyClient.fetch(`*[_type == "points"]{..., creator->{...}}`)
+    const creatorUsernames = fp.uniq(fp.map(point => point.creator.username, allPoints))
+
+    return fp.orderBy(['totalPoints'], ['desc'],
+      fp.map(creatorUsername => {
+        const pointsForUser = getPointsForUser(creatorUsername, allPoints)
+        const totalPoints = fp.sumBy('amount', pointsForUser)
+
+        return {creatorUsername: creatorUsername || "unknown", totalPoints}
+
+      }, creatorUsernames))
   }
 
-  const draw = (gameId) => {
-    return async (event) => {
-      // TODO: start a new prompt pick to add a drawing to an existing game
-    }
+  const getPointsForUser = (username, pointRecords) => {
+    return fp.filter(point => point.creator.username === username, pointRecords)
   }
+
+
+  const getGuessesForUser = async (creatorId) => {
+    const guesses = await readOnlyClient.fetch(`*[_type == "guess"][guesser._ref match "${creatorId}"]{..., challenge->{..., choodle->{...}, challenger->{...}}}`)
+    console.log("user guesses ", guesses)
+    return fp.reject(guess => guess.guessedCorrectly === undefined, guesses)
+  }
+
+  const challengesThatHaveNotBeenGuessed = async (creatorId, challenges, guesses) => {
+    const guessedChallengeIds = fp.map(guess => guess.challenge._id, guesses)
+    console.log("challenges", challenges)
+
+    return fp.reject(challenge => challenge.challenger.username === currentChoodler.username,
+      fp.reject(challenge => guessedChallengeIds.includes(challenge._id), challenges))
+  }
+
+  onMount(async () => {
+    if (!browser) return;
+
+    loading.set(true)
+
+    const emailFetch = getEmail()
+    const usernameFetch = getUsername()
+    const deviceIdFetch = getDeviceId()
+    const creatorFetch = locateCreator({
+      email: await emailFetch,
+      username: await usernameFetch,
+      deviceId: await deviceIdFetch
+    }); // TODO: migrate global creator/player state to a store shared across pages
+
+    currentChoodler = await creatorFetch;
+    console.log({creator: currentChoodler})
+
+    if (currentChoodler?.choodles?.length > 0) { // TODO: figure out the appropriate test for game participation
+      hasCreatedAChallenge = true;
+    } else {
+      loading.set(false)
+      return // Don't load leaderboard stuff if player can't see it anyway
+    }
+
+    assembleLeaderboard().then(leaderboardList => {
+      leaderboard = leaderboardList
+    }).then(() => {
+      currentChoodlerPoints = getPointsForUser(currentChoodler?.username, allPoints)
+      pointsTotal = fp.sumBy('amount', currentChoodlerPoints)
+    })
+
+    guesses = await getGuessesForUser(currentChoodler._id)
+    challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(currentChoodler._id, data.challenges, guesses)
+
+
+    loading.set(false)
+  })
 </script>
 
-<MetaData 
-  title="Choodle with Friends" 
+<MetaData
+  title="Choodle w/ Friends"
   themeColor={pageBackgroundDefault}
   url={$page.url}
 />
 
-<LayoutContainer --layout-justify="space-evenly">
-  <Button variant="primary" colour="yellow" on:click={startGame}>{data.copy.startGameButtonText}</Button>
+{#if $loading}
+  <LoadingIndicator explanation="enhancing happiness"/>
+{:else}
+  <LayoutContainer>
+    {#if !hasCreatedAChallenge || !currentChoodler}
+      <img src={urlFor(data.copy.logo).url()} width="80%" style="margin: 3rem auto;" alt=''/>
 
-  <section class="live-games">
-    <strong>Live games</strong>
+      {@html toHTML(data.copy.landing_content)}
 
-    {#if (0 >= data.liveGames.length)}
-      <p>Start a new game to view them here.</p>
+      <Button variant="primary" colour="yellow" on:click={startGame}
+              style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
     {:else}
-      <ul>
-        {#each data.liveGames as liveGame}
-          <li id={liveGame._id}>
-            <div class="img">image</div>
-            {#if liveGame.turn === playerId}
-              <span class="status">
-                Your turn
-              </span>
-              <Button on:click={draw(liveGame._id)}>Draw</Button>
-            {:else}
-              <span class="status">
-                Their turn
-              </span>
-              <Button on:click={nudge(liveGame._id)}>Nudge</Button>
-            {/if}
-          </li>
+      <div>
+        <img src={urlFor(data.copy.logo).url()} width="80%" alt=''/>
+      </div>
+      <header>
+        <h3><strong>{currentChoodler.username}</strong></h3>
+        <h3>{pointsTotal} points</h3>
+      </header>
+
+      <nav>
+        {#each navItems as navItem }
+        <span on:click={() => { activeTab.set(navItem)}} class={`${navItem == $activeTab ? 'active' : ''}`}>
+            {navItem}
+        </span>
         {/each}
-      </ul>
+      </nav>
+
+      {#if $activeTab === "my games"}
+        <section class="tabContent my-games">
+          <ul>
+            {#each challengesToBeGuessed as challenge}
+              <li>
+                <a href="{`/game/cwf/guess/${challenge.choodle._ref}`}"
+                   on:click={() => goto(`/game/cwf/guess/${challenge.choodle._ref}`)}>
+                  <span class="status">Guess</span>
+                  <span class="username">{challenge.challenger.username}</span>
+                </a>
+              </li>
+            {/each}
+            {#each guesses as guess}
+              <li>
+                <span
+                  class={`${guess.guessedCorrectly ? "won" : "lost"} status`}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</span>
+                <span class="username">{guess.challenge.challenger.username}</span>
+              </li>
+            {/each}
+          </ul>
+        </section>
+      {/if}
+
+      {#if $activeTab === "leaderboard"}
+        <section class="tabContent leaderboard">
+          <table>
+            {#each leaderboard as leaderboardItem}
+              <tr class="{currentChoodler.username === leaderboardItem.creatorUsername ? 'highlight' : ''}">
+                <td class="score">
+                  {leaderboardItem.totalPoints}
+                </td>
+                <td class="username">
+                  {leaderboardItem.creatorUsername}
+                </td>
+              </tr>
+            {/each}
+          </table>
+        </section>
+      {/if}
+
+      {#if $activeTab === "rules"}
+        {@html toHTML(data.copy.rules_content)}
+      {/if}
     {/if}
-  </section>
-</LayoutContainer>
+  </LayoutContainer>
+{/if}
 
 <style>
-  .live-games {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.5rem;
 
-    border-radius: 1rem;
-    background: var(--colors-greyscale-50, #F1F1F1);
+  header {
+    display: block;
+    width: 100%;
+    text-align: right;
   }
 
-  .live-games > ul {
-    list-style-type: none;
+  nav {
+    display: block;
+    width: 100%;
+    margin: 1rem 0 2rem;
+    text-align: left;
+
+    text-transform: capitalize;
+    font-size: 18px;
+    font-family: 'DejaVu Sans Bold';
+    color: darkgrey;
+  }
+
+  nav > span {
+    display: block;
+    width: 100%;
+  }
+
+  nav > .active {
+    color: var(--choodle-black);
+  }
+
+  nav > span + span {
+    margin-top: 1rem;
+  }
+
+  .tabContent {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+
+  .tabContent ul {
+    list-style: none;
     margin: 0;
     padding: 0;
   }
-  .live-games > ul > li {
-    list-style-type: none;
-    padding: 1rem;
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 1rem;
 
-    justify-content: stretch;
-    align-items: center;
-    width: 100%;
-
-    border-radius: 0.75rem;
-    background: var(--colors-greyscale-1, #FCFCFC);
+  .highlight {
+    background: var(--choodle-yellow)
   }
 
-  .live-games .img {
-    display: block;
-    height: 100%;
-    aspect-ratio: 1/1;
-    object-fit: cover;
-    border: 1px solid green;
+  table {
+    width: 100%;
+  }
+
+  .my-games tr, nav > span {
+    cursor: pointer;
+  }
+
+  .won {
+    color: hsla(108, 90%, 28%, 1);
+  }
+
+  .lost {
+    color: hsla(0, 100%, 21%, 1);
+  }
+
+  .status {
+    text-align: center;
+  }
+
+  .username {
+    text-align: right;
   }
 </style>
