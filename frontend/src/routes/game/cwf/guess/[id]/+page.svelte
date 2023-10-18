@@ -74,7 +74,14 @@
     console.log(`right answer, you won the thing`)
     success = true
 
-    goto(`/game/cwf/success/${data.choodle._id}`)
+    const client = readWriteClient
+      .patch(guess._id)
+      .setIfMissing({guesses: []})
+      .append('guesses', [$currentGuess.join('')])
+
+    client.set({guessedCorrectly: true})
+    client.commit()
+    cursorLocation.set(-1)
   }
 
   const handleIncorrectGuess = () => {
@@ -167,6 +174,8 @@
     guesser = await locateCreator({email, deviceId, username})
     guess = await locateGuess({guesserId: guesser._id, challengeId: data.challenge._id})
 
+    if (guess.guessedCorrectly) { success = true }
+
     hints = [
       {text: data.gamePrompt.hint, used: hintUsedInGuess(guess, data.gamePrompt.hint)},
       {text: data.gamePrompt.hint_2, used: hintUsedInGuess(guess, data.gamePrompt.hint_2)},
@@ -221,13 +230,17 @@
     </div>
   {:else}
     {#if success}
-      <p class="">{data.copy.guess_successMessageText}</p>
+      <p class="success">{data.copy.guess_successMessageText}</p>
       <GuessInput
         format={data.gamePrompt.prompt.split('')}
         display={data.gamePrompt.prompt.split('').map(str => str.toUpperCase())}
         cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
       <p><!-- layout placeholder --> </p>
-      <Keyboard onKeyPress={() => {}}/>
+        <div>
+          <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
+            {data.copy.success_continueGameButtonText}
+          </Button>
+        </div>
     {:else}
       {#if guessesRemaining < 1}
         <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
