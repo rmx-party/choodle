@@ -70,16 +70,19 @@
   }
 
   const createGuess = (guessedCorrectly: boolean | null) => {
-    const client = readWriteClient
-      .patch(guess._id)
-      .setIfMissing({guesses: []})
-      .append('guesses', [$currentGuess.join('')])
+    readWriteClient
+      .transaction()
+      .patch(guess._id, (p) => {
+        p.setIfMissing({guesses: []})
+        p.append('guesses', [$currentGuess.join('')])
 
-    if (guessedCorrectly !== null) {
-      client.set({guessedCorrectly})
-    }
+        if (guessedCorrectly !== null) {
+          p.set({guessedCorrectly})
+        }
 
-    client.commit()
+        return p
+      })
+      .commit()
   }
 
   const handleCorrectGuess = () => {
