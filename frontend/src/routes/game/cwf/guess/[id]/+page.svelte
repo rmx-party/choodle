@@ -215,7 +215,7 @@
     {/if}
   </div>
 
-  <ChoodleContainer --choodle-max-height-offset='26rem'>
+  <ChoodleContainer --choodle-max-height-offset='27rem'>
     <img src={urlFor(data.choodle.upScaledImage).url()} alt=''/>
   </ChoodleContainer>
 
@@ -226,7 +226,7 @@
               on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
     </div>
     <div>
-      <Button on:click={() => {goto('/game/cwf')}}>Dashboard</Button>
+      <Button on:click={() => {goto('/')}}>{data.copy.guess_doneButtonText}</Button>
     </div>
   {:else}
     {#if success}
