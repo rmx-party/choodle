@@ -140,6 +140,9 @@
         <h3>{pointsTotal} points</h3>
       </header>
 
+      <Button variant="primary" colour="yellow" on:click={startGame}
+              style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
+
       <nav>
         {#each navItems as navItem }
         <span on:click={() => { activeTab.set(navItem)}} class={`${navItem == $activeTab ? 'active' : ''}`}>
