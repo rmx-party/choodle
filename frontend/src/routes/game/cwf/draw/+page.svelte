@@ -83,7 +83,7 @@
     await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
 
     dialogState.update(dialogs => {
-      return {...dialogs, ["email-prompt"]: false}
+      return {...dialogs, ["username-prompt"]: false}
     })
 
     child.save()
