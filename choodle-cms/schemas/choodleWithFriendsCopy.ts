@@ -114,6 +114,11 @@ export default {
       type: 'string',
     },
     {
+      name: 'guess_needHintCtaText',
+      title: 'CTA for using hints',
+      type: 'string',
+    },
+    {
       name: 'guess_incorrectFeedbackText',
       title: 'Guess Page Incorrect Guess Feedback Text',
       type: 'string',

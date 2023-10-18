@@ -264,7 +264,7 @@
         <GuessingInterface format={data.gamePrompt.prompt.split('')} inputDisplay={currentGuess}
                            cursorLocation={cursorLocation} onEnter={check}>
           <div slot="between">
-            <Hints {hints} {hintCta} {afterHint}/>
+            <Hints {hints} hintCta={data.copy.guess_needHintCtaText} {afterHint}/>
           </div>
         </GuessingInterface>
       {/if}
