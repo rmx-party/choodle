@@ -47,6 +47,29 @@
 
   let hints = []
 
+  const streakComplete = (streak: any) => {
+    return fp.isEmpty(fp.filter(guess => !guess.guessedCorrectly, streak.guesses))
+  }
+
+  const locateStreak = async ({challengerId, guesserId, guessId}) => {
+    const query = `*[_type == "streak"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{guesses->{...}}`
+    let streak = (await readOnlyClient.fetch(query))[0]
+    if (!streak && !streakComplete(streak)) {
+      streak = await readWriteClient.create({
+        _type: "streak",
+        player1: {_ref: challengerId},
+        player2: {_ref: guesserId},
+        guesses: [{_ref: guessId}]
+      })
+    } else {
+      readWriteClient.patch(streak._id).append('guesses', [{_ref: guessId}])
+    }
+
+    return streak
+
+    // a streak is complete when the last guess is guessedCorrectly = false
+  }
+
   export const locateGuess = async ({guesserId, challengeId}: {
     guesserId: string | undefined,
     challengeId: string | undefined,
