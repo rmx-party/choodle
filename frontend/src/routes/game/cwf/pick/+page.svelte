@@ -12,6 +12,7 @@
   import {choodleYellow} from '$lib/Configuration';
   import { page } from '$app/stores';
   import MetaData from '../../../../components/MetaData.svelte';
+  import { urlFor } from '$lib/PersistedImagesUtils';
 
   export let data;
   let prompts: any[] = [];
@@ -62,6 +63,7 @@
 
 <LayoutContainer --layout-justify="space-evenly">
   <section class="pickPrompt">
+    {#if data.copy.logo}<img src={urlFor(data.copy.logo).url()} />{/if}
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
     <output for="shuffle">{$selectedPrompt}</output>
@@ -79,6 +81,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .pickPrompt img {
+    max-width: 100%;
   }
 
   output {
