@@ -6,6 +6,7 @@
 <style>
   .choodle-container {
     flex-grow: 1;
+    flex-shrink: 0; /* may address safari layout stretching issues */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -17,6 +18,7 @@
 
   .choodle-container > :global(*) {
     flex-grow: 1;
+    flex-shrink: 0; /* may address safari layout stretching issues */
     aspect-ratio: 3/4;
     height: auto;
     width: auto;
