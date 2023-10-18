@@ -14,13 +14,15 @@
   import GuessingInterface from "../../GuessingInterface.svelte";
   import GuessInput from "../../../../../components/GuessInput.svelte";
   import {toHTML} from "@portabletext/to-html";
-  import {choodleYellow, pageBackgroundDefault} from '$lib/Configuration';
+  import {choodleCreatorUsernameKey, choodleYellow, pageBackgroundDefault} from '$lib/Configuration';
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
   import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
   import Hints from '../../Hints.svelte';
-  import {loading, loadingMessage} from "$lib/store";
+  import {dialogState, loading, loadingMessage} from "$lib/store";
   import LoadingIndicator from '../../../../../components/LoadingIndicator.svelte';
+  import localforage from "localforage";
+  import Dialog from "../../../../../components/Dialog.svelte";
 
   loading.set(true)
   loadingMessage.set('loading')
@@ -39,7 +41,7 @@
 
   let deviceId
   let email
-  let username
+  let username = ''
   let guesser
   let guess
 
@@ -102,7 +104,7 @@
     cursorLocation.set(0)
   }
 
-  const check = () => {
+  const submitGuess = () => {
     if ($currentGuess.length < data.gamePrompt.prompt.length) return;
 
     guessesRemaining--;
@@ -165,12 +167,38 @@
     return guess.hintsUsed.includes(hintText);
   }
 
+  const closeUsernameDialog = () => {
+    dialogState.update(dialogs => {
+      return {...dialogs, ["username-prompt"]: false}
+    })
+  }
+
+  const openUsernameDialog = () => {
+    dialogState.update(dialogs => {
+      return {...dialogs, ["username-prompt"]: true}
+    })
+  }
+
+  const attemptToSubmitGuess = async (event: Event) => {
+    if (!browser) return;
+
+    if (username.length > 0) {
+      closeUsernameDialog()
+      await localforage.setItem(choodleCreatorUsernameKey, username)
+      guesser = await locateCreator({username, deviceId})
+      submitGuess()
+      return
+    }
+
+    openUsernameDialog()
+  }
+
   onMount(async () => {
     deviceId = await getDeviceId()
     choodleOwner = (data.choodle.creatorId === deviceId)
 
     email = await getEmail()
-    username = await getUsername()
+    username = (await getUsername()) || ''
     guesser = await locateCreator({email, deviceId, username})
     guess = await locateGuess({guesserId: guesser._id, challengeId: data.challenge._id})
 
@@ -264,11 +292,24 @@
             <p><!-- layout placeholder --> </p>
           {/if}
           <GuessingInterface format={data.gamePrompt.prompt.split('')} inputDisplay={currentGuess}
-                             cursorLocation={cursorLocation} onEnter={check}>
+                             cursorLocation={cursorLocation} onEnter={attemptToSubmitGuess}>
             <div slot="between">
               <Hints {hints} hintCta={data.copy.guess_needHintCtaText} {afterHint}/>
             </div>
           </GuessingInterface>
+          <Dialog id={'username-prompt'}>
+            <header slot="header">{data.copy.draw_usernameHeader}</header>
+            <div>{data.copy.draw_usernameInstructions}</div>
+            <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
+              <br/>
+              <input bind:value={username} type="username" id="creator-username" name="creatorusername"
+                     placeholder="{data.copy.draw_usernamePlaceholder}"
+                     style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
+            </label>
+            <Button on:click={attemptToSubmitGuess} variant="primary" colour="yellow">
+              {data.copy.draw_usernameSaveButtonText}
+            </Button>
+          </Dialog>
         {/if}
       {/if}
     {/if}

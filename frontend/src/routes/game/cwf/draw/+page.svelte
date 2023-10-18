@@ -83,6 +83,7 @@
       closeUsernameDialog()
       await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
       child.save()
+      return
     }
 
     openUsernameDialog()
