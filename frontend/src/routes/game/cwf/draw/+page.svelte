@@ -61,32 +61,31 @@
     loading.set(false)
   }
 
-  const promptForUsernameAndSave = async (event: Event) => {
-    if (!browser) return;
+  const closeUsernameDialog = () => {
+    dialogState.update(dialogs => {
+      return {...dialogs, ["username-prompt"]: false}
+    })
+  }
 
-    const undoStack = await getUndoStack()
-    if (undoStack.current === '') return loading.set(false);
-
-    if (creatorUsername.length > 0) return await saveUsername();
-
-    console.log(`prompting for username...`)
+  const openUsernameDialog = () => {
     dialogState.update(dialogs => {
       return {...dialogs, ["username-prompt"]: true}
     })
   }
 
-  const saveUsername = async () => {
+  const attemptToSaveChoodle = async (event: Event) => {
     if (!browser) return;
-    if (!(creatorUsername.length > 0)) return;
 
-    console.log(`saving creator username`)
-    await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
+    const undoStack = await getUndoStack()
+    if (undoStack.current === '') return loading.set(false);
 
-    dialogState.update(dialogs => {
-      return {...dialogs, ["username-prompt"]: false}
-    })
+    if (creatorUsername.length > 0) {
+      closeUsernameDialog()
+      await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
+      child.save()
+    }
 
-    child.save()
+    openUsernameDialog()
   }
 
   onMount(async () => {
@@ -118,7 +117,7 @@
     <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave}>
       <ButtonMenu slot="buttons">
         <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
-        <Button on:click={promptForUsernameAndSave} isOnline={isOnline}
+        <Button on:click={attemptToSaveChoodle} isOnline={isOnline}
                 colour="yellow">{data.copy.draw_doneButtonText}</Button>
       </ButtonMenu>
 
@@ -131,7 +130,7 @@
                  placeholder="{data.copy.draw_usernamePlaceholder}"
                  style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
         </label>
-        <Button on:click={saveUsername} variant="primary" colour="yellow">
+        <Button on:click={attemptToSaveChoodle} variant="primary" colour="yellow">
           {data.copy.draw_usernameSaveButtonText}
         </Button>
       </Dialog>
