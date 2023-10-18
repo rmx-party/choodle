@@ -1,12 +1,11 @@
-
 <div class="choodle-container" {...$$restProps}>
-  <slot />
+  <slot/>
 </div>
 
 <style>
   .choodle-container {
     flex-grow: 1;
-    flex-shrink: 0; /* may address safari layout stretching issues */
+    aspect-ratio: 3/4;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -18,10 +17,7 @@
 
   .choodle-container > :global(*) {
     flex-grow: 1;
-    flex-shrink: 0; /* may address safari layout stretching issues */
     aspect-ratio: 3/4;
-    height: auto;
-    width: auto;
     max-height: clamp(100px, 100%, calc(100svh - var(--choodle-max-height-offset, 60svh)));
     max-width: min(100%, 100svw);
     image-rendering: pixelated;
