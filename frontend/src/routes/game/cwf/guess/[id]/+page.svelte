@@ -205,15 +205,18 @@
   const attemptToSubmitGuess = async (event: Event) => {
     if (!browser) return;
 
-    if (username.length > 0) {
-      closeUsernameDialog()
-      await localforage.setItem(choodleCreatorUsernameKey, username)
-      guesser = await locateCreator({username, deviceId})
-      submitGuess()
-      return
-    }
+    // TODO: re-enable after pushing navigation update to prod
+    // if (username.length > 0) {
+    //   closeUsernameDialog()
+    //   await localforage.setItem(choodleCreatorUsernameKey, username)
+    //   guesser = await locateCreator({username, deviceId})
+    //   submitGuess()
+    //   return
+    // }
+    //
+    // openUsernameDialog()
 
-    openUsernameDialog()
+      submitGuess()
   }
 
   onMount(async () => {

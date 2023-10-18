@@ -79,14 +79,16 @@
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false);
 
-    if (creatorUsername.length > 0) {
-      closeUsernameDialog()
-      await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
-      child.save()
-      return
-    }
-
-    openUsernameDialog()
+    // TODO: re-enable after pushing nav update to prod
+    // if (creatorUsername.length > 0) {
+    //   closeUsernameDialog()
+    //   await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
+    //   child.save()
+    //   return
+    // }
+    //
+    // openUsernameDialog()
+    child.save()
   }
 
   onMount(async () => {
