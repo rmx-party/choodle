@@ -45,7 +45,6 @@
   let guess
 
   let hints = []
-  const hintCta = "Need a hint?"
 
   export const locateGuess = async ({guesserId, challengeId}: {
     guesserId: string | undefined,
@@ -174,7 +173,9 @@
     guesser = await locateCreator({email, deviceId, username})
     guess = await locateGuess({guesserId: guesser._id, challengeId: data.challenge._id})
 
-    if (guess.guessedCorrectly) { success = true }
+    if (guess.guessedCorrectly) {
+      success = true
+    }
 
     hints = [
       {text: data.gamePrompt.hint, used: hintUsedInGuess(guess, data.gamePrompt.hint)},
@@ -196,81 +197,81 @@
 />
 
 {#if $loading}
-  <LoadingIndicator explanation={$loadingMessage} />
+  <LoadingIndicator explanation={$loadingMessage}/>
 {:else}
-<LayoutContainer class="no-pan">
-  <div class="topBar" slot="topBar">
+  <LayoutContainer class="no-pan">
+    <div class="topBar" slot="topBar">
+      {#if choodleOwner}
+        <TopBar>
+          <div slot="topBarContent">
+            {@html toHTML(data.copy.guess_pageAuthorTopContent)}
+          </div>
+        </TopBar>
+      {:else}
+        <GuessingHUD {guessesRemaining} {guessesLimit}>
+          <div slot="content">
+            {@html toHTML(data.copy.guess_pageTopContent)}
+          </div>
+        </GuessingHUD>
+      {/if}
+    </div>
+
+    <ChoodleContainer --choodle-max-height-offset='27rem'>
+      <img src={urlFor(data.choodle.upScaledImage).url()} alt=''/>
+    </ChoodleContainer>
+
     {#if choodleOwner}
-      <TopBar>
-        <div slot="topBarContent">
-          {@html toHTML(data.copy.guess_pageAuthorTopContent)}
-        </div>
-      </TopBar>
+      <h3><strong>{data.gamePrompt.prompt.toUpperCase()}</strong></h3>
+      <div>
+        <Button colour="yellow"
+                on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+      </div>
+      <div>
+        <Button on:click={() => {goto('/')}}>{data.copy.guess_doneButtonText}</Button>
+      </div>
     {:else}
-      <GuessingHUD {guessesRemaining} {guessesLimit}>
-        <div slot="content">
-          {@html toHTML(data.copy.guess_pageTopContent)}
-        </div>
-      </GuessingHUD>
-    {/if}
-  </div>
-
-  <ChoodleContainer --choodle-max-height-offset='27rem'>
-    <img src={urlFor(data.choodle.upScaledImage).url()} alt=''/>
-  </ChoodleContainer>
-
-  {#if choodleOwner}
-    <h3><strong>{data.gamePrompt.prompt.toUpperCase()}</strong></h3>
-    <div>
-      <Button colour="yellow"
-              on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
-    </div>
-    <div>
-      <Button on:click={() => {goto('/')}}>{data.copy.guess_doneButtonText}</Button>
-    </div>
-  {:else}
-    {#if success}
-      <p class="success">{data.copy.guess_successMessageText}</p>
-      <GuessInput
-        format={data.gamePrompt.prompt.split('')}
-        display={data.gamePrompt.prompt.split('').map(str => str.toUpperCase())}
-        cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
-      <p><!-- layout placeholder --> </p>
+      {#if success}
+        <p class="success">{data.copy.guess_successMessageText}</p>
+        <GuessInput
+          format={data.gamePrompt.prompt.split('')}
+          display={data.gamePrompt.prompt.split('').map(str => str.toUpperCase())}
+          cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
+        <p><!-- layout placeholder --> </p>
         <div>
           <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
             {data.copy.success_continueGameButtonText}
           </Button>
         </div>
-    {:else}
-      {#if guessesRemaining < 1}
-        <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
-        <GuessInput
-          format={data.gamePrompt.prompt.split('')}
-          display={data.gamePrompt.prompt.split('').map(str => str.toUpperCase())}
-          cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
-
-        <p><!-- layout placeholder --> </p>
-        <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
-          <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
-            {data.copy.guess_failureNewGameButtonText}
-          </Button>
-        </div>
       {:else}
-        {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
-          <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
-        {:else}
+        {#if guessesRemaining < 1}
+          <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
+          <GuessInput
+            format={data.gamePrompt.prompt.split('')}
+            display={data.gamePrompt.prompt.split('').map(str => str.toUpperCase())}
+            cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
+
           <p><!-- layout placeholder --> </p>
-        {/if}
-        <GuessingInterface format={data.gamePrompt.prompt.split('')} inputDisplay={currentGuess}
-                           cursorLocation={cursorLocation} onEnter={check}>
-          <div slot="between">
-            <Hints {hints} hintCta={data.copy.guess_needHintCtaText} {afterHint}/>
+          <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
+            <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
+              {data.copy.guess_failureNewGameButtonText}
+            </Button>
           </div>
-        </GuessingInterface>
+        {:else}
+          {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
+            <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
+          {:else}
+            <p><!-- layout placeholder --> </p>
+          {/if}
+          <GuessingInterface format={data.gamePrompt.prompt.split('')} inputDisplay={currentGuess}
+                             cursorLocation={cursorLocation} onEnter={check}>
+            <div slot="between">
+              <Hints {hints} hintCta={data.copy.guess_needHintCtaText} {afterHint}/>
+            </div>
+          </GuessingInterface>
+        {/if}
       {/if}
     {/if}
-  {/if}
-</LayoutContainer>
+  </LayoutContainer>
 {/if}
 
 <style>
