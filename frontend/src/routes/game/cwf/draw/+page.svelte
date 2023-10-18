@@ -4,19 +4,20 @@
   import Prompt from "../../../../components/Prompt.svelte";
   import {writable} from "svelte/store";
   import {createUncommittedChoodle, saveChoodle} from "$lib/ChoodleStorage";
-  import {getDeviceId, getEmail, locateCreator} from "$lib/CreatorUtils";
+  import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
-  import {clearStorage} from "$lib/StorageStuff";
+  import {clearStorage, getUndoStack} from "$lib/StorageStuff";
   import {goto} from "$app/navigation";
   import {onMount} from "svelte";
   import localforage from "localforage";
-  import {choodlePromptKey} from "$lib/Configuration";
+  import {choodleCreatorUsernameKey, choodlePromptKey} from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
-  import {loading} from "$lib/store";
+  import {dialogState, loading} from "$lib/store";
   import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
-  import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
+  import {readOnlyClient} from "$lib/CMSUtils";
   import LayoutContainer from "../../../../components/LayoutContainer.svelte";
   import ButtonMenu from "../../../../components/ButtonMenu.svelte";
+  import Dialog from "../../../../components/Dialog.svelte";
 
   export let data;
 
@@ -24,6 +25,8 @@
   let isOnline = true;
   let prompt;
   let challenger;
+
+  let creatorUsername: string;
 
   const gamePrompt = writable<string | null>(null)
 
@@ -58,6 +61,34 @@
     loading.set(false)
   }
 
+  const promptForUsernameAndSave = async (event: Event) => {
+    if (!browser) return;
+
+    const undoStack = await getUndoStack()
+    if (undoStack.current === '') return loading.set(false);
+
+    if (creatorUsername.length > 0) return await saveUsername();
+
+    console.log(`prompting for username...`)
+    dialogState.update(dialogs => {
+      return {...dialogs, ["username-prompt"]: true}
+    })
+  }
+
+  const saveUsername = async () => {
+    if (!browser) return;
+    if (!(creatorUsername.length > 0)) return;
+
+    console.log(`saving creator username`)
+    await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
+
+    dialogState.update(dialogs => {
+      return {...dialogs, ["email-prompt"]: false}
+    })
+
+    child.save()
+  }
+
   onMount(async () => {
     if (!browser) return;
 
@@ -71,6 +102,7 @@
     })
 
     gamePrompt.set(await localforage.getItem(choodlePromptKey))
+    creatorUsername = (await getUsername()) || ''
 
     prompt = await readOnlyClient.fetch(`*[_type == "gamePrompt" && prompt == "${$gamePrompt}"][0]`)
 
@@ -86,8 +118,23 @@
     <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave}>
       <ButtonMenu slot="buttons">
         <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
-        <Button on:click={child.save} isOnline={isOnline} colour="yellow">{data.copy.draw_doneButtonText}</Button>
+        <Button on:click={promptForUsernameAndSave} isOnline={isOnline}
+                colour="yellow">{data.copy.draw_doneButtonText}</Button>
       </ButtonMenu>
+
+      <Dialog id={'username-prompt'}>
+        <header slot="header">{data.copy.draw_usernameHeader}</header>
+        <div>{data.copy.draw_usernameInstructions}</div>
+        <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
+          <br/>
+          <input bind:value={creatorUsername} type="username" id="creator-username" name="creatorusername"
+                 placeholder="{data.copy.draw_usernamePlaceholder}"
+                 style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
+        </label>
+        <Button on:click={saveUsername} variant="primary" colour="yellow">
+          {data.copy.draw_usernameSaveButtonText}
+        </Button>
+      </Dialog>
     </ChoodleBoard>
   </LayoutContainer>
 {:else}
