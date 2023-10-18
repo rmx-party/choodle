@@ -19,7 +19,7 @@
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
   import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
   import Hints from '../../Hints.svelte';
-  import {dialogState, loading, loadingMessage} from "$lib/store";
+  import {loading, loadingMessage} from "$lib/store";
   import LoadingIndicator from '../../../../../components/LoadingIndicator.svelte';
   import localforage from "localforage";
   import Dialog from "../../../../../components/Dialog.svelte";
@@ -190,31 +190,21 @@
     return guess.hintsUsed.includes(hintText);
   }
 
-  const closeUsernameDialog = () => {
-    dialogState.update(dialogs => {
-      return {...dialogs, ["username-prompt"]: false}
-    })
-  }
-
-  const openUsernameDialog = () => {
-    dialogState.update(dialogs => {
-      return {...dialogs, ["username-prompt"]: true}
-    })
-  }
+  const usernamePromptId = 'username-prompt'
 
   const attemptToSubmitGuess = async (event: Event) => {
     if (!browser) return;
 
     // TODO: re-enable after pushing navigation update to prod
     // if (username.length > 0) {
-    //   closeUsernameDialog()
+    //   closeDialog(usernamePromptId)
     //   await localforage.setItem(choodleCreatorUsernameKey, username)
     //   guesser = await locateCreator({username, deviceId})
     //   submitGuess()
     //   return
     // }
     //
-    // openUsernameDialog()
+    // openDialog(usernamePromptId)
 
       submitGuess()
   }
@@ -323,7 +313,7 @@
               <Hints {hints} hintCta={data.copy.guess_needHintCtaText} {afterHint}/>
             </div>
           </GuessingInterface>
-          <Dialog id={'username-prompt'}>
+          <Dialog id={usernamePromptId}>
             <header slot="header">{data.copy.draw_usernameHeader}</header>
             <div>{data.copy.draw_usernameInstructions}</div>
             <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username

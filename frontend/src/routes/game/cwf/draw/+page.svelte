@@ -12,7 +12,7 @@
   import localforage from "localforage";
   import {choodleCreatorUsernameKey, choodlePromptKey} from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
-  import {dialogState, loading} from "$lib/store";
+  import {loading} from "$lib/store";
   import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
   import {readOnlyClient} from "$lib/CMSUtils";
   import LayoutContainer from "../../../../components/LayoutContainer.svelte";
@@ -61,17 +61,7 @@
     loading.set(false)
   }
 
-  const closeUsernameDialog = () => {
-    dialogState.update(dialogs => {
-      return {...dialogs, ["username-prompt"]: false}
-    })
-  }
-
-  const openUsernameDialog = () => {
-    dialogState.update(dialogs => {
-      return {...dialogs, ["username-prompt"]: true}
-    })
-  }
+  const usernamePromptId = 'username-prompt'
 
   const attemptToSaveChoodle = async (event: Event) => {
     if (!browser) return;
@@ -81,13 +71,13 @@
 
     // TODO: re-enable after pushing nav update to prod
     // if (creatorUsername.length > 0) {
-    //   closeUsernameDialog()
+    //   closeDialog(usernamePromptId)
     //   await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
     //   child.save()
     //   return
     // }
     //
-    // openUsernameDialog()
+    // openDialog(usernamePromptId)
     child.save()
   }
 
@@ -124,7 +114,7 @@
                 colour="yellow">{data.copy.draw_doneButtonText}</Button>
       </ButtonMenu>
 
-      <Dialog id={'username-prompt'}>
+      <Dialog id={usernamePromptId}>
         <header slot="header">{data.copy.draw_usernameHeader}</header>
         <div>{data.copy.draw_usernameInstructions}</div>
         <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
