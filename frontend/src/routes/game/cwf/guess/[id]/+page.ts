@@ -2,7 +2,7 @@ import {readOnlyClient} from "$lib/CMSUtils";
 
 export async function load({params}) {
   const copyPromise = await readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy"] | order(_createdAt) [0]`)
-  const challengePromise = await readOnlyClient.fetch(`*[_type == "challenge" && _id == "${params.id}"]{..., choodle->{...}, gamePromptRef->{...}} [0]`);
+  const challengePromise = await readOnlyClient.fetch(`*[_type == "challenge" && _id == "${params.id}"]{..., challenger->{...}, choodle->{...}, gamePromptRef->{...}} [0]`);
 
   const [copy, challenge] = await Promise.all([copyPromise, challengePromise])
 
