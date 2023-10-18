@@ -153,8 +153,8 @@
           <ul>
             {#each challengesToBeGuessed as challenge}
               <li>
-                <a href="{`/game/cwf/guess/${challenge.choodle._ref}`}"
-                   on:click={() => goto(`/game/cwf/guess/${challenge.choodle._ref}`)}>
+                <a href="{`/game/cwf/guess/${challenge._id}`}"
+                   on:click={() => goto(`/game/cwf/guess/${challenge._id}`)}>
                   <span class="status">Guess</span>
                   <span class="username">{challenge.challenger.username}</span>
                 </a>
