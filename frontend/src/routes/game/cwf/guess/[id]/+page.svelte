@@ -69,33 +69,32 @@
     return guess.join('').toUpperCase() === answer.toUpperCase()
   }
 
-  const handleCorrectGuess = () => {
-    console.log(`right answer, you won the thing`)
-    success = true
-
+  const createGuess = (guessedCorrectly: boolean | null) => {
     const client = readWriteClient
       .patch(guess._id)
       .setIfMissing({guesses: []})
       .append('guesses', [$currentGuess.join('')])
 
-    client.set({guessedCorrectly: true})
+    if (guessedCorrectly !== null) {
+      client.set({guessedCorrectly})
+    }
+
     client.commit()
+  }
+
+  const handleCorrectGuess = () => {
+    console.log(`right answer, you won the thing`)
+    success = true
+
+    createGuess(true)
+
     cursorLocation.set(-1)
   }
 
   const handleIncorrectGuess = () => {
     console.log(`wrong`)
 
-    const client = readWriteClient
-      .patch(guess._id)
-      .setIfMissing({guesses: []})
-      .append('guesses', [$currentGuess.join('')])
-
-    if (guessesRemaining < 1) {
-      client.set({guessedCorrectly: false})
-    }
-
-    client.commit()
+    guessesRemaining < 1 ? createGuess(false) : createGuess(null)
 
     currentGuess.set([])
     cursorLocation.set(0)
