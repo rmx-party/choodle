@@ -9,19 +9,7 @@ const uploadImageBlob = (imageBlob: Blob) => {
   return readWriteClient.assets.upload('image', imageBlob, {timeout: 5000})
 }
 
-export const addChoodleToCreator = async ({choodleId, creatorId}) => {
-  const result = await readWriteClient
-    .patch(creatorId)
-    .setIfMissing({choodles: []})
-    .append('choodles', [{_ref: choodleId}])
-    .commit({
-      autoGenerateArrayKeys: true,
-    })
-  console.log('addChoodleToCreator', {choodleId, creatorId, result})
-  return result
-}
-
-export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElement, extraMetadata?: any) {
+export async function createUncommittedChoodle(undoStack: UndoStack, canvas: HTMLCanvasElement, extraMetadata?: any, creatorId?: string) {
   if (!browser) return;
 
   const upScaledUploadResult = (async () => {
@@ -40,7 +28,9 @@ export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElemen
 
   console.log(`pending uploads`, uploadResult, upScaledUploadResult)
 
+  const choodleId = `choodle-${window.crypto.randomUUID()}`;
   const cmsChoodle = {
+    _id: choodleId,
     _type: 'choodle',
     title: 'Untitled',
     image: {
@@ -61,12 +51,33 @@ export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElemen
     ...extraMetadata
   }
   console.log({cmsChoodle})
-  const createResult = await readWriteClient.create(cmsChoodle)
-  console.log({createResult})
 
   const deviceId = await getDeviceId()
-  const creator = await locateCreator({deviceId})
-  addChoodleToCreator({choodleId: createResult._id, creatorId: creator._id})
+  if (!creatorId) {
+    const creator = await locateCreator({deviceId})
+    creatorId = creator._id
+  }
 
-  return createResult;
+  return {
+    transaction: readWriteClient
+      .transaction()
+      .create(cmsChoodle)
+      .patch(creatorId, p =>
+        p.setIfMissing({choodles: []})
+          .append('choodles', [{_ref: choodleId}])
+      ),
+    choodleId: choodleId
+  }
+}
+
+export async function saveChoodle(undoStack: UndoStack, canvas: HTMLCanvasElement, extraMetadata?: any, creatorId?: string) {
+  if (!browser) return;
+
+  const {transaction, choodleId} = await createUncommittedChoodle(undoStack, canvas, extraMetadata, creatorId)
+
+  await transaction.commit({
+    autoGenerateArrayKeys: true,
+  })
+
+  return choodleId
 }

@@ -3,7 +3,7 @@
   import type {UndoStack} from "$lib/UndoStack";
   import Prompt from "../../../../components/Prompt.svelte";
   import {writable} from "svelte/store";
-  import {addChoodleToCreator, saveChoodle} from "$lib/ChoodleStorage";
+  import {saveChoodle} from "$lib/ChoodleStorage";
   import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
   import {clearStorage} from "$lib/StorageStuff";
@@ -36,15 +36,11 @@
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loading.set(true)
-    return await saveChoodle(undoStack, canvas, {
+
+    const choodleId = await saveChoodle(undoStack, canvas, {
       gamePrompt: $gamePrompt || null,
       creatorId: await getDeviceId()
     })
-  }
-
-  const afterSave = async (result) => {
-    if (!browser) return;
-    if (!result._id) return;
 
     const deviceId = await getDeviceId()
     const email = await getEmail()
@@ -52,10 +48,8 @@
 
     creator = await locateCreator({username, deviceId, email});
 
-    addChoodleToCreator({choodleId: result._id, creatorId: creator._id})
-
     // take us to the home page
-    await goto(`/c/${result._id}`)
+    await goto(`/c/${choodleId}`)
 
     await clearStorage()
     loading.set(false)
@@ -77,7 +71,6 @@
   })
 </script>
 
-
 <MetaData
   title="Squiggles"
   themeColor={choodleYellow}
@@ -88,14 +81,14 @@
 {#if !$loading}
   <LayoutContainer class="no-pan">
     <div slot="topBar" style="width: 100%;">
-      <Prompt prompt={`Add just one line to create your own doodle!`} instruction={`Draw:`} />
+      <Prompt prompt={`Add just one line to create your own doodle!`} instruction={`Draw:`}/>
     </div>
 
-    <ChoodleBoard id="squiggles-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
+    <ChoodleBoard id="squiggles-canvas" bind:this={child} performSave={performSave}>
       <ButtonMenu slot="buttons">
         <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
         <Button on:click={child.save} isOnline={isOnline}
-          colour="yellow">{data.copy.draw_doneButtonText}</Button>
+                colour="yellow">{data.copy.draw_doneButtonText}</Button>
       </ButtonMenu>
     </ChoodleBoard>
   </LayoutContainer>

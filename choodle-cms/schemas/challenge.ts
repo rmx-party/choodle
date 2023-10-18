@@ -25,6 +25,12 @@ export default {
       to: {type: 'choodle'}
     },
     {
+      name: 'gamePromptRef',
+      title: 'the prompt this challenge choodle is based on',
+      type: 'reference',
+      to: {type: 'gamePrompt'}
+    },
+    {
       name: 'challenger',
       title: 'the person who drew the choodle to be guessed',
       type: 'reference',

@@ -6,7 +6,7 @@ export const readWriteClient = createClient({
   dataset: PUBLIC_SANITY_DATASET,
   token: PUBLIC_SANITY_TOKEN,
   apiVersion: "2023-07-18",
-  useCdn: false
+  useCdn: true
 })
 
 export const readOnlyClient = createClient({
@@ -14,7 +14,7 @@ export const readOnlyClient = createClient({
   dataset: PUBLIC_SANITY_DATASET,
   perspective: 'published',
   apiVersion: "2023-07-18",
-  useCdn: false
+  useCdn: true
 })
 
 export const getChoodleById = async (choodleId) => {

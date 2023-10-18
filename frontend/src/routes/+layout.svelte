@@ -8,5 +8,7 @@
 
     import Bugsnag from "@bugsnag/js";
 
-    Bugsnag.start({apiKey: '91931cee1cbae5feec1925a566386158'})
+    if (browser && !dev) {
+      Bugsnag.start({apiKey: '91931cee1cbae5feec1925a566386158'})
+    }
 </script>

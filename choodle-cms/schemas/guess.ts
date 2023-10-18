@@ -26,8 +26,18 @@ export default {
       ],
     },
     {
+      name: 'hintsUsed',
+      title: 'Which hints did the guesser use?',
+      type: 'array',
+      of: [
+        {
+          type: 'string',
+        }
+      ],
+    },
+    {
       name: 'guessedCorrectly',
-      title: 'Did the user guess correctly?',
+      title: 'Did the  ser guess correctly?',
       type: 'boolean',
     },
   ]

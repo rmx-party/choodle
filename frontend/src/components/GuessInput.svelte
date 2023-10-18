@@ -2,12 +2,13 @@
   export let format: string[];
   export let display: string[];
   export let cursorLocation: number;
+  export let reveal: number[] = [];
 </script>
 
 <div class="input" {...$$restProps}>
   {#each format as formatCharacter, i}
     <div class="{formatCharacter === ' ' ? 'space' : 'character'} {i === cursorLocation ? 'cursor' : ''}">
-      {display[i] || ' '}
+      {reveal.includes(i) ? format[i] : display[i] || ' '}
     </div>
   {/each}
 </div>
@@ -36,6 +37,7 @@
     width: 2rem;
     aspect-ratio: 1/1;
   }
+
   .character {
     display: flex;
     align-items: center;

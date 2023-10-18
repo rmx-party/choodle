@@ -3,14 +3,14 @@
   import type {UndoStack} from "$lib/UndoStack";
   import Prompt from "../../../../components/Prompt.svelte";
   import {writable} from "svelte/store";
-  import {saveChoodle} from "$lib/ChoodleStorage";
-  import {getDeviceId} from "$lib/CreatorUtils";
+  import {createUncommittedChoodle, saveChoodle} from "$lib/ChoodleStorage";
+  import {getDeviceId, getEmail, locateCreator} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
   import {clearStorage} from "$lib/StorageStuff";
   import {goto} from "$app/navigation";
   import {onMount} from "svelte";
   import localforage from "localforage";
-  import {choodleCreatorEmailKey, choodlePromptKey} from "$lib/Configuration";
+  import {choodlePromptKey} from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
   import {loading} from "$lib/store";
   import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
@@ -22,43 +22,37 @@
 
   let child;
   let isOnline = true;
+  let prompt;
+  let challenger;
 
   const gamePrompt = writable<string | null>(null)
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loading.set(true)
-    return saveChoodle(undoStack, canvas, {
-      gamePrompt: $gamePrompt || null,
-      creatorId: await getDeviceId()
-    })
-  }
 
-  const locateCreator = async () => {
-    const deviceId = getDeviceId()
-    const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
-    const query = `*[_type == "creator"][deviceIds match "${deviceId}" || email match "${creatorEmail}"]`
-    return (await readOnlyClient.fetch(query))[0]
-  }
+    const {transaction, choodleId} = await createUncommittedChoodle(undoStack, canvas, {
+        gamePrompt: $gamePrompt || null,
+        gameHint: prompt.hint,
+        creatorId: await getDeviceId()
+      },
+      challenger._id)
 
-  const createChallenge = async ({choodle, prompt, challenger}) => {
-    await readWriteClient.create({
+    let challengeId = `challenge-${window.crypto.randomUUID()}`;
+    transaction.create({
+      _id: challengeId,
       _type: "challenge",
-      choodle: {_ref: choodle._id},
+      choodle: {_ref: choodleId},
       challenger: {_ref: challenger._id},
-      gamePrompt: prompt,
-    }, {
-        autoGenerateArrayKeys: true,
-      })
-  }
+      gamePrompt: $gamePrompt,
+      gameHint: prompt.hint,
+      gamePromptRef: {_ref: prompt._id},
+    })
 
-  const afterSave = async (result) => {
-    if (!browser) return;
-    if (!result._id) return;
+    await transaction.commit({
+      autoGenerateArrayKeys: true,
+    })
 
-    // create the challenge
-    createChallenge({choodle: result, prompt: $gamePrompt, challenger: await locateCreator()})
-
-    await goto(`/game/cwf/guess/${result._id}`)
+    await goto(`/game/cwf/guess/${challengeId}`)
 
     await clearStorage()
     loading.set(false)
@@ -77,13 +71,19 @@
     })
 
     gamePrompt.set(await localforage.getItem(choodlePromptKey))
+
+    prompt = await readOnlyClient.fetch(`*[_type == "gamePrompt" && prompt == "${$gamePrompt}"][0]`)
+
+    const deviceId = await getDeviceId()
+    const email = await getEmail()
+    challenger = await locateCreator({deviceId, email})
   })
 </script>
 
 {#if !$loading}
   <LayoutContainer>
     <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>
-    <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave} afterSave={afterSave}>
+    <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave}>
       <ButtonMenu slot="buttons">
         <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
         <Button on:click={child.save} isOnline={isOnline} colour="yellow">{data.copy.draw_doneButtonText}</Button>

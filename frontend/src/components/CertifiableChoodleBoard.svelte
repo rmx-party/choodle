@@ -104,20 +104,15 @@
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     const asyncCreatorId = (async () => await getDeviceId())()
 
-    return saveChoodle(undoStack, canvas, {
+    const choodleId = await saveChoodle(undoStack, canvas, {
       creatorId: await asyncCreatorId,
     })
-  }
-
-  const afterSave = async (result) => {
-    if (!browser) return;
-    if (!result._id) return;
 
     let sendingCertificate;
     const clearingStorage = clearStorage()
     const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
     if (creatorEmail) {
-      sendingCertificate = sendCreatorCertificate({creatorEmail, choodleId: result._id})
+      sendingCertificate = sendCreatorCertificate({creatorEmail, choodleId: choodleId})
       loadingMessage.set('generating certificate')
     }
 
@@ -126,12 +121,12 @@
     await Promise.all(promises) // TODO: may need to handle error with user feedback
     console.log(`promises resolved, navigating`)
 
-    await goto(`/c/${result._id}`)
+    await goto(`/c/${choodleId}`)
   }
 </script>
 
 <Prompt prompt={prompt.prompt} slot="topBar"/>
-<ChoodleBoard id={id} bind:this={child} performSave={performSave} afterSave={afterSave}>
+<ChoodleBoard id={id} bind:this={child} performSave={performSave}>
 
   <ButtonMenu slot="buttons">
     <Button on:click={child.undo} colour="yellow">Undo</Button>
@@ -148,12 +143,12 @@
     <label for="creator-email" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">Email
       <br/>
       <input bind:value={creatorEmailInput} type="email" id="creator-email" name="creatorEmail"
-        placeholder="Enter Email"
-        required title="Please enter a valid email address as the creator to attribute this art to" style='width: 100%; padding:
+             placeholder="Enter Email"
+             required title="Please enter a valid email address as the creator to attribute this art to" style='width: 100%; padding:
           1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
     </label>
 
     <Button on:click={saveCreatorEmail} variant="primary"
-      colour="yellow">{certificateModal.CTA}</Button>
+            colour="yellow">{certificateModal.CTA}</Button>
   </Dialog>
 </ChoodleBoard>

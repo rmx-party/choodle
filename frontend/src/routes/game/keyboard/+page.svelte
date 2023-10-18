@@ -1,73 +1,18 @@
 <script lang="ts">
-  import Keyboard from "../../../components/Keyboard.svelte";
-  import GuessInput from "../../../components/GuessInput.svelte";
   import {writable} from "svelte/store";
+  import GuessingInterface from "../cwf/GuessingInterface.svelte";
 
-  let inputDisplay = writable([])
   let cursorLocation = writable(0)
   let format = "FOO BAR".split('')
 
-  const moveCursorRightHandlingSpace = () => {
-    moveCursorRight()
+  const currentGuess = writable([])
 
-    if (format[$cursorLocation] === " ") {
-      updateAtCursor(' ')
-      moveCursorRight()
-    }
-  }
-
-  const moveCursorLeftHandlingSpace = () => {
-    moveCursorLeft()
-
-    if (format[$cursorLocation] === " ") {
-      updateAtCursor(' ')
-      moveCursorLeft()
-    }
-  }
-
-  const moveCursorRight = () => {
-    if ($cursorLocation >= format.length) return;
-
-    cursorLocation.update(currentCursorLocation => currentCursorLocation + 1)
-  }
-
-  const moveCursorLeft = () => {
-    if ($cursorLocation < 1) {
-      cursorLocation.set(0)
-      return;
-    }
-    cursorLocation.update(currentCursorLocation => currentCursorLocation - 1)
-  }
-
-  const updateAtCursor = (key) => {
-    if ($cursorLocation > format.length) return;
-
-    inputDisplay.update(currentInputDisplay => {
-      currentInputDisplay[$cursorLocation] = key
-      return currentInputDisplay
-    })
-  }
-
-  const handleKeyPress = (key: string) => {
-    if (key !== "BACKSPACE" && key !== "ENTER") {
-      updateAtCursor(key)
-      moveCursorRightHandlingSpace()
-    }
-
-    if (key === "BACKSPACE") {
-      moveCursorLeftHandlingSpace()
-      updateAtCursor('')
-    }
-
-    if (key === "ENTER") {
-      // handle Enter
-    }
-  }
 </script>
 
 <strong>{format.join('')}</strong>
 <br/>
 
-<GuessInput format={format} display={$inputDisplay} cursorLocation={$cursorLocation}/>
-<br/>
-<Keyboard onKeyPress={handleKeyPress}/>
+<GuessingInterface format={format} inputDisplay={currentGuess}
+                   cursorLocation={cursorLocation} onEnter={()=>{}} reveal={[1, 5]}>
+</GuessingInterface>
+
