@@ -3,7 +3,7 @@
   import type {UndoStack} from "$lib/UndoStack";
   import Prompt from "../../../../components/Prompt.svelte";
   import {writable} from "svelte/store";
-  import {createUncommittedChoodle, saveChoodle} from "$lib/ChoodleStorage";
+  import {createUncommittedChoodle} from "$lib/ChoodleStorage";
   import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
   import {browser} from "$app/environment";
   import {clearStorage, getUndoStack} from "$lib/StorageStuff";
