@@ -3,7 +3,7 @@
   import {page} from "$app/stores";
   import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-1200x630-2x.jpg';
   import CertifiableChoodleBoard from "../../components/CertifiableChoodleBoard.svelte";
-  import { choodleYellow } from "$lib/Configuration";
+  import { choodleYellow, pageBackgroundDefault } from "$lib/Configuration";
 
   export let data;
 </script>
@@ -12,6 +12,7 @@
   url={$page.url}
   title="Draw a Choodle"
   themeColor={choodleYellow}
+  bgColor={pageBackgroundDefault}
   imageUrl={opengraphChoodle}
   imageAlt="Cursive writing of the word “Choodle” with doodle stars and a smiley face on a yellow background"
   width="1200"

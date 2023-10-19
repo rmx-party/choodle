@@ -199,10 +199,6 @@
   onMount(async () => {
     if (!browser) return;
 
-    // Explicitly reset bg color since it sticks after being set on next page and then navigating back
-    let root = document.documentElement;
-    root.style.setProperty('--page-background-color', 'rgba(20, 21, 24, 0.03)');
-
     canvas = document.getElementById(id) as HTMLCanvasElement;
     ctx = canvas.getContext('2d', {willReadFrequently: true})!
 
@@ -219,6 +215,7 @@
 
     await resetViewportUnit()
     await resizeCanvas()
+    loading.set(false)
   });
 </script>
 
