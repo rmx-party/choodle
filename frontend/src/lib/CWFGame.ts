@@ -6,6 +6,16 @@ export type CWFGame = {
   guessResults: boolean[]
 }
 
+export const normalizeGame = (game): CWFGame => {
+  const normalizedGame = createCWFGame(game.player1._id, game.player2._id)
+
+  fp.reduce((guessResult, accumulator: CWFGame) => {
+    return addGuessToGame(accumulator, guessResult.guessedCorrectly)
+  }, normalizedGame, game.guessResults)
+
+  return normalizedGame
+}
+
 export const createCWFGame = (player1Id, player2Id): CWFGame => {
   return {
     player1: player1Id,

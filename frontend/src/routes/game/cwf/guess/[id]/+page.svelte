@@ -22,7 +22,7 @@
   import {closeDialog, loading, loadingMessage, openDialog} from "$lib/store";
   import Dialog from "../../../../../components/Dialog.svelte";
   import localforage from "localforage";
-  import {addGuessToGame, createCWFGame} from "$lib/CWFGame";
+  import {addGuessToGame, createCWFGame, normalizeGame} from "$lib/CWFGame";
   import type {CWFGame} from "$lib/CWFGame";
 
   loadingMessage.set('loading')
@@ -50,16 +50,6 @@
 
   const gameComplete = (guessResults: boolean[]) => {
     return fp.isEmpty(fp.filter(guess => !guess.guessedCorrectly, guessResults))
-  }
-
-  const normalizeGame = (game): CWFGame => {
-    const normalizedGame = createCWFGame(game.player1._id, game.player2._id)
-
-    fp.reduce((guessResult, accumulator: CWFGame) => {
-      return addGuessToGame(accumulator, guessResult.guessedCorrectly)
-    }, normalizedGame, game.guessResults)
-
-    return normalizedGame
   }
 
   const locateGame = async ({challengerId, guesserId, guessId}) => {

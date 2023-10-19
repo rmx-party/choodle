@@ -13,6 +13,7 @@
   import {toHTML} from "@portabletext/to-html";
   import {loading} from "$lib/store";
   import {urlFor} from "$lib/PersistedImagesUtils";
+  import {normalizeGame, streakCount} from "$lib/CWFGame";
 
   export let data
   let currentChoodler
@@ -26,7 +27,7 @@
   let challengesToBeGuessed = []
   let leaderboard = []
 
-  let myGames
+  let myGames = []
 
   const navItems = [
     'my games',
@@ -72,6 +73,25 @@
       fp.reject(challenge => guessedChallengeIds.includes(challenge._id), challenges))
   }
 
+  const myTurnGames = (games) => {
+    return fp.filter((game) => {
+      if (!game.guesses) return false
+      return fp.last(game.guesses).guesser._id !== currentChoodler._id
+    }, games)
+  }
+
+  const theirTurnGames = (games) => {
+    return fp.filter((game) => {
+      if (!game.guesses) return false
+      return fp.last(game.guesses).guesser._id === currentChoodler._id
+    }, games)
+  }
+
+  const otherPlayerIn = (game) => {
+    if (game.player1._id === currentChoodler._id) return game.player2.username
+    return game.player1.username
+  }
+
   onMount(async () => {
     const emailFetch = getEmail()
     const usernameFetch = getUsername()
@@ -102,8 +122,10 @@
     guesses = await getGuessesForUser(currentChoodler._id)
     challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(currentChoodler._id, data.challenges, guesses)
 
+    console.log(data.games)
+    console.log(currentChoodler._id)
     myGames = fp.filter((game) => {
-      game.player1 === currentChoodler._id || game.player2 === currentChoodler._id
+      return game.player1._id === currentChoodler._id || game.player2._id === currentChoodler._id
     }, data.games)
 
     loading.set(false)
@@ -146,6 +168,18 @@
 
     {#if $activeTab === "my games"}
       <section class="tabContent my-games">
+        <p>My Turn</p>
+        {#each myTurnGames(myGames) as myTurnGame}
+          <p>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</p>
+        {/each}
+        <p>Their Turn</p>
+        {#each theirTurnGames(myGames) as myTurnGame}
+          <p>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</p>
+        {/each}
+        <p>New My Games</p>
+        {#each myGames as myGame}
+          <pre>{JSON.stringify(myGame)}</pre>
+        {/each}
         <p>My turn</p>
         <ul>
           {#each challengesToBeGuessed as challenge}
