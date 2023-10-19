@@ -2,9 +2,12 @@
   import {loading, loadingMessage} from "$lib/store";
   import { fade, blur } from "svelte/transition";
   import AnimatedEllipses from "./AnimatedEllipses.svelte";
+	import { onMount } from "svelte";
 
-  loading.subscribe(value => {
-    console.log(`loading state: `, value)
+  onMount(() => {
+    loading.subscribe(value => {
+      console.log(`loading state: `, value)
+    })
   })
 </script>
 

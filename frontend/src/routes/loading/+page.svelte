@@ -1,13 +1,10 @@
 <script>
-    import LoadingIndicator from "../../components/LoadingIndicator.svelte";
+  import {loading} from "$lib/store";
 
-    import {loading} from "$lib/store";
+  loading.set(true)
 
-    loading.set(true)
-
-    setInterval(() => {
-      loading.set(!$loading)
-    }, 10000)
+  setInterval(() => {
+    loading.set(!$loading)
+  }, 8000)
 </script>
 
-<LoadingIndicator />
