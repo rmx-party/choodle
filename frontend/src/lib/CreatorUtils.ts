@@ -68,8 +68,8 @@ export const locateCreator = async ({username, deviceId, email}: {
   if (creator) {
     creator = await readWriteClient
       .patch(creator._id)
-      .setIfMissing({username})
-      .setIfMissing({email})
+      .set({username})
+      .set({email})
       .setIfMissing({deviceIds: [deviceId]})
       .commit({autoGenerateArrayKeys: true})
   } else {
