@@ -2,24 +2,15 @@ import {describe, expect, it} from 'vitest';
 import {addGuessToGame, createCWFGame, isGameComplete, streakCount} from "$lib/CWFGame";
 
 describe('CWFGame', () => {
-  const challenge = {
-    challenger: {
-      _id: 'player1-id'
-    }
-  }
-  const guesser = {
-    _id: 'player2-id'
-  }
-
   describe('creation', () => {
-    const game = createCWFGame(challenge, guesser)
+    const game = createCWFGame("player1-id", "player2-id")
 
     it('sets challenger as player1', () => {
-      expect(game.player1).toEqual(challenge.challenger._id)
+      expect(game.player1).toEqual("player1-id")
     });
 
     it('sets first guesser as player2', () => {
-      expect(game.player2).toEqual(guesser._id)
+      expect(game.player2).toEqual("player2-id")
     });
 
     it('sets guesses to an empty list', () => {
@@ -36,7 +27,7 @@ describe('CWFGame', () => {
   });
 
   describe('with one incorrect guess', () => {
-    const gameWithOneIncorrectGuess = addGuessToGame(createCWFGame(challenge, guesser), false)
+    const gameWithOneIncorrectGuess = addGuessToGame(createCWFGame("player1-id", "player2-id"), false)
 
     it('contains the guess', () => {
       expect(gameWithOneIncorrectGuess.guessResults.length).toEqual(1)
@@ -52,7 +43,7 @@ describe('CWFGame', () => {
   });
 
   describe('with one correct guess', () => {
-    const game = createCWFGame(challenge, guesser)
+    const game = createCWFGame("player1-id", "player2-id")
     const gameWithOneCorrectGuess = addGuessToGame(game, true)
 
     it('contains the first guess', () => {

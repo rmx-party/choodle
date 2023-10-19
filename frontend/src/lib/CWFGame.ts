@@ -6,10 +6,10 @@ export type CWFGame = {
   guessResults: boolean[]
 }
 
-export const createCWFGame = (challenge, firstGuesser): CWFGame => {
+export const createCWFGame = (player1Id, player2Id): CWFGame => {
   return {
-    player1: challenge.challenger._id,
-    player2: firstGuesser._id,
+    player1: player1Id,
+    player2: player2Id,
     guessResults: [],
   }
 }
