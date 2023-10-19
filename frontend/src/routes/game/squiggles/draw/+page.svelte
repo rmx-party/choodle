@@ -18,8 +18,7 @@
 
   } from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
-  import {loading} from "$lib/store";
-  import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
+  import {loading, loadingMessage, isOnline} from "$lib/store";
   import MetaData from "../../../../components/MetaData.svelte";
   import {page} from "$app/stores";
   import LayoutContainer from "../../../../components/LayoutContainer.svelte";
@@ -29,13 +28,13 @@
 
   let child: SvelteComponent<ChoodleBoard>;
 
-  let isOnline = true;
   let creator
 
   const gamePrompt = writable<string | null>(null)
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loading.set(true)
+    loadingMessage.set('saving')
 
     const choodleId = await saveChoodle(undoStack, canvas, {
       gamePrompt: $gamePrompt || null,
@@ -56,18 +55,8 @@
   }
 
   onMount(async () => {
-    if (!browser) return;
-
-    window.addEventListener('online', () => {
-      console.log('online')
-      isOnline = true
-    })
-    window.addEventListener('offline', () => {
-      console.log('offline')
-      isOnline = false
-    })
-
     gamePrompt.set(await localforage.getItem(choodlePromptKey))
+    loading.set(false)
   })
 </script>
 
@@ -78,22 +67,18 @@
   url={$page.url}
 />
 
-{#if !$loading}
-  <LayoutContainer class="no-pan">
-    <div slot="topBar" style="width: 100%;">
-      <Prompt prompt={`Add just one line to create your own doodle!`} instruction={`Draw:`}/>
-    </div>
+<LayoutContainer class="no-pan">
+  <div slot="topBar" style="width: 100%;">
+    <Prompt prompt={`Add just one line to create your own doodle!`} instruction={`Draw:`}/>
+  </div>
 
-    <ChoodleBoard id="squiggles-canvas" bind:this={child} performSave={performSave}>
-      <ButtonMenu slot="buttons">
-        <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
-        <Button on:click={child.save} isOnline={isOnline}
-                colour="yellow">{data.copy.draw_doneButtonText}</Button>
-      </ButtonMenu>
-    </ChoodleBoard>
-  </LayoutContainer>
-{:else}
-  <LoadingIndicator explanation={'saving'}/>
-{/if}
+  <ChoodleBoard id="squiggles-canvas" bind:this={child} {performSave}>
+    <ButtonMenu slot="buttons">
+      <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
+      <Button on:click={child.save} {isOnline}
+        colour="yellow">{data.copy.draw_doneButtonText}</Button>
+    </ButtonMenu>
+  </ChoodleBoard>
+</LayoutContainer>
 
 
