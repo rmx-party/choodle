@@ -13,10 +13,7 @@
   import fp from "lodash/fp";
   import {toHTML} from "@portabletext/to-html";
   import {loading} from "$lib/store";
-  import LoadingIndicator from "../../../components/LoadingIndicator.svelte";
   import {urlFor} from "$lib/PersistedImagesUtils";
-
-  loading.set(true)
 
   export let data
   let currentChoodler
@@ -75,10 +72,6 @@
   }
 
   onMount(async () => {
-    if (!browser) return;
-
-    loading.set(true)
-
     const emailFetch = getEmail()
     const usernameFetch = getUsername()
     const deviceIdFetch = getDeviceId()
@@ -119,89 +112,85 @@
   url={$page.url}
 />
 
-{#if $loading}
-  <LoadingIndicator explanation="enhancing happiness"/>
-{:else}
-  <LayoutContainer>
-    {#if !hasCreatedAChallenge || !currentChoodler}
-      <img src={urlFor(data.copy.logo).url()} width="80%" style="margin: 3rem auto;" alt=''/>
+<LayoutContainer>
+  {#if !hasCreatedAChallenge || !currentChoodler}
+    <img src={urlFor(data.copy.logo).url()} width="80%" style="margin: 3rem auto;" alt=''/>
 
-      {@html toHTML(data.copy.landing_content)}
+    {@html toHTML(data.copy.landing_content)}
 
-      <Button variant="primary" colour="yellow" on:click={startGame}
-              style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
-    {:else}
-      <div>
-        <img src={urlFor(data.copy.logo).url()} width="80%" alt=''/>
-      </div>
-      <header>
-        <h3><strong>{currentChoodler.username}</strong></h3>
-        <h3>{pointsTotal} points</h3>
-      </header>
+    <Button variant="primary" colour="yellow" on:click={startGame}
+      style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
+  {:else}
+    <div>
+      <img src={urlFor(data.copy.logo).url()} width="80%" alt=''/>
+    </div>
+    <header>
+      <h3><strong>{currentChoodler.username}</strong></h3>
+      <h3>{pointsTotal} points</h3>
+    </header>
 
-      <Button variant="primary" colour="yellow" on:click={startGame}
-              style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
+    <Button variant="primary" colour="yellow" on:click={startGame}
+      style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
 
-      <nav>
-        {#each navItems as navItem }
+    <nav>
+      {#each navItems as navItem }
         <span on:click={() => { activeTab.set(navItem)}} class={`${navItem == $activeTab ? 'active' : ''}`}>
-            {navItem}
+          {navItem}
         </span>
-        {/each}
-      </nav>
+      {/each}
+    </nav>
 
-      {#if $activeTab === "my games"}
-        <section class="tabContent my-games">
-          <p>My turn</p>
-          <ul>
-            {#each challengesToBeGuessed as challenge}
-              <li>
-                <a href="{`/game/cwf/guess/${challenge._id}`}"
-                   on:click={() => goto(`/game/cwf/guess/${challenge._id}`)}>
-                  <span class="status">Guess</span>
-                  <span class="username">{challenge.challenger.username}</span>
-                </a>
-              </li>
-            {/each}
-          </ul>
-        </section>
-        <section class="tabContent my-games">
-          <p>Their turn</p>
-          <ul>
-            {#each guesses as guess}
-              <li>
-                <span
-                  class={`${guess.guessedCorrectly ? "won" : "lost"} status`}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</span>
-                <span class="username">{guess.challenge.challenger.username}</span>
-              </li>
-            {/each}
-          </ul>
-        </section>
-      {/if}
-
-      {#if $activeTab === "leaderboard"}
-        <section class="tabContent leaderboard">
-          <table>
-            {#each leaderboard as leaderboardItem}
-              <tr class="{currentChoodler.username === leaderboardItem.creatorUsername ? 'highlight' : ''}">
-                <td class="score">
-                  {leaderboardItem.totalPoints}
-                </td>
-                <td class="username">
-                  {leaderboardItem.creatorUsername}
-                </td>
-              </tr>
-            {/each}
-          </table>
-        </section>
-      {/if}
-
-      {#if $activeTab === "rules"}
-        {@html toHTML(data.copy.rules_content)}
-      {/if}
+    {#if $activeTab === "my games"}
+      <section class="tabContent my-games">
+        <p>My turn</p>
+        <ul>
+          {#each challengesToBeGuessed as challenge}
+            <li>
+              <a href="{`/game/cwf/guess/${challenge._id}`}"
+                on:click={() => goto(`/game/cwf/guess/${challenge._id}`)}>
+                <span class="status">Guess</span>
+                <span class="username">{challenge.challenger.username}</span>
+              </a>
+            </li>
+          {/each}
+        </ul>
+      </section>
+      <section class="tabContent my-games">
+        <p>Their turn</p>
+        <ul>
+          {#each guesses as guess}
+            <li>
+              <span
+                class={`${guess.guessedCorrectly ? "won" : "lost"} status`}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</span>
+              <span class="username">{guess.challenge.challenger.username}</span>
+            </li>
+          {/each}
+        </ul>
+      </section>
     {/if}
-  </LayoutContainer>
-{/if}
+
+    {#if $activeTab === "leaderboard"}
+      <section class="tabContent leaderboard">
+        <table>
+          {#each leaderboard as leaderboardItem}
+            <tr class="{currentChoodler.username === leaderboardItem.creatorUsername ? 'highlight' : ''}">
+              <td class="score">
+                {leaderboardItem.totalPoints}
+              </td>
+              <td class="username">
+                {leaderboardItem.creatorUsername}
+              </td>
+            </tr>
+          {/each}
+        </table>
+      </section>
+    {/if}
+
+    {#if $activeTab === "rules"}
+      {@html toHTML(data.copy.rules_content)}
+    {/if}
+  {/if}
+</LayoutContainer>
 
 <style>
 

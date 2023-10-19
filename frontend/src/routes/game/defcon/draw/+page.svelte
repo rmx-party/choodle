@@ -12,8 +12,7 @@
   import localforage from "localforage";
   import {choodleCreatorUsernameKey, choodlePromptKey, pageBackgroundDefault} from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
-  import {dialogState, loading} from "$lib/store";
-  import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
+  import {dialogState, loading, isOnline} from "$lib/store";
   import {addPoints, readOnlyClient, readWriteClient} from "$lib/CMSUtils";
   import Dialog from "../../../../components/Dialog.svelte";
   import MetaData from "../../../../components/MetaData.svelte";
@@ -25,7 +24,6 @@
 
   let child: SvelteComponent<ChoodleBoard>;
 
-  let isOnline = true;
   let creatorUsername: string;
   let choodle
   let creator
@@ -36,6 +34,7 @@
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loading.set(true)
+    loadingMessage.set('saving')
     const choodleId = await saveChoodle(undoStack, canvas, {
       gamePrompt: $gamePrompt || null,
       creatorId: await getDeviceId()
@@ -112,21 +111,11 @@
   }
 
   onMount(async () => {
-    if (!browser) return;
-
-    window.addEventListener('online', () => {
-      console.log('online')
-      isOnline = true
-    })
-    window.addEventListener('offline', () => {
-      console.log('offline')
-      isOnline = false
-    })
-
     gamePrompt.set(await localforage.getItem(choodlePromptKey))
     creatorUsername = (await getUsername()) || ''
 
     prompt = await readOnlyClient.fetch(`*[_type == "gamePrompt" && prompt == "${$gamePrompt}"]`)
+    loading.set(false)
   })
 </script>
 
@@ -137,32 +126,28 @@
   url={$page.url}
 />
 
-{#if !$loading}
-  <LayoutContainer class="no-pan">
-    <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>
+<LayoutContainer class="no-pan">
+  <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>
 
-    <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave}>
-      <ButtonMenu slot="buttons">
-        <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
-        <Button on:click={promptForUsernameAndSave} isOnline={isOnline}
-                colour="yellow">{data.copy.draw_doneButtonText}</Button>
-      </ButtonMenu>
+  <ChoodleBoard id="cwf-canvas" bind:this={child} {performSave}>
+    <ButtonMenu slot="buttons">
+      <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
+      <Button on:click={promptForUsernameAndSave} isOnline={$isOnline}
+        colour="yellow">{data.copy.draw_doneButtonText}</Button>
+    </ButtonMenu>
 
-      <Dialog id={'username-prompt'}>
-        <header slot="header">{data.copy.draw_usernameHeader}</header>
-        <div>{data.copy.draw_usernameInstructions}</div>
-        <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
-          <br/>
-          <input bind:value={creatorUsername} type="username" id="creator-username" name="creatorusername"
-                 placeholder="{data.copy.draw_usernamePlaceholder}"
-                 style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
-        </label>
-        <Button on:click={saveUsername} variant="primary" colour="yellow">
-          {data.copy.draw_usernameSaveButtonText}
-        </Button>
-      </Dialog>
-    </ChoodleBoard>
-  </LayoutContainer>
-{:else}
-  <LoadingIndicator explanation={'saving'}/>
-{/if}
+    <Dialog id={'username-prompt'}>
+      <header slot="header">{data.copy.draw_usernameHeader}</header>
+      <div>{data.copy.draw_usernameInstructions}</div>
+      <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
+        <br/>
+        <input bind:value={creatorUsername} type="username" id="creator-username" name="creatorusername"
+          placeholder="{data.copy.draw_usernamePlaceholder}"
+          style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
+      </label>
+      <Button on:click={saveUsername} variant="primary" colour="yellow">
+        {data.copy.draw_usernameSaveButtonText}
+      </Button>
+    </Dialog>
+  </ChoodleBoard>
+</LayoutContainer>
