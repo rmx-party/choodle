@@ -1,15 +1,15 @@
 import {readOnlyClient} from "$lib/CMSUtils";
+import { loading } from "$lib/store";
 
 export async function load({params}) {
-  const copyPromise = await readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy"] | order(_createdAt) [0]`)
-  const challengePromise = await readOnlyClient.fetch(`*[_type == "challenge" && _id == "${params.id}"]{..., challenger->{...}, choodle->{...}, gamePromptRef->{...}} [0]`);
-
-  const [copy, challenge] = await Promise.all([copyPromise, challengePromise])
-
-  if (challenge && copy) return {copy, challenge, gamePrompt: challenge.gamePromptRef, choodle: challenge.choodle};
+  loading.set(true)
+  const copy = readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy"] | order(_createdAt) [0]`)
+  const challenge = readOnlyClient.fetch(`*[_type == "challenge" && _id == "${params.id}"]{..., challenger->{...}, choodle->{...}, gamePromptRef->{...}} [0]`);
 
   return {
-    status: 500,
-    body: new Error("Internal Server Error")
+    copy,
+    challenge,
+    gamePrompt: (await challenge).gamePromptRef,
+    choodle: (await challenge).choodle
   };
 }
