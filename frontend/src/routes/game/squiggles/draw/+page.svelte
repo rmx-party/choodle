@@ -5,7 +5,6 @@
   import {writable} from "svelte/store";
   import {saveChoodle} from "$lib/ChoodleStorage";
   import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
-  import {browser} from "$app/environment";
   import {clearStorage} from "$lib/StorageStuff";
   import {goto} from "$app/navigation";
   import {onMount, SvelteComponent} from "svelte";

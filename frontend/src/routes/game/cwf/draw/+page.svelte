@@ -10,13 +10,15 @@
   import {goto} from "$app/navigation";
   import {onMount} from "svelte";
   import localforage from "localforage";
-  import {choodlePromptKey} from "$lib/Configuration";
+  import {choodlePromptKey, choodleYellow, pageBackgroundDefault} from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
-  import {loading, isOnline} from "$lib/store";
+  import {loading, isOnline, loadingMessage} from "$lib/store";
   import {readOnlyClient} from "$lib/CMSUtils";
   import LayoutContainer from "../../../../components/LayoutContainer.svelte";
   import ButtonMenu from "../../../../components/ButtonMenu.svelte";
   import Dialog from "../../../../components/Dialog.svelte";
+  import MetaData from "../../../../components/MetaData.svelte";
+  import { page } from "$app/stores";
 
   export let data;
 
@@ -89,8 +91,17 @@
     const deviceId = await getDeviceId()
     const email = await getEmail()
     challenger = await locateCreator({deviceId, email})
+    loading.set(false)
   })
 </script>
+
+
+<MetaData
+  title="Choodle w/ Friends"
+  themeColor={choodleYellow}
+  bgColor={pageBackgroundDefault}
+  url={$page.url}
+/>
 
 <LayoutContainer>
   <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>

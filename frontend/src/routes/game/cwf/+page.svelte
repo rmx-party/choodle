@@ -2,7 +2,6 @@
   import {goto} from "$app/navigation";
   import {onMount} from "svelte";
   import Button from "../../../components/Button.svelte";
-  import {browser} from "$app/environment";
   import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
   import LayoutContainer from "../../../components/LayoutContainer.svelte";
   import {page} from "$app/stores";

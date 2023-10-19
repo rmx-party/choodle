@@ -12,11 +12,10 @@ export const switchDialog = (id: string, open: boolean) => {
 export const openDialog = (id) => switchDialog(id, true)
 export const closeDialog = (id) => switchDialog(id, false)
 
-export const isOnline = writable(true);
-
 export const tokenId = writable(0);
 export const loading = writable(false);
 export const loadingMessage = writable('enhancing happiness');
+export const isOnline = writable(true);
 
 export const imageData = writable("");
 export const nftTitle = writable("");

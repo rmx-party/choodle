@@ -1,13 +1,10 @@
 import {readOnlyClient} from "$lib/CMSUtils";
+import { loading } from "$lib/store";
 
 export async function load({params}) {
-  const copy = await readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy"] | order(_createdAt) [0]`)
+  loading.set(true)
 
-  if (copy) {
-    return {copy};
-  }
   return {
-    status: 500,
-    body: new Error("Internal Server Error")
+    copy: readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy"] | order(_createdAt) [0]`)
   };
 }
