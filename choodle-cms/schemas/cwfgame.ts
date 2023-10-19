@@ -1,7 +1,7 @@
 export default {
-  name: 'streak',
+  name: 'cwfgame',
   type: 'document',
-  title: 'Streak',
+  title: 'CWF Game',
   fields: [
     {
       name: 'player1',

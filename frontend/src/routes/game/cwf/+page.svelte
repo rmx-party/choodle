@@ -32,6 +32,12 @@
   ]
   let activeTab = writable(navItems[0])
 
+  $: {
+    let myGames = fp.filter((game) => {
+      game.player1 === currentChoodler._id || game.player2 === currentChoodler._id
+    }, data.games)
+  }
+
   // TODO: CMS-populate all the copy / non-dynamic html contents
 
   const startGame = async () => {
@@ -55,7 +61,7 @@
   const getPointsForUser = (username, pointRecords) => {
     return fp.filter(point => point.creator.username === username, pointRecords)
   }
-  
+
   const getGuessesForUser = async (creatorId) => {
     const guesses = await readOnlyClient.fetch(`*[_type == "guess"][guesser._ref match "${creatorId}"]{..., challenge->{..., choodle->{...}, challenger->{...}}}`)
     console.log("user guesses ", guesses)
@@ -118,7 +124,7 @@
     {@html toHTML(data.copy.landing_content)}
 
     <Button variant="primary" colour="yellow" on:click={startGame}
-      style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
+            style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
   {:else}
     <div>
       <img src={urlFor(data.copy.logo).url()} width="80%" alt=''/>
@@ -129,7 +135,7 @@
     </header>
 
     <Button variant="primary" colour="yellow" on:click={startGame}
-      style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
+            style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
 
     <nav>
       {#each navItems as navItem }
@@ -146,7 +152,7 @@
           {#each challengesToBeGuessed as challenge}
             <li>
               <a href="{`/game/cwf/guess/${challenge._id}`}"
-                on:click={() => goto(`/game/cwf/guess/${challenge._id}`)}>
+                 on:click={() => goto(`/game/cwf/guess/${challenge._id}`)}>
                 <span class="status">Guess</span>
                 <span class="username">{challenge.challenger.username}</span>
               </a>

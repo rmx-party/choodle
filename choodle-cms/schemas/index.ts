@@ -10,7 +10,7 @@ import creator from './creator';
 import challenge from './challenge';
 import points from "./points";
 import guess from "./guess";
-import streak from "./streak";
+import cwfgame from "./cwfgame";
 
 export const schemaTypes = [
   dailyPrompt,
@@ -25,5 +25,5 @@ export const schemaTypes = [
   challenge,
   guess,
   points,
-  streak,
+  cwfgame,
 ]
