@@ -1,29 +1,29 @@
 <script lang="ts">
-  import {loading} from "$lib/store";
+  import {loading, loadingMessage} from "$lib/store";
   import { fade, blur } from "svelte/transition";
   import AnimatedEllipses from "./AnimatedEllipses.svelte";
 
   loading.subscribe(value => {
     console.log(`loading state: `, value)
   })
-
-  export let explanation = "";
 </script>
 
 {#if $loading}
-    <div class="LoadingIndicator loading-backdrop" transition:blur={{duration: 150}}>
-        <div class="loading" in:fade={{delay: 1000, duration: 50}}>
-            <img class="loading-image" height="263" width="174" src='/choodle-bob-p2.png'
-                alt="A doodle of the painter Bob Ross, slightly smiling"/>
-            <strong>
-                <span>{explanation}<AnimatedEllipses/></span>
-            </strong>
-        </div>
+  <div class="LoadingIndicator loading-backdrop" transition:blur={{duration: 150}}>
+    <div class="loading" in:fade={{delay: 1000, duration: 50}}>
+      <img class="loading-image" height="263" width="174" src='/choodle-bob-p2.png'
+        alt="A doodle of the painter Bob Ross, slightly smiling"/>
+      <strong>
+        {#if $loadingMessage.length > 0}
+          <span>{$loadingMessage}<AnimatedEllipses/></span>
+        {/if}
+      </strong>
     </div>
+  </div>
 {:else}
-    <span class="not-loading">
-        not loading
-    </span>
+  <span class="not-loading">
+    not loading
+  </span>
 {/if}
 
 <style>
