@@ -17,13 +17,9 @@
   import {addPoints, readOnlyClient, readWriteClient} from "$lib/CMSUtils";
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import {pageBackgroundDefault, choodleYellow} from '$lib/Configuration';
-  import LoadingIndicator from "../../../../../components/LoadingIndicator.svelte";
   import {dialogState, loading} from "$lib/store";
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
-  import Keyboard from '../../../../../components/Keyboard.svelte';
   import Dialog from "../../../../../components/Dialog.svelte";
-
-  loading.set(true)
 
   export let data;
   const currentGuess = writable([])
@@ -183,86 +179,82 @@
           height="932"
 />
 
-{#if $loading}
-  <LoadingIndicator explanation="enhancing happiness"/>
-{:else}
-  <LayoutContainer class="no-pan">
-    <div class="topBar" slot="topBar">
-      {#if choodleOwner}
-        <TopBar>
-          <div slot="topBarContent">
-            {@html toHTML(data.copy.guess_pageAuthorTopContent)}
-          </div>
-        </TopBar>
-      {:else}
-        <GuessingHUD {guessesRemaining} {guessesLimit}>
-          <div slot="content">
-            {@html toHTML(data.copy.guess_pageTopContent)}
-          </div>
-        </GuessingHUD>
-      {/if}
-    </div>
-
-    <ChoodleContainer>
-      <img src={urlFor(data.choodle.upScaledImage).url()} width='390' height='520' alt=''/>
-    </ChoodleContainer>
-
+<LayoutContainer class="no-pan">
+  <div class="topBar" slot="topBar">
     {#if choodleOwner}
-      <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
+      <TopBar>
+        <div slot="topBarContent">
+          {@html toHTML(data.copy.guess_pageAuthorTopContent)}
+        </div>
+      </TopBar>
+    {:else}
+      <GuessingHUD {guessesRemaining} {guessesLimit}>
+        <div slot="content">
+          {@html toHTML(data.copy.guess_pageTopContent)}
+        </div>
+      </GuessingHUD>
+    {/if}
+  </div>
+
+  <ChoodleContainer>
+    <img src={urlFor(data.choodle.upScaledImage).url()} width='390' height='520' alt=''/>
+  </ChoodleContainer>
+
+  {#if choodleOwner}
+    <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
+    <div>
+      <Button colour="yellow"
+        on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+    </div>
+  {:else}
+    {#if success}
+      <p class="">{data.copy.guess_successMessageText}</p>
+      <GuessInput
+        format={data.choodle.gamePrompt.split('')}
+        display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
+        cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
+      <p><!-- layout placeholder --> </p>
       <div>
-        <Button colour="yellow"
-                on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+        <Button on:click={() => { goto('/game/defcon')}}
+          colour="yellow">{data.copy.success_continueGameButtonText}</Button>
       </div>
     {:else}
-      {#if success}
-        <p class="">{data.copy.guess_successMessageText}</p>
+      {#if guessesRemaining < 1 || alreadyGuessed}
+        <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
         <GuessInput
           format={data.choodle.gamePrompt.split('')}
           display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
           cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
+
         <p><!-- layout placeholder --> </p>
-        <div>
-          <Button on:click={() => { goto('/game/defcon')}}
-                  colour="yellow">{data.copy.success_continueGameButtonText}</Button>
+        <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
+          <Button colour="yellow" on:click={() => {goto(`/game/defcon`)}}>
+            {data.copy.guess_failureNewGameButtonText}
+          </Button>
         </div>
       {:else}
-        {#if guessesRemaining < 1 || alreadyGuessed}
-          <p class="failure">{data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}</p>
-          <GuessInput
-            format={data.choodle.gamePrompt.split('')}
-            display={data.choodle.gamePrompt.split('').map(str => str.toUpperCase())}
-            cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
-
-          <p><!-- layout placeholder --> </p>
-          <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
-            <Button colour="yellow" on:click={() => {goto(`/game/defcon`)}}>
-              {data.copy.guess_failureNewGameButtonText}
-            </Button>
-          </div>
+        {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
+          <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
         {:else}
-          {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
-            <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
-          {:else}
-            <p><!-- layout placeholder --> </p>
-          {/if}
-          <a on:click={showHint}>Need a hint?</a>
-          <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
-                             cursorLocation={cursorLocation} onEnter={check}>
-            <div slot="between">
-              <p><!-- layout placeholder --> </p>
-            </div>
-          </GuessingInterface>
+          <p><!-- layout placeholder --> </p>
         {/if}
+        <a on:click={showHint}>Need a hint?</a>
+        <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
+          cursorLocation={cursorLocation} onEnter={check}>
+          <div slot="between">
+            <p><!-- layout placeholder --> </p>
+          </div>
+        </GuessingInterface>
       {/if}
     {/if}
-    <Dialog id={'hint'}>
-      <h1 slot="header">Hint</h1>
-      <br/>
-      <p>{data.choodle.gameHint}</p>
-      <br/>
-    </Dialog>
-  </LayoutContainer>
-{/if}
+  {/if}
+  <Dialog id={'hint'}>
+    <h1 slot="header">Hint</h1>
+    <br/>
+    <p>{data.choodle.gameHint}</p>
+    <br/>
+  </Dialog>
+</LayoutContainer>
 
 <style>
   .failure {

@@ -1,13 +1,11 @@
 import {readOnlyClient} from "$lib/CMSUtils";
+import { loading } from "$lib/store";
 
 export async function load({params}) {
-  const copy = await readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy" && gameName  == "defcon"] | order(_createdAt) [0]`)
-  const choodle = await readOnlyClient.fetch(`*[_type == "choodle" && _id == "${params.id}"] [0]`);
-
-  if (choodle) return {copy, choodle};
+  loading.set(true)
 
   return {
-    status: 500,
-    body: new Error("Internal Server Error")
+    copy: readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy" && gameName  == "defcon"] | order(_createdAt) [0]`),
+    choodle: readOnlyClient.fetch(`*[_type == "choodle" && _id == "${params.id}"] [0]`)
   };
 }

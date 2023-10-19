@@ -1,12 +1,11 @@
 import {readOnlyClient} from "$lib/CMSUtils";
+import { loading } from "$lib/store";
 
 export async function load({params}) {
-  const copy = await readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy" && gameName  == "defcon"] | order(_createdAt) [0]`)
-  const challenges = await readOnlyClient.fetch(`*[_type == "challenge" && game == "defcon"]{..., choodle, challenger->{username}} | order(_createdAt desc)`)
+  loading.set(true)
 
-  console.log(`load data: `, copy, challenges)
   return {
-    copy,
-    challenges,
+    copy: readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy" && gameName  == "defcon"] | order(_createdAt) [0]`),
+    challenges: readOnlyClient.fetch(`*[_type == "challenge" && game == "defcon"]{..., choodle, challenger->{username}} | order(_createdAt desc)`)
   }
 }
