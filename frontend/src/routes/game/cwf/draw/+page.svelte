@@ -10,15 +10,15 @@
   import {goto} from "$app/navigation";
   import {onMount} from "svelte";
   import localforage from "localforage";
-  import {choodlePromptKey, choodleYellow, pageBackgroundDefault} from "$lib/Configuration";
+  import {choodleCreatorUsernameKey, choodlePromptKey, choodleYellow, pageBackgroundDefault} from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
-  import {loading, isOnline, loadingMessage} from "$lib/store";
+  import {loading, isOnline, loadingMessage, closeDialog, openDialog} from "$lib/store";
   import {readOnlyClient} from "$lib/CMSUtils";
   import LayoutContainer from "../../../../components/LayoutContainer.svelte";
   import ButtonMenu from "../../../../components/ButtonMenu.svelte";
   import Dialog from "../../../../components/Dialog.svelte";
   import MetaData from "../../../../components/MetaData.svelte";
-  import { page } from "$app/stores";
+  import {page} from "$app/stores";
 
   export let data;
 
@@ -68,16 +68,14 @@
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false);
 
-    // TODO: re-enable after pushing nav update to prod
-    // if (creatorUsername.length > 0) {
-    //   closeDialog(usernamePromptId)
-    //   await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
-    //   child.save()
-    //   return
-    // }
-    //
-    // openDialog(usernamePromptId)
-    child.save()
+    if (creatorUsername.length > 0) {
+      closeDialog(usernamePromptId)
+      await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
+      child.save()
+      return
+    }
+
+    openDialog(usernamePromptId)
   }
 
   onMount(async () => {
@@ -107,7 +105,7 @@
     <ButtonMenu slot="buttons">
       <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
       <Button on:click={attemptToSaveChoodle} isOnline={$isOnline}
-        colour="yellow">{data.copy.draw_doneButtonText}</Button>
+              colour="yellow">{data.copy.draw_doneButtonText}</Button>
     </ButtonMenu>
 
     <Dialog id={usernamePromptId}>
@@ -116,8 +114,8 @@
       <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
         <br/>
         <input bind:value={creatorUsername} type="username" id="creator-username" name="creatorusername"
-          placeholder="{data.copy.draw_usernamePlaceholder}"
-          style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
+               placeholder="{data.copy.draw_usernamePlaceholder}"
+               style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
       </label>
       <Button on:click={attemptToSaveChoodle} variant="primary" colour="yellow">
         {data.copy.draw_usernameSaveButtonText}

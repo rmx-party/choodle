@@ -14,13 +14,14 @@
   import GuessingInterface from "../../GuessingInterface.svelte";
   import GuessInput from "../../../../../components/GuessInput.svelte";
   import {toHTML} from "@portabletext/to-html";
-  import {choodleYellow, pageBackgroundDefault} from '$lib/Configuration';
+  import {choodleCreatorUsernameKey, choodleYellow, pageBackgroundDefault} from '$lib/Configuration';
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
   import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
   import Hints from '../../Hints.svelte';
-  import {loading, loadingMessage} from "$lib/store";
+  import {closeDialog, loading, loadingMessage, openDialog} from "$lib/store";
   import Dialog from "../../../../../components/Dialog.svelte";
+  import localforage from "localforage";
 
   loadingMessage.set('loading')
 
@@ -192,18 +193,15 @@
   const attemptToSubmitGuess = async (event: Event) => {
     if (!browser) return;
 
-    // TODO: re-enable after pushing navigation update to prod
-    // if (username.length > 0) {
-    //   closeDialog(usernamePromptId)
-    //   await localforage.setItem(choodleCreatorUsernameKey, username)
-    //   guesser = await locateCreator({username, deviceId})
-    //   submitGuess()
-    //   return
-    // }
-    //
-    // openDialog(usernamePromptId)
-
+    if (username.length > 0) {
+      closeDialog(usernamePromptId)
+      await localforage.setItem(choodleCreatorUsernameKey, username)
+      guesser = await locateCreator({username, deviceId})
       submitGuess()
+      return
+    }
+
+    openDialog(usernamePromptId)
   }
 
   onMount(async () => {
@@ -263,7 +261,7 @@
     <h3><strong>{data.gamePrompt.prompt.toUpperCase()}</strong></h3>
     <div>
       <Button colour="yellow"
-        on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+              on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
     </div>
     <div>
       <Button on:click={() => {goto('/game/cwf/pick')}}>{data.copy.guess_doneButtonText}</Button>
@@ -302,7 +300,7 @@
           <p><!-- layout placeholder --> </p>
         {/if}
         <GuessingInterface format={data.gamePrompt.prompt.split('')} inputDisplay={currentGuess}
-          cursorLocation={cursorLocation} onEnter={attemptToSubmitGuess}>
+                           cursorLocation={cursorLocation} onEnter={attemptToSubmitGuess}>
           <div slot="between">
             <Hints {hints} hintCta={data.copy.guess_needHintCtaText} {afterHint}/>
           </div>
@@ -313,8 +311,8 @@
           <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
             <br/>
             <input bind:value={username} type="username" id="creator-username" name="creatorusername"
-              placeholder="{data.copy.draw_usernamePlaceholder}"
-              style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
+                   placeholder="{data.copy.draw_usernamePlaceholder}"
+                   style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
           </label>
           <Button on:click={attemptToSubmitGuess} variant="primary" colour="yellow">
             {data.copy.draw_usernameSaveButtonText}
