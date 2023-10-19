@@ -1,10 +1,9 @@
 import {readOnlyClient} from "$lib/CMSUtils";
+import { loading } from "$lib/store";
 
 export async function load({params}) {
-    const data = await readOnlyClient.fetch(`*[_type == "howto"] | order(_createdAt) [0]`);
-
-        console.log(`load data: `, data)
-        return {
-            howto: data || {howto: { howto: []}}
-        };
+  loading.set(true)
+  return {
+    howto: readOnlyClient.fetch(`*[_type == "howto"] | order(_createdAt) [0]`)
+  };
 }
