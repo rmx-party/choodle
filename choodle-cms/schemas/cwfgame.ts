@@ -16,8 +16,8 @@ export default {
       to: {type: 'creator'}
     },
     {
-      name: 'guesses',
-      title: 'guesses in this streak',
+      name: 'guessResults',
+      title: 'results of guesses in this game',
       type: 'array',
       of: [
         {
