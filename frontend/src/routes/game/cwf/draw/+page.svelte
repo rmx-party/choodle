@@ -56,10 +56,8 @@
       autoGenerateArrayKeys: true,
     })
 
-    await goto(`/game/cwf/guess/${challengeId}`)
-
     await clearStorage()
-    loading.set(false)
+    await goto(`/game/cwf/guess/${challengeId}`)
   }
 
   const usernamePromptId = 'username-prompt'
