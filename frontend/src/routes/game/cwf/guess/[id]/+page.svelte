@@ -22,6 +22,8 @@
   import {closeDialog, loading, loadingMessage, openDialog} from "$lib/store";
   import Dialog from "../../../../../components/Dialog.svelte";
   import localforage from "localforage";
+  import {addGuessToGame, createCWFGame} from "$lib/CWFGame";
+  import type {CWFGame} from "$lib/CWFGame";
 
   loadingMessage.set('loading')
 
@@ -42,30 +44,42 @@
   let username = ''
   let guesser
   let guess
+  let game
 
   let hints = []
 
-  const streakComplete = (streak: any) => {
-    return fp.isEmpty(fp.filter(guess => !guess.guessedCorrectly, streak.guesses))
+  const gameComplete = (guessResults: boolean[]) => {
+    return fp.isEmpty(fp.filter(guess => !guess.guessedCorrectly, guessResults))
   }
 
-  const locateStreak = async ({challengerId, guesserId, guessId}) => {
-    const query = `*[_type == "streak"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{guesses->{...}}`
-    let streak = (await readOnlyClient.fetch(query))[0]
-    if (!streak && !streakComplete(streak)) {
-      streak = await readWriteClient.create({
-        _type: "streak",
-        player1: {_ref: challengerId},
-        player2: {_ref: guesserId},
-        guesses: [{_ref: guessId}]
-      })
+  const normalizeGame = (game): CWFGame => {
+    const normalizedGame = createCWFGame(game.player1._id, game.player2._id)
+
+    fp.reduce((guessResult, accumulator: CWFGame) => {
+      return addGuessToGame(accumulator, guessResult.guessedCorrectly)
+    }, normalizedGame, game.guessResults)
+
+    return normalizedGame
+  }
+
+  const locateGame = async ({challengerId, guesserId, guessId}) => {
+    const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults->{...}, player1->{...}, player2->{...}}`
+    let game = (await readOnlyClient.fetch(query))[0]
+    if (!game || gameComplete(normalizeGame(game))) {
+      game = await readWriteClient.create({
+          _type: "cwfgame",
+          player1: {_ref: challengerId},
+          player2: {_ref: guesserId},
+          guessResults: [{_ref: guessId}]
+        },
+        {autoGenerateArrayKeys: true}
+      )
     } else {
-      readWriteClient.patch(streak._id).append('guesses', [{_ref: guessId}])
+      console.log(game)
+      readWriteClient.patch(game._id).append('guessResults', [{_ref: guessId}]).commit({autoGenerateArrayKeys: true})
     }
 
-    return streak
-
-    // a streak is complete when the last guess is guessedCorrectly = false
+    return game
   }
 
   export const locateGuess = async ({guesserId, challengeId}: {
@@ -212,6 +226,10 @@
     username = (await getUsername()) || ''
     guesser = await locateCreator({email, deviceId, username})
     guess = await locateGuess({guesserId: guesser._id, challengeId: data.challenge._id})
+
+    if (!choodleOwner) {
+      game = await locateGame({challengerId: data.challenge.challenger._id, guesserId: guesser._id, guessId: guess._id})
+    }
 
     if (guess.guessedCorrectly) {
       success = true

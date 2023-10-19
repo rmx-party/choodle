@@ -26,17 +26,13 @@
   let challengesToBeGuessed = []
   let leaderboard = []
 
+  let myGames
+
   const navItems = [
     'my games',
     'rules'
   ]
   let activeTab = writable(navItems[0])
-
-  $: {
-    let myGames = fp.filter((game) => {
-      game.player1 === currentChoodler._id || game.player2 === currentChoodler._id
-    }, data.games)
-  }
 
   // TODO: CMS-populate all the copy / non-dynamic html contents
 
@@ -106,6 +102,9 @@
     guesses = await getGuessesForUser(currentChoodler._id)
     challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(currentChoodler._id, data.challenges, guesses)
 
+    myGames = fp.filter((game) => {
+      game.player1 === currentChoodler._id || game.player2 === currentChoodler._id
+    }, data.games)
 
     loading.set(false)
   })
