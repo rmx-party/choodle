@@ -10,10 +10,9 @@
   import {goto} from "$app/navigation";
   import {onMount} from "svelte";
   import localforage from "localforage";
-  import {choodleCreatorUsernameKey, choodlePromptKey} from "$lib/Configuration";
+  import {choodlePromptKey} from "$lib/Configuration";
   import Button from "../../../../components/Button.svelte";
-  import {loading} from "$lib/store";
-  import LoadingIndicator from "../../../../components/LoadingIndicator.svelte";
+  import {loading, isOnline} from "$lib/store";
   import {readOnlyClient} from "$lib/CMSUtils";
   import LayoutContainer from "../../../../components/LayoutContainer.svelte";
   import ButtonMenu from "../../../../components/ButtonMenu.svelte";
@@ -22,7 +21,6 @@
   export let data;
 
   let child;
-  let isOnline = true;
   let prompt;
   let challenger;
 
@@ -31,6 +29,7 @@
   const gamePrompt = writable<string | null>(null)
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
+    loadingMessage.set('saving')
     loading.set(true)
 
     const {transaction, choodleId} = await createUncommittedChoodle(undoStack, canvas, {
@@ -82,17 +81,6 @@
   }
 
   onMount(async () => {
-    if (!browser) return;
-
-    window.addEventListener('online', () => {
-      console.log('online')
-      isOnline = true
-    })
-    window.addEventListener('offline', () => {
-      console.log('offline')
-      isOnline = false
-    })
-
     gamePrompt.set(await localforage.getItem(choodlePromptKey))
     creatorUsername = (await getUsername()) || ''
 
@@ -104,31 +92,27 @@
   })
 </script>
 
-{#if !$loading}
-  <LayoutContainer>
-    <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>
-    <ChoodleBoard id="cwf-canvas" bind:this={child} performSave={performSave}>
-      <ButtonMenu slot="buttons">
-        <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
-        <Button on:click={attemptToSaveChoodle} isOnline={isOnline}
-                colour="yellow">{data.copy.draw_doneButtonText}</Button>
-      </ButtonMenu>
+<LayoutContainer>
+  <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>
+  <ChoodleBoard id="cwf-canvas" bind:this={child} {performSave}>
+    <ButtonMenu slot="buttons">
+      <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
+      <Button on:click={attemptToSaveChoodle} isOnline={$isOnline}
+        colour="yellow">{data.copy.draw_doneButtonText}</Button>
+    </ButtonMenu>
 
-      <Dialog id={usernamePromptId}>
-        <header slot="header">{data.copy.draw_usernameHeader}</header>
-        <div>{data.copy.draw_usernameInstructions}</div>
-        <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
-          <br/>
-          <input bind:value={creatorUsername} type="username" id="creator-username" name="creatorusername"
-                 placeholder="{data.copy.draw_usernamePlaceholder}"
-                 style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
-        </label>
-        <Button on:click={attemptToSaveChoodle} variant="primary" colour="yellow">
-          {data.copy.draw_usernameSaveButtonText}
-        </Button>
-      </Dialog>
-    </ChoodleBoard>
-  </LayoutContainer>
-{:else}
-  <LoadingIndicator explanation={'saving'}/>
-{/if}
+    <Dialog id={usernamePromptId}>
+      <header slot="header">{data.copy.draw_usernameHeader}</header>
+      <div>{data.copy.draw_usernameInstructions}</div>
+      <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
+        <br/>
+        <input bind:value={creatorUsername} type="username" id="creator-username" name="creatorusername"
+          placeholder="{data.copy.draw_usernamePlaceholder}"
+          style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
+      </label>
+      <Button on:click={attemptToSaveChoodle} variant="primary" colour="yellow">
+        {data.copy.draw_usernameSaveButtonText}
+      </Button>
+    </Dialog>
+  </ChoodleBoard>
+</LayoutContainer>
