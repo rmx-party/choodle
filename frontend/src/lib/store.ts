@@ -16,7 +16,7 @@ export const isOnline = writable(true);
 
 export const tokenId = writable(0);
 export const loading = writable(false);
-export const loadingMessage = writable('');
+export const loadingMessage = writable('enhancing happiness');
 
 export const imageData = writable("");
 export const nftTitle = writable("");
