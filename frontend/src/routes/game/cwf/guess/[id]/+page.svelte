@@ -95,10 +95,8 @@
     return guess.join('').toUpperCase() === answer.toUpperCase()
   }
 
-  const createGuess = (guessedCorrectly: boolean | null) => {
-    readWriteClient
-      .transaction()
-      .patch(guess._id, (p) => {
+  const createGuess = async (guessedCorrectly: boolean | null) => {
+    const guessResult = await readWriteClient.patch(guess._id, (p) => {
         p.setIfMissing({guesses: []})
         p.append('guesses', [$currentGuess.join('')])
 
@@ -109,6 +107,7 @@
         return p
       })
       .commit()
+    console.log({guessResult})
   }
 
   const handleCorrectGuess = () => {
@@ -210,11 +209,14 @@
 
   onMount(async () => {
     deviceId = await getDeviceId()
-    choodleOwner = (data.choodle.creatorId === deviceId)
+    choodleOwner = (data.choodle.creatorId === deviceId) // TODO: this is based on device+choodle, should be by creator account
+
+    if (choodleOwner) return loading.set(false)
 
     email = await getEmail()
     username = (await getUsername()) || ''
     guesser = await locateCreator({email, deviceId, username})
+
     guess = await locateGuess({guesserId: guesser._id, challengeId: data.challenge._id})
 
     if (!choodleOwner) {

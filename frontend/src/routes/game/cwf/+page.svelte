@@ -18,14 +18,10 @@
   export let data
   let currentChoodler
   let hasCreatedAChallenge = false
-  let pointsTotal = 0
-  let allPoints = []
-  let currentChoodlerPoints = []
 
   let guesses = []
 
   let challengesToBeGuessed = []
-  let leaderboard = []
 
   let myGames = []
 
@@ -35,28 +31,8 @@
   ]
   let activeTab = writable(navItems[0])
 
-  // TODO: CMS-populate all the copy / non-dynamic html contents
-
   const startGame = async () => {
     await goto(`/game/cwf/pick`)
-  }
-
-  const assembleLeaderboard = async () => {
-    allPoints = await readOnlyClient.fetch(`*[_type == "points"]{..., creator->{...}}`)
-    const creatorUsernames = fp.uniq(fp.map(point => point.creator.username, allPoints))
-
-    return fp.orderBy(['totalPoints'], ['desc'],
-      fp.map(creatorUsername => {
-        const pointsForUser = getPointsForUser(creatorUsername, allPoints)
-        const totalPoints = fp.sumBy('amount', pointsForUser)
-
-        return {creatorUsername: creatorUsername || "unknown", totalPoints}
-
-      }, creatorUsernames))
-  }
-
-  const getPointsForUser = (username, pointRecords) => {
-    return fp.filter(point => point.creator.username === username, pointRecords)
   }
 
   const getGuessesForUser = async (creatorId) => {
@@ -112,21 +88,14 @@
       return // Don't load leaderboard stuff if player can't see it anyway
     }
 
-    assembleLeaderboard().then(leaderboardList => {
-      leaderboard = leaderboardList
-    }).then(() => {
-      currentChoodlerPoints = getPointsForUser(currentChoodler?.username, allPoints)
-      pointsTotal = fp.sumBy('amount', currentChoodlerPoints)
-    })
-
     guesses = await getGuessesForUser(currentChoodler._id)
     challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(currentChoodler._id, data.challenges, guesses)
 
-    console.log(data.games)
-    console.log(currentChoodler._id)
+    console.log(`games`, data.games)
     myGames = fp.filter((game) => {
       return game.player1._id === currentChoodler._id || game.player2._id === currentChoodler._id
     }, data.games)
+    console.log(`myGames`, myGames)
 
     loading.set(false)
   })
@@ -152,7 +121,6 @@
     </div>
     <header>
       <h3><strong>{currentChoodler.username}</strong></h3>
-      <h3>{pointsTotal} points</h3>
     </header>
 
     <Button variant="primary" colour="yellow" on:click={startGame}
@@ -176,9 +144,10 @@
         {#each theirTurnGames(myGames) as myTurnGame}
           <p>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</p>
         {/each}
+
         <p>New My Games</p>
         {#each myGames as myGame}
-          <pre>{JSON.stringify(myGame)}</pre>
+          <pre style={`max-width: 100%; overflow: scroll;`}>{JSON.stringify(myGame)}</pre>
         {/each}
         <p>My turn</p>
         <ul>
@@ -194,7 +163,7 @@
         </ul>
       </section>
       <section class="tabContent my-games">
-        <p>Their turn</p>
+        <p>Ended</p>
         <ul>
           {#each guesses as guess}
             <li>
@@ -204,23 +173,6 @@
             </li>
           {/each}
         </ul>
-      </section>
-    {/if}
-
-    {#if $activeTab === "leaderboard"}
-      <section class="tabContent leaderboard">
-        <table>
-          {#each leaderboard as leaderboardItem}
-            <tr class="{currentChoodler.username === leaderboardItem.creatorUsername ? 'highlight' : ''}">
-              <td class="score">
-                {leaderboardItem.totalPoints}
-              </td>
-              <td class="username">
-                {leaderboardItem.creatorUsername}
-              </td>
-            </tr>
-          {/each}
-        </table>
       </section>
     {/if}
 

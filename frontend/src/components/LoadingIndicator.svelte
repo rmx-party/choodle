@@ -2,7 +2,7 @@
   import {loading, loadingMessage} from "$lib/store";
   import { fade, blur } from "svelte/transition";
   import AnimatedEllipses from "./AnimatedEllipses.svelte";
-	import { onMount } from "svelte";
+  import { onMount } from "svelte";
 
   onMount(() => {
     loading.subscribe(value => {
