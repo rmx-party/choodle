@@ -51,21 +51,21 @@
 
   const myTurnGames = (games) => {
     return fp.filter((game) => {
-      if (!game.guesses) return false
-      return fp.last(game.guesses).guesser._id !== currentChoodler._id
+      if (!game.guessResults) return false
+      return fp.last(game.guessResults).guesser._ref !== currentChoodler._id
     }, games)
   }
 
   const theirTurnGames = (games) => {
     return fp.filter((game) => {
-      if (!game.guesses) return false
-      return fp.last(game.guesses).guesser._id === currentChoodler._id
+      if (!game.guessResults) return false
+      return fp.last(game.guessResults).guesser._ref === currentChoodler._id
     }, games)
   }
 
   const otherPlayerIn = (game) => {
-    if (game.player1._id === currentChoodler._id) return game.player2.username
-    return game.player1.username
+    if (game.player1._id === currentChoodler._id) return game.player2.username || 'player2 unknown'
+    return game.player1.username || 'player1 unknown'
   }
 
   onMount(async () => {

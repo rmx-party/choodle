@@ -8,12 +8,10 @@ export type CWFGame = {
 
 export const normalizeGame = (game): CWFGame => {
   const normalizedGame = createCWFGame(game.player1._id, game.player2._id)
-
-  fp.reduce((guessResult, accumulator: CWFGame) => {
-    return addGuessToGame(accumulator, guessResult.guessedCorrectly)
-  }, normalizedGame, game.guessResults)
-
-  return normalizedGame
+  return {
+    ...normalizedGame,
+    guessResults: fp.map(result => result.guessedCorrectly, [...game.guessResults])
+  }
 }
 
 export const createCWFGame = (player1Id, player2Id): CWFGame => {

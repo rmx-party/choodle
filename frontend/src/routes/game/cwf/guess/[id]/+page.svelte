@@ -53,9 +53,11 @@
   }
 
   const locateGame = async ({challengerId, guesserId, guessId}) => {
-    const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults->{...}, player1->{...}, player2->{...}}`
+    const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults[]->{...}, player1->{...}, player2->{...}}`
     let game = (await readOnlyClient.fetch(query))[0]
-    if (!game || gameComplete(normalizeGame(game))) {
+    console.log({game})
+    if (!game || gameComplete([...normalizeGame(game).guessResults])) {
+      console.log('create')
       game = await readWriteClient.create({
           _type: "cwfgame",
           player1: {_ref: challengerId},
@@ -65,8 +67,9 @@
         {autoGenerateArrayKeys: true}
       )
     } else {
-      console.log(game)
-      readWriteClient.patch(game._id).append('guessResults', [{_ref: guessId}]).commit({autoGenerateArrayKeys: true})
+      console.log('update')
+      console.log({game})
+      readWriteClient.patch(game._id).setIfMissing({guessResults: []}).append('guessResults', [{_ref: guessId}]).commit({autoGenerateArrayKeys: true})
     }
 
     return game
