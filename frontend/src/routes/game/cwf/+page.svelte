@@ -52,14 +52,14 @@
   const myTurnGames = (games) => {
     return fp.filter((game) => {
       if (!game.guessResults) return false
-      return fp.last(game.guessResults).guesser._ref !== currentChoodler._id
+      return fp.last(game.guessResults)?.guesser?._id !== currentChoodler._id
     }, games)
   }
 
   const theirTurnGames = (games) => {
     return fp.filter((game) => {
       if (!game.guessResults) return false
-      return fp.last(game.guessResults).guesser._ref === currentChoodler._id
+      return fp.last(game.guessResults)?.guesser?._id === currentChoodler._id
     }, games)
   }
 
@@ -145,11 +145,11 @@
           <p>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</p>
         {/each}
 
-        <p>New My Games</p>
-        {#each myGames as myGame}
-          <pre style={`max-width: 100%; overflow: scroll;`}>{JSON.stringify(myGame)}</pre>
-        {/each}
-        <p>My turn</p>
+        <!-- <p>New My Games</p> -->
+        <!-- {#each myGames as myGame} -->
+        <!--   <pre style={`max-width: 100%; overflow: scroll;`}>{JSON.stringify(myGame)}</pre> -->
+        <!-- {/each} -->
+        <p>Open Challenges</p>
         <ul>
           {#each challengesToBeGuessed as challenge}
             <li>
