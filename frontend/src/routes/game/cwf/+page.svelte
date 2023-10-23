@@ -30,24 +30,18 @@
   const startGame = async () => {
     await goto(`/game/cwf/pick`)
   }
-
-  const getGuessesForUser = async (creatorId) => {
-    const guesses = await readOnlyClient.fetch(`*[_type == "guess"][guesser._ref match "${creatorId}"]{..., challenge->{..., choodle->{...}, challenger->{...}}}`)
-    console.log("user guesses ", guesses)
-    return fp.reject(guess => guess.guessedCorrectly === undefined, guesses)
-  }
-
+  
   const myTurnGames = (games) => {
     return fp.filter((game) => {
-      if (!game.guessResults) return game.player2._id === currentChoodler._id
-      return fp.last(game.guessResults)?.guesser?._id !== currentChoodler._id
+      if (game.currentChallenge.challenger._id !== currentChoodler._id) return true
+
+      return !game.currentChallenge.choodle;
     }, games)
   }
 
   const theirTurnGames = (games) => {
     return fp.filter((game) => {
-      if (!game.guessResults) return game.player1._id === currentChoodler._id
-      return fp.last(game.guessResults)?.guesser?._id === currentChoodler._id
+      return game.currentChallenge.challenger._id === currentChoodler._id && game.currentChallenge.choodle;
     }, games)
   }
 
