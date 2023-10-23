@@ -19,10 +19,6 @@
   let currentChoodler
   let hasCreatedAChallenge = false
 
-  let guesses = []
-
-  let challengesToBeGuessed = []
-
   let myGames = []
 
   const navItems = [
@@ -41,24 +37,16 @@
     return fp.reject(guess => guess.guessedCorrectly === undefined, guesses)
   }
 
-  const challengesThatHaveNotBeenGuessed = async (creatorId, challenges, guesses) => {
-    const guessedChallengeIds = fp.map(guess => guess.challenge._id, guesses)
-    console.log("challenges", challenges)
-
-    return fp.reject(challenge => challenge.challenger.username === currentChoodler.username,
-      fp.reject(challenge => guessedChallengeIds.includes(challenge._id), challenges))
-  }
-
   const myTurnGames = (games) => {
     return fp.filter((game) => {
-      if (!game.guessResults) return false
+      if (!game.guessResults) return game.player2._id === currentChoodler._id
       return fp.last(game.guessResults)?.guesser?._id !== currentChoodler._id
     }, games)
   }
 
   const theirTurnGames = (games) => {
     return fp.filter((game) => {
-      if (!game.guessResults) return false
+      if (!game.guessResults) return game.player1._id === currentChoodler._id
       return fp.last(game.guessResults)?.guesser?._id === currentChoodler._id
     }, games)
   }
@@ -87,9 +75,6 @@
       loading.set(false)
       return // Don't load leaderboard stuff if player can't see it anyway
     }
-
-    guesses = await getGuessesForUser(currentChoodler._id)
-    challengesToBeGuessed = await challengesThatHaveNotBeenGuessed(currentChoodler._id, data.challenges, guesses)
 
     console.log(`games`, data.games)
     myGames = fp.filter((game) => {
@@ -144,35 +129,6 @@
         {#each theirTurnGames(myGames) as myTurnGame}
           <p>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</p>
         {/each}
-
-        <!-- <p>New My Games</p> -->
-        <!-- {#each myGames as myGame} -->
-        <!--   <pre style={`max-width: 100%; overflow: scroll;`}>{JSON.stringify(myGame)}</pre> -->
-        <!-- {/each} -->
-        <p>Open Challenges</p>
-        <ul>
-          {#each challengesToBeGuessed as challenge}
-            <li>
-              <a href="{`/game/cwf/guess/${challenge._id}`}"
-                 on:click={() => goto(`/game/cwf/guess/${challenge._id}`)}>
-                <span class="status">Guess</span>
-                <span class="username">{challenge.challenger.username}</span>
-              </a>
-            </li>
-          {/each}
-        </ul>
-      </section>
-      <section class="tabContent my-games">
-        <p>Ended</p>
-        <ul>
-          {#each guesses as guess}
-            <li>
-              <span
-                class={`${guess.guessedCorrectly ? "won" : "lost"} status`}>{guess.guessedCorrectly ? "Won :)" : "Lost :("}</span>
-              <span class="username">{guess.challenge.challenger.username}</span>
-            </li>
-          {/each}
-        </ul>
       </section>
     {/if}
 
