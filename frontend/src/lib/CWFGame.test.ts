@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {addGuessToGame, createCWFGame, isGameComplete, streakCount} from "$lib/CWFGame";
+import {addGuessToGame, createCWFGame, gameComplete, isGameComplete, streakCount} from "$lib/CWFGame";
 
 describe('CWFGame', () => {
   describe('creation', () => {
@@ -95,4 +95,24 @@ describe('CWFGame', () => {
     });
   });
 
+  describe('gameComplete', () => {
+    it('is true when a single guessResult is false', () => {
+      expect(gameComplete([false])).toBeTruthy()
+    });
+    it('is false when a single guessResult is true', () => {
+      expect(gameComplete([true])).toBeFalsy()
+    });
+    it('is false when a single guessResult is null', () => {
+      expect(gameComplete([null])).toBeFalsy()
+    });
+    it('is true when a guessResult contains false', () => {
+      expect(gameComplete([true, false, true])).toBeTruthy()
+    });
+    it('is false when all guessResults are true', () => {
+      expect(gameComplete([true, true, true])).toBeFalsy()
+    });
+    it('is false when a guessResult contains null', () => {
+      expect(gameComplete([true, true, null])).toBeFalsy()
+    });
+  });
 });

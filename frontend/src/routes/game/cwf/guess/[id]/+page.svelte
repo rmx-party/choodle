@@ -22,7 +22,7 @@
   import {closeDialog, loading, loadingMessage, openDialog} from "$lib/store";
   import Dialog from "../../../../../components/Dialog.svelte";
   import localforage from "localforage";
-  import {normalizeGame} from "$lib/CWFGame";
+  import {gameComplete, normalizeGame} from "$lib/CWFGame";
 
   loadingMessage.set('loading')
 
@@ -47,14 +47,18 @@
 
   let hints = []
 
-  const gameComplete = (guessResults: boolean[]) => {
-    return fp.isEmpty(fp.filter(guess => !guess.guessedCorrectly, guessResults))
+  const challengeHasBeenGuessed = (game, challenge) => {
+    return fp.isEmpty(fp.filter(guessResult => guessResult.challenge._id === challenge._id, game.guessResults));
   }
 
   const locateGame = async ({challengerId, guesserId, guessId}) => {
     const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults[]->{...}, player1->{...}, player2->{...}}`
     let game = (await readOnlyClient.fetch(query))[0]
     console.log({game})
+    if (game && challengeHasBeenGuessed(game, data.challenge)) {
+      console.log('this challenge has already been guessed, do nothing')
+      return;
+    }
     if (!game || gameComplete([...normalizeGame(game).guessResults])) {
       console.log('create')
       game = await readWriteClient.create({
@@ -69,10 +73,14 @@
     } else {
       console.log('update')
       console.log({game})
-      readWriteClient.patch(game._id)
-        .setIfMissing({guessResults: []})
-        .append('guessResults', [{_ref: guessId}])
-        .commit({autoGenerateArrayKeys: true})
+      const patch = readWriteClient.patch(game._id)
+      if (game.guessResults.map(gr => gr._id).includes(guess._id)) {
+        console.log('we already have this guess')
+      } else {
+        console.log('adding a guessResult')
+        patch.append('guessResults', [{_ref: guessId}])
+      }
+      patch.commit({autoGenerateArrayKeys: true})
     }
 
     return game
@@ -102,18 +110,16 @@
   }
 
   const createGuess = async (guessedCorrectly: boolean | null) => {
-    const guessResult = await readWriteClient.patch(guess._id, (p) => {
-      p.setIfMissing({guesses: []})
-      p.append('guesses', [$currentGuess.join('')])
+    const guessResult = readWriteClient.patch(guess._id)
+      .setIfMissing({guesses: []})
+      .append('guesses', [$currentGuess.join('')])
 
-      if (guessedCorrectly !== null) {
-        p.set({guessedCorrectly})
-      }
+    if (guessedCorrectly !== null) {
+      guessResult.set({guessedCorrectly})
+    }
 
-      return p
-    })
-      .commit()
-    console.log({guessResult})
+    const finalGuessResult = await guessResult.commit()
+    console.log({finalGuessResult})
   }
 
   const handleCorrectGuess = () => {

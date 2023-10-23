@@ -6,6 +6,10 @@ export type CWFGame = {
   guessResults: boolean[]
 }
 
+export const gameComplete = (guessResults: []) => {
+  return !fp.isEmpty(fp.filter(guess => guess === false, guessResults))
+}
+
 export const normalizeGame = (game): CWFGame => {
   const normalizedGame = createCWFGame(game.player1._id, game.player2._id)
   return {
