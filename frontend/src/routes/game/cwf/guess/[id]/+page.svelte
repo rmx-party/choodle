@@ -22,8 +22,7 @@
   import {closeDialog, loading, loadingMessage, openDialog} from "$lib/store";
   import Dialog from "../../../../../components/Dialog.svelte";
   import localforage from "localforage";
-  import {addGuessToGame, createCWFGame, normalizeGame} from "$lib/CWFGame";
-  import type {CWFGame} from "$lib/CWFGame";
+  import {normalizeGame} from "$lib/CWFGame";
 
   loadingMessage.set('loading')
 
@@ -104,15 +103,15 @@
 
   const createGuess = async (guessedCorrectly: boolean | null) => {
     const guessResult = await readWriteClient.patch(guess._id, (p) => {
-        p.setIfMissing({guesses: []})
-        p.append('guesses', [$currentGuess.join('')])
+      p.setIfMissing({guesses: []})
+      p.append('guesses', [$currentGuess.join('')])
 
-        if (guessedCorrectly !== null) {
-          p.set({guessedCorrectly})
-        }
+      if (guessedCorrectly !== null) {
+        p.set({guessedCorrectly})
+      }
 
-        return p
-      })
+      return p
+    })
       .commit()
     console.log({guessResult})
   }
@@ -242,11 +241,21 @@
 
     loading.set(false)
   })
+
+  const bestImageUrl = (choodle) => {
+    let bestImage = choodle.upScaledImage
+
+    if (!bestImage) {
+      bestImage = choodle.image
+    }
+
+    return urlFor(bestImage).url()
+  }
 </script>
 
 <MetaData url={$page.url}
           title="Choodle with Friends"
-          imageUrl={urlFor(data.choodle.upScaledImage).url()}
+          imageUrl={bestImageUrl(data.choodle)}
           width="430"
           height="932"
           themeColor={choodleYellow}
@@ -271,7 +280,7 @@
   </div>
 
   <ChoodleContainer --choodle-max-height-offset='27rem'>
-    <img src={urlFor(data.choodle.upScaledImage).url()} alt=''/>
+    <img src={bestImageUrl(data.choodle)} alt=''/>
   </ChoodleContainer>
 
   {#if choodleOwner}
