@@ -52,6 +52,12 @@ export const locateCreator = async ({username, deviceId, email}: {
   if (!deviceId) {
     deviceId = await getDeviceId()
   }
+  if (!email) {
+    email = await getEmail()
+  }
+  if (!username) {
+    username = await getUsername()
+  }
   console.log(`locateCreator: ${deviceId} ${username} ${email}`)
   let query = `*[_type == "creator"][deviceIds match "${deviceId}"`
   if (email && email.length > 0) {
@@ -66,12 +72,19 @@ export const locateCreator = async ({username, deviceId, email}: {
   // TODO: if creator is in the backend, store the ID in browser so we don't have to keep asking on every page
 
   if (creator) {
-    creator = await readWriteClient
+    const patch = readWriteClient
       .patch(creator._id)
-      .set({username})
-      .set({email})
-      .setIfMissing({deviceIds: [deviceId]})
-      .commit({autoGenerateArrayKeys: true})
+      .setIfMissing({deviceIds: []})
+      .append("deviceIds", [deviceId])
+
+      if(username && username.length > 0) {
+        patch.set({username})
+      }
+
+      if(email && email.length > 0) {
+        patch.set({email})
+      }
+    creator = await patch.commit({autoGenerateArrayKeys: true})
   } else {
     creator = await readWriteClient.create(
       {
