@@ -16,6 +16,12 @@ export default {
       to: {type: 'creator'}
     },
     {
+      name: 'currentChallenge',
+      title: 'The current challenge to be guessed',
+      type: 'reference',
+      to: {type: 'challenge'}
+    },
+    {
       name: 'guessResults',
       title: 'results of guesses in this game',
       type: 'array',
