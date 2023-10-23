@@ -62,6 +62,7 @@
           _type: "cwfgame",
           player1: {_ref: challengerId},
           player2: {_ref: guesserId},
+          currentChallenge: {_ref: data.challenge._id},
           guessResults: [{_ref: guessId}]
         },
         {autoGenerateArrayKeys: true}
@@ -69,7 +70,10 @@
     } else {
       console.log('update')
       console.log({game})
-      readWriteClient.patch(game._id).setIfMissing({guessResults: []}).append('guessResults', [{_ref: guessId}]).commit({autoGenerateArrayKeys: true})
+      readWriteClient.patch(game._id)
+        .setIfMissing({guessResults: []})
+        .append('guessResults', [{_ref: guessId}])
+        .commit({autoGenerateArrayKeys: true})
     }
 
     return game
