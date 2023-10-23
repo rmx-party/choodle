@@ -62,7 +62,9 @@
 
   const usernamePromptId = 'username-prompt'
 
-  const attemptToSaveChoodle = async (event: Event) => {
+  // TODO: switch back for username driven gameplay after prod deploy
+  const usernameRequired = false;
+  const attemptToSaveChoodleRequiringUsername = async (event: Event) => {
     if (!browser) return;
 
     const undoStack = await getUndoStack()
@@ -76,6 +78,19 @@
     }
 
     openDialog(usernamePromptId)
+  }
+  const attemptToSaveChoodle = async (event: Event) => {
+    if (!browser) return;
+
+    const undoStack = await getUndoStack()
+    if (undoStack.current === '') return loading.set(false);
+
+    if (usernameRequired) {
+      return await attemptToSaveChoodleRequiringUsername(event)
+    } else {
+      child.save()
+      return
+    }
   }
 
   onMount(async () => {

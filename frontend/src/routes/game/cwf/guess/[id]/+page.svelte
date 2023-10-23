@@ -205,7 +205,9 @@
 
   const usernamePromptId = 'username-prompt'
 
-  const attemptToSubmitGuess = async (event: Event) => {
+  // TODO: switch back for username driven gameplay after prod deploy
+  const usernameRequired = false
+  const attemptToSubmitGuessWithUsername = async (event: Event) => {
     if (!browser) return;
 
     if (username.length > 0) {
@@ -217,6 +219,16 @@
     }
 
     openDialog(usernamePromptId)
+  }
+  const attemptToSubmitGuess = async (event: Event) => {
+    if (!browser) return;
+
+    if (usernameRequired) {
+      return await attemptToSubmitGuessWithUsername(event)
+    } else {
+      submitGuess()
+      return
+    }
   }
 
   onMount(async () => {
