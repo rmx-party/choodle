@@ -30,24 +30,26 @@
   const startGame = async () => {
     await goto(`/game/cwf/pick`)
   }
-  
-  const myTurnGames = (games) => {
-    return fp.filter((game) => {
-      if (game.currentChallenge.challenger._id !== currentChoodler._id) return true
 
-      return !game.currentChallenge.choodle;
-    }, games)
-  }
+  let myTurnGames = []
+  let theirTurnGames = []
+  $: [myTurnGames, theirTurnGames] = fp.partition(isMyTurn, myGames)
 
-  const theirTurnGames = (games) => {
-    return fp.filter((game) => {
-      return game.currentChallenge.challenger._id === currentChoodler._id && game.currentChallenge.choodle;
-    }, games)
+  const isMyTurn = (game) => {
+    if (game.currentChallenge.challenger._id !== currentChoodler._id) return true
+    return !game.currentChallenge.choodle;
   }
 
   const otherPlayerIn = (game) => {
     if (game.player1._id === currentChoodler._id) return game.player2.username || 'player2 unknown'
     return game.player1.username || 'player1 unknown'
+  }
+
+  const needsGuess = (game) => {
+    // true if guess results contains no resolved guess for the current challenge
+    const guessesForCurrentChallenge = fp.filter(id=> id !== game.currentChallenge._id, fp.map(gr => gr.challenge._id, game.guessResults))
+    if (guessesForCurrentChallenge.length < 1) return true;
+    return fp.all(resolved => resolved !== false && resolved !== true, fp.map(g => g.guessedCorrectly, guessesForCurrentChallenge))
   }
 
   onMount(async () => {
@@ -116,12 +118,18 @@
     {#if $activeTab === "my games"}
       <section class="tabContent my-games">
         <p>My Turn</p>
-        {#each myTurnGames(myGames) as myTurnGame}
-          <p>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</p>
+        {#each myTurnGames as myTurnGame}
+          {#if needsGuess(myTurnGame)}
+            {@const guessChallengeUrl = `/game/cwf/guess/${myTurnGame.currentChallenge._id}`}
+            <p><a href={guessChallengeUrl} on:click={goto(guessChallengeUrl)}>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</a></p>
+          {:else}
+            <p>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</p>
+          {/if}
         {/each}
         <p>Their Turn</p>
-        {#each theirTurnGames(myGames) as myTurnGame}
-          <p>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</p>
+        {#each theirTurnGames as theirTurnGame}
+          {@const guessChallengeUrl = `/game/cwf/guess/${theirTurnGame.currentChallenge._id}`}
+          <p><a href={guessChallengeUrl} on:click={goto(guessChallengeUrl)}>{otherPlayerIn(theirTurnGame)} {streakCount(normalizeGame(theirTurnGame))}</a></p>
         {/each}
       </section>
     {/if}
