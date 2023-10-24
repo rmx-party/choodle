@@ -8,7 +8,6 @@
   import MetaData from "../../../components/MetaData.svelte";
   import {pageBackgroundDefault} from "$lib/Configuration";
   import {writable} from "svelte/store";
-  import {readOnlyClient} from "$lib/CMSUtils";
   import fp from "lodash/fp";
   import {toHTML} from "@portabletext/to-html";
   import {loading} from "$lib/store";
