@@ -48,10 +48,10 @@
   <Button variant="primary" on:click={() => {goto('/game/cwf/pick')}}>
     Play With Friends
   </Button>
-  
-  <Button variant="primary" on:click={() => {goto('/draw')}}>
-    Draw
-  </Button>
+
+  <!-- <Button variant="primary" on:click={() => {goto('/draw')}}> -->
+  <!--   Draw -->
+  <!-- </Button> -->
 
   <div id="bottom-content">
     {@html toHTML(data.howto.bottom)}
