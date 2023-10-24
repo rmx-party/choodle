@@ -204,7 +204,7 @@
     <h3><strong>{data.choodle.gamePrompt.toUpperCase()}</strong></h3>
     <div>
       <Button colour="yellow"
-        on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
+              on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
     </div>
   {:else}
     {#if success}
@@ -216,7 +216,7 @@
       <p><!-- layout placeholder --> </p>
       <div>
         <Button on:click={() => { goto('/game/defcon')}}
-          colour="yellow">{data.copy.success_continueGameButtonText}</Button>
+                colour="yellow">{data.copy.success_continueGameButtonText}</Button>
       </div>
     {:else}
       {#if guessesRemaining < 1 || alreadyGuessed}
@@ -240,7 +240,7 @@
         {/if}
         <a on:click={showHint}>Need a hint?</a>
         <GuessingInterface format={data.choodle.gamePrompt.split('')} inputDisplay={currentGuess}
-          cursorLocation={cursorLocation} onEnter={check}>
+                           cursorLocation={cursorLocation} onEnter={check}>
           <div slot="between">
             <p><!-- layout placeholder --> </p>
           </div>
@@ -251,7 +251,6 @@
   <Dialog id={'hint'}>
     <h1 slot="header">Hint</h1>
     <br/>
-    <p>{data.choodle.gameHint}</p>
     <br/>
   </Dialog>
 </LayoutContainer>

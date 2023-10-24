@@ -37,7 +37,6 @@
     let challengeId
     const {transaction, choodleId} = await createUncommittedChoodle(undoStack, canvas, {
         gamePrompt: $gamePrompt || null,
-        gameHint: prompt.hint,
         creatorId: await getDeviceId()
       },
       challenger._id)
@@ -53,7 +52,6 @@
         choodle: {_ref: choodleId},
         challenger: {_ref: challenger._id},
         gamePrompt: $gamePrompt,
-        gameHint: prompt.hint,
         gamePromptRef: {_ref: prompt._id},
       })
     }

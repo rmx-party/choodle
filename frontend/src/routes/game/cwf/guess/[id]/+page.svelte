@@ -150,7 +150,7 @@
 
     if (guessedCorrectly !== null) {
       console.log('guess completed, adding to game')
-      await readWriteClient.patch(game._id).append('guessResults', [guessResult]).commit()
+      await readWriteClient.patch(game._id).append('guessResults', [guessResult]).commit({autoGenerateArrayKeys: true})
     }
   }
 
