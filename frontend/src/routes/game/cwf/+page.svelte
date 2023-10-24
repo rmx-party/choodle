@@ -47,7 +47,7 @@
 
   const needsGuess = (game) => {
     // true if guess results contains no resolved guess for the current challenge
-    const guessesForCurrentChallenge = fp.filter(id=> id !== game.currentChallenge._id, fp.map(gr => gr.challenge._id, game.guessResults))
+    const guessesForCurrentChallenge = fp.filter(id => id !== game.currentChallenge._id, fp.map(gr => gr.challenge._id, game.guessResults))
     if (guessesForCurrentChallenge.length < 1) return true;
     return fp.all(resolved => resolved !== false && resolved !== true, fp.map(g => g.guessedCorrectly, guessesForCurrentChallenge))
   }
@@ -83,7 +83,7 @@
 </script>
 
 <MetaData
-  title="Choodle w/ Friends"
+  title={data.copy.defaultPageTitle}
   themeColor={pageBackgroundDefault}
   url={$page.url}
 />
@@ -121,7 +121,9 @@
         {#each myTurnGames as myTurnGame}
           {#if needsGuess(myTurnGame)}
             {@const guessChallengeUrl = `/game/cwf/guess/${myTurnGame.currentChallenge._id}`}
-            <p><a href={guessChallengeUrl} on:click={goto(guessChallengeUrl)}>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</a></p>
+            <p><a href={guessChallengeUrl}
+                  on:click={goto(guessChallengeUrl)}>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</a>
+            </p>
           {:else}
             <p>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</p>
           {/if}
@@ -129,7 +131,9 @@
         <p>Their Turn</p>
         {#each theirTurnGames as theirTurnGame}
           {@const guessChallengeUrl = `/game/cwf/guess/${theirTurnGame.currentChallenge._id}`}
-          <p><a href={guessChallengeUrl} on:click={goto(guessChallengeUrl)}>{otherPlayerIn(theirTurnGame)} {streakCount(normalizeGame(theirTurnGame))}</a></p>
+          <p><a href={guessChallengeUrl}
+                on:click={goto(guessChallengeUrl)}>{otherPlayerIn(theirTurnGame)} {streakCount(normalizeGame(theirTurnGame))}</a>
+          </p>
         {/each}
       </section>
     {/if}

@@ -63,7 +63,7 @@
 
 <MetaData
   url={$page.url}
-  title="Choodle with Friends"
+  title={data.copy.defaultPageTitle}
   themeColor={choodleYellow}
 />
 

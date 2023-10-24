@@ -4,6 +4,11 @@ export default {
   title: 'Choodle With Friends Copy',
   fields: [
     {
+      name: 'defaultPageTitle',
+      type: 'string',
+      title: 'The page title for the game; this shows up on the share card.',
+    },
+    {
       name: 'gameName',
       type: 'string',
       title: 'The game that this copy is for.',

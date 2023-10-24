@@ -108,7 +108,7 @@
 
 
 <MetaData
-  title="Choodle w/ Friends"
+  title={data.copy.defaultPageTitle}
   themeColor={choodleYellow}
   bgColor={pageBackgroundDefault}
   url={$page.url}

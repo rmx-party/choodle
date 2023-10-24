@@ -4,8 +4,8 @@
   import {toHTML} from "@portabletext/to-html";
   import {urlFor} from "$lib/PersistedImagesUtils";
   import MetaData from "../../../../../components/MetaData.svelte";
-  import { choodleYellow, pageBackgroundDefault } from "$lib/Configuration";
-  import { page } from "$app/stores";
+  import {choodleYellow, pageBackgroundDefault} from "$lib/Configuration";
+  import {page} from "$app/stores";
   import LayoutContainer from "../../../../../components/LayoutContainer.svelte";
   import ChoodleContainer from "../../../../../components/ChoodleContainer.svelte";
 
@@ -14,7 +14,7 @@
 
 
 <MetaData
-  title="Choodle with Friends"
+  title={data.copy.defaultPageTitle}
   themeColor={choodleYellow}
   bgColor={pageBackgroundDefault}
   url={$page.url}
@@ -33,6 +33,6 @@
 
   <div>
     <Button on:click={() => { goto('/game/cwf/pick')}}
-      colour="yellow">{data.copy.success_continueGameButtonText}</Button>
+            colour="yellow">{data.copy.success_continueGameButtonText}</Button>
   </div>
 </LayoutContainer>

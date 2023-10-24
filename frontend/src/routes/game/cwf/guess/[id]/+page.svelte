@@ -285,7 +285,7 @@
 </script>
 
 <MetaData url={$page.url}
-          title="Choodle with Friends"
+          title={data.copy.defaultPageTitle}
           imageUrl={bestImageUrl(data.choodle)}
           width="430"
           height="932"
