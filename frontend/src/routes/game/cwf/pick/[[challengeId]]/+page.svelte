@@ -8,8 +8,8 @@
   import {toHTML} from "@portabletext/to-html";
   import {browser} from "$app/environment";
   import {choodleYellow} from '$lib/Configuration';
-  import { page } from '$app/stores';
-  import { urlFor } from '$lib/PersistedImagesUtils';
+  import {page} from '$app/stores';
+  import {urlFor} from '$lib/PersistedImagesUtils';
   import Button from '../../../../../components/Button.svelte';
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import MetaData from '../../../../../components/MetaData.svelte';
@@ -54,7 +54,9 @@
 
     console.log(`proceeding with prompt ${prompt}`);
     // TODO: patch the prompt to the challenge
-
+    if (!challengeId) {
+      challengeId = '';
+    }
     goto(`/game/cwf/draw/${challengeId}`)
   };
 </script>
@@ -67,7 +69,7 @@
 
 <LayoutContainer --layout-justify="space-evenly">
   <section class="pickPrompt">
-    {#if data.copy.logo}<img src={urlFor(data.copy.logo).url()} />{/if}
+    {#if data.copy.logo}<img src={urlFor(data.copy.logo).url()}/>{/if}
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
     <output for="shuffle">{$selectedPrompt}</output>
