@@ -47,6 +47,11 @@
 
   let hints = []
 
+  const createCounterChallenge = () => {
+    // TODO: create a blank challenge with a pregenerated ID, and navigate to fill it in
+    goto(`/game/cwf/${challengeId}/pick`)
+  }
+
   const challengeHasBeenGuessed = (game, challenge) => {
     return fp.isEmpty(fp.filter(guessResult => guessResult.challenge._id === challenge._id, game.guessResults));
   }
