@@ -51,7 +51,8 @@
   {#each keyRows as row}
     <div class="keyboardRow">
       {#each row as key}
-        <button class={`keyboardKey ${key.toLowerCase()}`} on:click={handleKeyPress} data-key="{key}">{displayKey(key)}</button>
+        <button class={`keyboardKey ${key.toLowerCase()}`} on:click={handleKeyPress}
+                data-key="{key}">{displayKey(key)}</button>
       {/each}
     </div>
   {/each}
@@ -65,6 +66,7 @@
     gap: 0.3rem;
     text-align: center;
   }
+
   .keyboard {
     flex-direction: column;
     padding: 0.5rem;
@@ -95,8 +97,9 @@
 
   .backspace {
     width: 2.5rem;
-    padding: 0.625rem 1rem;
+    font-size: 1.5rem;
   }
+
   .enter {
     width: 5rem;
     font-size: 1.1rem;
