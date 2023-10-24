@@ -1,6 +1,5 @@
 <script lang="ts">
   import {writable} from 'svelte/store';
-  import Button from '../../../../components/Button.svelte';
   import {goto} from '$app/navigation';
   import fp from 'lodash/fp';
   import {onMount} from 'svelte';
@@ -8,15 +7,18 @@
   import {choodlePromptKey} from '$lib/Configuration';
   import {toHTML} from "@portabletext/to-html";
   import {browser} from "$app/environment";
-  import LayoutContainer from '../../../../components/LayoutContainer.svelte';
   import {choodleYellow} from '$lib/Configuration';
   import { page } from '$app/stores';
-  import MetaData from '../../../../components/MetaData.svelte';
   import { urlFor } from '$lib/PersistedImagesUtils';
+  import Button from '../../../../../components/Button.svelte';
+  import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
+  import MetaData from '../../../../../components/MetaData.svelte';
 
   export let data;
   let prompts: any[] = [];
   let initialPrompt: string | null = null;
+  let challengeId: string | null = null;
+  $: challengeId = $page.params.challengeId;
 
   const selectedPrompt = writable(null);
   if (browser) {
@@ -48,10 +50,12 @@
 
   const proceed = async () => {
     const prompt = $selectedPrompt;
-    if (prompt) {
-      console.log(`proceeding with prompt ${prompt}`);
-      goto(`/game/cwf/draw`)
-    }
+    if (!prompt) return;
+
+    console.log(`proceeding with prompt ${prompt}`);
+    // TODO: patch the prompt to the challenge
+
+    goto(`/game/cwf/draw/${challengeId}`)
   };
 </script>
 

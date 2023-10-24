@@ -48,7 +48,14 @@
   let hints = []
 
   const createCounterChallenge = () => {
+    // TODO: bail to the regular pick page if the preconditions are wrong such as wrong player
     // TODO: create a blank challenge with a pregenerated ID, and navigate to fill it in
+    const challengeId = `challenge-${window.crypto.randomUUID()}`
+    readWriteClient.create({
+      _id: challengeId,
+      _type: "challenge",
+      challenger: {_ref: guesser._id},
+    })
     goto(`/game/cwf/${challengeId}/pick`)
   }
 
