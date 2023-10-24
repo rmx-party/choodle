@@ -52,11 +52,11 @@
   }
 
   const locateGame = async ({challengerId, guesserId, guessId}) => {
-    const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults[]->{...}, player1->{...}, player2->{...}}`
+    const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults[]->{...}, player1->{...}, player2->{...}, challenge->{...}}`
     let game = (await readOnlyClient.fetch(query))[0]
     console.log({game})
     if (game && challengeHasBeenGuessed(game, data.challenge)) {
-      console.log('this challenge has already been guessed, do nothing')
+      console.log('this challenge has already been guessed within this game, do not create or update the game')
       return;
     }
     if (!game || gameComplete([...normalizeGame(game).guessResults])) {
@@ -110,6 +110,7 @@
   }
 
   const createGuess = async (guessedCorrectly: boolean | null) => {
+    console.log(`adding guess, resolving result to`, guessedCorrectly)
     const guessResult = readWriteClient.patch(guess._id)
       .setIfMissing({guesses: []})
       .append('guesses', [$currentGuess.join('')])
@@ -118,7 +119,7 @@
       guessResult.set({guessedCorrectly})
     }
 
-    const finalGuessResult = await guessResult.commit()
+    const finalGuessResult = await guessResult.commit({autoGenerateArrayKeys: true})
     console.log({finalGuessResult})
   }
 
@@ -206,7 +207,7 @@
   const usernamePromptId = 'username-prompt'
 
   // TODO: switch back for username driven gameplay after prod deploy
-  const usernameRequired = false
+  const usernameRequired = true
   const attemptToSubmitGuessWithUsername = async (event: Event) => {
     if (!browser) return;
 
@@ -308,7 +309,7 @@
               on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
     </div>
     <div>
-      <Button on:click={() => {goto('/game/cwf/pick')}}>{data.copy.guess_doneButtonText}</Button>
+      <Button on:click={createCounterChallenge}>{data.copy.guess_doneButtonText}</Button>
     </div>
   {:else}
     {#if success}

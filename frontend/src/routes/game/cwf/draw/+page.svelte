@@ -63,7 +63,7 @@
   const usernamePromptId = 'username-prompt'
 
   // TODO: switch back for username driven gameplay after prod deploy
-  const usernameRequired = false;
+  const usernameRequired = true;
   const attemptToSaveChoodleRequiringUsername = async (event: Event) => {
     if (!browser) return;
 
