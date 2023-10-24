@@ -47,16 +47,31 @@
 
   let hints = []
 
-  const createCounterChallenge = () => {
-    // TODO: bail to the regular pick page if the preconditions are wrong such as wrong player
-    // TODO: create a blank challenge with a pregenerated ID, and navigate to fill it in
+  const isPlayerInGame = (game, player) => {
+    return game.player1._id === player._id ||
+      game.player2._id === player._id
+  }
+
+  const createCounterChallenge = async () => {
+    console.log({game})
+    console.log({isPlayerInGame: isPlayerInGame(game, guesser)})
+
+    if (!isPlayerInGame(game, guesser)) goto(`/game/cwf/pick`)
+
+    console.log('creating the challenge and updating current challenge')
     const challengeId = `challenge-${window.crypto.randomUUID()}`
-    readWriteClient.create({
-      _id: challengeId,
-      _type: "challenge",
-      challenger: {_ref: guesser._id},
-    })
-    goto(`/game/cwf/${challengeId}/pick`)
+    const transaction = await readWriteClient
+      .transaction()
+      .create({
+        _id: challengeId,
+        _type: "challenge",
+        challenger: {_ref: guesser._id},
+        gameRef: {_ref: game._id},
+      })
+      .patch(game._id, p => p.set({currentChallenge: {_ref: challengeId}}))
+      .commit({autoGenerateArrayKeys: true})
+    console.log(transaction)
+    goto(`/game/cwf/pick/${challengeId}`)
   }
 
   const challengeHasBeenGuessed = (game, challenge) => {
@@ -65,15 +80,15 @@
 
   const locateGame = async ({challengerId, guesserId, guessId}) => {
     const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults[]->{...}, player1->{...}, player2->{...}, challenge->{...}}`
-    let game = (await readOnlyClient.fetch(query))[0]
-    console.log({game})
-    if (game && challengeHasBeenGuessed(game, data.challenge)) {
+    let locatedGame = (await readOnlyClient.fetch(query))[0]
+    console.log({locatedGame})
+    if (locatedGame && challengeHasBeenGuessed(locatedGame, data.challenge)) {
       console.log('this challenge has already been guessed within this game, do not create or update the game')
-      return;
+      return locatedGame;
     }
-    if (!game || gameComplete([...normalizeGame(game).guessResults])) {
+    if (!locatedGame || gameComplete([...normalizeGame(locatedGame).guessResults])) {
       console.log('create')
-      game = await readWriteClient.create({
+      locatedGame = await readWriteClient.create({
           _type: "cwfgame",
           player1: {_ref: challengerId},
           player2: {_ref: guesserId},
@@ -84,9 +99,9 @@
       )
     } else {
       console.log('update')
-      console.log({game})
-      const patch = readWriteClient.patch(game._id)
-      if (game.guessResults.map(gr => gr._id).includes(guess._id)) {
+      console.log({game: locatedGame})
+      const patch = readWriteClient.patch(locatedGame._id)
+      if (locatedGame.guessResults.map(gr => gr._id).includes(guess._id)) {
         console.log('we already have this guess')
       } else {
         console.log('adding a guessResult')
@@ -95,7 +110,7 @@
       patch.commit({autoGenerateArrayKeys: true})
     }
 
-    return game
+    return locatedGame
   }
 
   export const locateGuess = async ({guesserId, challengeId}: {
@@ -130,9 +145,13 @@
     if (guessedCorrectly !== null) {
       guessResult.set({guessedCorrectly})
     }
-
     const finalGuessResult = await guessResult.commit({autoGenerateArrayKeys: true})
     console.log({finalGuessResult})
+
+    if (guessedCorrectly !== null) {
+      console.log('guess completed, adding to game')
+      await readWriteClient.patch(game._id).append('guessResults', [guessResult]).commit()
+    }
   }
 
   const handleCorrectGuess = () => {
@@ -246,18 +265,23 @@
 
   onMount(async () => {
     deviceId = await getDeviceId()
-    choodleOwner = (data.choodle.creatorId === deviceId) // TODO: this is based on device+choodle, should be by creator account
-
-    if (choodleOwner) return loading.set(false)
 
     email = await getEmail()
     username = (await getUsername()) || ''
     guesser = await locateCreator({email, deviceId, username})
 
+    console.log({challenge: data.challenge})
+    choodleOwner = (data.challenge.challenger._id === guesser._id) // TODO: this is based on device+choodle, should be by creator account
+
+    console.log({choodleOwner})
+
+    if (choodleOwner) return loading.set(false)
+
     guess = await locateGuess({guesserId: guesser._id, challengeId: data.challenge._id})
 
     if (!choodleOwner) {
       game = await locateGame({challengerId: data.challenge.challenger._id, guesserId: guesser._id, guessId: guess._id})
+      console.log({game})
     }
 
     if (guess.guessedCorrectly) {
@@ -321,7 +345,7 @@
               on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
     </div>
     <div>
-      <Button on:click={createCounterChallenge}>{data.copy.guess_doneButtonText}</Button>
+      <Button on:click={() => {goto('/game/cwf/pick')}}>{data.copy.guess_doneButtonText}</Button>
     </div>
   {:else}
     {#if success}
@@ -332,7 +356,7 @@
         cursorLocation={-1} --bgcolor="var(--choodle-yellow)"/>
       <p><!-- layout placeholder --> </p>
       <div>
-        <Button colour="yellow" on:click={() => {goto(`/game/cwf/pick`)}}>
+        <Button colour="yellow" on:click={createCounterChallenge}>
           {data.copy.success_continueGameButtonText}
         </Button>
       </div>

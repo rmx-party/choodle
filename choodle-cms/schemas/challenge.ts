@@ -9,9 +9,9 @@ export default {
       title: 'the prompt this challenge choodle is based on',
     },
     {
-      name: 'gameHint',
-      type: 'string',
-      title: 'the hint for the guesser',
+      name: 'gameRef',
+      type: 'reference',
+      to: {type: 'cwfgame'}
     },
     {
       name: 'game',

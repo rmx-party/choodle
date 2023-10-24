@@ -1,7 +1,7 @@
 <script lang="ts">
-  import ChoodleBoard from "../../../../components/ChoodleBoard.svelte";
+  import ChoodleBoard from "../../../../../components/ChoodleBoard.svelte";
   import type {UndoStack} from "$lib/UndoStack";
-  import Prompt from "../../../../components/Prompt.svelte";
+  import Prompt from "../../../../../components/Prompt.svelte";
   import {writable} from "svelte/store";
   import {createUncommittedChoodle} from "$lib/ChoodleStorage";
   import {getDeviceId, getEmail, getUsername, locateCreator} from "$lib/CreatorUtils";
@@ -11,13 +11,13 @@
   import {onMount} from "svelte";
   import localforage from "localforage";
   import {choodleCreatorUsernameKey, choodlePromptKey, choodleYellow, pageBackgroundDefault} from "$lib/Configuration";
-  import Button from "../../../../components/Button.svelte";
+  import Button from "../../../../../components/Button.svelte";
   import {loading, isOnline, loadingMessage, closeDialog, openDialog} from "$lib/store";
-  import {readOnlyClient} from "$lib/CMSUtils";
-  import LayoutContainer from "../../../../components/LayoutContainer.svelte";
-  import ButtonMenu from "../../../../components/ButtonMenu.svelte";
-  import Dialog from "../../../../components/Dialog.svelte";
-  import MetaData from "../../../../components/MetaData.svelte";
+  import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
+  import LayoutContainer from "../../../../../components/LayoutContainer.svelte";
+  import ButtonMenu from "../../../../../components/ButtonMenu.svelte";
+  import Dialog from "../../../../../components/Dialog.svelte";
+  import MetaData from "../../../../../components/MetaData.svelte";
   import {page} from "$app/stores";
 
   export let data;
@@ -25,6 +25,7 @@
   let child;
   let prompt;
   let challenger;
+  let challenge;
 
   let creatorUsername: string;
 
@@ -33,7 +34,7 @@
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loadingMessage.set('saving')
     loading.set(true)
-
+    let challengeId
     const {transaction, choodleId} = await createUncommittedChoodle(undoStack, canvas, {
         gamePrompt: $gamePrompt || null,
         gameHint: prompt.hint,
@@ -41,23 +42,34 @@
       },
       challenger._id)
 
-    let challengeId = `challenge-${window.crypto.randomUUID()}`;
-    transaction.create({
-      _id: challengeId,
-      _type: "challenge",
-      choodle: {_ref: choodleId},
-      challenger: {_ref: challenger._id},
-      gamePrompt: $gamePrompt,
-      gameHint: prompt.hint,
-      gamePromptRef: {_ref: prompt._id},
-    })
+    if ($page.params.challengeId) {
+      console.log(`patching in the choodle ${choodleId} to challenge ${challenge._id}`)
+      transaction.patch($page.params.challengeId, p => p.set({choodle: {_ref: choodleId}}))
+    } else {
+      challengeId = `challenge-${window.crypto.randomUUID()}`;
+      transaction.create({
+        _id: challengeId,
+        _type: "challenge",
+        choodle: {_ref: choodleId},
+        challenger: {_ref: challenger._id},
+        gamePrompt: $gamePrompt,
+        gameHint: prompt.hint,
+        gamePromptRef: {_ref: prompt._id},
+      })
+    }
 
-    await transaction.commit({
+    const transactionResult = await transaction.commit({
       autoGenerateArrayKeys: true,
     })
 
+    console.log({transactionResult})
+
     await clearStorage()
-    await goto(`/game/cwf/guess/${challengeId}`)
+    if ($page.params.challengeId) {
+      await goto(`/game/cwf/guess/${$page.params.challengeId}`)
+    } else {
+      await goto(`/game/cwf/guess/${challengeId}`)
+    }
   }
 
   const usernamePromptId = 'username-prompt'
@@ -98,10 +110,19 @@
     creatorUsername = (await getUsername()) || ''
 
     prompt = await readOnlyClient.fetch(`*[_type == "gamePrompt" && prompt == "${$gamePrompt}"][0]`)
+    console.log({prompt})
 
     const deviceId = await getDeviceId()
     const email = await getEmail()
-    challenger = await locateCreator({deviceId, email})
+
+    console.log({challengeId: $page.params.challengeId})
+    if ($page.params.challengeId) {
+      challenge = await readOnlyClient.fetch(`*[_type == "challenge" && _id == "${$page.params.challengeId}"]{..., challenger->{...}, choodle->{...}, gamePromptRef->{...}} [0]`);
+      challenger = challenge.challenger._id
+      console.log({challenger})
+    } else {
+      challenger = await locateCreator({deviceId, email})
+    }
     loading.set(false)
   })
 </script>

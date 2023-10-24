@@ -13,6 +13,7 @@
   import Button from '../../../../../components/Button.svelte';
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import MetaData from '../../../../../components/MetaData.svelte';
+  import {readWriteClient} from "$lib/CMSUtils";
 
   export let data;
   let prompts: any[] = [];
@@ -53,7 +54,16 @@
     if (!prompt) return;
 
     console.log(`proceeding with prompt ${prompt}`);
-    // TODO: patch the prompt to the challenge
+
+    const gamePrompt = fp.find(p => p.prompt === prompt, data.records)
+
+    if ($page.params.challengeId) {
+      await readWriteClient.patch(challengeId).set({
+        gamePrompt: gamePrompt.prompt,
+        gamePromptRef: {_ref: gamePrompt._id}
+      }).commit()
+    }
+    
     if (!challengeId) {
       challengeId = '';
     }
