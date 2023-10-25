@@ -90,4 +90,4 @@
 
 <slot name="between"/>
 
-<Keyboard onKeyPress={handleKeyPress}/>
+<Keyboard onKeyPress={handleKeyPress} {...$$restProps}/>

@@ -44,6 +44,7 @@
   let guesser
   let guess
   let game
+  let disableKeyboard = false
 
   let hints = []
 
@@ -243,6 +244,7 @@
     if (!browser) return;
 
     if (username.length > 0) {
+      disableKeyboard = false
       closeDialog(usernamePromptId)
       await localforage.setItem(choodleCreatorUsernameKey, username)
       guesser = await locateCreator({username, deviceId})
@@ -250,6 +252,7 @@
       return
     }
 
+    disableKeyboard = true
     openDialog(usernamePromptId)
   }
   const attemptToSubmitGuess = async (event: Event) => {
@@ -381,7 +384,7 @@
           <p><!-- layout placeholder --> </p>
         {/if}
         <GuessingInterface format={data.gamePrompt.prompt.split('')} inputDisplay={currentGuess}
-                           cursorLocation={cursorLocation} onEnter={attemptToSubmitGuess}>
+                           cursorLocation={cursorLocation} onEnter={attemptToSubmitGuess} {disableKeyboard}>
           <div slot="between">
             <Hints {hints} hintCta={data.copy.guess_needHintCtaText} {afterHint}/>
           </div>

@@ -9,8 +9,7 @@
   ]
 
   export let onKeyPress;
-  const {disabled} = $$restProps
-  console.log("disabled", $$restProps.disabled)
+  export let disableKeyboard;
 
   const handleKeyInput = (input) => {
     onKeyPress(input)
@@ -26,7 +25,7 @@
     if (!browser) return;
 
     let keyUpListener = (event) => {
-      if (disabled) return;
+      if (disableKeyboard) return;
       const validKeys = keyRows.flatMap(key => key).flatMap(key => key.toUpperCase())
       if (validKeys.includes(event.key.toUpperCase())) {
         event.preventDefault()
@@ -55,7 +54,7 @@
     <div class="keyboardRow">
       {#each row as key}
         <button class={`keyboardKey ${key.toLowerCase()}`} on:click={handleKeyPress}
-                data-key="{key}" {disabled}>{displayKey(key)}</button>
+                data-key="{key}" disabled={disableKeyboard}>{displayKey(key)}</button>
       {/each}
     </div>
   {/each}
