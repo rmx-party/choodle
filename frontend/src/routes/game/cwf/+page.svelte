@@ -12,7 +12,7 @@
   import {toHTML} from "@portabletext/to-html";
   import {loading} from "$lib/store";
   import {urlFor} from "$lib/PersistedImagesUtils";
-  import {normalizeGame, streakCount} from "$lib/CWFGame";
+  import {isGameComplete, normalizeGame, streakCount} from "$lib/CWFGame";
 
   export let data
   let currentChoodler
@@ -32,7 +32,7 @@
 
   let myTurnGames = []
   let theirTurnGames = []
-  $: [myTurnGames, theirTurnGames] = fp.partition(isMyTurn, myGames)
+  $: [myTurnGames, theirTurnGames] = fp.partition(isMyTurn, fp.reject(isGameComplete, myGames))
 
   const isMyTurn = (game) => {
     if (game.currentChallenge.challenger._id !== currentChoodler._id) return true
@@ -72,6 +72,7 @@
     }
 
     console.log(`games`, data.games)
+    console.log(`map on isGameComplete`, fp.map(isGameComplete, data.games))
     myGames = fp.filter((game) => {
       return game.player1._id === currentChoodler._id || game.player2._id === currentChoodler._id
     }, data.games)

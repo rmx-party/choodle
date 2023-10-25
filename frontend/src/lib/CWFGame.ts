@@ -34,7 +34,7 @@ export const addGuessToGame = (game: CWFGame, guessResult: boolean): CWFGame => 
 };
 
 export const isGameComplete = (game: CWFGame) => {
-  return fp.any(result => !result, game.guessResults)
+  return fp.any(result => result === false, normalizeGame(game).guessResults)
 };
 
 export const streakCount = (game: CWFGame) => {
