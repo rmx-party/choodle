@@ -349,7 +349,7 @@
               on:click={share}>{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.guess_shareButtonText}</Button>
     </div>
     <div>
-      <Button on:click={() => {goto('/game/cwf/pick')}}>{data.copy.guess_doneButtonText}</Button>
+      <Button on:click={() => {goto('/game/cwf')}}>{data.copy.guess_doneButtonText}</Button>
     </div>
   {:else}
     {#if success}
