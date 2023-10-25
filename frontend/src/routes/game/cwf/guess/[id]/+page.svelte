@@ -257,6 +257,7 @@
   }
   const attemptToSubmitGuess = async (event: Event) => {
     if (!browser) return;
+    if ($currentGuess.length !== data.choodle.gamePrompt.length) return;
 
     if (usernameRequired) {
       return await attemptToSubmitGuessWithUsername(event)
