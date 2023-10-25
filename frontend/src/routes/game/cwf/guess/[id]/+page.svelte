@@ -22,7 +22,7 @@
   import {closeDialog, loading, loadingMessage, openDialog} from "$lib/store";
   import Dialog from "../../../../../components/Dialog.svelte";
   import localforage from "localforage";
-  import {gameComplete, normalizeGame} from "$lib/CWFGame";
+  import {isNormalizedGameComplete, normalizeGame} from "$lib/CWFGame";
 
   loadingMessage.set('loading')
 
@@ -87,7 +87,7 @@
       console.log('this challenge has already been guessed within this game, do not create or update the game')
       return locatedGame;
     }
-    if (!locatedGame || gameComplete([...normalizeGame(locatedGame).guessResults])) {
+    if (!locatedGame || isNormalizedGameComplete([...normalizeGame(locatedGame).guessResults])) {
       console.log('create')
       locatedGame = await readWriteClient.create({
           _type: "cwfgame",
