@@ -37,7 +37,7 @@
   const isMyTurn = (game) => {
     if (game.currentChallenge.challenger._id !== currentChoodler._id && game.currentChallenge.choodle) return true
     if (game.currentChallenge.challenger._id === currentChoodler._id && !game.currentChallenge.choodle) return true
-    
+
     return false
   }
 
@@ -51,6 +51,16 @@
     const guessesForCurrentChallenge = fp.filter(id => id !== game.currentChallenge._id, fp.map(gr => gr.challenge._id, game.guessResults))
     if (guessesForCurrentChallenge.length < 1) return true;
     return fp.all(resolved => resolved !== false && resolved !== true, fp.map(g => g.guessedCorrectly, guessesForCurrentChallenge))
+  }
+
+  const generateLinkFor = (game): string => {
+    let currentChallenge = game.currentChallenge;
+
+    if (currentChallenge.challenger._id === currentChoodler._id && !currentChallenge.choodle) {
+      return `/game/cwf/pick/${currentChallenge._id}`
+    }
+
+    return `/game/cwf/guess/${currentChallenge._id}`
   }
 
   onMount(async () => {
@@ -122,7 +132,7 @@
         <p>My Turn</p>
         {#each myTurnGames as myTurnGame}
           {#if needsGuess(myTurnGame)}
-            {@const guessChallengeUrl = `/game/cwf/guess/${myTurnGame.currentChallenge._id}`}
+            {@const guessChallengeUrl = generateLinkFor(myTurnGame)}
             <p><a href={guessChallengeUrl}
                   on:click={goto(guessChallengeUrl)}>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</a>
             </p>
