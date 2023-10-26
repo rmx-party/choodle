@@ -46,6 +46,14 @@
     return game.player1.username || 'player1 unknown'
   }
 
+  const sortedGuesses = (guesses) => {
+    return fp.sortBy(['createdAt'], guesses)
+  }
+
+  const lastGuessInChallenge = (challenge) => {
+    return sortedGuesses(challenge.guesses)
+  }
+
   const needsGuess = (game) => {
     // true if guess results contains no resolved guess for the current challenge
     const guessesForCurrentChallenge = fp.filter(id => id !== game.currentChallenge._id, fp.map(gr => gr.challenge._id, game.guessResults))
@@ -58,6 +66,10 @@
 
     if (currentChallenge.challenger._id === currentChoodler._id && !currentChallenge.choodle) {
       return `/game/cwf/pick/${currentChallenge._id}`
+    }
+
+    if (currentChallenge.challenger._id !== currentChoodler._id && !currentChallenge.choodle) {
+      return ``
     }
 
     return `/game/cwf/guess/${currentChallenge._id}`
@@ -85,9 +97,11 @@
 
     console.log(`games`, data.games)
     console.log(`map on isGameComplete`, fp.map(isGameComplete, data.games))
-    myGames = fp.filter((game) => {
+    myGames = fp.map((game) => {
+      return {...game, guessResults: sortedGuesses(game.guessResults)}
+    }, fp.filter((game) => {
       return game.player1._id === currentChoodler._id || game.player2._id === currentChoodler._id
-    }, data.games)
+    }, data.games))
     console.log(`myGames`, myGames)
 
     loading.set(false)
@@ -131,20 +145,14 @@
       <section class="tabContent my-games">
         <p>My Turn</p>
         {#each myTurnGames as myTurnGame}
-          {#if needsGuess(myTurnGame)}
-            {@const guessChallengeUrl = generateLinkFor(myTurnGame)}
-            <p><a href={guessChallengeUrl}
-                  on:click={goto(guessChallengeUrl)}>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</a>
-            </p>
-          {:else}
-            <p>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</p>
-          {/if}
+          <p><a href={generateLinkFor(myTurnGame)}
+                on:click={goto(generateLinkFor(myTurnGame))}>{otherPlayerIn(myTurnGame)} {streakCount(normalizeGame(myTurnGame))}</a>
+          </p>
         {/each}
         <p>Their Turn</p>
         {#each theirTurnGames as theirTurnGame}
-          {@const guessChallengeUrl = `/game/cwf/guess/${theirTurnGame.currentChallenge._id}`}
-          <p><a href={guessChallengeUrl}
-                on:click={goto(guessChallengeUrl)}>{otherPlayerIn(theirTurnGame)} {streakCount(normalizeGame(theirTurnGame))}</a>
+          <p><a href={generateLinkFor(theirTurnGame)}
+                on:click={goto(generateLinkFor(theirTurnGame))}>{otherPlayerIn(theirTurnGame)} {streakCount(normalizeGame(theirTurnGame))}</a>
           </p>
         {/each}
       </section>
