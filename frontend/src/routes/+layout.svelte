@@ -1,17 +1,12 @@
 <script lang="ts">
-    import {browser, dev} from "$app/environment"
+    import {browser} from "$app/environment"
     import {isOnline} from "$lib/store"
     import '$lib/assets/fonts.css'
     import { onMount } from "svelte";
     import '../app.css'
     import LoadingIndicator from "../components/LoadingIndicator.svelte";
 
-    import Bugsnag from "@bugsnag/js";
     import { appsignal } from "$lib/appsignal";
-
-    if (browser && !dev) {
-      Bugsnag.start({apiKey: '91931cee1cbae5feec1925a566386158'})
-    }
 
     onMount(async () => {
       if (!browser) return;
