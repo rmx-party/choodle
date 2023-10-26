@@ -35,8 +35,10 @@
   $: [myTurnGames, theirTurnGames] = fp.partition(isMyTurn, fp.reject(isGameComplete, myGames))
 
   const isMyTurn = (game) => {
-    if (game.currentChallenge.challenger._id !== currentChoodler._id) return true
-    return !game.currentChallenge.choodle;
+    if (game.currentChallenge.challenger._id !== currentChoodler._id && game.currentChallenge.choodle) return true
+    if (game.currentChallenge.challenger._id === currentChoodler._id && !game.currentChallenge.choodle) return true
+    
+    return false
   }
 
   const otherPlayerIn = (game) => {
