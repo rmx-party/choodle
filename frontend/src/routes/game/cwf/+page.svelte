@@ -69,7 +69,7 @@
     }
 
     if (currentChallenge.challenger._id !== currentChoodler._id && !currentChallenge.choodle) {
-      return ``
+      return `/game/cwf/guess/${fp.last(game.guessResults).challenge._id}`
     }
 
     return `/game/cwf/guess/${currentChallenge._id}`
