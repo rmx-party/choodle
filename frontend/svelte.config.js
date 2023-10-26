@@ -2,14 +2,6 @@ import adapter from '@sveltejs/adapter-vercel';
 import {vitePreprocess} from '@sveltejs/kit/vite';
 import * as child_process from "child_process";
 
-import { Appsignal } from "@appsignal/nodejs";
-console.log(`Appsignal key: ${process.env.APPSIGNAL_PUSH_API_KEY}`)
-new Appsignal({
-  active: true,
-  name: "Choodle",
-  pushApiKey: `${process.env.APPSIGNAL_PUSH_API_KEY}`
-});
-
 let name;
 
 if (process.env.VERCEL === '1') {
