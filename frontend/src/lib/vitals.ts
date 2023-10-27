@@ -1,6 +1,8 @@
 import { getCLS, getFCP, getFID, getLCP, getTTFB } from 'web-vitals';
 
 const vitalsUrl = 'https://vitals.vercel-analytics.com/v1/vitals';
+export const analyticsId = import.meta.env.VERCEL_ANALYTICS_ID;
+
 
 function getConnectionSpeed() {
   return 'connection' in navigator &&
@@ -47,6 +49,7 @@ function sendToAnalytics(metric, options) {
 }
 
 export function webVitals(options) {
+  console.log('sending web vitals with analytics ID', analyticsId)
   try {
     getFID((metric) => sendToAnalytics(metric, options));
     getTTFB((metric) => sendToAnalytics(metric, options));
