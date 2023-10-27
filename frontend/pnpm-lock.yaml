@@ -56,6 +56,9 @@ dependencies:
   tempy:
     specifier: ^3.1.0
     version: 3.1.0
+  web-vitals:
+    specifier: ^3.5.0
+    version: 3.5.0
   web3:
     specifier: ^4.1.0
     version: 4.1.0
@@ -4666,6 +4669,10 @@ packages:
       - supports-color
       - terser
     dev: true
+
+  /web-vitals@3.5.0:
+    resolution: {integrity: sha512-f5YnCHVG9Y6uLCePD4tY8bO/Ge15NPEQWtvm3tPzDKygloiqtb4SVqRHBcrIAqo2ztqX5XueqDn97zHF0LdT6w==}
+    dev: false
 
   /web3-core-helpers@1.5.2:
     resolution: {integrity: sha512-U7LJoeUdQ3aY9t5gU7t/1XpcApsWm+4AcW5qKl/44ZxD44w0Dmsq1c5zJm3GuLr/a9MwQfXK4lpmvxVQWHHQRg==}
