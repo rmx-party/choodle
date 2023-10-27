@@ -9,6 +9,7 @@
     import Bugsnag from "@bugsnag/js";
     import { page } from "$app/stores";
 
+    console.log('analytics ID', analyticsId)
     $: if (browser && analyticsId) {
       webVitals({
         path: $page.url.pathname,
