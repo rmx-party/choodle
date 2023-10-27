@@ -1,7 +1,7 @@
 <script lang="ts">
     import {browser, dev} from "$app/environment"
     import {isOnline} from "$lib/store"
-    import {webVitals, analyticsId} from "$lib/vitals"
+    import {webVitals} from "$lib/vitals"
     import '$lib/assets/fonts.css'
     import { onMount } from "svelte";
     import '../app.css'
@@ -9,12 +9,14 @@
     import Bugsnag from "@bugsnag/js";
     import { page } from "$app/stores";
 
-    console.log('analytics ID', analyticsId)
-    $: if (browser && analyticsId) {
+    export let data;
+
+    console.log('analytics ID', data.analyticsId)
+    $: if (browser && data.analyticsId) {
       webVitals({
         path: $page.url.pathname,
         params: $page.params,
-        analyticsId
+        analyticsId: data.analyticsId
       })
     }
 

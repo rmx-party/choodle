@@ -1,18 +1,16 @@
-import { getCLS, getFCP, getFID, getLCP, getTTFB } from 'web-vitals';
+import { onCLS, onFCP, onFID, onLCP, onTTFB } from 'web-vitals';
 
 const vitalsUrl = 'https://vitals.vercel-analytics.com/v1/vitals';
-export const analyticsId = import.meta.env.VERCEL_ANALYTICS_ID;
-
 
 function getConnectionSpeed() {
-  return 'connection' in navigator &&
-    navigator['connection'] &&
-    'effectiveType' in navigator['connection']
-    ? // @ts-ignore
-      navigator['connection']['effectiveType']
-    : '';
+  // @ts-ignore
+  return navigator?.connection?.effectiveType ?? '';
 }
 
+/**
+ * @param {import("web-vitals").Metric} metric
+ * @param {{ params: { [s: string]: any; } | ArrayLike<any>; path: string; analyticsId: string; debug: boolean; }} options
+ */
 function sendToAnalytics(metric, options) {
   const page = Object.entries(options.params).reduce(
     (acc, [key, value]) => acc.replace(value, `[${key}]`),
@@ -40,23 +38,26 @@ function sendToAnalytics(metric, options) {
   if (navigator.sendBeacon) {
     navigator.sendBeacon(vitalsUrl, blob);
   } else
-    fetch(vitalsUrl, {
-      body: blob,
-      method: 'POST',
-      credentials: 'omit',
-      keepalive: true
-    });
+  fetch(vitalsUrl, {
+    body: blob,
+    method: 'POST',
+    credentials: 'omit',
+    keepalive: true
+  });
 }
 
+/**
+ * @param {any} options
+ */
 export function webVitals(options) {
-  console.log('sending web vitals with analytics ID', analyticsId)
   try {
-    getFID((metric) => sendToAnalytics(metric, options));
-    getTTFB((metric) => sendToAnalytics(metric, options));
-    getLCP((metric) => sendToAnalytics(metric, options));
-    getCLS((metric) => sendToAnalytics(metric, options));
-    getFCP((metric) => sendToAnalytics(metric, options));
+    console.log(`[Web Vitals] for page ${options.path}`);
+    onFID((metric) => sendToAnalytics(metric, options));
+    onTTFB((metric) => sendToAnalytics(metric, options));
+    onLCP((metric) => sendToAnalytics(metric, options));
+    onCLS((metric) => sendToAnalytics(metric, options));
+    onFCP((metric) => sendToAnalytics(metric, options));
   } catch (err) {
-    console.error('[Web Vitals]', err);
+    console.error(`[Web Vitals] for page ${options.path}`, err);
   }
 }
