@@ -396,7 +396,7 @@
           <label for="creator-username" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">username
             <br/>
             <input bind:value={username} type="username" id="creator-username" name="creatorusername"
-                   placeholder="{data.copy.draw_usernamePlaceholder}"
+                   placeholder={data.copy.draw_usernamePlaceholder}
                    style='width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
           </label>
           <Button on:click={attemptToSubmitGuess} variant="primary" colour="yellow">
