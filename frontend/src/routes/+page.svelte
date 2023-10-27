@@ -4,20 +4,18 @@
   import MetaData from '../components/MetaData.svelte';
   import Wordmark from "../components/Wordmark.svelte";
   import {toHTML} from "@portabletext/to-html";
-  import handDraw from "$lib/assets/hand-draw-filled-40px.svg";
   import star1 from "$lib/assets/star-1.png";
   import star2 from "$lib/assets/star-2.png";
   import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-1200x630-2x.jpg';
   import {page} from '$app/stores';
   import {onMount} from 'svelte';
+  import { choodleYellow } from '$lib/Configuration';
+  import { loading } from '$lib/store';
 
   export let data;
 
-  console.log(data)
-
   onMount(() => {
-    let root = document.documentElement;
-    root.style.setProperty('--page-background-color', 'var(--choodle-yellow)');
+    loading.set(false)
   });
 </script>
 
@@ -25,6 +23,7 @@
 <MetaData
   title="Choodle"
   themeColor="#FEF40A"
+  bgColor={choodleYellow}
   url={$page.url}
   imageUrl={opengraphChoodle}
   imageAlt="Cursive writing of the word “Choodle” with doodle stars and a smiley face on a yellow background"
@@ -49,10 +48,10 @@
   <Button variant="primary" on:click={() => {goto('/game/cwf/pick')}}>
     Play With Friends
   </Button>
-  
-  <Button variant="primary" on:click={() => {goto('/draw')}}>
-    Draw
-  </Button>
+
+  <!-- <Button variant="primary" on:click={() => {goto('/draw')}}> -->
+  <!--   Draw -->
+  <!-- </Button> -->
 
   <div id="bottom-content">
     {@html toHTML(data.howto.bottom)}
