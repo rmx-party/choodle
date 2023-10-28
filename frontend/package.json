@@ -38,6 +38,7 @@
     "@sanity/client": "^6.1.7",
     "@sanity/image-url": "^1.0.2",
     "@sendgrid/mail": "^7.7.0",
+    "@sentry/sveltekit": "^7.76.0",
     "@sveltejs/adapter-vercel": "^3.0.3",
     "@types/qrcode": "^1.5.1",
     "alchemy-sdk": "^2.9.2",
