@@ -13,7 +13,7 @@
   import {choodleCreatorUsernameKey, choodlePromptKey, choodleYellow, pageBackgroundDefault} from "$lib/Configuration";
   import Button from "../../../../../components/Button.svelte";
   import {loading, isOnline, loadingMessage, closeDialog, openDialog} from "$lib/store";
-  import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
+  import {readOnlyClient} from "$lib/CMSUtils";
   import LayoutContainer from "../../../../../components/LayoutContainer.svelte";
   import ButtonMenu from "../../../../../components/ButtonMenu.svelte";
   import Dialog from "../../../../../components/Dialog.svelte";
