@@ -11,6 +11,14 @@
   import {onMount} from 'svelte';
   import { choodleYellow } from '$lib/Configuration';
   import { loading } from '$lib/store';
+  import { PUBLIC_ISR_BYPASS_TOKEN } from '$env/static/public'
+
+  export const config = {
+    isr: {
+      expiration: 600,
+      bypassToken: PUBLIC_ISR_BYPASS_TOKEN
+    }
+  }
 
   export let data;
 
@@ -77,3 +85,5 @@
     color: rgba(20, 21, 24, 0.8);
   }
 </style>
+
+
