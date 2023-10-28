@@ -95,12 +95,10 @@
       return // Don't load leaderboard stuff if player can't see it anyway
     }
 
-    console.log(`games`, data.games)
-    console.log(`map on isGameComplete`, fp.map(isGameComplete, data.games))
     myGames = fp.map((game) => {
       return {...game, guessResults: sortedGuesses(game.guessResults)}
     }, fp.filter((game) => {
-      return game.player1._id === currentChoodler._id || game.player2._id === currentChoodler._id
+      return game?.player1?._id === currentChoodler?._id || game?.player2?._id === currentChoodler?._id
     }, data.games))
     console.log(`myGames`, myGames)
 

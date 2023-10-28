@@ -11,7 +11,7 @@ export const isNormalizedGameComplete = (guessResults: []) => {
 }
 
 export const normalizeGame = (game): CWFGame => {
-  const normalizedGame = createCWFGame(game.player1._id, game.player2._id)
+  const normalizedGame = createCWFGame(game?.player1?._id, game?.player2?._id)
   return {
     ...normalizedGame,
     guessResults: fp.map(result => result.guessedCorrectly, [...game.guessResults])
