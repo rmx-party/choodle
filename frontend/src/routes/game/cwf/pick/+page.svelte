@@ -10,15 +10,15 @@
   import {browser} from "$app/environment";
   import LayoutContainer from '../../../../components/LayoutContainer.svelte';
   import {choodleYellow} from '$lib/Configuration';
-  import { page } from '$app/stores';
+  import {page} from '$app/stores';
   import MetaData from '../../../../components/MetaData.svelte';
-  import { urlFor } from '$lib/PersistedImagesUtils';
+  import {urlFor} from '$lib/PersistedImagesUtils';
 
   export let data;
-  let prompts: any[] = [];
-  let initialPrompt: string | null = null;
+  let prompts: string[]
+  let initialPrompt: string
 
-  const selectedPrompt = writable(null);
+  const selectedPrompt = writable('');
   if (browser) {
     selectedPrompt.subscribe((value) => {
       console.log(`selected prompt: ${value}`);
@@ -27,13 +27,12 @@
   }
 
   onMount(() => {
-    prompts = fp.shuffle(fp.map('prompt')(data.records));
-    initialPrompt = prompts[0];
-    rotatePrompts();
+    prompts = fp.map('prompt')(data.records)
+    initialPrompt = prompts[0]
+    selectedPrompt.set(initialPrompt)
   })
 
-  const rotatePrompts = (event?: Event) => {
-    event?.preventDefault();
+  const rotatePrompts = () => {
     const [head, ...tail] = prompts;
 
     if (head === initialPrompt) {
@@ -44,7 +43,13 @@
 
     selectedPrompt.set(head);
     prompts = [...tail, head];
-  };
+  }
+
+  const handleShuffle = (event: Event) => {
+    event.preventDefault()
+
+    rotatePrompts()
+  }
 
   const proceed = async () => {
     const prompt = $selectedPrompt;
@@ -63,12 +68,12 @@
 
 <LayoutContainer --layout-justify="space-evenly">
   <section class="pickPrompt">
-    {#if data.copy.logo}<img src={urlFor(data.copy.logo).url()} />{/if}
+    {#if data.copy.logo}<img src={urlFor(data.copy.logo).url()}/>{/if}
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
     <output for="shuffle">{$selectedPrompt}</output>
     <br/>
-    <Button id="shuffle" on:click={rotatePrompts}>{data.copy.pick_shuffleButtonText}</Button>
+    <Button id="shuffle" on:click={handleShuffle}>{data.copy.pick_shuffleButtonText}</Button>
   </section>
 
   <div id="cta">

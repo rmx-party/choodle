@@ -1,8 +1,9 @@
 import {readOnlyClient} from "$lib/CMSUtils";
+import fp from "lodash/fp.js";
 
 export async function load({params}) {
   const copy = await readOnlyClient.fetch(`*[_type == "choodleWithFriendsCopy"] | order(_createdAt) [0]`)
-  const records = await readOnlyClient.fetch(`*[_type == "gamePrompt"]`);
+  const records = fp.shuffle(await readOnlyClient.fetch(`*[_type == "gamePrompt"]`));
 
   if (records) {
     console.log({records})
