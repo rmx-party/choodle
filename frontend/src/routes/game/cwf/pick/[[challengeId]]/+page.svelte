@@ -16,12 +16,12 @@
   import {readWriteClient} from "$lib/CMSUtils";
 
   export let data;
-  let prompts: any[] = [];
-  let initialPrompt: string | null = null;
+  let prompts: string[]
+  let initialPrompt: string
   let challengeId: string | null = null;
   $: challengeId = $page.params.challengeId;
 
-  const selectedPrompt = writable(null);
+  const selectedPrompt = writable('');
   if (browser) {
     selectedPrompt.subscribe((value) => {
       console.log(`selected prompt: ${value}`);
@@ -30,24 +30,26 @@
   }
 
   onMount(() => {
-    prompts = fp.shuffle(fp.map('prompt')(data.records));
-    initialPrompt = prompts[0];
-    rotatePrompts();
+    prompts = fp.map('prompt')(data.records)
+    initialPrompt = prompts[0]
+    selectedPrompt.set(initialPrompt)
   })
 
-  const rotatePrompts = (event?: Event) => {
-    event?.preventDefault();
-    const [head, ...tail] = prompts;
-
-    if (head === initialPrompt) {
-      console.log(`reached the beginning of the list again, re-shuffling prompts...`)
-      prompts = fp.shuffle(prompts);
-      return rotatePrompts()
+  const rotatePrompts = () => {
+    console.log(prompts.length)
+    if (prompts.length >= 1) {
+      selectedPrompt.set(prompts.pop())
+      return
     }
 
-    selectedPrompt.set(head);
-    prompts = [...tail, head];
-  };
+    prompts = fp.map('prompt')(data.records)
+  }
+
+  const handleShuffle = (event: Event) => {
+    event.preventDefault()
+
+    rotatePrompts()
+  }
 
   const proceed = async () => {
     const prompt = $selectedPrompt;
@@ -63,7 +65,7 @@
         gamePromptRef: {_ref: gamePrompt._id}
       }).commit()
     }
-    
+
     if (!challengeId) {
       challengeId = '';
     }
@@ -84,7 +86,7 @@
 
     <output for="shuffle">{$selectedPrompt}</output>
     <br/>
-    <Button id="shuffle" on:click={rotatePrompts}>{data.copy.pick_shuffleButtonText}</Button>
+    <Button id="shuffle" on:click={handleShuffle}>{data.copy.pick_shuffleButtonText}</Button>
   </section>
 
   <div id="cta">
