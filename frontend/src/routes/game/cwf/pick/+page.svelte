@@ -33,16 +33,13 @@
   })
 
   const rotatePrompts = () => {
-    const [head, ...tail] = prompts;
-
-    if (head === initialPrompt) {
-      console.log(`reached the beginning of the list again, re-shuffling prompts...`)
-      prompts = fp.shuffle(prompts);
-      return rotatePrompts()
+    console.log(prompts.length)
+    if (prompts.length >= 1) {
+      selectedPrompt.set(prompts.pop())
+      return
     }
 
-    selectedPrompt.set(head);
-    prompts = [...tail, head];
+    prompts = fp.map('prompt')(data.records)
   }
 
   const handleShuffle = (event: Event) => {
