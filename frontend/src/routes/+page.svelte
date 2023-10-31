@@ -2,10 +2,7 @@
 	import { goto } from '$app/navigation';
 	import Button from '../components/Button.svelte';
 	import MetaData from '../components/MetaData.svelte';
-	import Wordmark from '../components/Wordmark.svelte';
 	import { toHTML } from '@portabletext/to-html';
-	import star1 from '$lib/assets/star-1.png';
-	import star2 from '$lib/assets/star-2.png';
 	import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-1200x630-2x.jpg';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
@@ -76,10 +73,6 @@
 		margin: 0;
 		height: 100vh;
 		text-align: center;
-	}
-
-	.tagline {
-		margin-top: 0rem;
 	}
 
 	#bottom-content {
