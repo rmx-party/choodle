@@ -18,7 +18,7 @@ const config = {
 
   kit: {
     adapter: adapter({
-      precompress: true,
+      runtime: 'edge'
     }),
     version: {
       name: name
