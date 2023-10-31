@@ -26,8 +26,6 @@
 
   loadingMessage.set('loading')
 
-  export const ssr = false;
-
   export let data;
   const currentGuess = writable([])
   const cursorLocation = writable(0)
