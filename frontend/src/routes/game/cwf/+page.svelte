@@ -142,7 +142,7 @@
 
     {#if $activeTab === 'my games'}
       <section class="tabContent my-games">
-        <p>My Turn</p>
+        <span class="game-list-heading">Your Turn</span>
         {#each myTurnGames as myTurnGame}
           <DashboardGameEntry currentChoodler={currentChoodler} game={myTurnGame}
                               gameListUserUnknownText={data.copy.gameListUserUnknownText}/>
@@ -150,7 +150,7 @@
         <Button variant="primary" colour="yellow" on:click={startGame} style="margin: 3rem auto;">
           {data.copy.startGameButtonText}
         </Button>
-        <p>Their Turn</p>
+        <span class="game-list-heading">Their Turn</span>
         {#each theirTurnGames as theirTurnGame}
           <DashboardGameEntry currentChoodler={currentChoodler} game={theirTurnGame}
                               gameListUserUnknownText={data.copy.gameListUserUnknownText}/>
@@ -200,6 +200,19 @@
     display: block;
     width: 100%;
     text-align: left;
+  }
+
+  .game-list-heading {
+    /* mobile/caption-bold */
+    font-family: DejaVu Sans Bold;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 120%; /* 16.8px */
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid var(--choodle-black);
+    padding: 0.5rem 0;
   }
 
   .highlight {
