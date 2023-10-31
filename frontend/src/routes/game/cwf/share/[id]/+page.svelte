@@ -71,6 +71,13 @@
     console.log({challenge: data.challenge})
     choodleOwner = (data.challenge.challenger._id === currentChoodler._id) // TODO: this is based on device+choodle, should be by creator account
 
+    // Store in localstorage on Draw:
+    //  - all details we need to draw it here, including the image
+    
+    // If the challenge is in localstorage, render it immediately.
+    // Wait for it to load.
+    //   If the currentChoodler doesn't own it, redirect to guess page.
+
     if (!choodleOwner) {
       goto(`/game/cwf/guess/${data.challenge._id}`)
       return
