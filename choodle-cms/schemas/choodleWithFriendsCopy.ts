@@ -19,16 +19,21 @@ export default {
       title: 'Choodle Logo'
     },
     {
+      name: 'logoTwo',
+      type: 'image',
+      title: 'Choodle Logo Alternative for white Backgrounds'
+    },
+    {
       name: 'landing_content',
       title: 'Content for the landing page',
       type: 'array',
-      of: [{type: 'block'}]
+      of: [{ type: 'block' }]
     },
     {
       name: 'rules_content',
       title: 'Rules of the Game',
       type: 'array',
-      of: [{type: 'block'}]
+      of: [{ type: 'block' }]
     },
     {
       name: 'gameListUserUnknownText',
@@ -44,7 +49,7 @@ export default {
       name: 'pick_promptSelectionPageTopContent',
       title: 'Prompt Selection Page Top Content',
       type: 'array',
-      of: [{type: 'block'}]
+      of: [{ type: 'block' }]
     },
     {
       name: 'pick_shuffleButtonText',
@@ -100,13 +105,13 @@ export default {
       name: 'guess_pageAuthorTopContent',
       title: 'Guess Page Top Content For Author',
       type: 'array',
-      of: [{type: 'block'}]
+      of: [{ type: 'block' }]
     },
     {
       name: 'guess_pageTopContent',
       title: 'Guess Page Top Content',
       type: 'array',
-      of: [{type: 'block'}]
+      of: [{ type: 'block' }]
     },
     {
       name: 'guess_doneButtonText',
@@ -157,7 +162,7 @@ export default {
       name: 'success_topContent',
       title: 'Success Page New Game Button Text',
       type: 'array',
-      of: [{type: 'block'}]
+      of: [{ type: 'block' }]
     },
     {
       name: 'success_continueGameButtonText',
