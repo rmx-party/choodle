@@ -4,12 +4,13 @@ import {defineConfig} from 'vitest/config';
 import * as path from 'path';
 
 export default defineConfig({
-    plugins: [sentrySvelteKit({
-      sourceMapsUploadOptions: {
-        org: "rmx-party",
-        project: "javascript-sveltekit",
-      }
-    }), sveltekit()],
+    plugins: [sveltekit()],
+    // plugins: [sentrySvelteKit({
+    //   sourceMapsUploadOptions: {
+    //     org: "rmx-party",
+    //     project: "javascript-sveltekit",
+    //   }
+    // }), sveltekit()],
     build: {
       sourcemap: true,
     },
