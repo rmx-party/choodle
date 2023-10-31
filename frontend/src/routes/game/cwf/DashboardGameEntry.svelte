@@ -9,8 +9,8 @@
   export let gameListUserUnknownText
 
   const otherPlayerIn = (game) => {
-    if (game.player1._id === currentChoodler._id) return game.player2.username || gameListUserUnknownText;
-    return game.player1.username || gameListUserUnknownText;
+    if (game.player1?._id === currentChoodler._id) return game.player2?.username || gameListUserUnknownText;
+    return game.player1?.username || gameListUserUnknownText;
   };
 
   const generateLinkFor = (game): string => {

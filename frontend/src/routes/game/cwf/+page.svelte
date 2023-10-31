@@ -18,6 +18,7 @@
   export let data;
   let currentChoodler;
   let hasCreatedAChallenge = false;
+  let currentChoodlerChallenges;
 
   let myGames = [];
 
@@ -34,13 +35,13 @@
 
   const isMyTurn = (game) => {
     if (
-      game.currentChallenge.challenger._id !== currentChoodler._id &&
-      game.currentChallenge.choodle
+      game.currentChallenge?.challenger?._id !== currentChoodler._id &&
+      game.currentChallenge?.choodle
     )
       return true;
     if (
-      game.currentChallenge.challenger._id === currentChoodler._id &&
-      !game.currentChallenge.choodle
+      game.currentChallenge?.challenger?._id === currentChoodler._id &&
+      !game.currentChallenge?.choodle
     )
       return true;
 
@@ -50,6 +51,10 @@
   const sortedGuesses = (guesses) => {
     return fp.sortBy(['createdAt'], guesses);
   };
+
+  const gameFromChallenge = (challenge) => {
+    return {currentChallenge: {...challenge, challenger: currentChoodler}, guessResults: []}
+  }
 
   onMount(async () => {
     const emailFetch = getEmail();
@@ -62,7 +67,7 @@
     }); // TODO: migrate global creator/player state to a store shared across pages
 
     currentChoodler = await creatorFetch;
-    console.log({creator: currentChoodler});
+    currentChoodlerChallenges = fp.filter(c => c.challenger && c.challenger._id === currentChoodler._id, data.challenges)
 
     if (currentChoodler?.choodles?.length > 0) {
       // TODO: figure out the appropriate test for game participation
@@ -82,6 +87,7 @@
         );
       }, data.games)
     );
+    myGames = [...myGames, ...fp.map(c => gameFromChallenge(c), currentChoodlerChallenges)]
     console.log(`myGames`, myGames);
 
     loading.set(false);
