@@ -7,14 +7,15 @@ export default defineConfig({
   // plugins: [sveltekit()],
   plugins: [sentrySvelteKit({
     adapter: "vercel",
-    sourceMapsUploadOptions: {
-      org: "rmx-party",
-      project: "javascript-sveltekit",
-    },
+    autoUploadSourceMaps: false,
+    // sourceMapsUploadOptions: {
+    //   org: "rmx-party",
+    //   project: "javascript-sveltekit",
+    // },
     autoInstrument: {
       load: false,
       serverLoad: false,
-    }
+    },
   }), sveltekit()],
   build: {
     sourcemap: true,
