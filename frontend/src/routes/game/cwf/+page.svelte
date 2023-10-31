@@ -126,9 +126,6 @@
       <h3><strong>{currentChoodler.username}</strong></h3>
     </header>
 
-    <Button variant="primary" colour="yellow" on:click={startGame} style="margin: 3rem auto;"
-    >{data.copy.startGameButtonText}</Button
-    >
 
     <nav>
       {#each navItems as navItem}
@@ -149,6 +146,9 @@
         {#each myTurnGames as myTurnGame}
           <DashboardGameEntry currentChoodler={currentChoodler} game={myTurnGame}/>
         {/each}
+        <Button variant="primary" colour="yellow" on:click={startGame} style="margin: 3rem auto;">
+          {data.copy.startGameButtonText}
+        </Button>
         <p>Their Turn</p>
         {#each theirTurnGames as theirTurnGame}
           <DashboardGameEntry currentChoodler={currentChoodler} game={theirTurnGame}/>
