@@ -71,6 +71,11 @@
     console.log({challenge: data.challenge})
     choodleOwner = (data.challenge.challenger._id === currentChoodler._id) // TODO: this is based on device+choodle, should be by creator account
 
+    if (!choodleOwner) {
+      goto(`/game/cwf/guess/${data.challenge._id}`)
+      return
+    }
+
     console.log({choodleOwner})
 
     loading.set(false)

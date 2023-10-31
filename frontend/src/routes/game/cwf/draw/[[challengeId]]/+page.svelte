@@ -64,9 +64,9 @@
 
     await clearStorage()
     if ($page.params.challengeId) {
-      await goto(`/game/cwf/guess/${$page.params.challengeId}`)
+      await goto(`/game/cwf/share/${$page.params.challengeId}`)
     } else {
-      await goto(`/game/cwf/guess/${challengeId}`)
+      await goto(`/game/cwf/share/${challengeId}`)
     }
   }
 
