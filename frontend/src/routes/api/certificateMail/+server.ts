@@ -10,7 +10,7 @@ import {PUBLIC_URL_BASE} from "$env/static/public";
 import dataUriToBuffer from "$lib/dataUriToBuffer";
 
 export const config = {
-  runtime: "node",
+  runtime: "nodejs18.x",
 }
 
 sgMail.setApiKey(SENDGRID_API_KEY)
