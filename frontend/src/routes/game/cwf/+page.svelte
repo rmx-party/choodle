@@ -144,14 +144,16 @@
       <section class="tabContent my-games">
         <p>My Turn</p>
         {#each myTurnGames as myTurnGame}
-          <DashboardGameEntry currentChoodler={currentChoodler} game={myTurnGame}/>
+          <DashboardGameEntry currentChoodler={currentChoodler} game={myTurnGame}
+                              gameListUserUnknownText={data.copy.gameListUserUnknownText}/>
         {/each}
         <Button variant="primary" colour="yellow" on:click={startGame} style="margin: 3rem auto;">
           {data.copy.startGameButtonText}
         </Button>
         <p>Their Turn</p>
         {#each theirTurnGames as theirTurnGame}
-          <DashboardGameEntry currentChoodler={currentChoodler} game={theirTurnGame}/>
+          <DashboardGameEntry currentChoodler={currentChoodler} game={theirTurnGame}
+                              gameListUserUnknownText={data.copy.gameListUserUnknownText}/>
         {/each}
       </section>
     {/if}

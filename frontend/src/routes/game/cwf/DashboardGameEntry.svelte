@@ -2,13 +2,15 @@
   import {normalizeGame, streakCount} from "$lib/CWFGame";
   import {goto} from '$app/navigation';
   import fp from "lodash/fp";
+  import streakFlame from "$lib/assets/streak-flame.svg"
 
   export let currentChoodler
   export let game
+  export let gameListUserUnknownText
 
   const otherPlayerIn = (game) => {
-    if (game.player1._id === currentChoodler._id) return game.player2.username || 'player2 unknown';
-    return game.player1.username || 'player1 unknown';
+    if (game.player1._id === currentChoodler._id) return game.player2.username || gameListUserUnknownText;
+    return game.player1.username || gameListUserUnknownText;
   };
 
   const generateLinkFor = (game): string => {
@@ -26,8 +28,34 @@
   };
 </script>
 
-<p>
-  <a href={generateLinkFor(game)} on:click={goto(generateLinkFor(game))}>
-    {otherPlayerIn(game)} {streakCount(normalizeGame(game))}
-  </a>
-</p>
+<div class="game-entry">
+  <a href={generateLinkFor(game)} on:click={goto(generateLinkFor(game))}>{otherPlayerIn(game)}</a>
+  <div class="game-entry-streak"><img src={streakFlame}/>{streakCount(normalizeGame(game))}</div>
+</div>
+
+<style>
+  .game-entry {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .game-entry img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .game-entry-streak {
+    display: flex;
+    align-items: center;
+
+    color: var(--text-text-primary, #141518);
+    text-align: center;
+    font-family: DejaVu Sans;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%; /* 16.8px */
+  }
+</style>

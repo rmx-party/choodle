@@ -31,6 +31,11 @@ export default {
       of: [{type: 'block'}]
     },
     {
+      name: 'gameListUserUnknownText',
+      type: 'string',
+      title: 'Text for unknown username',
+    },
+    {
       name: 'startGameButtonText',
       type: 'string',
       title: 'Start Game Button Text',
