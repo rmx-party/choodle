@@ -9,6 +9,10 @@ import {toHTML} from "@portabletext/to-html";
 import {PUBLIC_URL_BASE} from "$env/static/public";
 import dataUriToBuffer from "$lib/dataUriToBuffer";
 
+export const config = {
+  runtime: "node",
+}
+
 sgMail.setApiKey(SENDGRID_API_KEY)
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {

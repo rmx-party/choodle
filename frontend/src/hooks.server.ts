@@ -1,7 +1,7 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import { handleErrorWithSentry, sentryHandle } from "@sentry/sveltekit";
 import * as Sentry from '@sentry/sveltekit';
-import { ProfilingIntegration } from "@sentry/profiling-node";
+// import { ProfilingIntegration } from "@sentry/profiling-node";
 
 Sentry.init({
   dsn: 'https://6396667f7493703c96bed4717a086c02@o4506125009813504.ingest.sentry.io/4506125012762624',
