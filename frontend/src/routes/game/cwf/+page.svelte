@@ -12,7 +12,7 @@
   import {toHTML} from '@portabletext/to-html';
   import {loading} from '$lib/store';
   import {urlFor} from '$lib/PersistedImagesUtils';
-  import {isGameComplete, normalizeGame, streakCount} from '$lib/CWFGame';
+  import {isGameComplete} from '$lib/CWFGame';
   import DashboardGameEntry from "./DashboardGameEntry.svelte";
 
   export let data;
@@ -47,27 +47,8 @@
     return false;
   };
 
-  const otherPlayerIn = (game) => {
-    if (game.player1._id === currentChoodler._id) return game.player2.username || 'player2 unknown';
-    return game.player1.username || 'player1 unknown';
-  };
-
   const sortedGuesses = (guesses) => {
     return fp.sortBy(['createdAt'], guesses);
-  };
-
-  const generateLinkFor = (game): string => {
-    let currentChallenge = game.currentChallenge;
-
-    if (currentChallenge.challenger._id === currentChoodler._id && !currentChallenge.choodle) {
-      return `/game/cwf/pick/${currentChallenge._id}`;
-    }
-
-    if (currentChallenge.challenger._id !== currentChoodler._id && !currentChallenge.choodle) {
-      return `/game/cwf/guess/${fp.last(game.guessResults).challenge._id}`;
-    }
-
-    return `/game/cwf/guess/${currentChallenge._id}`;
   };
 
   onMount(async () => {
