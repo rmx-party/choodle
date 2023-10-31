@@ -5769,7 +5769,7 @@ packages:
       util: 0.12.5
       web3-errors: 1.1.0
       web3-types: 1.1.0
-      zod: 3.22.1
+      zod: 3.22.4
     dev: false
 
   /web3@4.1.0:
@@ -6046,6 +6046,6 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  /zod@3.22.1:
-    resolution: {integrity: sha512-+qUhAMl414+Elh+fRNtpU+byrwjDFOS1N7NioLY+tSlcADTx4TkCUua/hxJvxwDXcV4397/nZ420jy4n4+3WUg==}
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
