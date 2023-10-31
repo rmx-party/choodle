@@ -48,12 +48,16 @@
     return false;
   };
 
-  const sortedGuesses = (guesses) => {
-    return fp.sortBy(['createdAt'], guesses);
+  const sortedByCreatedAt = (thingsWithCreatedAt) => {
+    return fp.sortBy(['createdAt'], thingsWithCreatedAt);
   };
 
   const gameFromChallenge = (challenge) => {
-    return {currentChallenge: {...challenge, challenger: currentChoodler}, guessResults: []}
+    return {
+      currentChallenge: {...challenge, challenger: currentChoodler},
+      guessResults: [],
+      createdAt: challenge.createdAt
+    }
   }
 
   onMount(async () => {
@@ -79,7 +83,7 @@
 
     myGames = fp.map(
       (game) => {
-        return {...game, guessResults: sortedGuesses(game.guessResults)};
+        return {...game, guessResults: sortedByCreatedAt(game.guessResults)};
       },
       fp.filter((game) => {
         return (
@@ -88,6 +92,7 @@
       }, data.games)
     );
     myGames = [...myGames, ...fp.map(c => gameFromChallenge(c), currentChoodlerChallenges)]
+    myGames = sortedByCreatedAt(myGames)
     console.log(`myGames`, myGames);
 
     loading.set(false);
