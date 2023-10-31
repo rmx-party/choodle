@@ -13,12 +13,12 @@
   import { loading } from '$lib/store';
   import { PUBLIC_ISR_BYPASS_TOKEN } from '$env/static/public'
 
-  export const config = {
-    isr: {
-      expiration: 600,
-      bypassToken: PUBLIC_ISR_BYPASS_TOKEN
-    }
-  }
+  // export const config = {
+  //   isr: {
+  //     expiration: 600,
+  //     bypassToken: PUBLIC_ISR_BYPASS_TOKEN
+  //   }
+  // }
 
   export let data;
 
