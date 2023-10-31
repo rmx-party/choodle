@@ -1,5 +1,8 @@
 import {cachedReadOnlyClient, readOnlyClient} from "$lib/CMSUtils";
-import {loading} from "$lib/store";
+
+export const config = {
+  runtime: 'edge'
+}
 
 export async function load({params}) {
   const challenge = await readOnlyClient.fetch(`*[_type == "challenge" && _id == "${params.id}"]{..., challenger->{...}, choodle->{...}, gamePromptRef->{...}} [0]`);

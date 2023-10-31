@@ -1,9 +1,7 @@
-import {readOnlyClient} from "$lib/CMSUtils";
-import { loading } from "$lib/store";
+import {cachedReadOnlyClient} from "$lib/CMSUtils";
 
 export async function load({params}) {
-  loading.set(true)
   return {
-    howto: readOnlyClient.fetch(`*[_type == "howto"] | order(_createdAt) [0]`)
+    howto: cachedReadOnlyClient.fetch(`*[_type == "howto"] | order(_createdAt) [0]`)
   };
 }

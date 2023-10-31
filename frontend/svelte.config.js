@@ -18,7 +18,7 @@ const config = {
 
   kit: {
     adapter: adapter({
-      runtime: 'edge',
+      runtime: 'nodejs18.x',
       external: ['$app/stores']
     }),
     version: {
