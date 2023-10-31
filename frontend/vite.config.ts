@@ -13,7 +13,7 @@ export default defineConfig({
     //   project: "javascript-sveltekit",
     // },
     autoInstrument: {
-      load: false,
+      load: true,
       serverLoad: false,
     },
   }), sveltekit()],
