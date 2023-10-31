@@ -147,9 +147,11 @@
           <DashboardGameEntry currentChoodler={currentChoodler} game={myTurnGame}
                               gameListUserUnknownText={data.copy.gameListUserUnknownText}/>
         {/each}
-        <Button variant="primary" colour="yellow" on:click={startGame} style="margin: 3rem auto;">
-          {data.copy.startGameButtonText}
-        </Button>
+        <div class="centre-container">
+          <Button variant="secondary" colour="yellow" on:click={startGame} style="margin: 1rem auto; flex-grow: 0;">
+            {data.copy.startGameButtonText}
+          </Button>
+        </div>
         <span class="game-list-heading">Their Turn</span>
         {#each theirTurnGames as theirTurnGame}
           <DashboardGameEntry currentChoodler={currentChoodler} game={theirTurnGame}
@@ -165,6 +167,12 @@
 </LayoutContainer>
 
 <style>
+  .centre-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   header {
     display: block;
     width: 100%;
