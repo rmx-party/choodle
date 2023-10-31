@@ -3,13 +3,11 @@ import {sveltekit} from '@sveltejs/kit/vite';
 import {defineConfig} from 'vitest/config';
 import * as path from 'path';
 
-console.log(`sentry token: ${process.env.SENTRY_AUTH_TOKEN}`);
 export default defineConfig({
     plugins: [sentrySvelteKit({
       sourceMapsUploadOptions: {
         org: "rmx-party",
         project: "javascript-sveltekit",
-        authToken: process.env.SENTRY_AUTH_TOKEN,
       }
     }), sveltekit()],
     build: {
