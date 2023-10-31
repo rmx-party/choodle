@@ -14,7 +14,7 @@ export default defineConfig({
     // },
     autoInstrument: {
       load: true,
-      serverLoad: false,
+      serverLoad: true,
     },
   }), sveltekit()],
   build: {
