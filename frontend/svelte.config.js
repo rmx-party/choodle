@@ -12,16 +12,20 @@ if (process.env.VERCEL === '1') {
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-    // Consult https://kit.svelte.dev/docs/integrations#preprocessors
-    // for more information about preprocessors
-    preprocess: vitePreprocess(),
+  // Consult https://kit.svelte.dev/docs/integrations#preprocessors
+  // for more information about preprocessors
+  preprocess: vitePreprocess(),
 
-    kit: {
-        adapter: adapter(),
-        version: {
-            name: name
-        }
-    },
+  kit: {
+    adapter: adapter({
+      precompress: true,
+    }),
+    version: {
+      name: name
+    }
+  },
 };
 
 export default config;
+
+
