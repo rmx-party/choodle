@@ -1,7 +1,8 @@
 import {cachedReadOnlyClient, readOnlyClient} from "$lib/CMSUtils";
 
 export const config = {
-  runtime: 'edge'
+  runtime: 'edge',
+  ssr: false
 }
 
 export async function load({params}) {
