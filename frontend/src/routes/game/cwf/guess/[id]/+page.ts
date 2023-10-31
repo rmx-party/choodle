@@ -2,6 +2,7 @@ import {cachedReadOnlyClient, readOnlyClient} from "$lib/CMSUtils";
 
 export const config = {
   runtime: 'edge',
+  external: ['$app/stores']
 }
 
 export async function load({params}) {
