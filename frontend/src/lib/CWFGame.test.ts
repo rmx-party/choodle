@@ -4,14 +4,15 @@ import {
   createCWFGame, createEmptyGameFromChallenge,
   isGameComplete,
   isNormalizedGameComplete,
-  normalizedGameStreakCount, otherPlayer, streakCount, StreakGuessingGame,
+  normalizedGameStreakCount, otherPlayer, streakCount, whichAction, whoseTurn,
+} from "$lib/CWFGame";
+import type {
+  StreakGuessingGame,
   StreakGuessingGameChallenge,
   StreakGuessingGameDrawing, StreakGuessingGameGuessResult,
   StreakGuessingGamePlayer,
-  StreakGuessingGamePrompt, whichAction, whoseTurn,
-} from "$lib/CWFGame";
-import fp from "lodash/fp.js";
-
+  StreakGuessingGamePrompt
+} from "$lib/CWFGame"
 
 describe("StreakGuessingGame", () => {
   const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
@@ -191,7 +192,10 @@ describe("StreakGuessingGame", () => {
       const game: StreakGuessingGame = {
         _id: challengeThatHasNotBeenDrawn._id,
         createdAt: challengeThatHasNotBeenDrawn.createdAt,
-        currentChallenge: {...challengeThatHasNotBeenDrawn, challenger: challengeThatHasNotBeenDrawn.challenger},
+        currentChallenge: {
+          ...challengeThatHasBeenDrawnByPlayer1,
+          challenger: challengeThatHasBeenDrawnByPlayer1.challenger
+        },
         player1: player1,
         player2: player2,
         guessResults: [correctInOneGuess],
