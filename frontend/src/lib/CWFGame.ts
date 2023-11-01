@@ -1,24 +1,30 @@
-import fp from 'lodash/fp';
+import fp from "lodash/fp";
 
-export type CWFGame = {
+export type NormalizedCWFGame = {
   player1: string;
   player2: string;
   guessResults: boolean[];
 };
 
-export const isNormalizedGameComplete = (guessResults: []) => {
-  return !fp.isEmpty(fp.filter((guess) => guess === false, guessResults));
+export const isNormalizedGameComplete = (guessResults: boolean[]) => {
+  return fp.any((guess) => guess === false, guessResults);
 };
 
-export const normalizeGame = (game): CWFGame => {
+export const normalizeGame = (game): NormalizedCWFGame => {
   const normalizedGame = createCWFGame(game?.player1?._id, game?.player2?._id);
   return {
+    ...game,
     ...normalizedGame,
-    guessResults: fp.map((result) => result.guessedCorrectly, [...game.guessResults]),
+    guessResults: fp.map((result) => {
+      if ([true, false].includes(result)) return result;
+      return result.guessedCorrectly;
+    }, [
+      ...game.guessResults,
+    ]),
   };
 };
 
-export const createCWFGame = (player1Id, player2Id): CWFGame => {
+export const createCWFGame = (player1Id, player2Id): NormalizedCWFGame => {
   return {
     player1: player1Id,
     player2: player2Id,
@@ -26,17 +32,20 @@ export const createCWFGame = (player1Id, player2Id): CWFGame => {
   };
 };
 
-export const addGuessToGame = (game: CWFGame, guessResult: boolean): CWFGame => {
+export const addGuessToGame = (
+  game: NormalizedCWFGame,
+  guessResult: boolean,
+): NormalizedCWFGame => {
   return {
     ...game,
     guessResults: [...game.guessResults, guessResult],
   };
 };
 
-export const isGameComplete = (game: CWFGame) => {
-  return fp.any((result) => result === false, normalizeGame(game).guessResults);
+export const isGameComplete = (game) => {
+  return isNormalizedGameComplete(normalizeGame(game).guessResults);
 };
 
-export const streakCount = (game: CWFGame) => {
+export const streakCount = (game: NormalizedCWFGame) => {
   return fp.filter((result) => result, game.guessResults).length;
 };

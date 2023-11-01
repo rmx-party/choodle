@@ -1,135 +1,140 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 import {
   addGuessToGame,
   createCWFGame,
-  isNormalizedGameComplete,
   isGameComplete,
+  isNormalizedGameComplete,
   streakCount,
-} from '$lib/CWFGame';
+} from "$lib/CWFGame";
 
-describe('CWFGame', () => {
-  describe('creation', () => {
-    const game = createCWFGame('player1-id', 'player2-id');
+describe("CWFGame", () => {
+  describe("creation", () => {
+    const game = createCWFGame("player1-id", "player2-id");
 
-    it('sets challenger as player1', () => {
-      expect(game.player1).toEqual('player1-id');
+    it("sets challenger as player1", () => {
+      expect(game.player1).toEqual("player1-id");
     });
 
-    it('sets first guesser as player2', () => {
-      expect(game.player2).toEqual('player2-id');
+    it("sets first guesser as player2", () => {
+      expect(game.player2).toEqual("player2-id");
     });
 
-    it('sets guesses to an empty list', () => {
+    it("sets guesses to an empty list", () => {
       expect(game.guessResults).toEqual([]);
     });
 
-    it('is not complete', () => {
+    it("is not complete", () => {
       expect(isGameComplete(game)).toBeFalsy();
     });
 
-    it('has a streak of 0', () => {
+    it("has a streak of 0", () => {
       expect(streakCount(game)).toEqual(0);
     });
   });
 
-  describe('with one incorrect guess', () => {
+  describe("with one incorrect guess", () => {
     const gameWithOneIncorrectGuess = addGuessToGame(
-      createCWFGame('player1-id', 'player2-id'),
-      false
+      createCWFGame("player1-id", "player2-id"),
+      false,
     );
 
-    it('contains the guess', () => {
+    it("contains the guess", () => {
       expect(gameWithOneIncorrectGuess.guessResults.length).toEqual(1);
     });
 
-    it('has a streak of 0', () => {
+    it("has a streak of 0", () => {
       expect(streakCount(gameWithOneIncorrectGuess)).toEqual(0);
     });
 
-    it('is complete', () => {
+    it("is complete", () => {
       expect(isGameComplete(gameWithOneIncorrectGuess)).toBeTruthy();
     });
   });
 
-  describe('with one correct guess', () => {
-    const game = createCWFGame('player1-id', 'player2-id');
+  describe("with one correct guess", () => {
+    const game = createCWFGame("player1-id", "player2-id");
     const gameWithOneCorrectGuess = addGuessToGame(game, true);
 
-    it('contains the first guess', () => {
+    it("contains the first guess", () => {
       expect(gameWithOneCorrectGuess.guessResults).toEqual([true]);
     });
 
-    it('the game is not complete', () => {
+    it("the game is not complete", () => {
       expect(isGameComplete(gameWithOneCorrectGuess)).toBeFalsy();
     });
 
-    it('has a streak of 1', () => {
+    it("has a streak of 1", () => {
       expect(streakCount(gameWithOneCorrectGuess)).toEqual(1);
     });
 
-    describe('with one correct guess and one incorrect guess', () => {
+    describe("with one correct guess and one incorrect guess", () => {
       const gameWithOneCorrectGuessAndOneIncorrectGuess = addGuessToGame(
         gameWithOneCorrectGuess,
-        false
+        false,
       );
 
-      it('contains the second guess', () => {
-        expect(gameWithOneCorrectGuessAndOneIncorrectGuess.guessResults.length).toEqual(2);
+      it("contains the second guess", () => {
+        expect(gameWithOneCorrectGuessAndOneIncorrectGuess.guessResults.length)
+          .toEqual(2);
       });
 
-      it('is complete', () => {
-        expect(isGameComplete(gameWithOneCorrectGuessAndOneIncorrectGuess)).toBeTruthy();
+      it("is complete", () => {
+        expect(isGameComplete(gameWithOneCorrectGuessAndOneIncorrectGuess))
+          .toBeTruthy();
       });
     });
 
-    describe('with multiple correct guesses', () => {
+    describe("with multiple correct guesses", () => {
       const gameWithMultipleCorrectGuesses = addGuessToGame(
         addGuessToGame(addGuessToGame(gameWithOneCorrectGuess, true), true),
-        true
+        true,
       );
 
-      it('is not complete', () => {
+      it("is not complete", () => {
         expect(isGameComplete(gameWithMultipleCorrectGuesses)).toBeFalsy();
       });
 
-      it('has a streak of 4', () => {
+      it("has a streak of 4", () => {
         expect(streakCount(gameWithMultipleCorrectGuesses)).toEqual(4);
       });
     });
 
-    describe('with multiple correct guesses and an incorrect guess', () => {
+    describe("with multiple correct guesses and an incorrect guess", () => {
       const gameWithMultipleCorrectGuessesAndAnIncorrectGuess = addGuessToGame(
         addGuessToGame(addGuessToGame(gameWithOneCorrectGuess, true), false),
-        true
+        true,
       );
 
-      it('is complete', () => {
-        expect(isGameComplete(gameWithMultipleCorrectGuessesAndAnIncorrectGuess)).toBeTruthy();
+      it("is complete", () => {
+        expect(
+          isGameComplete(gameWithMultipleCorrectGuessesAndAnIncorrectGuess),
+        ).toBeTruthy();
       });
 
-      it('has a streak of 3', () => {
-        expect(streakCount(gameWithMultipleCorrectGuessesAndAnIncorrectGuess)).toEqual(3);
+      it("has a streak of 3", () => {
+        expect(streakCount(gameWithMultipleCorrectGuessesAndAnIncorrectGuess))
+          .toEqual(3);
       });
     });
   });
 
-  describe('gameComplete', () => {
-    it('is true when a single guessResult is false', () => {
+  describe("gameComplete", () => {
+    it("is true when a single guessResult is false", () => {
       expect(isNormalizedGameComplete([false])).toBeTruthy();
     });
-    it('is false when a single guessResult is true', () => {
+    it("is false when a single guessResult is true", () => {
       expect(isNormalizedGameComplete([true])).toBeFalsy();
     });
-    it('is false when a single guessResult is null', () => {
+    it("is false when a single guessResult is null", () => {
       expect(isNormalizedGameComplete([null])).toBeFalsy();
     });
-    it('is true when a guessResult contains false', () => {
+    it("is true when a guessResult contains false", () => {
       expect(isNormalizedGameComplete([true, false, true])).toBeTruthy();
     });
-    it('is false when all guessResults are true', () => {
+    it("is false when all guessResults are true", () => {
       expect(isNormalizedGameComplete([true, true, true])).toBeFalsy();
     });
-    it('is false when a guessResult contains null', () => {
+    it("is false when a guessResult contains null", () => {
       expect(isNormalizedGameComplete([true, true, null])).toBeFalsy();
     });
   });
