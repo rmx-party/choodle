@@ -53,6 +53,16 @@ const streakCount = (game: StreakGuessingGame): number => {
   return fp.size(fp.filter(guessResult => guessResult.guessedCorrectly, game.guessResults))
 }
 
+const createEmptyGameFromChallenge = (challenge: StreakGuessingGameChallenge): StreakGuessingGame => {
+  return {
+    _id: challenge._id,
+    createdAt: challenge.createdAt,
+    currentChallenge: {...challenge, challenger: challenge.challenger},
+    player1: challenge.challenger,
+    guessResults: [],
+  }
+}
+
 describe("StreakGuessingGame", () => {
   const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
   const challenger: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
@@ -78,22 +88,21 @@ describe("StreakGuessingGame", () => {
     guesses: ["baz"],
     guessedCorrectly: true
   }
+  const emptyGame: StreakGuessingGame = {
+    _id: challenge._id,
+    createdAt: challenge.createdAt,
+    currentChallenge: {...challenge, challenger: challenge.challenger},
+    player1: challenger,
+    guessResults: [],
+  }
 
   describe("constructing a bare game from a challenge", () => {
+    expect(createEmptyGameFromChallenge(challenge)).toEqual(emptyGame)
   });
 
   describe("streak counting", () => {
     it("starts at zero", () => {
-      // FIXME: game doesn't exist in this case
-      const game: StreakGuessingGame = {
-        _id: challenge._id,
-        createdAt: challenge.createdAt,
-        currentChallenge: {...challenge, challenger: challenge.challenger},
-        player1: challenger,
-        guessResults: [],
-      }
-
-      expect(streakCount(game)).toBe(0)
+      expect(streakCount(emptyGame)).toBe(0)
     });
 
     it("does not start a streak if the first guesser has not completed guessing", () => {
