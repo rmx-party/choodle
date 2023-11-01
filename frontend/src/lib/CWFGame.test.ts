@@ -33,11 +33,16 @@ type StreakGuessingGamePlayer = SanityDocumentMetadata & {
   [key: string]: any
 } & {}
 
+type StreakGuessingGameDrawing = SanityDocumentMetadata & {
+  [key: string]: any
+} & {}
+
 type StreakGuessingGameChallenge = SanityDocumentMetadata & {
   [key: string]: any
 } & {
   challenger: StreakGuessingGamePlayer,
   prompt: StreakGuessingGamePrompt,
+  choodle?: StreakGuessingGameDrawing,
 }
 
 type StreakGuessingGame = SanityDocumentMetadata & {
@@ -65,39 +70,72 @@ const createEmptyGameFromChallenge = (challenge: StreakGuessingGameChallenge): S
 
 describe("StreakGuessingGame", () => {
   const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
-  const challenger: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
-  const guesser: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
-  const challenge: StreakGuessingGameChallenge = {_id: "", challenger, createdAt: "", prompt}
+  const player1: StreakGuessingGamePlayer = {_id: "player-1", createdAt: ""}
+  const player2: StreakGuessingGamePlayer = {_id: "player-2", createdAt: ""}
+  const challengeThatHasNotBeenDrawn: StreakGuessingGameChallenge = {
+    _id: "",
+    challenger: player1,
+    createdAt: "",
+    prompt
+  }
+  const drawing: StreakGuessingGameDrawing = {
+    _id: "drawing-1",
+    createdAt: "",
+  }
+  const challengeThatHasBeenDrawn: StreakGuessingGameChallenge = {
+    _id: "",
+    challenger: player1,
+    createdAt: "",
+    prompt: prompt,
+    choodle: drawing,
+  }
   const incompleteGuess: StreakGuessingGameGuessResult = {
     _id: "",
-    challenge: challenge,
+    challenge: challengeThatHasNotBeenDrawn,
     createdAt: "",
     guesses: ["foo"]
   }
   const incorrectInOneGuess: StreakGuessingGameGuessResult = {
     _id: "",
-    challenge: challenge,
+    challenge: challengeThatHasNotBeenDrawn,
     createdAt: "",
     guesses: ["bar"],
     guessedCorrectly: false,
   }
   const correctInOneGuess: StreakGuessingGameGuessResult = {
     _id: "",
-    challenge: challenge,
+    challenge: challengeThatHasNotBeenDrawn,
     createdAt: "",
     guesses: ["baz"],
     guessedCorrectly: true
   }
   const emptyGame: StreakGuessingGame = {
-    _id: challenge._id,
-    createdAt: challenge.createdAt,
-    currentChallenge: {...challenge, challenger: challenge.challenger},
-    player1: challenger,
+    _id: challengeThatHasNotBeenDrawn._id,
+    createdAt: challengeThatHasNotBeenDrawn.createdAt,
+    currentChallenge: {...challengeThatHasNotBeenDrawn, challenger: challengeThatHasNotBeenDrawn.challenger},
+    player1: player1,
+    guessResults: [],
+  }
+  const gameWithDrawingThatHasNoOtherPlayer: StreakGuessingGame = {
+    _id: challengeThatHasNotBeenDrawn._id,
+    createdAt: challengeThatHasNotBeenDrawn.createdAt,
+    currentChallenge: {...challengeThatHasBeenDrawn, challenger: challengeThatHasBeenDrawn.challenger},
+    choodle: drawing,
+    player1: player1,
+    guessResults: [],
+  }
+  const gameWithDrawingThatHasNotBeenGuessed: StreakGuessingGame = {
+    _id: challengeThatHasNotBeenDrawn._id,
+    createdAt: challengeThatHasNotBeenDrawn.createdAt,
+    currentChallenge: {...challengeThatHasBeenDrawn, challenger: challengeThatHasBeenDrawn.challenger},
+    choodle: drawing,
+    player1: player1,
+    player2: player2,
     guessResults: [],
   }
 
   describe("constructing a bare game from a challenge", () => {
-    expect(createEmptyGameFromChallenge(challenge)).toEqual(emptyGame)
+    expect(createEmptyGameFromChallenge(challengeThatHasNotBeenDrawn)).toEqual(emptyGame)
   });
 
   describe("streak counting", () => {
@@ -107,11 +145,11 @@ describe("StreakGuessingGame", () => {
 
     it("does not start a streak if the first guesser has not completed guessing", () => {
       const game: StreakGuessingGame = {
-        _id: challenge._id,
-        createdAt: challenge.createdAt,
-        currentChallenge: {...challenge, challenger: challenge.challenger},
-        player1: challenger,
-        player2: guesser,
+        _id: challengeThatHasNotBeenDrawn._id,
+        createdAt: challengeThatHasNotBeenDrawn.createdAt,
+        currentChallenge: {...challengeThatHasNotBeenDrawn, challenger: challengeThatHasNotBeenDrawn.challenger},
+        player1: player1,
+        player2: player2,
         guessResults: [incompleteGuess],
       }
 
@@ -120,11 +158,11 @@ describe("StreakGuessingGame", () => {
 
     it("does not start a streak if the first guesser has guessed incorrectly", () => {
       const game: StreakGuessingGame = {
-        _id: challenge._id,
-        createdAt: challenge.createdAt,
-        currentChallenge: {...challenge, challenger: challenge.challenger},
-        player1: challenger,
-        player2: guesser,
+        _id: challengeThatHasNotBeenDrawn._id,
+        createdAt: challengeThatHasNotBeenDrawn.createdAt,
+        currentChallenge: {...challengeThatHasNotBeenDrawn, challenger: challengeThatHasNotBeenDrawn.challenger},
+        player1: player1,
+        player2: player2,
         guessResults: [incorrectInOneGuess],
       }
 
@@ -133,11 +171,11 @@ describe("StreakGuessingGame", () => {
 
     it("starts a streak if the first guesser has guessed correctly on the first try", () => {
       const game: StreakGuessingGame = {
-        _id: challenge._id,
-        createdAt: challenge.createdAt,
-        currentChallenge: {...challenge, challenger: challenge.challenger},
-        player1: challenger,
-        player2: guesser,
+        _id: challengeThatHasNotBeenDrawn._id,
+        createdAt: challengeThatHasNotBeenDrawn.createdAt,
+        currentChallenge: {...challengeThatHasNotBeenDrawn, challenger: challengeThatHasNotBeenDrawn.challenger},
+        player1: player1,
+        player2: player2,
         guessResults: [correctInOneGuess],
       }
 
@@ -146,17 +184,68 @@ describe("StreakGuessingGame", () => {
 
     it("ends a streak if the second guesser has guessed incorrectly on the first try", () => {
       const game: StreakGuessingGame = {
-        _id: challenge._id,
-        createdAt: challenge.createdAt,
-        currentChallenge: {...challenge, challenger: challenge.challenger},
-        player1: challenger,
-        player2: guesser,
+        _id: challengeThatHasNotBeenDrawn._id,
+        createdAt: challengeThatHasNotBeenDrawn.createdAt,
+        currentChallenge: {...challengeThatHasNotBeenDrawn, challenger: challengeThatHasNotBeenDrawn.challenger},
+        player1: player1,
+        player2: player2,
         guessResults: [correctInOneGuess, incorrectInOneGuess],
       }
 
       expect(streakCount(game)).toBe(1)
     });
   });
+
+  // what is the current challenge?
+  //   when currentChallenge has not been created yet
+  //   when currentChallenge exists but has not been drawn yet
+  //   when currentChallenge has been drawn, and guessed correctly
+
+  const whoseTurn = (game: StreakGuessingGame): StreakGuessingGamePlayer => {
+    if (!game.currentChallenge.choodle) return game.player1
+    if (!game.player2) return game.player1
+    return game.player2
+  }
+
+  const whichAction = (game: StreakGuessingGame): string => {
+    if (!game.currentChallenge.choodle) return "draw"
+    if (!game.player2) return "share"
+    return "guess"
+  }
+
+  describe("whose turn is it anyway?", () => {
+    describe("a challenge has been created, but not yet drawn", () => {
+      it("is the player1's turn", () => {
+        expect(whoseTurn(emptyGame)).toEqual(player1)
+      })
+
+      it("needs to be drawn", () => {
+        expect(whichAction(emptyGame)).toEqual("draw")
+      })
+    })
+
+    describe("a challenge has been created and drawn, but not yet opened by a second player", () => {
+      it("is player1's turn", () => {
+        expect(whoseTurn(gameWithDrawingThatHasNoOtherPlayer)).toEqual(player1)
+      })
+
+      it("needs to be shared", () => {
+        expect(whichAction(gameWithDrawingThatHasNoOtherPlayer)).toEqual("share")
+      })
+    })
+
+    describe("a challenge has been created and drawn, but not yet guessed by the second player", () => {
+      it("is player2's turn", () => {
+        expect(whoseTurn(gameWithDrawingThatHasNotBeenGuessed)).toEqual(player2)
+      })
+
+      it("needs to be guessed", () => {
+        expect(whichAction(gameWithDrawingThatHasNotBeenGuessed)).toEqual("guess")
+      })
+    });
+  })
+
+  // what is the next action?
 });
 
 describe("NormalizedCWFGame", () => {
