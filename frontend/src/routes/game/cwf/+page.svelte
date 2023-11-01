@@ -143,6 +143,10 @@
 						game={myTurnGame}
 						gameListUserUnknownText={data.copy.gameListUserUnknownText}
 					/>
+				{:else}
+					<div class="centre-container">
+						<p>All caught up</p>
+					</div>
 				{/each}
 				<div class="centre-container">
 					<Button
@@ -161,6 +165,10 @@
 						game={theirTurnGame}
 						gameListUserUnknownText={data.copy.gameListUserUnknownText}
 					/>
+				{:else}
+					<div class="centre-container">
+						<p>Your challenges to other players will show up here.</p>
+					</div>
 				{/each}
 			</section>
 		{/if}
