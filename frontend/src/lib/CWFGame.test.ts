@@ -239,7 +239,8 @@ describe("StreakGuessingGame", () => {
     it("is player2 when the current drawer is player1", () => {
       expect(otherPlayer(player1, gameWithDrawingThatHasNotBeenGuessed)).toEqual(player2)
     })
-  });
+  })
+
   describe("constructing a bare game from a challenge", () => {
     expect(createEmptyGameFromChallenge(challengeThatHasNotBeenDrawn)).toEqual(emptyGame)
   });
@@ -364,11 +365,17 @@ describe("StreakGuessingGame", () => {
         })
       })
 
-      describe("player2 has picked a prompt and has drawn", () => {
+      describe("player1 guesses correctly and has not yet picked a new prompt", () => {
+        it("is player 1's turn", () => {
 
+        });
+
+        it("needs to be picked", () => {
+
+        });
       })
 
-      describe("player1 guesses correctly and has not yet picked a new prompt", () => {
+      describe("player1 guesses incorrectly but has not completed guessing", () => {
 
       })
 
