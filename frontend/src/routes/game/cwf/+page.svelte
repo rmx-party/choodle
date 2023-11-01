@@ -148,17 +148,11 @@
           </Button>
         </div>
         <span class="game-list-heading">Their Turn</span>
-        {#each theirTurnGames as theirTurnGame (theirTurnGame._id)}
-          <DashboardGameEntry
-            {currentChoodler}
-            game={theirTurnGame}
-            gameListUserUnknownText={data.copy.gameListUserUnknownText}
-          />
-        {:else}
-          <div class="centre-container">
-            <p>Your challenges to other players will show up here.</p>
-          </div>
-        {/each}
+        <DashboardGameEntry
+          {currentChoodler}
+          game={theirTurnGames[0]}
+          gameListUserUnknownText={data.copy.gameListUserUnknownText}
+        />
       </section>
     {/if}
 

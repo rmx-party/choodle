@@ -1,19 +1,19 @@
 <script lang="ts">
-  import { urlFor } from '$lib/PersistedImagesUtils.js';
-  import { writable } from 'svelte/store';
+  import {urlFor} from '$lib/PersistedImagesUtils.js';
+  import {writable} from 'svelte/store';
   import GuessingHUD from '../../../../../components/GuessingHUD.svelte';
   import TopBar from '../../../../../components/TopBar.svelte';
   import Button from '../../../../../components/Button.svelte';
-  import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
+  import {goto} from '$app/navigation';
+  import {page} from '$app/stores';
   import MetaData from '../../../../../components/MetaData.svelte';
-  import { onMount } from 'svelte';
-  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils';
-  import { browser } from '$app/environment';
+  import {onMount} from 'svelte';
+  import {getDeviceId, getEmail, getUsername, locateCreator} from '$lib/CreatorUtils';
+  import {browser} from '$app/environment';
   import fp from 'lodash/fp';
   import GuessingInterface from '../../GuessingInterface.svelte';
   import GuessInput from '../../../../../components/GuessInput.svelte';
-  import { toHTML } from '@portabletext/to-html';
+  import {toHTML} from '@portabletext/to-html';
   import {
     choodleCreatorUsernameKey,
     choodleYellow,
@@ -21,12 +21,12 @@
   } from '$lib/Configuration';
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
-  import { readOnlyClient, readWriteClient } from '$lib/CMSUtils';
+  import {readOnlyClient, readWriteClient} from '$lib/CMSUtils';
   import Hints from '../../Hints.svelte';
-  import { closeDialog, loading, loadingMessage, openDialog } from '$lib/store';
+  import {closeDialog, loading, loadingMessage, openDialog} from '$lib/store';
   import Dialog from '../../../../../components/Dialog.svelte';
   import localforage from 'localforage';
-  import { isNormalizedGameComplete, normalizeGame } from '$lib/CWFGame';
+  import {isNormalizedGameComplete, normalizeGame} from '$lib/CWFGame';
 
   loadingMessage.set('loading');
 
@@ -57,8 +57,8 @@
   };
 
   const createCounterChallenge = async () => {
-    console.log({ game });
-    console.log({ isPlayerInGame: isPlayerInGame(game, guesser) });
+    console.log({game});
+    console.log({isPlayerInGame: isPlayerInGame(game, guesser)});
 
     if (!isPlayerInGame(game, guesser)) goto(`/game/cwf/pick`);
 
@@ -69,11 +69,11 @@
       .create({
         _id: challengeId,
         _type: 'challenge',
-        challenger: { _ref: guesser._id },
-        gameRef: { _ref: game._id },
+        challenger: {_ref: guesser._id},
+        gameRef: {_ref: game._id},
       })
-      .patch(game._id, (p) => p.set({ currentChallenge: { _ref: challengeId } }))
-      .commit({ autoGenerateArrayKeys: true });
+      .patch(game._id, (p) => p.set({currentChallenge: {_ref: challengeId}}))
+      .commit({autoGenerateArrayKeys: true});
     console.log(transaction);
     goto(`/game/cwf/pick/${challengeId}`);
   };
@@ -84,10 +84,10 @@
     );
   };
 
-  const locateGame = async ({ challengerId, guesserId, guessId }) => {
+  const locateGame = async ({challengerId, guesserId, guessId}) => {
     const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults[]->{...}, player1->{...}, player2->{...}, challenge->{...}}`;
     let locatedGame = (await readOnlyClient.fetch(query))[0];
-    console.log({ locatedGame });
+    console.log({locatedGame});
     if (locatedGame && challengeHasBeenGuessed(locatedGame, data.challenge)) {
       console.log(
         'this challenge has already been guessed within this game, do not create or update the game'
@@ -99,48 +99,51 @@
       locatedGame = await readWriteClient.create(
         {
           _type: 'cwfgame',
-          player1: { _ref: challengerId },
-          player2: { _ref: guesserId },
-          currentChallenge: { _ref: data.challenge._id },
-          guessResults: [{ _ref: guessId }],
+          player1: {_ref: challengerId},
+          player2: {_ref: guesserId},
+          currentChallenge: {_ref: data.challenge._id},
         },
-        { autoGenerateArrayKeys: true }
+        {autoGenerateArrayKeys: true}
       );
     } else {
       console.log('update');
-      console.log({ game: locatedGame });
+      console.log({game: locatedGame});
       const patch = readWriteClient.patch(locatedGame._id);
       if (locatedGame.guessResults.map((gr) => gr._id).includes(guess._id)) {
         console.log('we already have this guess');
       } else {
         console.log('adding a guessResult');
-        patch.append('guessResults', [{ _ref: guessId }]);
+        patch.append('guessResults', [{_ref: guessId}]);
       }
-      patch.commit({ autoGenerateArrayKeys: true });
+      patch.commit({autoGenerateArrayKeys: true});
     }
 
     return locatedGame;
   };
 
   export const locateGuess = async ({
-    guesserId,
-    challengeId,
-  }: {
+                                      guesserId,
+                                      challengeId,
+                                    }: {
     guesserId: string | undefined;
     challengeId: string | undefined;
   }) => {
+    console.log('locateGuess')
     const query = `*[_type == "guess"][guesser._ref match "${guesserId}" && challenge._ref match "${challengeId}"]`;
     let guess = (await readOnlyClient.fetch(query))[0];
+    console.log(guess)
     if (!guess) {
+      console.log('create a new guess')
       guess = await readWriteClient.create(
         {
           _type: 'guess',
-          guesser: { _ref: guesserId },
-          challenge: { _ref: data.challenge._id },
+          guesser: {_ref: guesserId},
+          challenge: {_ref: data.challenge._id},
         },
-        { autoGenerateArrayKeys: true }
+        {autoGenerateArrayKeys: true}
       );
     }
+    console.log('returning that guess')
     return guess;
   };
 
@@ -152,21 +155,22 @@
     console.log(`adding guess, resolving result to`, guessedCorrectly);
     const guessResult = readWriteClient
       .patch(guess._id)
-      .setIfMissing({ guesses: [] })
+      .setIfMissing({guesses: []})
       .append('guesses', [$currentGuess.join('')]);
 
     if (guessedCorrectly !== null) {
-      guessResult.set({ guessedCorrectly });
+      guessResult.set({guessedCorrectly});
     }
-    const finalGuessResult = await guessResult.commit({ autoGenerateArrayKeys: true });
-    console.log({ finalGuessResult });
+    const finalGuessResult = await guessResult.commit({autoGenerateArrayKeys: true});
+    console.log({finalGuessResult});
 
     if (guessedCorrectly !== null) {
       console.log('guess completed, adding to game');
       await readWriteClient
         .patch(game._id)
-        .append('guessResults', [{ _ref: finalGuessResult._id }])
-        .commit({ autoGenerateArrayKeys: true });
+        .setIfMissing({guessResults: []})
+        .append('guessResults', [{_ref: finalGuessResult._id}])
+        .commit({autoGenerateArrayKeys: true});
     }
   };
 
@@ -217,7 +221,7 @@
     const url = `${window.location.origin}/game/cwf/guess/${data.challenge._id}`;
     const shareCopy = data.copy.share_messageText || '';
     const text = [shareCopy, gamePromptTiles, url].join(`\n`);
-    const shareable = { text };
+    const shareable = {text};
 
     console.log(`sharing:`, shareable);
 
@@ -241,7 +245,7 @@
 
     readWriteClient
       .patch(guess._id)
-      .setIfMissing({ hintsUsed: [] })
+      .setIfMissing({hintsUsed: []})
       .append('hintsUsed', [hint.text])
       .commit();
   };
@@ -267,7 +271,7 @@
       disableKeyboard = false;
       closeDialog(usernamePromptId);
       await localforage.setItem(choodleCreatorUsernameKey, username);
-      guesser = await locateCreator({ username, deviceId });
+      guesser = await locateCreator({username, deviceId});
       submitGuess();
       return;
     }
@@ -292,16 +296,16 @@
 
     email = await getEmail();
     username = (await getUsername()) || '';
-    guesser = await locateCreator({ email, deviceId, username });
+    guesser = await locateCreator({email, deviceId, username});
 
-    console.log({ challenge: data.challenge });
+    console.log({challenge: data.challenge});
     choodleOwner = data.challenge.challenger._id === guesser._id; // TODO: this is based on device+choodle, should be by creator account
 
-    console.log({ choodleOwner });
+    console.log({choodleOwner});
 
     if (choodleOwner) return loading.set(false);
 
-    guess = await locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id });
+    guess = await locateGuess({guesserId: guesser._id, challengeId: data.challenge._id});
 
     if (!choodleOwner) {
       game = await locateGame({
@@ -309,7 +313,7 @@
         guesserId: guesser._id,
         guessId: guess._id,
       });
-      console.log({ game });
+      console.log({game});
     }
 
     if (guess.guessedCorrectly) {
@@ -317,9 +321,9 @@
     }
 
     hints = [
-      { text: data.gamePrompt.hint, used: hintUsedInGuess(guess, data.gamePrompt.hint) },
-      { text: data.gamePrompt.hint_2, used: hintUsedInGuess(guess, data.gamePrompt.hint_2) },
-      { text: data.gamePrompt.hint_3, used: hintUsedInGuess(guess, data.gamePrompt.hint_3) },
+      {text: data.gamePrompt.hint, used: hintUsedInGuess(guess, data.gamePrompt.hint)},
+      {text: data.gamePrompt.hint_2, used: hintUsedInGuess(guess, data.gamePrompt.hint_2)},
+      {text: data.gamePrompt.hint_3, used: hintUsedInGuess(guess, data.gamePrompt.hint_3)},
     ];
 
     loading.set(false);
@@ -364,16 +368,16 @@
   </div>
 
   <ChoodleContainer --choodle-max-height-offset="27rem">
-    <img src={bestImageUrl(data.choodle)} alt="" />
+    <img src={bestImageUrl(data.choodle)} alt=""/>
   </ChoodleContainer>
 
   {#if choodleOwner}
     <h3><strong>{data.gamePrompt.prompt.toUpperCase()}</strong></h3>
     <div>
       <Button colour="yellow" on:click={share}
-        >{copiedToClipboard
-          ? data.copy.guess_copiedToClipboard
-          : data.copy.guess_shareButtonText}</Button
+      >{copiedToClipboard
+        ? data.copy.guess_copiedToClipboard
+        : data.copy.guess_shareButtonText}</Button
       >
     </div>
     <div>
@@ -433,7 +437,7 @@
       {disableKeyboard}
     >
       <div slot="between">
-        <Hints {hints} hintCta={data.copy.guess_needHintCtaText} {afterHint} />
+        <Hints {hints} hintCta={data.copy.guess_needHintCtaText} {afterHint}/>
       </div>
     </GuessingInterface>
     <Dialog id={usernamePromptId}>
@@ -442,8 +446,8 @@
       <label
         for="creator-username"
         style="text-align: left; display: block; font-family: Dejavu Sans Bold;"
-        >username
-        <br />
+      >username
+        <br/>
         <input
           bind:value={username}
           type="username"
