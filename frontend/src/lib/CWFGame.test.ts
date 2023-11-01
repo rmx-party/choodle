@@ -54,14 +54,37 @@ const streakCount = (game: StreakGuessingGame): number => {
 }
 
 describe("StreakGuessingGame", () => {
+  const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
+  const challenger: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
+  const guesser: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
+  const challenge: StreakGuessingGameChallenge = {_id: "", challenger, createdAt: "", prompt}
+  const incompleteGuess: StreakGuessingGameGuessResult = {
+    _id: "",
+    challenge: challenge,
+    createdAt: "",
+    guesses: ["foo"]
+  }
+  const incorrectInOneGuess: StreakGuessingGameGuessResult = {
+    _id: "",
+    challenge: challenge,
+    createdAt: "",
+    guesses: ["bar"],
+    guessedCorrectly: false,
+  }
+  const correctInOneGuess: StreakGuessingGameGuessResult = {
+    _id: "",
+    challenge: challenge,
+    createdAt: "",
+    guesses: ["baz"],
+    guessedCorrectly: true
+  }
+
   describe("constructing a bare game from a challenge", () => {
   });
+
   describe("streak counting", () => {
     it("starts at zero", () => {
       // FIXME: game doesn't exist in this case
-      const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
-      const challenger: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
-      const challenge: StreakGuessingGameChallenge = {_id: "", challenger, createdAt: "", prompt};
       const game: StreakGuessingGame = {
         _id: challenge._id,
         createdAt: challenge.createdAt,
@@ -74,16 +97,6 @@ describe("StreakGuessingGame", () => {
     });
 
     it("does not start a streak if the first guesser has not completed guessing", () => {
-      const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
-      const challenger: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
-      const guesser: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
-      const challenge: StreakGuessingGameChallenge = {_id: "", challenger, createdAt: "", prompt}
-      const incompleteGuess: StreakGuessingGameGuessResult = {
-        _id: "",
-        challenge: challenge,
-        createdAt: "",
-        guesses: ["foo"]
-      }
       const game: StreakGuessingGame = {
         _id: challenge._id,
         createdAt: challenge.createdAt,
@@ -97,48 +110,26 @@ describe("StreakGuessingGame", () => {
     })
 
     it("does not start a streak if the first guesser has guessed incorrectly", () => {
-      const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
-      const challenger: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
-      const guesser: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
-      const challenge: StreakGuessingGameChallenge = {_id: "", challenger, createdAt: "", prompt}
-      const incompleteGuess: StreakGuessingGameGuessResult = {
-        _id: "",
-        challenge: challenge,
-        createdAt: "",
-        guesses: ["bar"],
-        guessedCorrectly: false,
-      }
       const game: StreakGuessingGame = {
         _id: challenge._id,
         createdAt: challenge.createdAt,
         currentChallenge: {...challenge, challenger: challenge.challenger},
         player1: challenger,
         player2: guesser,
-        guessResults: [incompleteGuess],
+        guessResults: [incorrectInOneGuess],
       }
 
       expect(streakCount(game)).toBe(0)
     })
 
     it("starts a streak if the first guesser has guessed correctly on the first try", () => {
-      const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
-      const challenger: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
-      const guesser: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
-      const challenge: StreakGuessingGameChallenge = {_id: "", challenger, createdAt: "", prompt}
-      const incompleteGuess: StreakGuessingGameGuessResult = {
-        _id: "",
-        challenge: challenge,
-        createdAt: "",
-        guesses: ["bar"],
-        guessedCorrectly: true
-      }
       const game: StreakGuessingGame = {
         _id: challenge._id,
         createdAt: challenge.createdAt,
         currentChallenge: {...challenge, challenger: challenge.challenger},
         player1: challenger,
         player2: guesser,
-        guessResults: [incompleteGuess],
+        guessResults: [correctInOneGuess],
       }
 
       expect(streakCount(game)).toBe(1)
