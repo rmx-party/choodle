@@ -68,6 +68,40 @@ const createEmptyGameFromChallenge = (challenge: StreakGuessingGameChallenge): S
   }
 }
 
+const otherPlayer = (currentPlayer: StreakGuessingGamePlayer, game: StreakGuessingGame) => {
+  if (currentPlayer._id === game.player1._id && game.player2) return game.player2
+  return game.player1
+}
+
+const whoseTurn = (game: StreakGuessingGame): StreakGuessingGamePlayer => {
+  if (!game.player2) return game.player1
+  if (!game.currentChallenge.choodle) return game.currentChallenge.challenger
+
+  const currentGuessResult = guessResultForCurrentChallenge(game)
+  if (!currentGuessResult) return otherPlayer(game.currentChallenge.challenger, game)
+  if (currentGuessResult?.guessedCorrectly === undefined) return otherPlayer(game.currentChallenge.challenger, game)
+
+  return otherPlayer(game.currentChallenge.challenger, game)
+}
+
+const guessResultForCurrentChallenge = (game: StreakGuessingGame) => {
+  return fp.find(guessResult => guessResult.challenge._id === game.currentChallenge._id, game.guessResults)
+}
+
+const whichAction = (game: StreakGuessingGame): string => {
+  if (!game.currentChallenge.choodle) return "draw"
+  if (!game.player2) return "share"
+
+  const currentGuessResult = guessResultForCurrentChallenge(game)
+  if (currentGuessResult && currentGuessResult.guessedCorrectly !== undefined) {
+    if (game.currentChallenge.prompt && !game.currentChallenge.choodle) return "draw"
+
+    return "pick"
+  }
+
+  return "guess"
+}
+
 describe("StreakGuessingGame", () => {
   const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
   const player1: StreakGuessingGamePlayer = {_id: "player-1", createdAt: ""}
@@ -82,9 +116,23 @@ describe("StreakGuessingGame", () => {
     _id: "drawing-1",
     createdAt: "",
   }
-  const challengeThatHasBeenDrawn: StreakGuessingGameChallenge = {
+  const challengeThatHasBeenDrawnByPlayer1: StreakGuessingGameChallenge = {
     _id: "",
     challenger: player1,
+    createdAt: "",
+    prompt: prompt,
+    choodle: drawing,
+  }
+  const challengeThatHasBeenDrawnByPlayer2: StreakGuessingGameChallenge = {
+    _id: "",
+    challenger: player2,
+    createdAt: "",
+    prompt: prompt,
+    choodle: drawing,
+  }
+  const anotherChallengeThatHasBeenDrawnByPlayer2: StreakGuessingGameChallenge = {
+    _id: "another-challenge",
+    challenger: player2,
     createdAt: "",
     prompt: prompt,
     choodle: drawing,
@@ -104,7 +152,7 @@ describe("StreakGuessingGame", () => {
   }
   const correctInOneGuess: StreakGuessingGameGuessResult = {
     _id: "",
-    challenge: challengeThatHasNotBeenDrawn,
+    challenge: challengeThatHasBeenDrawnByPlayer1,
     createdAt: "",
     guesses: ["baz"],
     guessedCorrectly: true
@@ -119,16 +167,22 @@ describe("StreakGuessingGame", () => {
   const gameWithDrawingThatHasNoOtherPlayer: StreakGuessingGame = {
     _id: challengeThatHasNotBeenDrawn._id,
     createdAt: challengeThatHasNotBeenDrawn.createdAt,
-    currentChallenge: {...challengeThatHasBeenDrawn, challenger: challengeThatHasBeenDrawn.challenger},
-    choodle: drawing,
+    currentChallenge: {
+      ...challengeThatHasBeenDrawnByPlayer1,
+      challenger: challengeThatHasBeenDrawnByPlayer1.challenger,
+      choodle: drawing,
+    },
     player1: player1,
     guessResults: [],
   }
   const gameWithDrawingThatHasNotBeenGuessed: StreakGuessingGame = {
     _id: challengeThatHasNotBeenDrawn._id,
     createdAt: challengeThatHasNotBeenDrawn.createdAt,
-    currentChallenge: {...challengeThatHasBeenDrawn, challenger: challengeThatHasBeenDrawn.challenger},
-    choodle: drawing,
+    currentChallenge: {
+      ...challengeThatHasBeenDrawnByPlayer1,
+      challenger: challengeThatHasBeenDrawnByPlayer1.challenger,
+      choodle: drawing,
+    },
     player1: player1,
     player2: player2,
     guessResults: [],
@@ -136,22 +190,56 @@ describe("StreakGuessingGame", () => {
   const gameWithCorrectlyGuessedChallengeWherePlayerTwoHasNotYetDrawn: StreakGuessingGame = {
     _id: challengeThatHasNotBeenDrawn._id,
     createdAt: challengeThatHasNotBeenDrawn.createdAt,
-    currentChallenge: {...challengeThatHasBeenDrawn, challenger: challengeThatHasBeenDrawn.challenger},
-    choodle: drawing,
+    currentChallenge: {
+      ...challengeThatHasBeenDrawnByPlayer1,
+      challenger: challengeThatHasBeenDrawnByPlayer1.challenger
+    },
     player1: player1,
     player2: player2,
-    guessResults: [{...correctInOneGuess, challenge: challengeThatHasBeenDrawn}],
+    guessResults: [{...correctInOneGuess, challenge: challengeThatHasBeenDrawnByPlayer1}],
   }
   const gameWithIncorrectlyGuessedChallengeWherePlayerTwoHasNotYetDrawn: StreakGuessingGame = {
     _id: challengeThatHasNotBeenDrawn._id,
     createdAt: challengeThatHasNotBeenDrawn.createdAt,
-    currentChallenge: {...challengeThatHasBeenDrawn, challenger: challengeThatHasBeenDrawn.challenger},
+    currentChallenge: {
+      ...challengeThatHasBeenDrawnByPlayer1,
+      challenger: challengeThatHasBeenDrawnByPlayer1.challenger
+    },
     choodle: drawing,
     player1: player1,
     player2: player2,
-    guessResults: [{...incorrectInOneGuess, challenge: challengeThatHasBeenDrawn}],
+    guessResults: [{...incorrectInOneGuess, challenge: challengeThatHasBeenDrawnByPlayer1}],
+  }
+  const gameWithMultipleCorrectlyGuessedChallengesWherePlayerTwoHasNotYetDrawn: StreakGuessingGame = {
+    _id: challengeThatHasNotBeenDrawn._id,
+    createdAt: challengeThatHasNotBeenDrawn.createdAt,
+    currentChallenge: {
+      ...challengeThatHasNotBeenDrawn,
+      challenger: challengeThatHasBeenDrawnByPlayer2.challenger
+    },
+    player1: player1,
+    player2: player2,
+    guessResults: [{...correctInOneGuess, challenge: challengeThatHasBeenDrawnByPlayer1}],
+  }
+  const gameWithMultipleCorrectlyGuessedChallengesWherePlayerTwoHasDrawn: StreakGuessingGame = {
+    _id: challengeThatHasNotBeenDrawn._id,
+    createdAt: challengeThatHasNotBeenDrawn.createdAt,
+    currentChallenge: anotherChallengeThatHasBeenDrawnByPlayer2,
+    player1: player1,
+    player2: player2,
+    guessResults: [{...correctInOneGuess, challenge: challengeThatHasBeenDrawnByPlayer1},
+      {...correctInOneGuess, challenge: challengeThatHasBeenDrawnByPlayer2}],
   }
 
+  describe("other player", () => {
+    it("is player1 when the current drawer is player2", () => {
+      expect(otherPlayer(player2, gameWithDrawingThatHasNotBeenGuessed)).toEqual(player1)
+    })
+
+    it("is player2 when the current drawer is player1", () => {
+      expect(otherPlayer(player1, gameWithDrawingThatHasNotBeenGuessed)).toEqual(player2)
+    })
+  });
   describe("constructing a bare game from a challenge", () => {
     expect(createEmptyGameFromChallenge(challengeThatHasNotBeenDrawn)).toEqual(emptyGame)
   });
@@ -214,26 +302,6 @@ describe("StreakGuessingGame", () => {
     });
   });
 
-  // what is the current challenge?
-  //   when currentChallenge has been drawn, and guessed correctly
-
-  const whoseTurn = (game: StreakGuessingGame): StreakGuessingGamePlayer => {
-    if (!game.currentChallenge.choodle) return game.player1
-    if (!game.player2) return game.player1
-    return game.player2
-  }
-
-  const whichAction = (game: StreakGuessingGame): string => {
-    if (!game.currentChallenge.choodle) return "draw"
-    if (!game.player2) return "share"
-
-    const guessResultForCurrentChallenge = fp.find(guessResult => guessResult.challenge._id === game.currentChallenge._id,
-      game.guessResults)
-    if (guessResultForCurrentChallenge && guessResultForCurrentChallenge.guessedCorrectly !== undefined) return "pick"
-
-    return "guess"
-  }
-
   describe("whose turn is it anyway?", () => {
     describe("a challenge has been created, but not yet drawn", () => {
       it("is the player1's turn", () => {
@@ -255,7 +323,7 @@ describe("StreakGuessingGame", () => {
       })
     })
 
-    describe("a challenge has been created and drawn, but not yet guessed by the second player", () => {
+    describe("a challenge has been created and drawn, but the second player has not completed guessing", () => {
       it("is player2's turn", () => {
         expect(whoseTurn(gameWithDrawingThatHasNotBeenGuessed)).toEqual(player2)
       })
@@ -275,6 +343,48 @@ describe("StreakGuessingGame", () => {
       })
     })
 
+    describe("game with an ongoing streak", () => {
+      describe("player2 has picked a prompt and has not yet drawn", () => {
+        it("is player2's turn", () => {
+          expect(whoseTurn(gameWithMultipleCorrectlyGuessedChallengesWherePlayerTwoHasNotYetDrawn)).toEqual(player2)
+        })
+
+        it("needs to be drawn", () => {
+          expect(whichAction(gameWithMultipleCorrectlyGuessedChallengesWherePlayerTwoHasNotYetDrawn)).toEqual("draw")
+        })
+      })
+
+      describe("player2 has drawn", () => {
+        it("is player1's turn", () => {
+          expect(whoseTurn(gameWithMultipleCorrectlyGuessedChallengesWherePlayerTwoHasDrawn)).toEqual(player1)
+        })
+
+        it("needs to be guessed", () => {
+          expect(whichAction(gameWithMultipleCorrectlyGuessedChallengesWherePlayerTwoHasDrawn)).toEqual("guess")
+        })
+      })
+
+      describe("player2 has picked a prompt and has drawn", () => {
+
+      })
+
+      describe("player1 guesses correctly and has not yet picked a new prompt", () => {
+
+      })
+
+      describe("player1 guesses incorrectly and has not yet picked a new prompt", () => {
+
+      })
+
+      describe("player1 guesses correctly and has picked a new prompt but not drawn yet", () => {
+
+      })
+
+      describe("player1 guesses correctly ", () => {
+
+      })
+    });
+
     describe("player2 guesses incorrectly and has not yet picked a new prompt", () => {
       it("is player2's turn", () => {
         expect(whoseTurn(gameWithIncorrectlyGuessedChallengeWherePlayerTwoHasNotYetDrawn)).toEqual(player2)
@@ -283,10 +393,29 @@ describe("StreakGuessingGame", () => {
       it("needs to be picked", () => {
         expect(whichAction(gameWithIncorrectlyGuessedChallengeWherePlayerTwoHasNotYetDrawn)).toEqual("pick")
       })
+    })
 
-    });
+    describe("in an ongoing streak", () => {
+      describe("player 2", () => {
+
+      })
+
+      describe("the original challenger (player 1) guesses correctly and has not yet picked", () => {
+        it("is player1's turn", () => {
+
+        })
+
+        it("needs to be picked", () => {
+
+        })
+      })
+
+      describe("the original challenger guesses incorrectly and has not yet picked", () => {
+
+      })
+    })
   })
-});
+})
 
 describe("NormalizedCWFGame", () => {
   describe("creation", () => {
