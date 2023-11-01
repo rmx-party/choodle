@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { onMount } from 'svelte';
+  import {goto} from '$app/navigation';
+  import {onMount} from 'svelte';
   import Button from '../../../components/Button.svelte';
-  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils';
+  import {getDeviceId, getEmail, getUsername, locateCreator} from '$lib/CreatorUtils';
   import LayoutContainer from '../../../components/LayoutContainer.svelte';
-  import { page } from '$app/stores';
+  import {page} from '$app/stores';
   import MetaData from '../../../components/MetaData.svelte';
-  import { pageBackgroundDefault } from '$lib/Configuration';
-  import { writable } from 'svelte/store';
+  import {pageBackgroundDefault} from '$lib/Configuration';
+  import {writable} from 'svelte/store';
   import fp from 'lodash/fp';
-  import { toHTML } from '@portabletext/to-html';
-  import { loading } from '$lib/store';
-  import { urlFor } from '$lib/PersistedImagesUtils';
-  import { isGameComplete } from '$lib/CWFGame';
+  import {toHTML} from '@portabletext/to-html';
+  import {loading} from '$lib/store';
+  import {urlFor} from '$lib/PersistedImagesUtils';
+  import {isGameComplete, whoseTurn} from '$lib/CWFGame';
   import DashboardGameEntry from './DashboardGameEntry.svelte';
 
   export let data;
@@ -34,18 +34,7 @@
   $: [myTurnGames, theirTurnGames] = fp.partition(isMyTurn, fp.reject(isGameComplete, myGames));
 
   const isMyTurn = (game) => {
-    if (
-      game.currentChallenge?.challenger?._id !== currentChoodler._id &&
-      game.currentChallenge?.choodle
-    )
-      return true;
-    if (
-      game.currentChallenge?.challenger?._id === currentChoodler._id &&
-      !game.currentChallenge?.choodle
-    )
-      return true;
-
-    return false;
+    return whoseTurn(game) === currentChoodler
   };
 
   const sortedByCreatedAt = (thingsWithCreatedAt) => {
@@ -55,13 +44,13 @@
   const gameFromChallenge = (challenge) => {
     return {
       _id: challenge._id,
-      currentChallenge: { ...challenge, challenger: currentChoodler },
+      currentChallenge: {...challenge, challenger: currentChoodler},
       guessResults: [],
       createdAt: challenge.createdAt,
     };
   };
 
-  const filterGamesByPlayer = ({ _id }) =>
+  const filterGamesByPlayer = ({_id}) =>
     fp.filter((game) => game?.player1?._id === _id || game?.player2?._id === _id);
   const sortedGuessResults = (game) => ({
     ...game,
@@ -105,20 +94,20 @@
   });
 </script>
 
-<MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url} />
+<MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url}/>
 
 <LayoutContainer>
   {#if !hasCreatedAChallenge}
-    <img src={urlFor(data.copy.logoTwo).url()} width="80%" style="margin: 3rem auto;" alt="" />
+    <img src={urlFor(data.copy.logoTwo).url()} width="80%" style="margin: 3rem auto;" alt=""/>
 
     {@html toHTML(data.copy.landing_content)}
 
     <Button variant="primary" colour="yellow" on:click={startGame} style="margin: 3rem auto;"
-      >{data.copy.startGameButtonText}</Button
+    >{data.copy.startGameButtonText}</Button
     >
   {:else}
     <div>
-      <img src={urlFor(data.copy.logoTwo).url()} width="80%" alt="" />
+      <img src={urlFor(data.copy.logoTwo).url()} width="80%" alt=""/>
     </div>
 
     <nav>
