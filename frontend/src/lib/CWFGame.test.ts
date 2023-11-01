@@ -143,6 +143,19 @@ describe("StreakGuessingGame", () => {
 
       expect(streakCount(game)).toBe(1)
     })
+
+    it("ends a streak if the second guesser has guessed incorrectly on the first try", () => {
+      const game: StreakGuessingGame = {
+        _id: challenge._id,
+        createdAt: challenge.createdAt,
+        currentChallenge: {...challenge, challenger: challenge.challenger},
+        player1: challenger,
+        player2: guesser,
+        guessResults: [correctInOneGuess, incorrectInOneGuess],
+      }
+
+      expect(streakCount(game)).toBe(1)
+    });
   });
 });
 
