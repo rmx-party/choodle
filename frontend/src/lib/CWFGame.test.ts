@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import {describe, expect, it} from "vitest";
 import {
   addGuessToGame,
   createCWFGame,
@@ -7,7 +7,7 @@ import {
   streakCount,
 } from "$lib/CWFGame";
 
-describe("CWFGame", () => {
+describe("NormalizedCWFGame", () => {
   describe("creation", () => {
     const game = createCWFGame("player1-id", "player2-id");
 
