@@ -133,6 +133,15 @@ describe("StreakGuessingGame", () => {
     player2: player2,
     guessResults: [],
   }
+  const gameWithCorrectlyGuessedChallengeWherePlayerTwoHasNotYetDrawn: StreakGuessingGame = {
+    _id: challengeThatHasNotBeenDrawn._id,
+    createdAt: challengeThatHasNotBeenDrawn.createdAt,
+    currentChallenge: {...challengeThatHasBeenDrawn, challenger: challengeThatHasBeenDrawn.challenger},
+    choodle: drawing,
+    player1: player1,
+    player2: player2,
+    guessResults: [{...correctInOneGuess, challenge: challengeThatHasBeenDrawn}],
+  }
 
   describe("constructing a bare game from a challenge", () => {
     expect(createEmptyGameFromChallenge(challengeThatHasNotBeenDrawn)).toEqual(emptyGame)
@@ -197,8 +206,6 @@ describe("StreakGuessingGame", () => {
   });
 
   // what is the current challenge?
-  //   when currentChallenge has not been created yet
-  //   when currentChallenge exists but has not been drawn yet
   //   when currentChallenge has been drawn, and guessed correctly
 
   const whoseTurn = (game: StreakGuessingGame): StreakGuessingGamePlayer => {
@@ -210,6 +217,11 @@ describe("StreakGuessingGame", () => {
   const whichAction = (game: StreakGuessingGame): string => {
     if (!game.currentChallenge.choodle) return "draw"
     if (!game.player2) return "share"
+
+    const guessResultForCurrentChallenge = fp.filter(guessResult => guessResult.challenge._id === game.currentChallenge._id,
+      fp.reject(guessResult => guessResult.guessedCorrectly === undefined, game.guessResults))
+    if (guessResultForCurrentChallenge.length !== 0) return "pick"
+
     return "guess"
   }
 
@@ -243,9 +255,17 @@ describe("StreakGuessingGame", () => {
         expect(whichAction(gameWithDrawingThatHasNotBeenGuessed)).toEqual("guess")
       })
     });
-  })
 
-  // what is the next action?
+    describe("player2 guesses correctly and has not yet picked a new prompt", () => {
+      it("is player2's turn", () => {
+        expect(whoseTurn(gameWithCorrectlyGuessedChallengeWherePlayerTwoHasNotYetDrawn)).toEqual(player2)
+      })
+
+      it("needs to be picked", () => {
+        expect(whichAction(gameWithCorrectlyGuessedChallengeWherePlayerTwoHasNotYetDrawn)).toEqual("pick")
+      });
+    });
+  })
 });
 
 describe("NormalizedCWFGame", () => {
