@@ -4,8 +4,147 @@ import {
   createCWFGame,
   isGameComplete,
   isNormalizedGameComplete,
-  streakCount,
+  normalizedGameStreakCount,
 } from "$lib/CWFGame";
+import fp from "lodash/fp.js";
+
+type SanityDocumentMetadata = {
+  [key: string]: any
+} & {
+  _id: string,
+  createdAt: string,
+}
+
+type StreakGuessingGamePrompt = SanityDocumentMetadata & {
+  [key: string]: any
+} & {}
+
+type StreakGuessingGameGuessResult = SanityDocumentMetadata & {
+  [key: string]: any
+} & {
+  challenge: StreakGuessingGameChallenge,
+  guesser?: StreakGuessingGamePlayer,
+  guesses: string[],
+  hintsUsed?: string[],
+  guessedCorrectly?: boolean,
+}
+
+type StreakGuessingGamePlayer = SanityDocumentMetadata & {
+  [key: string]: any
+} & {}
+
+type StreakGuessingGameChallenge = SanityDocumentMetadata & {
+  [key: string]: any
+} & {
+  challenger: StreakGuessingGamePlayer,
+  prompt: StreakGuessingGamePrompt,
+}
+
+type StreakGuessingGame = SanityDocumentMetadata & {
+  [key: string]: any
+} & {
+  currentChallenge: StreakGuessingGameChallenge,
+  player1: StreakGuessingGamePlayer,
+  player2?: StreakGuessingGamePlayer,
+  guessResults: StreakGuessingGameGuessResult[],
+}
+
+const streakCount = (game: StreakGuessingGame): number => {
+  return fp.size(fp.filter(guessResult => guessResult.guessedCorrectly, game.guessResults))
+}
+
+describe("StreakGuessingGame", () => {
+  describe("constructing a bare game from a challenge", () => {
+  });
+  describe("streak counting", () => {
+    it("starts at zero", () => {
+      // FIXME: game doesn't exist in this case
+      const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
+      const challenger: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
+      const challenge: StreakGuessingGameChallenge = {_id: "", challenger, createdAt: "", prompt};
+      const game: StreakGuessingGame = {
+        _id: challenge._id,
+        createdAt: challenge.createdAt,
+        currentChallenge: {...challenge, challenger: challenge.challenger},
+        player1: challenger,
+        guessResults: [],
+      }
+
+      expect(streakCount(game)).toBe(0)
+    });
+
+    it("does not start a streak if the first guesser has not completed guessing", () => {
+      const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
+      const challenger: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
+      const guesser: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
+      const challenge: StreakGuessingGameChallenge = {_id: "", challenger, createdAt: "", prompt}
+      const incompleteGuess: StreakGuessingGameGuessResult = {
+        _id: "",
+        challenge: challenge,
+        createdAt: "",
+        guesses: ["foo"]
+      }
+      const game: StreakGuessingGame = {
+        _id: challenge._id,
+        createdAt: challenge.createdAt,
+        currentChallenge: {...challenge, challenger: challenge.challenger},
+        player1: challenger,
+        player2: guesser,
+        guessResults: [incompleteGuess],
+      }
+
+      expect(streakCount(game)).toBe(0)
+    })
+
+    it("does not start a streak if the first guesser has guessed incorrectly", () => {
+      const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
+      const challenger: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
+      const guesser: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
+      const challenge: StreakGuessingGameChallenge = {_id: "", challenger, createdAt: "", prompt}
+      const incompleteGuess: StreakGuessingGameGuessResult = {
+        _id: "",
+        challenge: challenge,
+        createdAt: "",
+        guesses: ["bar"],
+        guessedCorrectly: false,
+      }
+      const game: StreakGuessingGame = {
+        _id: challenge._id,
+        createdAt: challenge.createdAt,
+        currentChallenge: {...challenge, challenger: challenge.challenger},
+        player1: challenger,
+        player2: guesser,
+        guessResults: [incompleteGuess],
+      }
+
+      expect(streakCount(game)).toBe(0)
+    })
+
+    it("starts a streak if the first guesser has guessed correctly on the first try", () => {
+      const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
+      const challenger: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
+      const guesser: StreakGuessingGamePlayer = {_id: "", createdAt: ""}
+      const challenge: StreakGuessingGameChallenge = {_id: "", challenger, createdAt: "", prompt}
+      const incompleteGuess: StreakGuessingGameGuessResult = {
+        _id: "",
+        challenge: challenge,
+        createdAt: "",
+        guesses: ["bar"],
+        guessedCorrectly: true
+      }
+      const game: StreakGuessingGame = {
+        _id: challenge._id,
+        createdAt: challenge.createdAt,
+        currentChallenge: {...challenge, challenger: challenge.challenger},
+        player1: challenger,
+        player2: guesser,
+        guessResults: [incompleteGuess],
+      }
+
+      expect(streakCount(game)).toBe(1)
+    })
+  });
+});
 
 describe("NormalizedCWFGame", () => {
   describe("creation", () => {
@@ -28,7 +167,7 @@ describe("NormalizedCWFGame", () => {
     });
 
     it("has a streak of 0", () => {
-      expect(streakCount(game)).toEqual(0);
+      expect(normalizedGameStreakCount(game)).toEqual(0);
     });
   });
 
@@ -43,7 +182,7 @@ describe("NormalizedCWFGame", () => {
     });
 
     it("has a streak of 0", () => {
-      expect(streakCount(gameWithOneIncorrectGuess)).toEqual(0);
+      expect(normalizedGameStreakCount(gameWithOneIncorrectGuess)).toEqual(0);
     });
 
     it("is complete", () => {
@@ -64,7 +203,7 @@ describe("NormalizedCWFGame", () => {
     });
 
     it("has a streak of 1", () => {
-      expect(streakCount(gameWithOneCorrectGuess)).toEqual(1);
+      expect(normalizedGameStreakCount(gameWithOneCorrectGuess)).toEqual(1);
     });
 
     describe("with one correct guess and one incorrect guess", () => {
@@ -95,7 +234,7 @@ describe("NormalizedCWFGame", () => {
       });
 
       it("has a streak of 4", () => {
-        expect(streakCount(gameWithMultipleCorrectGuesses)).toEqual(4);
+        expect(normalizedGameStreakCount(gameWithMultipleCorrectGuesses)).toEqual(4);
       });
     });
 
@@ -112,7 +251,7 @@ describe("NormalizedCWFGame", () => {
       });
 
       it("has a streak of 3", () => {
-        expect(streakCount(gameWithMultipleCorrectGuessesAndAnIncorrectGuess))
+        expect(normalizedGameStreakCount(gameWithMultipleCorrectGuessesAndAnIncorrectGuess))
           .toEqual(3);
       });
     });

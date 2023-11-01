@@ -46,6 +46,6 @@ export const isGameComplete = (game) => {
   return isNormalizedGameComplete(normalizeGame(game).guessResults);
 };
 
-export const streakCount = (game: NormalizedCWFGame) => {
+export const normalizedGameStreakCount = (game: NormalizedCWFGame) => {
   return fp.filter((result) => result, game.guessResults).length;
 };

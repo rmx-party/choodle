@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { normalizeGame, streakCount } from '$lib/CWFGame';
-  import { goto } from '$app/navigation';
+  import {normalizeGame, normalizedGameStreakCount} from '$lib/CWFGame';
+  import {goto} from '$app/navigation';
   import fp from 'lodash/fp';
   import streakFlame from '$lib/assets/streak-flame.svg';
 
@@ -31,7 +31,7 @@
 
 <div class="game-entry">
   <a href={generateLinkFor(game)} on:click={goto(generateLinkFor(game))}>{otherPlayerIn(game)}</a>
-  <div class="game-entry-streak"><img src={streakFlame} />{streakCount(normalizeGame(game))}</div>
+  <div class="game-entry-streak"><img src={streakFlame}/>{normalizedGameStreakCount(normalizeGame(game))}</div>
 </div>
 
 <style>
