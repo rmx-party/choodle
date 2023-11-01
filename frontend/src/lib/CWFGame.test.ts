@@ -142,6 +142,15 @@ describe("StreakGuessingGame", () => {
     player2: player2,
     guessResults: [{...correctInOneGuess, challenge: challengeThatHasBeenDrawn}],
   }
+  const gameWithIncorrectlyGuessedChallengeWherePlayerTwoHasNotYetDrawn: StreakGuessingGame = {
+    _id: challengeThatHasNotBeenDrawn._id,
+    createdAt: challengeThatHasNotBeenDrawn.createdAt,
+    currentChallenge: {...challengeThatHasBeenDrawn, challenger: challengeThatHasBeenDrawn.challenger},
+    choodle: drawing,
+    player1: player1,
+    player2: player2,
+    guessResults: [{...incorrectInOneGuess, challenge: challengeThatHasBeenDrawn}],
+  }
 
   describe("constructing a bare game from a challenge", () => {
     expect(createEmptyGameFromChallenge(challengeThatHasNotBeenDrawn)).toEqual(emptyGame)
@@ -218,9 +227,9 @@ describe("StreakGuessingGame", () => {
     if (!game.currentChallenge.choodle) return "draw"
     if (!game.player2) return "share"
 
-    const guessResultForCurrentChallenge = fp.filter(guessResult => guessResult.challenge._id === game.currentChallenge._id,
-      fp.reject(guessResult => guessResult.guessedCorrectly === undefined, game.guessResults))
-    if (guessResultForCurrentChallenge.length !== 0) return "pick"
+    const guessResultForCurrentChallenge = fp.find(guessResult => guessResult.challenge._id === game.currentChallenge._id,
+      game.guessResults)
+    if (guessResultForCurrentChallenge && guessResultForCurrentChallenge.guessedCorrectly !== undefined) return "pick"
 
     return "guess"
   }
@@ -263,7 +272,18 @@ describe("StreakGuessingGame", () => {
 
       it("needs to be picked", () => {
         expect(whichAction(gameWithCorrectlyGuessedChallengeWherePlayerTwoHasNotYetDrawn)).toEqual("pick")
-      });
+      })
+    })
+
+    describe("player2 guesses incorrectly and has not yet picked a new prompt", () => {
+      it("is player2's turn", () => {
+        expect(whoseTurn(gameWithIncorrectlyGuessedChallengeWherePlayerTwoHasNotYetDrawn)).toEqual(player2)
+      })
+
+      it("needs to be picked", () => {
+        expect(whichAction(gameWithIncorrectlyGuessedChallengeWherePlayerTwoHasNotYetDrawn)).toEqual("pick")
+      })
+
     });
   })
 });
