@@ -1,15 +1,16 @@
 <script lang="ts">
-  import {normalizeGame, streakCount} from "$lib/CWFGame";
-  import {goto} from '$app/navigation';
-  import fp from "lodash/fp";
-  import streakFlame from "$lib/assets/streak-flame.svg"
+  import { normalizeGame, streakCount } from '$lib/CWFGame';
+  import { goto } from '$app/navigation';
+  import fp from 'lodash/fp';
+  import streakFlame from '$lib/assets/streak-flame.svg';
 
-  export let currentChoodler
-  export let game
-  export let gameListUserUnknownText
+  export let currentChoodler;
+  export let game;
+  export let gameListUserUnknownText;
 
   const otherPlayerIn = (game) => {
-    if (game.player1?._id === currentChoodler._id) return game.player2?.username || gameListUserUnknownText;
+    if (game.player1?._id === currentChoodler._id)
+      return game.player2?.username || gameListUserUnknownText;
     return game.player1?.username || gameListUserUnknownText;
   };
 
@@ -30,7 +31,7 @@
 
 <div class="game-entry">
   <a href={generateLinkFor(game)} on:click={goto(generateLinkFor(game))}>{otherPlayerIn(game)}</a>
-  <div class="game-entry-streak"><img src={streakFlame}/>{streakCount(normalizeGame(game))}</div>
+  <div class="game-entry-streak"><img src={streakFlame} />{streakCount(normalizeGame(game))}</div>
 </div>
 
 <style>

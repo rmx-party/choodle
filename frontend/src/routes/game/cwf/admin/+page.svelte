@@ -1,30 +1,30 @@
 <script lang="ts">
-  import Button from "../../../../components/Button.svelte";
-  import {readOnlyClient, readWriteClient} from "$lib/CMSUtils";
+  import Button from '../../../../components/Button.svelte';
+  import { readOnlyClient, readWriteClient } from '$lib/CMSUtils';
 
   const deleteAllGames = async () => {
-    const challenges: any[] = await readOnlyClient.fetch('*[_type == "challenge"]')
+    const challenges: any[] = await readOnlyClient.fetch('*[_type == "challenge"]');
 
     for (const challenge of challenges) {
-      await readWriteClient.patch(challenge._id).unset(['gameRef']).commit()
+      await readWriteClient.patch(challenge._id).unset(['gameRef']).commit();
     }
 
-    await readWriteClient.delete({query: '*[_type == "cwfgame"]'})
-  }
+    await readWriteClient.delete({ query: '*[_type == "cwfgame"]' });
+  };
 
   const deleteAllChallenges = async () => {
-    await readWriteClient.delete({query: '*[_type == "challenge"]'})
-  }
+    await readWriteClient.delete({ query: '*[_type == "challenge"]' });
+  };
 
   const deleteAllGuesses = async () => {
-    const challenges: any[] = await readOnlyClient.fetch('*[_type == "challenge"]')
+    const challenges: any[] = await readOnlyClient.fetch('*[_type == "challenge"]');
 
     for (const challenge of challenges) {
-      await readWriteClient.patch(challenge._id).unset(['gameRef']).commit()
+      await readWriteClient.patch(challenge._id).unset(['gameRef']).commit();
     }
 
-    await readWriteClient.delete({query: '*[_type == "guess"]'})
-  }
+    await readWriteClient.delete({ query: '*[_type == "guess"]' });
+  };
 </script>
 
 <div>

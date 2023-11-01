@@ -7,7 +7,11 @@
 
 <div class="input" {...$$restProps}>
   {#each format as formatCharacter, i}
-    <div class="{formatCharacter === ' ' ? 'space' : 'character'} {i === cursorLocation ? 'cursor' : ''}">
+    <div
+      class="{formatCharacter === ' ' ? 'space' : 'character'} {i === cursorLocation
+        ? 'cursor'
+        : ''}"
+    >
       {reveal.includes(i) ? format[i] : display[i] || ' '}
     </div>
   {/each}
@@ -33,7 +37,8 @@
     font-weight: 700;
   }
 
-  .character, .space {
+  .character,
+  .space {
     width: 2rem;
     aspect-ratio: 1/1;
   }
@@ -47,7 +52,7 @@
     padding: 0.1rem;
 
     border-radius: 0.125rem;
-    border: 1px solid var(--colors-greyscale-600, #7C7C77);
+    border: 1px solid var(--colors-greyscale-600, #7c7c77);
     background: var(--bgcolor, white);
   }
 

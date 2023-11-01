@@ -1,93 +1,93 @@
 <script lang="ts">
-  import Keyboard from "../../../components/Keyboard.svelte";
-  import GuessInput from "../../../components/GuessInput.svelte";
-  import {writable} from "svelte/store";
+  import Keyboard from '../../../components/Keyboard.svelte';
+  import GuessInput from '../../../components/GuessInput.svelte';
+  import { writable } from 'svelte/store';
 
-  export let format: string[] = []
-  export let inputDisplay = writable([])
-  export let cursorLocation = writable(0)
-  export let reveal = []
+  export let format: string[] = [];
+  export let inputDisplay = writable([]);
+  export let cursorLocation = writable(0);
+  export let reveal = [];
   export let onEnter = () => {
-    return
-  }
+    return;
+  };
 
   const moveCursorRightHandlingRevealAndSpace = () => {
-    moveCursorRightHandlingSpace()
+    moveCursorRightHandlingSpace();
 
     if (reveal.includes($cursorLocation)) {
       moveCursorRight();
     }
-  }
+  };
 
   const moveCursorLeftHandlingRevealAndSpace = () => {
-    moveCursorLeftHandlingSpace()
+    moveCursorLeftHandlingSpace();
 
     if (reveal.includes($cursorLocation)) {
       moveCursorLeft();
     }
-  }
+  };
 
   const moveCursorRightHandlingSpace = () => {
-    moveCursorRight()
+    moveCursorRight();
 
-    if (format[$cursorLocation] === " ") {
-      updateAtCursor(' ')
-      moveCursorRight()
+    if (format[$cursorLocation] === ' ') {
+      updateAtCursor(' ');
+      moveCursorRight();
     }
-  }
+  };
 
   const moveCursorLeftHandlingSpace = () => {
-    moveCursorLeft()
+    moveCursorLeft();
 
-    if (format[$cursorLocation] === " ") {
-      updateAtCursor(' ')
-      moveCursorLeft()
+    if (format[$cursorLocation] === ' ') {
+      updateAtCursor(' ');
+      moveCursorLeft();
     }
-  }
+  };
 
   const moveCursorRight = () => {
     if ($cursorLocation === format.length) return;
 
-    cursorLocation.update(currentCursorLocation => currentCursorLocation + 1)
-  }
+    cursorLocation.update((currentCursorLocation) => currentCursorLocation + 1);
+  };
 
   const moveCursorLeft = () => {
     if ($cursorLocation < 1) {
-      cursorLocation.set(0)
+      cursorLocation.set(0);
       return;
     }
-    cursorLocation.update(currentCursorLocation => currentCursorLocation - 1)
-  }
+    cursorLocation.update((currentCursorLocation) => currentCursorLocation - 1);
+  };
 
   const updateAtCursor = (key: string) => {
     if ($cursorLocation > format.length - 1) return;
 
-    inputDisplay.update(currentInputDisplay => {
-      const newInput = [...currentInputDisplay]
-      newInput[$cursorLocation] = key
-      return newInput
-    })
-  }
+    inputDisplay.update((currentInputDisplay) => {
+      const newInput = [...currentInputDisplay];
+      newInput[$cursorLocation] = key;
+      return newInput;
+    });
+  };
 
   const handleKeyPress = (key: string) => {
-    if (key !== "BACKSPACE" && key !== "ENTER") {
-      updateAtCursor(key)
-      moveCursorRightHandlingRevealAndSpace()
+    if (key !== 'BACKSPACE' && key !== 'ENTER') {
+      updateAtCursor(key);
+      moveCursorRightHandlingRevealAndSpace();
     }
 
-    if (key === "BACKSPACE") {
-      moveCursorLeftHandlingRevealAndSpace()
-      updateAtCursor('')
+    if (key === 'BACKSPACE') {
+      moveCursorLeftHandlingRevealAndSpace();
+      updateAtCursor('');
     }
 
-    if (key === "ENTER") {
-      onEnter()
+    if (key === 'ENTER') {
+      onEnter();
     }
-  }
+  };
 </script>
 
-<GuessInput format={format} display={$inputDisplay} cursorLocation={$cursorLocation} reveal={reveal}/>
+<GuessInput {format} display={$inputDisplay} cursorLocation={$cursorLocation} {reveal} />
 
-<slot name="between"/>
+<slot name="between" />
 
-<Keyboard onKeyPress={handleKeyPress} {...$$restProps}/>
+<Keyboard onKeyPress={handleKeyPress} {...$$restProps} />

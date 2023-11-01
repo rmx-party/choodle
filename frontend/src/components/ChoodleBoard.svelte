@@ -1,18 +1,13 @@
 <script lang="ts">
-  import {loading, loadingMessage} from "$lib/store";
-  import {browser} from "$app/environment";
-  import {getUndoStack, setUndoStack} from "$lib/StorageStuff";
-  import {onMount} from "svelte";
-  import {
-    drawColor,
-    backgroundColour,
-    lineWidth,
-    targetMaxSize,
-  } from "$lib/Configuration";
-  import {maximumSize} from "$lib/Calculations";
-  import type {Dimensiony} from "$lib/Calculations";
-  import {crunchCanvasToUrl, applyCrunchToCanvas} from "$lib/ImageUtils";
-  import fp from "lodash/fp";
+  import { loading, loadingMessage } from '$lib/store';
+  import { browser } from '$app/environment';
+  import { getUndoStack, setUndoStack } from '$lib/StorageStuff';
+  import { onMount } from 'svelte';
+  import { drawColor, backgroundColour, lineWidth, targetMaxSize } from '$lib/Configuration';
+  import { maximumSize } from '$lib/Calculations';
+  import type { Dimensiony } from '$lib/Calculations';
+  import { crunchCanvasToUrl, applyCrunchToCanvas } from '$lib/ImageUtils';
+  import fp from 'lodash/fp';
 
   export let id: string;
 
@@ -29,45 +24,44 @@
 
     const undoStack = await getUndoStack();
     drawImageFromDataURL(undoStack.current, ctx);
-    console.log(`loaded`, undoStack)
-  }
+    console.log(`loaded`, undoStack);
+  };
 
   const push = async () => {
-    const undoStack = await getUndoStack()
+    const undoStack = await getUndoStack();
 
-    const imageDataUrl = await crunchCanvasToUrl(canvas, ctx)
-    undoStack.push(imageDataUrl)
+    const imageDataUrl = await crunchCanvasToUrl(canvas, ctx);
+    undoStack.push(imageDataUrl);
 
     await setUndoStack(undoStack);
   };
 
   export const undo = async (event: Event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const undoStack = await getUndoStack()
-    undoStack.undo()
+    const undoStack = await getUndoStack();
+    undoStack.undo();
 
     await setUndoStack(undoStack);
 
-    const dataURL = undoStack.current
+    const dataURL = undoStack.current;
 
-    drawImageFromDataURL(dataURL, ctx)
-  }
-
+    drawImageFromDataURL(dataURL, ctx);
+  };
 
   export const save = async (_event: Event) => {
     if (!browser) return;
-    loading.set(true)
+    loading.set(true);
 
-    const undoStack = await getUndoStack()
+    const undoStack = await getUndoStack();
     if (undoStack.current === '') return loading.set(false);
 
-    loadingMessage.set('saving your choodle')
+    loadingMessage.set('saving your choodle');
     await performSave(undoStack, canvas);
 
-    clearCanvas(id)
-    loading.set(false)
-  }
+    clearCanvas(id);
+    loading.set(false);
+  };
 
   /* Canvas Resizing */
   const resetViewportUnit = async () => {
@@ -75,97 +69,95 @@
     // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
-  }
+  };
 
   const resizeCanvas = async () => {
     if (!browser) return;
     const bounds = canvas.getBoundingClientRect();
 
-    const canvasDimensions = maximumSize({x: bounds.width, y: bounds.height}, targetMaxSize)
+    const canvasDimensions = maximumSize({ x: bounds.width, y: bounds.height }, targetMaxSize);
 
     window.requestAnimationFrame(async () => {
-      canvas.width = canvasDimensions.x
-      canvas.height = canvasDimensions.y
-      await load()
-    })
-  }
+      canvas.width = canvasDimensions.x;
+      canvas.height = canvasDimensions.y;
+      await load();
+    });
+  };
 
   /* Drawing */
   function startDrawing(event: MouseEvent | TouchEvent) {
     if (!browser) return;
     isDrawing = true;
-    event.preventDefault()
-    const [newX, newY] = canvasCoordsFromEvent(event)
-    lastTouchedPoint = {x: newX, y: newY}
+    event.preventDefault();
+    const [newX, newY] = canvasCoordsFromEvent(event);
+    lastTouchedPoint = { x: newX, y: newY };
 
     window.requestAnimationFrame(() => {
-      ctx.beginPath()
-      ctx.fillStyle = drawColor
-    })
+      ctx.beginPath();
+      ctx.fillStyle = drawColor;
+    });
   }
 
   const doDraw = (event: MouseEvent | TouchEvent | PointerEvent | DragEvent) => {
     if (!isDrawing) return;
     lastTouchedPoint = null;
 
-    event.preventDefault()
+    event.preventDefault();
     drawTo(...canvasCoordsFromEvent(event));
-  }
+  };
 
   async function endDrawing(event: MouseEvent | TouchEvent) {
-    event.preventDefault()
+    event.preventDefault();
     isDrawing = false;
 
     if (lastTouchedPoint) {
       ctx.fillRect(
         Math.round(lastTouchedPoint.x - lineWidth * 2),
         Math.round(lastTouchedPoint.y - lineWidth * 2),
-        Math.round(lineWidth * 2), Math.round(lineWidth * 2)
-      )
+        Math.round(lineWidth * 2),
+        Math.round(lineWidth * 2)
+      );
     }
 
-    ctx.beginPath()
+    ctx.beginPath();
 
-    await applyCrunchToCanvas(canvas, ctx)
-    await push()
-    await load()
+    await applyCrunchToCanvas(canvas, ctx);
+    await push();
+    await load();
   }
 
   function drawTo(x: number, y: number) {
     if (!browser) return;
-    const [roundedX, roundedY] = [Math.round(x), Math.round(y)]
+    const [roundedX, roundedY] = [Math.round(x), Math.round(y)];
     //console.table([{action: 'drawing', x, y, roundedX, roundedY}])
 
     window.requestAnimationFrame(async () => {
-      ctx.lineTo(roundedX, roundedY)
+      ctx.lineTo(roundedX, roundedY);
       ctx.stroke();
-      await applyCrunchToCanvas(canvas, ctx)
-    })
+      await applyCrunchToCanvas(canvas, ctx);
+    });
   }
 
   function viewportCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
     switch (event.constructor) {
       case MouseEvent:
-        return [(event as MouseEvent).clientX,
-          (event as MouseEvent).clientY]
+        return [(event as MouseEvent).clientX, (event as MouseEvent).clientY];
       case TouchEvent:
-        return [(event as TouchEvent).touches[0].clientX,
-          (event as TouchEvent).touches[0].clientY]
+        return [(event as TouchEvent).touches[0].clientX, (event as TouchEvent).touches[0].clientY];
     }
-    return [-1, -1] // FIXME: this is terrible
+    return [-1, -1]; // FIXME: this is terrible
   }
 
   function canvasCoordsFromEvent(event: MouseEvent | TouchEvent): [number, number] {
     const box = canvas.getBoundingClientRect();
-    const [viewportX, viewportY] = [...viewportCoordsFromEvent(event)]
-    const offsetX = (viewportX - box.left);
-    const offsetY = (viewportY - box.top);
+    const [viewportX, viewportY] = [...viewportCoordsFromEvent(event)];
+    const offsetX = viewportX - box.left;
+    const offsetY = viewportY - box.top;
 
     // Normalize the screen coordinates to a 0..1 range relative to the canvas
     // box area then re-scale by the canvas dimensions
-    const newX = (offsetX / box.width) * canvas.width
-    const newY = (offsetY / box.height) * canvas.height
-
+    const newX = (offsetX / box.width) * canvas.width;
+    const newY = (offsetY / box.height) * canvas.height;
 
     return [newX, newY];
   }
@@ -175,7 +167,7 @@
 
     const canvas = document.getElementById(id) as HTMLCanvasElement;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d')!
+    const ctx = canvas.getContext('2d')!;
 
     ctx.fillStyle = backgroundColour;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -184,14 +176,14 @@
   const drawImageFromDataURL = (dataURL: string, context: CanvasRenderingContext2D) => {
     if (!browser) return;
     if (!context) throw new Error(`context is null`);
-    if (dataURL === '') clearCanvas(id)
-    const image = new Image;
+    if (dataURL === '') clearCanvas(id);
+    const image = new Image();
     image.addEventListener('load', () => {
       window.requestAnimationFrame(() => {
-        clearCanvas(id)
+        clearCanvas(id);
         context.drawImage(image, 0, 0);
         context.stroke();
-      })
+      });
     });
     image.src = dataURL;
   };
@@ -200,41 +192,49 @@
     if (!browser) return;
 
     canvas = document.getElementById(id) as HTMLCanvasElement;
-    ctx = canvas.getContext('2d', {willReadFrequently: true})!
+    ctx = canvas.getContext('2d', { willReadFrequently: true })!;
 
-    ctx.strokeStyle = drawColor
+    ctx.strokeStyle = drawColor;
     ctx.lineWidth = lineWidth;
     ctx.lineCap = 'square';
     ctx.imageSmoothingEnabled = false;
 
-    window.addEventListener('resize',
-      (fp.debounce(100, () => {
-        resizeCanvas()
-        resetViewportUnit()
-      })))
+    window.addEventListener(
+      'resize',
+      fp.debounce(100, () => {
+        resizeCanvas();
+        resetViewportUnit();
+      })
+    );
 
-    await resetViewportUnit()
-    await resizeCanvas()
-    loading.set(false)
+    await resetViewportUnit();
+    await resizeCanvas();
+    loading.set(false);
   });
 </script>
 
 <div class="canvas-container">
-  <canvas id={id}
-          on:mousedown={startDrawing}
-          on:touchstart={startDrawing}
-          on:mouseup={endDrawing}
-          on:touchend={endDrawing}
-          on:mousemove={doDraw}
-          on:touchmove={doDraw}
-          on:click={(event) => {event.preventDefault()}}
-          on:drag={(event) => {event.preventDefault()}}>
+  <canvas
+    {id}
+    on:mousedown={startDrawing}
+    on:touchstart={startDrawing}
+    on:mouseup={endDrawing}
+    on:touchend={endDrawing}
+    on:mousemove={doDraw}
+    on:touchmove={doDraw}
+    on:click={(event) => {
+      event.preventDefault();
+    }}
+    on:drag={(event) => {
+      event.preventDefault();
+    }}
+  >
   </canvas>
 </div>
 
-<slot name="buttons"/>
+<slot name="buttons" />
 
-<slot/>
+<slot />
 
 <style>
   .canvas-container {
@@ -252,8 +252,10 @@
     aspect-ratio: 3 / 4;
     max-width: 95vw;
 
-    background: #FFF;
-    box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.12), 1px 1px 1px 0px rgba(0, 0, 0, 0.08);
+    background: #fff;
+    box-shadow:
+      0px 0px 32px 0px rgba(0, 0, 0, 0.12),
+      1px 1px 1px 0px rgba(0, 0, 0, 0.08);
     backdrop-filter: blur(52px);
 
     /* minimize the amount of antialiasing effects in the canvas */

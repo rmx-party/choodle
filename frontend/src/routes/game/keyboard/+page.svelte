@@ -1,18 +1,20 @@
 <script lang="ts">
-  import {writable} from "svelte/store";
-  import GuessingInterface from "../cwf/GuessingInterface.svelte";
+  import { writable } from 'svelte/store';
+  import GuessingInterface from '../cwf/GuessingInterface.svelte';
 
-  let cursorLocation = writable(0)
-  let format = "FOO BAR".split('')
+  let cursorLocation = writable(0);
+  let format = 'FOO BAR'.split('');
 
-  const currentGuess = writable([])
-
+  const currentGuess = writable([]);
 </script>
 
 <strong>{format.join('')}</strong>
-<br/>
+<br />
 
-<GuessingInterface format={format} inputDisplay={currentGuess}
-                   cursorLocation={cursorLocation} onEnter={()=>{}} reveal={[1, 5]}>
-</GuessingInterface>
-
+<GuessingInterface
+  {format}
+  inputDisplay={currentGuess}
+  {cursorLocation}
+  onEnter={() => {}}
+  reveal={[1, 5]}
+></GuessingInterface>

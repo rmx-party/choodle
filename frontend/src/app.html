@@ -1,32 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="%sveltekit.assets%/Icon-iPhone-180.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="%sveltekit.assets%/Icon-Taskbar-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="%sveltekit.assets%/Icon-Browser-16.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="%sveltekit.assets%/Icon-Desktop-96.png">
-    <link rel="manifest" href="%sveltekit.assets%/manifest.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="%sveltekit.assets%/Icon-iPhone-180.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%sveltekit.assets%/Icon-Taskbar-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="%sveltekit.assets%/Icon-Browser-16.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="%sveltekit.assets%/Icon-Desktop-96.png" />
+    <link rel="manifest" href="%sveltekit.assets%/manifest.webmanifest" />
 
     %sveltekit.head%
-</head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-7Y79R44N2Q"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  </head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7Y79R44N2Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
 
-  gtag('config', 'G-7Y79R44N2Q');
-</script>
-<body data-sveltekit-preload-data="hover">
-<noscript>
-    <p>
-        This app requires JavaScript to run. Please enable JavaScript and reload the page.
-    </p>
-</noscript>
-<div style="display: contents">%sveltekit.body%</div>
-</body>
+    gtag('config', 'G-7Y79R44N2Q');
+  </script>
+  <body data-sveltekit-preload-data="hover">
+    <noscript>
+      <p>This app requires JavaScript to run. Please enable JavaScript and reload the page.</p>
+    </noscript>
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
 </html>

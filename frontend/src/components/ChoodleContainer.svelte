@@ -1,5 +1,5 @@
 <div class="choodle-container" {...$$restProps}>
-  <slot/>
+  <slot />
 </div>
 
 <style>
@@ -26,4 +26,3 @@
     box-shadow: 1px 1px 17.74193572998047px 0.8870968222618103px rgba(0, 0, 0, 0.12);
   }
 </style>
-

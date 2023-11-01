@@ -1,5 +1,5 @@
 <script lang="ts">
-  import TopBar from "./TopBar.svelte";
+  import TopBar from './TopBar.svelte';
 
   export let guessesRemaining: number | undefined = undefined;
   export let guessesLimit: number | undefined = undefined;
@@ -7,7 +7,7 @@
 
 <TopBar {...$$restProps}>
   <div slot="topBarContent" class="guessingHUDInner">
-    <slot name="content"/>
+    <slot name="content" />
 
     {#if guessesRemaining !== undefined && guessesLimit !== undefined}
       <div class="guessCounter">

@@ -5,34 +5,35 @@
   export type hint = {
     used: boolean;
     text: string;
-  }
+  };
   export let hints: hint[] = [];
   export let hintCta = '';
   export let activeHint = -1;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  export let afterHint = (hint: hint) => {
-  }
+  export let afterHint = (hint: hint) => {};
 
   const activateHint = (index) => () => {
     activeHint = index;
     hints[index].used = true;
 
-    afterHint(hints[index])
-  }
+    afterHint(hints[index]);
+  };
 </script>
 
 <div class="hintsContainer">
   {#if hints?.length > 0}
     <div class="hintButtons">
       {#each hints as hint, index}
-        <button on:click={activateHint(index)}
-                class={`hintButton ${index == activeHint ? 'active' : '' } ${hint.used ? 'used' : ''}`}>
+        <button
+          on:click={activateHint(index)}
+          class={`hintButton ${index == activeHint ? 'active' : ''} ${hint.used ? 'used' : ''}`}
+        >
           {#if hint.used}
-            <img src={lifeSaverIcon} alt="reveal a hint"/>
-            <img src={redX} alt="hint used" style="position: absolute;"/>
+            <img src={lifeSaverIcon} alt="reveal a hint" />
+            <img src={redX} alt="hint used" style="position: absolute;" />
           {:else}
-            <img src={lifeSaverIcon} alt="reveal a hint"/>
+            <img src={lifeSaverIcon} alt="reveal a hint" />
           {/if}
         </button>
       {/each}
@@ -73,7 +74,7 @@
     justify-content: center;
     gap: 0.5rem;
     border-radius: 0.125rem;
-    background: var(--colors-greyscale-200, #D3D3D3);
+    background: var(--colors-greyscale-200, #d3d3d3);
     width: 2rem;
     height: 2rem;
     border: none;

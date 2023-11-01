@@ -1,9 +1,9 @@
 <script lang="ts">
-  import {browser} from "$app/environment"
+  import { browser } from '$app/environment';
   import { onMount } from 'svelte';
   import { DialogOverlay, DialogContent } from 'svelte-accessible-dialog';
-  import { dialogState } from "$lib/store"
-  import closeBtn from "$lib/assets/icon-close-32px.svg"
+  import { dialogState } from '$lib/store';
+  import closeBtn from '$lib/assets/icon-close-32px.svg';
 
   export let initialOpen = false;
   let isOpen: boolean;
@@ -15,37 +15,40 @@
 
     return () => {
       dialogState.update((dialogs) => {
-        console.info(`Unmounting Dialog ${id}...`, dialogs)
-        delete dialogs[id]
-        return dialogs
-      })
-    }
-  })
+        console.info(`Unmounting Dialog ${id}...`, dialogs);
+        delete dialogs[id];
+        return dialogs;
+      });
+    };
+  });
 
   dialogState.subscribe((dialogs) => {
     isOpen = dialogs[id];
-    console.info(`Subscription: Dialog ${id} is ${dialogs[id] ? 'open' : 'closed'}`, dialogs)
-  })
+    console.info(`Subscription: Dialog ${id} is ${dialogs[id] ? 'open' : 'closed'}`, dialogs);
+  });
 
   function dismiss() {
-    dialogState.update(dialogs => { return { ...dialogs, [id]: false }})
+    dialogState.update((dialogs) => {
+      return { ...dialogs, [id]: false };
+    });
 
-    onClose?.()
+    onClose?.();
   }
 </script>
 
 {#if browser}
-<DialogOverlay {id} {isOpen} onDismiss={dismiss} class={`overlay`}>
-  <DialogContent aria-label="Dialog" class={`dialog`}>
-    <button class="close-btn" on:click={dismiss}><img src={closeBtn} alt="icon of an X for exit" title="close dialog"/></button>
+  <DialogOverlay {id} {isOpen} onDismiss={dismiss} class={`overlay`}>
+    <DialogContent aria-label="Dialog" class={`dialog`}>
+      <button class="close-btn" on:click={dismiss}
+        ><img src={closeBtn} alt="icon of an X for exit" title="close dialog" /></button
+      >
 
-    <div class="content">
-      <slot name="header" />
-      <slot />
-    </div>
-
-  </DialogContent>
-</DialogOverlay>
+      <div class="content">
+        <slot name="header" />
+        <slot />
+      </div>
+    </DialogContent>
+  </DialogOverlay>
 {/if}
 
 <style>
@@ -58,7 +61,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: env(safe-area-inset-top, 1rem) env(safe-area-inset-right, 1rem) env(safe-area-inset-bottom, 1rem) env(safe-area-inset-left, 1rem);
+    padding: env(safe-area-inset-top, 1rem) env(safe-area-inset-right, 1rem)
+      env(safe-area-inset-bottom, 1rem) env(safe-area-inset-left, 1rem);
   }
 
   :global([data-svelte-dialog-content].dialog) {

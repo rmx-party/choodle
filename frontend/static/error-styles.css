@@ -1,16 +1,15 @@
-
 @font-face {
-    font-family: 'DejaVu Sans';
-    src: url('/fonts/DejaVuSans-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'DejaVu Sans';
+  src: url('/fonts/DejaVuSans-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'DejaVu Sans Bold';
-    src: url('/fonts/DejaVuSans-Bold-webfont.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
+  font-family: 'DejaVu Sans Bold';
+  src: url('/fonts/DejaVuSans-Bold-webfont.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
 }
 
 :root {
@@ -73,11 +72,15 @@ pre {
   gap: 0.5rem;
   flex-shrink: 0;
   border-radius: 4rem;
-  border: 1px solid #FFF506;
-  background: var(--choodle-yellow, #FEF40A);
+  border: 1px solid #fff506;
+  background: var(--choodle-yellow, #fef40a);
 
   /* button/action */
-  box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.01), 0px -2px 8px 0px rgba(0, 0, 0, 0.12) inset, 0px 2px 24px 0px rgba(255, 255, 255, 0.40) inset, 0px 1px 4px 0px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0px 4px 24px 0px rgba(0, 0, 0, 0.01),
+    0px -2px 8px 0px rgba(0, 0, 0, 0.12) inset,
+    0px 2px 24px 0px rgba(255, 255, 255, 0.4) inset,
+    0px 1px 4px 0px rgba(0, 0, 0, 0.04);
   backdrop-filter: blur(40px);
 
   color: #000;

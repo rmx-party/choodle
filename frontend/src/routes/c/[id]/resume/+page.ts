@@ -1,17 +1,17 @@
-import {readOnlyClient} from "$lib/CMSUtils";
+import { readOnlyClient } from '$lib/CMSUtils';
 
 export const ssr = false;
 
-export async function load({params}) {
-    const choodle = await readOnlyClient.fetch(`*[_type == "choodle" && _id == "${params.id}"]`);
+export async function load({ params }) {
+  const choodle = await readOnlyClient.fetch(`*[_type == "choodle" && _id == "${params.id}"]`);
 
-    if (choodle) {
-        return {
-            choodle: choodle[0],
-        };
-    }
+  if (choodle) {
     return {
-        status: 500,
-        body: new Error("Internal Server Error")
+      choodle: choodle[0],
     };
+  }
+  return {
+    status: 500,
+    body: new Error('Internal Server Error'),
+  };
 }

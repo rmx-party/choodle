@@ -1,151 +1,169 @@
 :root {
-    --debug: 0;
-    --app-main-font-family: 'DejaVu Sans';
-    --font-size-base: 16px;
-    --choodle-yellow: #FEF40A;
-    --choodle-black: #141518;
-    --color-link: #051BDC;
-    --page-background-color: var(--choodle-yellow);
+  --debug: 0;
+  --app-main-font-family: 'DejaVu Sans';
+  --font-size-base: 16px;
+  --choodle-yellow: #fef40a;
+  --choodle-black: #141518;
+  --color-link: #051bdc;
+  --page-background-color: var(--choodle-yellow);
 
-    --choodle-max-height-offset: 60svh;
+  --choodle-max-height-offset: 60svh;
 }
 
-html, button, input, label {
-    font-family: var(--app-main-font-family);
-    font-size: var(--font-size-base);
-    color: var(--choodle-black);
+html,
+button,
+input,
+label {
+  font-family: var(--app-main-font-family);
+  font-size: var(--font-size-base);
+  color: var(--choodle-black);
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-html, body, main {
-    padding: 0;
-    margin: 0;
+html,
+body,
+main {
+  padding: 0;
+  margin: 0;
 }
 
 html {
-    background: var(--page-background-color);
+  background: var(--page-background-color);
 }
 
 body {
-    margin: 0 auto;
-    padding: 0;
-    max-width: 720px;
-    display: block;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 720px;
+  display: block;
 }
 
 pre {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 }
 
 /* Typography */
 /* https://www.figma.com/file/wozIImqVXBLj3XbQH4tqCw/Choodle?type=design&node-id=733-280551&mode=dev */
 h1 {
-    color: var(--choodle-black);
+  color: var(--choodle-black);
 
-    /* mobile/h1 */
-    font-family: DejaVu Sans Bold;
-    font-size: 2rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 120%; /* 2.4rem */
-    letter-spacing: 0.004rem;
+  /* mobile/h1 */
+  font-family: DejaVu Sans Bold;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 2.4rem */
+  letter-spacing: 0.004rem;
 }
 
 h2 {
-    color: var(--choodle-black);
+  color: var(--choodle-black);
 
-    /* mobile/h2 */
-    font-family: DejaVu Sans;
-    font-size: 2rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 120%; /* 2.4rem */
-    letter-spacing: 0.004rem;
+  /* mobile/h2 */
+  font-family: DejaVu Sans;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 2.4rem */
+  letter-spacing: 0.004rem;
 }
 
 h3 {
-    color: var(--choodle-black);
+  color: var(--choodle-black);
 
-    /* h3-reg */
-    font-family: DejaVu Sans;
-    font-size: 1.125rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 120%; /* 1.35rem */
+  /* h3-reg */
+  font-family: DejaVu Sans;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 1.35rem */
 
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
-h3 strong, h3 b, h3 .body-bold, strong h3, b h3, .body-bold h3 {
-    font-family: DejaVu Sans Bold;
-    font-size: 1.125rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 120%; /* 1.35rem */
+h3 strong,
+h3 b,
+h3 .body-bold,
+strong h3,
+b h3,
+.body-bold h3 {
+  font-family: DejaVu Sans Bold;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 1.35rem */
 }
 
-.body-bold, strong, b {
-    color: var(--choodle-black);
+.body-bold,
+strong,
+b {
+  color: var(--choodle-black);
 
-    /* mobile/body-bold */
-    font-family: DejaVu Sans Bold;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 120%; /* 1.2rem */
+  /* mobile/body-bold */
+  font-family: DejaVu Sans Bold;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 1.2rem */
 }
 
-body, .body-reg, p {
-    color: var(--choodle-black);
+body,
+.body-reg,
+p {
+  color: var(--choodle-black);
 
-    /* mobile/body-reg */
-    font-family: DejaVu Sans;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 120%; /* 1.2rem */
+  /* mobile/body-reg */
+  font-family: DejaVu Sans;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 1.2rem */
 }
 
-p, .body-reg {
-    margin: 0;
-    padding: 0em 0 0;
-    min-height: 1em;
+p,
+.body-reg {
+  margin: 0;
+  padding: 0em 0 0;
+  min-height: 1em;
 }
 
-a, .link {
-    color: var(--color-link);
+a,
+.link {
+  color: var(--color-link);
 
-    /* mobile/link */
-    font-family: DejaVu Sans;
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 120%; /* 1.2rem */
-    text-decoration-line: underline;
+  /* mobile/link */
+  font-family: DejaVu Sans;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 1.2rem */
+  text-decoration-line: underline;
 }
 
-.caption-bold, figcaption strong {
-    color: var(--choodle-black);
+.caption-bold,
+figcaption strong {
+  color: var(--choodle-black);
 
-    /* mobile/caption-bold */
-    font-family: DejaVu Sans Bold;
-    font-size: 0.875rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 120%; /* 1.05rem */
+  /* mobile/caption-bold */
+  font-family: DejaVu Sans Bold;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 1.05rem */
 }
 
-.caption-reg, figcaption {
-    color: var(--choodle-black);
+.caption-reg,
+figcaption {
+  color: var(--choodle-black);
 
-    /* mobile/caption-reg */
-    font-family: DejaVu Sans;
-    font-size: 0.875rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 120%; /* 1.05rem */
+  /* mobile/caption-reg */
+  font-family: DejaVu Sans;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 1.05rem */
 }

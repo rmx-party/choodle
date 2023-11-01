@@ -1,4 +1,3 @@
-
 <menu class="buttons" {...$$restProps}>
   <slot />
 </menu>

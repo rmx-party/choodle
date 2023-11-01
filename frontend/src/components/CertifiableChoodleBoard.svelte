@@ -1,23 +1,21 @@
 <script lang="ts">
-  import Prompt from "./Prompt.svelte";
-  import localforage from "localforage";
-  import {
-    choodleCreatorEmailKey,
-  } from "$lib/Configuration";
-  import {onMount, SvelteComponent} from "svelte";
-  import {browser} from "$app/environment";
-  import {urlFor} from "$lib/PersistedImagesUtils";
-  import Dialog from "./Dialog.svelte";
-  import Button from "./Button.svelte";
-  import {toHTML} from "@portabletext/to-html";
-  import {dialogState, loading, loadingMessage} from "$lib/store";
-  import {clearStorage, getUndoStack} from "$lib/StorageStuff";
-  import {goto} from "$app/navigation";
-  import type {UndoStack} from "$lib/UndoStack";
-  import ChoodleBoard from "./ChoodleBoard.svelte";
-  import {saveChoodle} from "$lib/ChoodleStorage";
-  import {getDeviceId} from "$lib/CreatorUtils";
-  import ButtonMenu from "./ButtonMenu.svelte";
+  import Prompt from './Prompt.svelte';
+  import localforage from 'localforage';
+  import { choodleCreatorEmailKey } from '$lib/Configuration';
+  import { onMount, SvelteComponent } from 'svelte';
+  import { browser } from '$app/environment';
+  import { urlFor } from '$lib/PersistedImagesUtils';
+  import Dialog from './Dialog.svelte';
+  import Button from './Button.svelte';
+  import { toHTML } from '@portabletext/to-html';
+  import { dialogState, loading, loadingMessage } from '$lib/store';
+  import { clearStorage, getUndoStack } from '$lib/StorageStuff';
+  import { goto } from '$app/navigation';
+  import type { UndoStack } from '$lib/UndoStack';
+  import ChoodleBoard from './ChoodleBoard.svelte';
+  import { saveChoodle } from '$lib/ChoodleStorage';
+  import { getDeviceId } from '$lib/CreatorUtils';
+  import ButtonMenu from './ButtonMenu.svelte';
 
   export let id;
   export let prompt;
@@ -33,122 +31,144 @@
   const promptForEmailOrSave = async (event: Event) => {
     if (!browser) return;
 
-    const undoStack = await getUndoStack()
+    const undoStack = await getUndoStack();
     if (undoStack.current === '') return loading.set(false);
 
-    const asyncCreatorEmail = (async () => creatorEmail = await localforage.getItem(choodleCreatorEmailKey))()
+    const asyncCreatorEmail = (async () =>
+      (creatorEmail = await localforage.getItem(choodleCreatorEmailKey)))();
 
-    if (!creatorEmail && !await asyncCreatorEmail) {
-      console.log(`prompting for email...`)
-      dialogState.update(dialogs => {
-        return {...dialogs, ["email-prompt"]: true}
-      })
+    if (!creatorEmail && !(await asyncCreatorEmail)) {
+      console.log(`prompting for email...`);
+      dialogState.update((dialogs) => {
+        return { ...dialogs, ['email-prompt']: true };
+      });
     } else {
-      console.log(`saving without email...`)
-      child.save(event)
+      console.log(`saving without email...`);
+      child.save(event);
     }
-  }
+  };
 
   const saveCreatorEmail = async (event) => {
     if (!browser) return;
-    const input = document.getElementById('creator-email') as HTMLInputElement
-    const validity = input.reportValidity()
+    const input = document.getElementById('creator-email') as HTMLInputElement;
+    const validity = input.reportValidity();
     if (validity === false) return;
 
-    console.log(`saving creator email`)
-    creatorEmail = creatorEmailInput
+    console.log(`saving creator email`);
+    creatorEmail = creatorEmailInput;
 
-    await localforage.setItem(choodleCreatorEmailKey, creatorEmail)
+    await localforage.setItem(choodleCreatorEmailKey, creatorEmail);
 
     // TODO: maybe also instruct server to remap sanity creator id to email
 
-    dialogState.update(dialogs => {
-      return {...dialogs, ["email-prompt"]: false}
-    })
-    child.save(event)
-  }
+    dialogState.update((dialogs) => {
+      return { ...dialogs, ['email-prompt']: false };
+    });
+    child.save(event);
+  };
 
   onMount(async () => {
     if (!browser) return;
 
     window.addEventListener('online', () => {
-      console.log('online')
-      isOnline = true
-    })
+      console.log('online');
+      isOnline = true;
+    });
     window.addEventListener('offline', () => {
-      console.log('offline')
-      isOnline = false
-    })
+      console.log('offline');
+      isOnline = false;
+    });
 
     const storedCreatorEmail = await localforage.getItem(choodleCreatorEmailKey);
     if (storedCreatorEmail) {
-      creatorEmail = storedCreatorEmail
+      creatorEmail = storedCreatorEmail;
     }
   });
 
-  async function sendCreatorCertificate({creatorEmail, choodleId}: { creatorEmail: string, choodleId: string }) {
-    console.log(`sending certificate to ${creatorEmail} for ${choodleId}`)
+  async function sendCreatorCertificate({
+    creatorEmail,
+    choodleId,
+  }: {
+    creatorEmail: string;
+    choodleId: string;
+  }) {
+    console.log(`sending certificate to ${creatorEmail} for ${choodleId}`);
     const pendingRequest = fetch(`/api/certificateMail`, {
       method: 'POST',
-      body: JSON.stringify({creatorEmail, choodleId}),
+      body: JSON.stringify({ creatorEmail, choodleId }),
       headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    const json = await (await pendingRequest).json()
-    console.log(`creator certificate result`, json)
+        'Content-Type': 'application/json',
+      },
+    });
+    const json = await (await pendingRequest).json();
+    console.log(`creator certificate result`, json);
 
-    return json
+    return json;
   }
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
-    const asyncCreatorId = (async () => await getDeviceId())()
+    const asyncCreatorId = (async () => await getDeviceId())();
 
     const choodleId = await saveChoodle(undoStack, canvas, {
       creatorId: await asyncCreatorId,
-    })
+    });
 
     let sendingCertificate;
-    const clearingStorage = clearStorage()
-    const creatorEmail = await localforage.getItem(choodleCreatorEmailKey)
+    const clearingStorage = clearStorage();
+    const creatorEmail = await localforage.getItem(choodleCreatorEmailKey);
     if (creatorEmail) {
-      sendingCertificate = sendCreatorCertificate({creatorEmail, choodleId: choodleId})
-      loadingMessage.set('generating certificate')
+      sendingCertificate = sendCreatorCertificate({ creatorEmail, choodleId: choodleId });
+      loadingMessage.set('generating certificate');
     }
 
-    const promises = [clearingStorage, sendingCertificate]
-    console.log(`awaiting promises`, promises)
-    await Promise.all(promises) // TODO: may need to handle error with user feedback
-    console.log(`promises resolved, navigating`)
+    const promises = [clearingStorage, sendingCertificate];
+    console.log(`awaiting promises`, promises);
+    await Promise.all(promises); // TODO: may need to handle error with user feedback
+    console.log(`promises resolved, navigating`);
 
-    await goto(`/c/${choodleId}`)
+    await goto(`/c/${choodleId}`);
   }
 </script>
 
-<Prompt prompt={prompt.prompt} slot="topBar"/>
-<ChoodleBoard id={id} bind:this={child} performSave={performSave}>
-
+<Prompt prompt={prompt.prompt} slot="topBar" />
+<ChoodleBoard {id} bind:this={child} {performSave}>
   <ButtonMenu slot="buttons">
     <Button on:click={child.undo} colour="yellow">Undo</Button>
-    <Button on:click={promptForEmailOrSave} isOnline={isOnline} colour="yellow">Done</Button>
+    <Button on:click={promptForEmailOrSave} {isOnline} colour="yellow">Done</Button>
   </ButtonMenu>
   <Dialog id={'email-prompt'}>
     <header slot="header">{@html toHTML(certificateModal.title)}</header>
     {#if certificateModal.Image}
-      <img height="100" style="margin: 1.5rem;" src="{urlFor(certificateModal.Image)}" alt="Choodle Certificate"/>
+      <img
+        height="100"
+        style="margin: 1.5rem;"
+        src={urlFor(certificateModal.Image)}
+        alt="Choodle Certificate"
+      />
     {/if}
     <div>{@html toHTML(certificateModal.body)}</div>
-    <br/>
+    <br />
 
-    <label for="creator-email" style="text-align: left; display: block; font-family: Dejavu Sans Bold;">Email
-      <br/>
-      <input bind:value={creatorEmailInput} type="email" id="creator-email" name="creatorEmail"
-             placeholder="Enter Email"
-             required title="Please enter a valid email address as the creator to attribute this art to" style='width: 100%; padding:
-          1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;'/>
+    <label
+      for="creator-email"
+      style="text-align: left; display: block; font-family: Dejavu Sans Bold;"
+      >Email
+      <br />
+      <input
+        bind:value={creatorEmailInput}
+        type="email"
+        id="creator-email"
+        name="creatorEmail"
+        placeholder="Enter Email"
+        required
+        title="Please enter a valid email address as the creator to attribute this art to"
+        style="width: 100%; padding:
+          1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;"
+      />
     </label>
 
-    <Button on:click={saveCreatorEmail} variant="primary"
-            colour="yellow">{certificateModal.CTA}</Button>
+    <Button on:click={saveCreatorEmail} variant="primary" colour="yellow"
+      >{certificateModal.CTA}</Button
+    >
   </Dialog>
 </ChoodleBoard>

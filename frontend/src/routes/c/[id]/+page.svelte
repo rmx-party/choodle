@@ -1,108 +1,108 @@
 <script lang="ts">
-  import {urlFor} from "$lib/PersistedImagesUtils"
-  import {page} from "$app/stores";
-  import Button from "../../../components/Button.svelte";
-  import handDraw from "$lib/assets/hand-draw.svg"
-  import send from "$lib/assets/send.svg"
-  import MetaData from "../../../components/MetaData.svelte";
-  import {goto} from "$app/navigation";
-  import {clearStorage} from "$lib/StorageStuff";
-  import {toHTML} from "@portabletext/to-html";
-  import Wordmark from "../../../components/Wordmark.svelte";
-  import {onMount} from "svelte";
-  import {browser} from "$app/environment";
-  import ChoodleContainer from "../../../components/ChoodleContainer.svelte";
-  import ButtonMenu from "../../../components/ButtonMenu.svelte";
-  import LayoutContainer from "../../../components/LayoutContainer.svelte";
-  import { choodleYellow } from "$lib/Configuration";
+  import { urlFor } from '$lib/PersistedImagesUtils';
+  import { page } from '$app/stores';
+  import Button from '../../../components/Button.svelte';
+  import handDraw from '$lib/assets/hand-draw.svg';
+  import send from '$lib/assets/send.svg';
+  import MetaData from '../../../components/MetaData.svelte';
+  import { goto } from '$app/navigation';
+  import { clearStorage } from '$lib/StorageStuff';
+  import { toHTML } from '@portabletext/to-html';
+  import Wordmark from '../../../components/Wordmark.svelte';
+  import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
+  import ChoodleContainer from '../../../components/ChoodleContainer.svelte';
+  import ButtonMenu from '../../../components/ButtonMenu.svelte';
+  import LayoutContainer from '../../../components/LayoutContainer.svelte';
+  import { choodleYellow } from '$lib/Configuration';
 
   export let data = {};
   let imgBlob;
 
   const canShare = (): boolean => {
-    console.log('canshare')
-    console.log(imgBlob)
+    console.log('canshare');
+    console.log(imgBlob);
     if (!browser) return false;
     if (!navigator.share) return false;
-    return navigator.canShare(generateShareableFor(imgBlob))
-  }
+    return navigator.canShare(generateShareableFor(imgBlob));
+  };
 
   function generateFilesFor(imgBlob: Blob) {
     return [
-      new File(
-        [imgBlob],
-        'c.png',
-        {
-          type: 'image/png',
-          lastModified: Date.now()
-        }
-      )
+      new File([imgBlob], 'c.png', {
+        type: 'image/png',
+        lastModified: Date.now(),
+      }),
     ];
   }
 
   onMount(async () => {
     const img: unknown = urlFor(data.choodle.upScaledImage);
     imgBlob = await (await fetch(img as URL)).blob();
-  })
+  });
 
   function generateShareableFor() {
     return {
       title: 'Choodle',
-      url: $page.url
+      url: $page.url,
     };
   }
 
   const share = async (event: Event) => {
     if (!browser) return;
-    event.preventDefault()
+    event.preventDefault();
     // const files = generateFilesFor(imgBlob);
-    console.log('page url: ', $page.url)
+    console.log('page url: ', $page.url);
     if (navigator.share) {
-      navigator.share(generateShareableFor()).then(() => {
-        console.log('Thanks for sharing!');
-      }).catch(console.error);
+      navigator
+        .share(generateShareableFor())
+        .then(() => {
+          console.log('Thanks for sharing!');
+        })
+        .catch(console.error);
     } else {
-      console.error('Web Share API not supported')
+      console.error('Web Share API not supported');
     }
   };
 
   const clearAndStartOver = async () => {
-    clearStorage()
-    await goto("/draw")
-  }
+    clearStorage();
+    await goto('/draw');
+  };
 
   const topContent = () => {
     if (data.copy?.tagline) {
-      return toHTML(data.copy.tagline)
+      return toHTML(data.copy.tagline);
     }
-    return ''
-  }
+    return '';
+  };
 
   const bottomContent = () => {
     if (data.copy?.bottom) {
-      return toHTML(data.copy.bottom)
+      return toHTML(data.copy.bottom);
     }
-    return ''
-  }
+    return '';
+  };
 
   const resetViewportUnit = async () => {
     if (!browser) return;
     // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
-  }
+  };
 
   onMount(() => {
     let root = document.documentElement;
     root.style.setProperty('--page-background-color', 'var(--choodle-yellow)');
 
     setTimeout(async () => {
-      await resetViewportUnit()
+      await resetViewportUnit();
     }, 20);
-  })
+  });
 </script>
 
-<MetaData url={$page.url}
+<MetaData
+  url={$page.url}
   title="Look, it's a Choodle"
   imageUrl={urlFor(data.choodle.upScaledImage).url()}
   themeColor={choodleYellow}
@@ -113,7 +113,7 @@
 <LayoutContainer>
   <div id="top-box">
     <a href="/">
-      <Wordmark fontSize="4.25rem"/>
+      <Wordmark fontSize="4.25rem" />
     </a>
     <span class="tagline">
       {@html topContent()}
@@ -121,7 +121,7 @@
   </div>
 
   <ChoodleContainer>
-    <img src={urlFor(data.choodle.upScaledImage).url()} width='390' height='520' alt=''/>
+    <img src={urlFor(data.choodle.upScaledImage).url()} width="390" height="520" alt="" />
   </ChoodleContainer>
 
   <section class="content">
@@ -131,7 +131,7 @@
   <ButtonMenu>
     <Button on:click={clearAndStartOver} icon={handDraw}>New</Button>
     {#if canShare()}
-      <Button on:click={share} icon={send} iconPosition='right'>Share</Button>
+      <Button on:click={share} icon={send} iconPosition="right">Share</Button>
     {/if}
   </ButtonMenu>
 </LayoutContainer>

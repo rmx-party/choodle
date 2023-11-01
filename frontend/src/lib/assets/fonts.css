@@ -1,13 +1,13 @@
 @font-face {
-    font-family: 'DejaVu Sans';
-    src: url('/fonts/DejaVuSans-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'DejaVu Sans';
+  src: url('/fonts/DejaVuSans-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'DejaVu Sans Bold';
-    src: url('/fonts/DejaVuSans-Bold-webfont.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
+  font-family: 'DejaVu Sans Bold';
+  src: url('/fonts/DejaVuSans-Bold-webfont.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
 }

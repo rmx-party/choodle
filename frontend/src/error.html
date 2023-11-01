@@ -1,35 +1,41 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
+  <head>
+    <meta charset="utf-8" />
     <title>Choops!</title>
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0">
+    <meta
+      name="viewport"
+      content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0"
+    />
     <link rel="stylesheet" href="/error-styles.css" />
-</head>
-<body>
+  </head>
+  <body>
     <h1>Oops!</h1>
     <p>Looks like you encountered an unknown error in cyberspace.</p>
 
-    <img class="error-image" src='/choodle-bob-p2.png'  alt="A doodle of the painter Bob Ross, slightly smiling" />
-<pre>
+    <img
+      class="error-image"
+      src="/choodle-bob-p2.png"
+      alt="A doodle of the painter Bob Ross, slightly smiling"
+    />
+    <pre>
 %sveltekit.status%
 %sveltekit.error.message%
-</pre>
+</pre
+    >
 
     <a id="back-link" onClick="goBack">Back</a>
 
     <p>Having trouble? <a href="mailto:help@choodle.xyz">Email us</a></p>
 
-    <footer>
-        Choodle © 2023
-    </footer>
-</body>
-<script defer>
+    <footer>Choodle © 2023</footer>
+  </body>
+  <script defer>
     function goBack() {
-        history.back();
-        return false;
+      history.back();
+      return false;
     }
     var element = document.getElementById('back-link');
     element.setAttribute('href', document.referrer);
-</script>
+  </script>
 </html>
