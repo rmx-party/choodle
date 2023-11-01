@@ -6,11 +6,6 @@
   import MetaData from '../components/MetaData.svelte';
   import { browser } from '$app/environment';
 
-  function reload() {
-    if (!browser) return;
-    window.location.reload(true);
-  }
-
   const resetViewportUnit = async () => {
     if (!browser) return;
     // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
@@ -75,13 +70,6 @@
     margin-top: 2rem;
     margin-bottom: 1.5rem;
     object-fit: contain;
-  }
-
-  pre {
-    text-align: left;
-    white-space: pre-wrap;
-    margin: 0 auto;
-    display: block;
   }
 
   footer {

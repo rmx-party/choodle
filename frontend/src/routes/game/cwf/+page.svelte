@@ -186,12 +186,6 @@
     justify-content: center;
   }
 
-  header {
-    display: block;
-    width: 100%;
-    text-align: right;
-  }
-
   nav {
     display: block;
     width: 100%;
