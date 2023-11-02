@@ -98,18 +98,22 @@
       <img src={urlFor(data.copy.logoTwo).url()} width="80%" alt=""/>
     </div>
 
-    <nav>
-      {#each navItems as navItem}
-        <span
-          on:click={() => {
-            activeTab.set(navItem);
-          }}
-          class={`${navItem == $activeTab ? 'active' : ''}`}
-        >
-          {navItem}
-        </span>
-      {/each}
-    </nav>
+    <section class="nav-and-hud">
+      <nav>
+        {#each navItems as navItem}
+          <span
+            on:click={() => {
+              activeTab.set(navItem);
+            }}
+            class={`${navItem == $activeTab ? 'active' : ''}`}
+          >
+            {navItem}
+          </span>
+        {/each}
+      </nav>
+
+      <span class="username">{currentChoodler.username}</span>
+    </section>
 
     {#if $activeTab === 'my games'}
       <section class="tabContent my-games">
@@ -159,9 +163,16 @@
     justify-content: center;
   }
 
-  nav {
-    display: block;
+  .nav-and-hud {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
     width: 100%;
+  }
+  nav {
+    align-self: flex-start;
+    display: block;
     margin: 1rem 0 2rem;
     text-align: left;
 
@@ -182,6 +193,20 @@
 
   nav > span + span {
     margin-top: 1rem;
+  }
+
+  .username {
+    display: inline-block;
+    text-align: right;
+    color: var(--text-text-primary, #141518);
+    background: var(--colors-brand-choodle-yellow, #fef40a);
+
+    /* mobile/caption-bold */
+    font-family: DejaVu Sans Bold;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%; /* 1.05rem */
   }
 
   .tabContent {
@@ -217,9 +242,5 @@
 
   .status {
     text-align: center;
-  }
-
-  .username {
-    text-align: right;
   }
 </style>
