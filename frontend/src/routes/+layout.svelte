@@ -1,13 +1,14 @@
 <script lang="ts">
-  import { browser, dev } from '$app/environment';
-  import { isOnline } from '$lib/store';
-  import { webVitals } from '$lib/vitals';
+  import {browser, dev} from '$app/environment';
+  import {isOnline} from '$lib/store';
+  import {webVitals} from '$lib/vitals';
   import '$lib/assets/fonts.css';
-  import { onMount } from 'svelte';
+  import {onMount} from 'svelte';
   import '../app.css';
   import LoadingIndicator from '../components/LoadingIndicator.svelte';
   import Bugsnag from '@bugsnag/js';
-  import { page } from '$app/stores';
+  import {page} from '$app/stores';
+  import fp from "lodash/fp";
 
   export let data;
 
@@ -21,8 +22,10 @@
   }
 
   if (browser && !dev) {
-    Bugsnag.start({ apiKey: '91931cee1cbae5feec1925a566386158' });
+    Bugsnag.start({apiKey: '91931cee1cbae5feec1925a566386158'});
   }
+
+  const rotatingMessages = fp.filter(msg => msg, [data.copy?.loadingMessage1, data.copy?.loadingMessage2, data.copy?.loadingMessage3, data.copy?.loadingMessage4, data.copy?.loadingMessage5])
 
   onMount(async () => {
     if (!browser) return;
@@ -38,5 +41,5 @@
   });
 </script>
 
-<LoadingIndicator />
-<slot />
+<LoadingIndicator {rotatingMessages}/>
+<slot/>

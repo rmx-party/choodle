@@ -1,19 +1,39 @@
 <script lang="ts">
-  import { loading, loadingMessage } from '$lib/store';
-  import { fade, blur } from 'svelte/transition';
+  import {loading, loadingMessage} from '$lib/store';
+  import {fade, blur} from 'svelte/transition';
   import AnimatedEllipses from './AnimatedEllipses.svelte';
-  import { onMount } from 'svelte';
+  import {onMount} from 'svelte';
+  import {toHTML} from "@portabletext/to-html";
+
+  export let rotatingMessages = []
+
+  let messageIndex = -1
+  let timeout
+  let interval
 
   onMount(() => {
     loading.subscribe((value) => {
       console.log(`loading state: `, value);
     });
+
+    if (rotatingMessages && rotatingMessages.length > 0)
+      timeout = setTimeout(() => {
+        messageIndex = 0
+        interval = setInterval(() => {
+          messageIndex = (messageIndex + 1) % rotatingMessages.length
+        }, 3000)
+      }, 1200)
+
+    return () => {
+      clearInterval(interval)
+      clearTimeout(timeout)
+    }
   });
 </script>
 
 {#if $loading}
   <div class="LoadingIndicator loading-backdrop" transition:blur={{ duration: 150 }}>
-    <div class="loading" in:fade={{ delay: 500, duration: 50 }}>
+    <div class="loading" in:fade={{ duration: 300 }}>
       <img
         class="loading-image"
         height="263"
@@ -21,11 +41,24 @@
         src="/choodle-bob-p2.png"
         alt="A doodle of the painter Bob Ross, slightly smiling"
       />
-      <strong>
-        {#if $loadingMessage.length > 0}
-          <span>{$loadingMessage}<AnimatedEllipses /></span>
+      <div class="messageContainer">
+        {#if messageIndex >= 0 && rotatingMessages.length > 0}
+          {#key messageIndex }
+            <div class="message" transition:fade={{duration: 300}}>
+              {@html toHTML(rotatingMessages[messageIndex])}
+            </div>
+          {/key}
+        {:else}
+          {#if $loadingMessage.length > 0}
+            <div class="message" transition:fade={{duration: 300}}>
+              <strong>
+          <span>{$loadingMessage}
+            <AnimatedEllipses/></span>
+              </strong>
+            </div>
+          {/if}
         {/if}
-      </strong>
+      </div>
     </div>
   </div>
 {:else}
@@ -55,6 +88,7 @@
 
     background: white;
   }
+
   /* loading element style */
   .loading {
     width: 100%;
@@ -65,9 +99,19 @@
     flex-direction: column;
   }
 
-  strong {
+  .messageContainer {
+    display: block;
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+  }
+
+  .message {
+    position: absolute;
     margin-top: 2.5rem;
-    text-align: left;
+    text-align: center;
+    width: 100%;
   }
 
   .loading-image {

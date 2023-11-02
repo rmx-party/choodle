@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
-  import { onDestroy } from 'svelte';
+  import {browser} from '$app/environment';
+  import {onDestroy} from 'svelte';
 
   const newEllipsesFrom = (oldEllipses) => {
     switch (oldEllipses) {
@@ -36,5 +36,6 @@
   .ellipses {
     display: inline-block;
     width: 1em;
+    text-align: left;
   }
 </style>
