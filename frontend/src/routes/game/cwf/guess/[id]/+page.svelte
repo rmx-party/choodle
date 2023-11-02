@@ -430,6 +430,13 @@
       >
         {data.copy.guess_failureNewGameButtonText}
       </Button>
+      <div>
+        <Button
+          on:click={() => {
+        goto('/game/cwf');
+      }}>{data.copy.guess_doneButtonText}</Button
+        >
+      </div>
     </div>
   {:else}
     {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
