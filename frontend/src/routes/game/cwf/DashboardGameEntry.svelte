@@ -1,28 +1,35 @@
 <script lang="ts">
-  import {streakCount} from '$lib/CWFGame';
-  import {goto} from '$app/navigation';
+  import {
+    streakCount,
+    type StreakGuessingGame,
+    type StreakGuessingGameChallenge,
+    type StreakGuessingGamePlayer,
+  } from '$lib/CWFGame';
+  import { goto } from '$app/navigation';
   import fp from 'lodash/fp';
   import streakFlame from '$lib/assets/streak-flame.svg';
 
-  export let currentChoodler;
-  export let game;
-  export let gameListUserUnknownText;
+  export let currentChoodler: StreakGuessingGamePlayer;
+  export let game: StreakGuessingGame;
+  export let gameListUserUnknownText: string;
 
-  const otherPlayerIn = (game) => {
+  const otherPlayerIn = (game: StreakGuessingGame) => {
     if (game.player1?._id === currentChoodler._id)
       return game.player2?.username || gameListUserUnknownText;
     return game.player1?.username || gameListUserUnknownText;
   };
 
-  const generateLinkFor = (game): string => {
-    let currentChallenge = game.currentChallenge;
-
+  const generateLinkFor = ({
+    currentChallenge,
+  }: {
+    currentChallenge: StreakGuessingGameChallenge;
+  }): string => {
     if (currentChallenge.challenger._id === currentChoodler._id && !currentChallenge.choodle) {
       return `/game/cwf/pick/${currentChallenge._id}`;
     }
 
     if (currentChallenge.challenger._id !== currentChoodler._id && !currentChallenge.choodle) {
-      return `/game/cwf/guess/${fp.last(game.guessResults).challenge._id}`;
+      return `/game/cwf/guess/${fp.last(game.guessResults)?.challenge?._id}`;
     }
 
     return `/game/cwf/guess/${currentChallenge._id}`;
@@ -30,8 +37,10 @@
 </script>
 
 <div class="game-entry">
-  <a href={generateLinkFor(game)} on:click={goto(generateLinkFor(game))}>{otherPlayerIn(game)}</a>
-  <div class="game-entry-streak"><img src={streakFlame}/>{streakCount(game)}</div>
+  <a href={generateLinkFor(game)} on:click={() => goto(generateLinkFor(game))}
+    >{otherPlayerIn(game)}</a
+  >
+  <div class="game-entry-streak"><img src={streakFlame} />{streakCount(game)}</div>
 </div>
 
 <style>
