@@ -101,7 +101,6 @@
 
   .messageContainer {
     display: block;
-    padding: 2rem 3rem;
     position: relative;
     width: 100%;
     max-width: 500px;
@@ -110,7 +109,7 @@
 
   .message {
     position: absolute;
-    margin-top: 2.5rem;
+    padding: 2rem 3rem;
     text-align: center;
     width: 100%;
   }
