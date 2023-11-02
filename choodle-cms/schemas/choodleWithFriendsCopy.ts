@@ -27,13 +27,13 @@ export default {
       name: 'landing_content',
       title: 'Content for the landing page',
       type: 'array',
-      of: [{ type: 'block' }]
+      of: [{type: 'block'}]
     },
     {
       name: 'rules_content',
       title: 'Rules of the Game',
       type: 'array',
-      of: [{ type: 'block' }]
+      of: [{type: 'block'}]
     },
     {
       name: 'gameListUserUnknownText',
@@ -49,7 +49,7 @@ export default {
       name: 'pick_promptSelectionPageTopContent',
       title: 'Prompt Selection Page Top Content',
       type: 'array',
-      of: [{ type: 'block' }]
+      of: [{type: 'block'}]
     },
     {
       name: 'pick_shuffleButtonText',
@@ -105,13 +105,13 @@ export default {
       name: 'guess_pageAuthorTopContent',
       title: 'Guess Page Top Content For Author',
       type: 'array',
-      of: [{ type: 'block' }]
+      of: [{type: 'block'}]
     },
     {
       name: 'guess_pageTopContent',
       title: 'Guess Page Top Content',
       type: 'array',
-      of: [{ type: 'block' }]
+      of: [{type: 'block'}]
     },
     {
       name: 'guess_doneButtonText',
@@ -162,7 +162,7 @@ export default {
       name: 'success_topContent',
       title: 'Success Page New Game Button Text',
       type: 'array',
-      of: [{ type: 'block' }]
+      of: [{type: 'block'}]
     },
     {
       name: 'success_continueGameButtonText',
@@ -173,6 +173,36 @@ export default {
       name: 'success_leaderboardButtonText',
       title: 'Success Page Leaderboard Button Text',
       type: 'string',
+    },
+    {
+      name: 'loadingMessage1',
+      title: 'Loading Message 1',
+      type: 'array',
+      of: [{type: 'block'}]
+    },
+    {
+      name: 'loadingMessage2',
+      title: 'Loading Message 2',
+      type: 'array',
+      of: [{type: 'block'}]
+    },
+    {
+      name: 'loadingMessage3',
+      title: 'Loading Message 3',
+      type: 'array',
+      of: [{type: 'block'}]
+    },
+    {
+      name: 'loadingMessage4',
+      title: 'Loading Message 4',
+      type: 'array',
+      of: [{type: 'block'}]
+    },
+    {
+      name: 'loadingMessage5',
+      title: 'Loading Message 5',
+      type: 'array',
+      of: [{type: 'block'}]
     },
   ]
 }
