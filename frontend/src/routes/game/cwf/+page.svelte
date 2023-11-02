@@ -23,7 +23,7 @@
 
   export let data;
   let currentChoodler: StreakGuessingGamePlayer;
-  let hasCreatedAChallenge = false;
+  let hasDismissedStartScreen = false;
 
   let myGames: StreakGuessingGame[] = [];
 
@@ -75,14 +75,6 @@
 
     currentChoodler = await creatorFetch;
 
-    if (currentChoodler?.choodles?.length > 0) {
-      // TODO: figure out the appropriate test for game participation
-      hasCreatedAChallenge = true;
-    } else {
-      loading.set(false);
-      return; // Don't load leaderboard stuff if player can't see it anyway
-    }
-
     // FIXME: make it so player is always here when we call isPlayerInGame
     myGames = fp.map(sortGuessResults,
       fp.filter(game => isPlayerInGame(game, currentChoodler), (data.games)))
@@ -103,14 +95,13 @@
 <MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url}/>
 
 <LayoutContainer>
-  {#if !hasCreatedAChallenge}
+  {#if !hasDismissedStartScreen}
     <img src={urlFor(data.copy.logoTwo).url()} width="80%" style="margin: 3rem auto;" alt=""/>
 
     {@html toHTML(data.copy.landing_content)}
 
-    <Button variant="primary" colour="yellow" on:click={startGame} style="margin: 3rem auto;"
-    >{data.copy.startGameButtonText}</Button
-    >
+    <Button variant="primary" colour="yellow" on:click={() => {hasDismissedStartScreen = true}}
+            style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
   {:else}
     <div>
       <img src={urlFor(data.copy.logoTwo).url()} width="80%" alt=""/>
@@ -188,6 +179,7 @@
     justify-content: space-between;
     width: 100%;
   }
+
   nav {
     align-self: flex-start;
     display: block;
