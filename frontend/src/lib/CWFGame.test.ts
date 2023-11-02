@@ -3,7 +3,7 @@ import {
   addGuessToGame,
   createCWFGame, createEmptyGameFromChallenge,
   isGameComplete,
-  isNormalizedGameComplete,
+  isNormalizedGameComplete, isPlayerInGame,
   normalizedGameStreakCount, otherPlayer, streakCount, whichAction, whoseTurn,
 } from "$lib/CWFGame";
 import type {
@@ -143,6 +143,30 @@ describe("StreakGuessingGame", () => {
       {...correctInOneGuess, challenge: challengeThatHasBeenDrawnByPlayer2}],
   }
 
+  describe("isPlayerInGame", () => {
+    it("player2 is not in a single player game", () => {
+      expect(isPlayerInGame(emptyGame, player2)).toBeFalsy()
+    })
+
+    it("player1 is in their single player game", () => {
+      expect(isPlayerInGame(emptyGame, player1)).toBeTruthy()
+    })
+
+    it("player2 is in their two player game", () => {
+      expect(isPlayerInGame(gameWithDrawingThatHasNotBeenGuessed, player2)).toBeTruthy()
+    })
+
+    it("player1 is in their two player game", () => {
+      expect(isPlayerInGame(gameWithDrawingThatHasNotBeenGuessed, player1)).toBeTruthy()
+    })
+
+    it("a random third player is not in a two player game between two other players", () => {
+      const randoPlayer: StreakGuessingGamePlayer = {_id: "player-rando"}
+
+      expect(isPlayerInGame(gameWithDrawingThatHasNotBeenGuessed, randoPlayer)).toBeFalsy()
+    })
+  })
+
   describe("other player", () => {
     it("is player1 when the current drawer is player2", () => {
       expect(otherPlayer(player2, gameWithDrawingThatHasNotBeenGuessed)).toEqual(player1)
@@ -155,7 +179,7 @@ describe("StreakGuessingGame", () => {
 
   describe("constructing a bare game from a challenge", () => {
     expect(createEmptyGameFromChallenge(challengeThatHasNotBeenDrawn)).toEqual(emptyGame)
-  });
+  })
 
   describe("streak counting", () => {
     it("starts at zero", () => {

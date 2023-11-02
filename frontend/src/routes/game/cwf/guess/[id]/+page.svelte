@@ -26,7 +26,7 @@
   import {closeDialog, loading, loadingMessage, openDialog} from '$lib/store';
   import Dialog from '../../../../../components/Dialog.svelte';
   import localforage from 'localforage';
-  import {isNormalizedGameComplete, normalizeGame} from '$lib/CWFGame';
+  import {isNormalizedGameComplete, isPlayerInGame, normalizeGame} from '$lib/CWFGame';
 
   loadingMessage.set('loading');
 
@@ -52,9 +52,6 @@
 
   let hints = [];
 
-  const isPlayerInGame = (game, player) => {
-    return game.player1._id === player._id || game.player2._id === player._id;
-  };
 
   const createCounterChallenge = async () => {
     console.log({game});

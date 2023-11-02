@@ -145,3 +145,7 @@ export const whichAction = (game: StreakGuessingGame): string => {
 
   return "guess"
 }
+
+export const isPlayerInGame = (game: StreakGuessingGame, player?: StreakGuessingGamePlayer) => {
+  return game.player1?._id === player?._id || game.player2?._id === player?._id
+}
