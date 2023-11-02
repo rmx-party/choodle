@@ -99,6 +99,8 @@ export type StreakGuessingGame = SanityDocumentMetadata & {
 }
 
 export const streakCount = (game: StreakGuessingGame): number => {
+  if (isGameComplete(game)) return 0;
+
   return fp.filter(guessResult => guessResult.guessedCorrectly, game.guessResults).length
 }
 

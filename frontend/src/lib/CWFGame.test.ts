@@ -186,6 +186,21 @@ describe("StreakGuessingGame", () => {
       expect(streakCount(emptyGame)).toBe(0)
     });
 
+    it("is zero if the game is complete", () => {
+      const game: StreakGuessingGame = {
+        _id: challengeThatHasNotBeenDrawn._id,
+        createdAt: challengeThatHasNotBeenDrawn.createdAt,
+        currentChallenge: anotherChallengeThatHasBeenDrawnByPlayer2,
+        player1: player1,
+        player2: player2,
+        guessResults: [{...correctInOneGuess, challenge: challengeThatHasBeenDrawnByPlayer1},
+          {...correctInOneGuess, challenge: challengeThatHasBeenDrawnByPlayer2},
+          {...incorrectInOneGuess, challenge: challengeThatHasBeenDrawnByPlayer1}],
+      }
+
+      expect(streakCount(game)).toBe(0)
+    });
+
     it("does not start a streak if the first guesser has not completed guessing", () => {
       const game: StreakGuessingGame = {
         _id: challengeThatHasNotBeenDrawn._id,
@@ -238,7 +253,7 @@ describe("StreakGuessingGame", () => {
         guessResults: [correctInOneGuess, incorrectInOneGuess],
       }
 
-      expect(streakCount(game)).toBe(1)
+      expect(streakCount(game)).toBe(0)
     });
   });
 
