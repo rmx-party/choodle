@@ -1,26 +1,38 @@
 <script lang="ts">
-  import {goto} from '$app/navigation';
-  import {onMount} from 'svelte';
+  import { goto } from '$app/navigation';
+  import { onMount } from 'svelte';
   import Button from '../../../components/Button.svelte';
-  import {getDeviceId, getEmail, getUsername, locateCreator} from '$lib/CreatorUtils';
+  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils';
   import LayoutContainer from '../../../components/LayoutContainer.svelte';
-  import {page} from '$app/stores';
+  import { page } from '$app/stores';
   import MetaData from '../../../components/MetaData.svelte';
-  import {pageBackgroundDefault} from '$lib/Configuration';
-  import {writable} from 'svelte/store';
+  import { pageBackgroundDefault } from '$lib/Configuration';
+  import { writable } from 'svelte/store';
   import fp from 'lodash/fp';
-  import {toHTML} from '@portabletext/to-html';
-  import {loading} from '$lib/store';
-  import {urlFor} from '$lib/PersistedImagesUtils';
-  import {isGameComplete, whoseTurn} from '$lib/CWFGame';
+  import { toHTML } from '@portabletext/to-html';
+  import { loading } from '$lib/store';
+  import { urlFor } from '$lib/PersistedImagesUtils';
+  import { isGameComplete, whoseTurn } from '$lib/CWFGame';
+  import type {
+    SanityDocumentMetadata,
+    StreakGuessingGame,
+    StreakGuessingGameChallenge,
+    StreakGuessingGamePlayer,
+  } from '$lib/CWFGame';
   import DashboardGameEntry from './DashboardGameEntry.svelte';
 
   export let data;
-  let currentChoodler;
+  let currentChoodler: StreakGuessingGamePlayer;
   let hasCreatedAChallenge = false;
-  let currentChoodlerChallenges;
+  let currentChoodlerChallenges: StreakGuessingGameChallenge[];
+  $: {
+    currentChoodlerChallenges = fp.filter(
+      (c) => c?.challenger && c.challenger?._id === currentChoodler?._id,
+      data.challenges
+    );
+  }
 
-  let myGames = [];
+  let myGames: StreakGuessingGame[] = [];
 
   const navItems = ['my games', 'rules'];
   let activeTab = writable(navItems[0]);
@@ -29,28 +41,29 @@
     await goto(`/game/cwf/pick`);
   };
 
-  let myTurnGames = [];
-  let theirTurnGames = [];
+  let myTurnGames: StreakGuessingGame[] = [];
+  let theirTurnGames: StreakGuessingGame[] = [];
   $: [myTurnGames, theirTurnGames] = fp.partition(isMyTurn, fp.reject(isGameComplete, myGames));
 
   const isMyTurn = (game) => {
-    return whoseTurn(game) === currentChoodler
+    return whoseTurn(game) === currentChoodler;
   };
 
-  const sortedByCreatedAt = (thingsWithCreatedAt) => {
+  const sortedByCreatedAt = (thingsWithCreatedAt: SanityDocumentMetadata[]) => {
     return fp.sortBy(['createdAt'], thingsWithCreatedAt);
   };
 
-  const impersonateGame = (challenge) => {
+  const impersonateGame = (challenge: StreakGuessingGameChallenge): StreakGuessingGame => {
     return {
       _id: challenge._id,
-      currentChallenge: {...challenge, challenger: currentChoodler},
+      currentChallenge: challenge,
+      player1: challenge.challenger,
       guessResults: [],
       createdAt: challenge.createdAt,
     };
   };
 
-  const filterGamesByPlayer = ({_id}) =>
+  const filterGamesByPlayer = ({ _id }) =>
     fp.filter((game) => game?.player1?._id === _id || game?.player2?._id === _id);
   const sortedGuessResults = (game) => ({
     ...game,
@@ -79,11 +92,6 @@
       return; // Don't load leaderboard stuff if player can't see it anyway
     }
 
-    currentChoodlerChallenges = fp.filter(
-      (c) => c.challenger && c.challenger._id === currentChoodler._id,
-      data.challenges
-    );
-
     myGames = sortedByCreatedAt([
       ...fp.map(sortedGuessResults, filterGamesByPlayer(currentChoodler)(data.games)),
       ...fp.map(impersonateGame, currentChoodlerChallenges),
@@ -94,20 +102,20 @@
   });
 </script>
 
-<MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url}/>
+<MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url} />
 
 <LayoutContainer>
   {#if !hasCreatedAChallenge}
-    <img src={urlFor(data.copy.logoTwo).url()} width="80%" style="margin: 3rem auto;" alt=""/>
+    <img src={urlFor(data.copy.logoTwo).url()} width="80%" style="margin: 3rem auto;" alt="" />
 
     {@html toHTML(data.copy.landing_content)}
 
     <Button variant="primary" colour="yellow" on:click={startGame} style="margin: 3rem auto;"
-    >{data.copy.startGameButtonText}</Button
+      >{data.copy.startGameButtonText}</Button
     >
   {:else}
     <div>
-      <img src={urlFor(data.copy.logoTwo).url()} width="80%" alt=""/>
+      <img src={urlFor(data.copy.logoTwo).url()} width="80%" alt="" />
     </div>
 
     <nav>
@@ -148,11 +156,13 @@
           </Button>
         </div>
         <span class="game-list-heading">Their Turn</span>
-        <DashboardGameEntry
-          {currentChoodler}
-          game={theirTurnGames[0]}
-          gameListUserUnknownText={data.copy.gameListUserUnknownText}
-        />
+        {#each theirTurnGames as theirTurnGame (theirTurnGame._id)}
+          <DashboardGameEntry
+            {currentChoodler}
+            game={theirTurnGame}
+            gameListUserUnknownText={data.copy.gameListUserUnknownText}
+          />
+        {/each}
       </section>
     {/if}
 
