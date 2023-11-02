@@ -1,15 +1,15 @@
 <script lang="ts">
-  import {loading, loadingMessage} from '$lib/store';
-  import {fade, blur} from 'svelte/transition';
+  import { loading, loadingMessage } from '$lib/store';
+  import { fade, blur } from 'svelte/transition';
   import AnimatedEllipses from './AnimatedEllipses.svelte';
-  import {onMount} from 'svelte';
-  import {toHTML} from "@portabletext/to-html";
+  import { onMount } from 'svelte';
+  import { toHTML } from '@portabletext/to-html';
 
-  export let rotatingMessages = []
+  export let rotatingMessages = [];
 
-  let messageIndex = -1
-  let timeout
-  let interval
+  let messageIndex = -1;
+  let timeout;
+  let interval;
 
   onMount(() => {
     loading.subscribe((value) => {
@@ -18,16 +18,16 @@
 
     if (rotatingMessages && rotatingMessages.length > 0)
       timeout = setTimeout(() => {
-        messageIndex = 0
+        messageIndex = 0;
         interval = setInterval(() => {
-          messageIndex = (messageIndex + 1) % rotatingMessages.length
-        }, 3000)
-      }, 1200)
+          messageIndex = (messageIndex + 1) % rotatingMessages.length;
+        }, 3000);
+      }, 1200);
 
     return () => {
-      clearInterval(interval)
-      clearTimeout(timeout)
-    }
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
   });
 </script>
 
@@ -43,20 +43,20 @@
       />
       <div class="messageContainer">
         {#if messageIndex >= 0 && rotatingMessages.length > 0}
-          {#key messageIndex }
-            <div class="message" transition:fade={{duration: 300}}>
+          {#key messageIndex}
+            <div class="message" transition:fade={{ duration: 300 }}>
               {@html toHTML(rotatingMessages[messageIndex])}
             </div>
           {/key}
-        {:else}
-          {#if $loadingMessage.length > 0}
-            <div class="message" transition:fade={{duration: 300}}>
-              <strong>
-          <span>{$loadingMessage}
-            <AnimatedEllipses/></span>
-              </strong>
-            </div>
-          {/if}
+        {:else if $loadingMessage.length > 0}
+          <div class="message" transition:fade={{ duration: 300 }}>
+            <strong>
+              <span
+                >{$loadingMessage}
+                <AnimatedEllipses /></span
+              >
+            </strong>
+          </div>
         {/if}
       </div>
     </div>
@@ -101,6 +101,7 @@
 
   .messageContainer {
     display: block;
+    padding: 2rem 3rem;
     position: relative;
     width: 100%;
     max-width: 500px;
