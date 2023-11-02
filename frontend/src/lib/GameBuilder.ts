@@ -11,7 +11,8 @@ export class GameBuilder {
   static fromChallenge(challenge: StreakGuessingGameChallenge) {
     const game: StreakGuessingGame = {
       _id: GameBuilder.generateIdFor('game'),
-      createdAt: "now",
+      // FIXME: this is important when we're using a challenge, but when we save it we might want a real date
+      _createdAt: challenge._createdAt,
       currentChallenge: challenge,
       player1: challenge.challenger,
       guessResults: [],

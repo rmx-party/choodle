@@ -56,7 +56,7 @@ export type SanityDocumentMetadata = {
   [key: string]: any
 } & {
   _id: string,
-  createdAt?: string,
+  _createdAt?: string,
 }
 
 export type StreakGuessingGamePrompt = SanityDocumentMetadata & {
