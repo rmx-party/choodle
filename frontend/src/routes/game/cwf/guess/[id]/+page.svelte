@@ -405,6 +405,9 @@
       <Button colour="yellow" on:click={createCounterChallenge}>
         {data.copy.success_continueGameButtonText}
       </Button>
+      <Button on:click={() => { goto('/game/cwf') }}>
+        {data.copy.guess_doneButtonText}
+      </Button>
     </div>
   {:else if guessesRemaining < 1}
     <p class="failure">
