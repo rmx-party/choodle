@@ -17,7 +17,7 @@
     StreakGuessingGame,
     StreakGuessingGamePlayer,
   } from '$lib/CWFGame';
-  import {isGameComplete, isPlayerInGame, whoseTurn} from '$lib/CWFGame';
+  import {isPlayerInGame, whoseTurn} from '$lib/CWFGame';
   import DashboardGameEntry from './DashboardGameEntry.svelte';
   import {GameBuilder} from "$lib/GameBuilder";
 
@@ -36,7 +36,7 @@
 
   let myTurnGames: StreakGuessingGame[] = [];
   let theirTurnGames: StreakGuessingGame[] = [];
-  $: [myTurnGames, theirTurnGames] = fp.partition(isMyTurn, fp.reject(isGameComplete, myGames));
+  $: [myTurnGames, theirTurnGames] = fp.partition(isMyTurn, myGames);
 
 
   let challengesInGames
