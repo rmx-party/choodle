@@ -101,7 +101,7 @@
     {@html toHTML(data.copy.landing_content)}
 
     <Button variant="primary" colour="yellow" on:click={() => {hasDismissedStartScreen = true}}
-            style="margin: 3rem auto;">{data.copy.startGameButtonText}</Button>
+            style="margin: 3rem auto;">{data.copy.dismissStartScreenButtonText}</Button>
   {:else}
     <div>
       <img src={urlFor(data.copy.logoTwo).url()} width="80%" alt=""/>

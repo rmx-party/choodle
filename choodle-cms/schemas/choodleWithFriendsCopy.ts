@@ -41,6 +41,11 @@ export default {
       title: 'Text for unknown username',
     },
     {
+      name: 'dismissStartScreenButtonText',
+      type: 'string',
+      title: 'Dismiss Start Screen Button Text',
+    },
+    {
       name: 'startGameButtonText',
       type: 'string',
       title: 'Start Game Button Text',
