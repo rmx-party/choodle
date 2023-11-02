@@ -41,7 +41,7 @@
     return fp.sortBy(['createdAt'], thingsWithCreatedAt);
   };
 
-  const gameFromChallenge = (challenge) => {
+  const impersonateGame = (challenge) => {
     return {
       _id: challenge._id,
       currentChallenge: {...challenge, challenger: currentChoodler},
@@ -86,7 +86,7 @@
 
     myGames = sortedByCreatedAt([
       ...fp.map(sortedGuessResults, filterGamesByPlayer(currentChoodler)(data.games)),
-      ...fp.map(gameFromChallenge, currentChoodlerChallenges),
+      ...fp.map(impersonateGame, currentChoodlerChallenges),
     ]);
     console.log(`myGames`, myGames);
 
