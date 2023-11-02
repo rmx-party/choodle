@@ -19,6 +19,7 @@
   } from '$lib/CWFGame';
   import {isGameComplete, isPlayerInGame, whoseTurn} from '$lib/CWFGame';
   import DashboardGameEntry from './DashboardGameEntry.svelte';
+  import {GameBuilder} from "$lib/GameBuilder";
 
   export let data;
   let currentChoodler: StreakGuessingGamePlayer;
@@ -37,13 +38,23 @@
   let theirTurnGames: StreakGuessingGame[] = [];
   $: [myTurnGames, theirTurnGames] = fp.partition(isMyTurn, fp.reject(isGameComplete, myGames));
 
+
+  let challengesInGames
+  let currentPlayerChallenges
+
+  const challengesInGame = (game: StreakGuessingGame) => {
+    return fp.map(guessResult => guessResult.challenge, game.guessResults)
+  }
+
   const isMyTurn = (game) => {
+    if (!game.player2) return game.player2
+
     return whoseTurn(game)._id === currentChoodler._id;
   };
 
-  const sortedByCreatedAt = (thingsWithCreatedAt: SanityDocumentMetadata[]) => {
-    return fp.sortBy(['createdAt'], thingsWithCreatedAt);
-  };
+  const sortedByCreatedAt = (thingsWithCreatedAt: SanityDocumentMetadata[]): SanityDocumentMetadata[] => {
+    return fp.reverse(fp.sortBy(['_createdAt'], thingsWithCreatedAt))
+  }
 
   const sortGuessResults = (game): StreakGuessingGame => ({
     ...game,
@@ -75,8 +86,15 @@
     // FIXME: make it so player is always here when we call isPlayerInGame
     myGames = fp.map(sortGuessResults,
       fp.filter(game => isPlayerInGame(game, currentChoodler), (data.games)))
-
     console.log(`myGames`, myGames);
+
+    challengesInGames = fp.flatMapDeep(challengesInGame, myGames)
+    currentPlayerChallenges = fp.filter(challenge => challenge.challenger?._id === currentChoodler._id, data.challenges)
+
+    const unAnsweredChallenges = fp.difference(currentPlayerChallenges, challengesInGames)
+
+    const unAnsweredGames = fp.map(builder => builder.build, fp.map(GameBuilder.fromChallenge, unAnsweredChallenges))
+    myGames = sortedByCreatedAt([...unAnsweredGames, ...myGames])
 
     loading.set(false);
   });
