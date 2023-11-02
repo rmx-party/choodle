@@ -172,18 +172,27 @@
   };
 
   const handleCorrectGuess = () => {
-    console.log(`right answer, you won the thing`);
-    success = true;
+    console.log(`right answer, you won the thing`)
+    success = true
 
-    createGuess(true);
+    createGuess(true)
 
-    cursorLocation.set(-1);
+    if (usernameRequired) {
+      promptForAndSetUsername()
+    }
+
+    cursorLocation.set(-1)
   };
 
   const handleIncorrectGuess = () => {
     console.log(`wrong`);
 
-    guessesRemaining < 1 ? createGuess(false) : createGuess(null);
+    if (guessesRemaining < 1) {
+      createGuess(false)
+      promptForAndSetUsername()
+    } else {
+      createGuess(null);
+    }
 
     currentGuess.set([]);
     cursorLocation.set(0);
@@ -261,32 +270,31 @@
 
   // TODO: switch back for username driven gameplay after prod deploy
   const usernameRequired = true;
-  const attemptToSubmitGuessWithUsername = async (event: Event) => {
+  const promptForAndSetUsername = async () => {
+    console.log('prompting for username')
     if (!browser) return;
 
     if (username.length > 0) {
+      console.log('there was a username, closing the dialog')
       disableKeyboard = false;
       closeDialog(usernamePromptId);
       await localforage.setItem(choodleCreatorUsernameKey, username);
       guesser = await locateCreator({username, deviceId});
-      submitGuess();
       return;
     }
 
+    console.log('disable keyboard and open username dialog')
     disableKeyboard = true;
     openDialog(usernamePromptId);
-  };
+  }
+
   const attemptToSubmitGuess = async (event: Event) => {
     if (!browser) return;
     if ($currentGuess.length !== data.choodle.gamePrompt.length) return;
 
-    if (usernameRequired) {
-      return await attemptToSubmitGuessWithUsername(event);
-    } else {
-      submitGuess();
-      return;
-    }
-  };
+    submitGuess()
+    return
+  }
 
   onMount(async () => {
     deviceId = await getDeviceId();
@@ -437,28 +445,28 @@
         <Hints {hints} hintCta={data.copy.guess_needHintCtaText} {afterHint}/>
       </div>
     </GuessingInterface>
-    <Dialog id={usernamePromptId}>
-      <header slot="header">{data.copy.draw_usernameHeader}</header>
-      <div>{data.copy.draw_usernameInstructions}</div>
-      <label
-        for="creator-username"
-        style="text-align: left; display: block; font-family: Dejavu Sans Bold;"
-      >username
-        <br/>
-        <input
-          bind:value={username}
-          type="username"
-          id="creator-username"
-          name="creatorusername"
-          placeholder={data.copy.draw_usernamePlaceholder}
-          style="width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;"
-        />
-      </label>
-      <Button on:click={attemptToSubmitGuess} variant="primary" colour="yellow">
-        {data.copy.draw_usernameSaveButtonText}
-      </Button>
-    </Dialog>
   {/if}
+  <Dialog id={usernamePromptId}>
+    <header slot="header">{data.copy.draw_usernameHeader}</header>
+    <div>{data.copy.draw_usernameInstructions}</div>
+    <label
+      for="creator-username"
+      style="text-align: left; display: block; font-family: Dejavu Sans Bold;"
+    >username
+      <br/>
+      <input
+        bind:value={username}
+        type="username"
+        id="creator-username"
+        name="creatorusername"
+        placeholder={data.copy.draw_usernamePlaceholder}
+        style="width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;"
+      />
+    </label>
+    <Button on:click={promptForAndSetUsername} variant="primary" colour="yellow">
+      {data.copy.draw_usernameSaveButtonText}
+    </Button>
+  </Dialog>
 </LayoutContainer>
 
 <style>
