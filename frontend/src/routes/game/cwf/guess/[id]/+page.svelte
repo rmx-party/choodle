@@ -39,7 +39,6 @@
   let guessesLimit = 3;
 
   let choodleOwner = false;
-  let copiedToClipboard = false;
   let success = false;
 
   let deviceId;
@@ -92,7 +91,14 @@
 
   const locateGame = async ({ challengerId, guesserId, guessId }) => {
     const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults[]->{...}, player1->{...}, player2->{...}, challenge->{...}}`;
-    let locatedGame = (await readOnlyClient.fetch(query))[0]; // FIXME: this assumes there is only ever one game per player pair, but we terminate a game streak and start a new one on guess failure
+    let locatedGames = await readOnlyClient.fetch(query);
+    // Find the located game that has the guess we're looking for, or the challenge.
+    let locatedGame = fp.find(
+      (game) =>
+        fp.find((guessResult) => guessResult._id === guessId, game.guessResults) ||
+        game.currentChallenge?._ref === data.challenge._id,
+      locatedGames
+    );
     console.log({ locatedGame });
     if (locatedGame && challengeHasBeenGuessed(locatedGame, data.challenge)) {
       console.log(
