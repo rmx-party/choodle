@@ -7,7 +7,7 @@
 
   export let initialOpen = false;
   let isOpen: boolean;
-  export let onClose = undefined;
+  export let onClose = () => {};
   export let id: string;
 
   onMount(() => {
