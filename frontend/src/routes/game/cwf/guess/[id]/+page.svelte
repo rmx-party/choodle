@@ -51,6 +51,16 @@
   let disableKeyboard = false;
 
   let hints = [];
+  $: {
+    hints = fp.filter(
+      (h) => h.text,
+      [
+        { text: data.gamePrompt.hint, used: hintUsedInGuess(guess, data.gamePrompt.hint) },
+        { text: data.gamePrompt.hint_2, used: hintUsedInGuess(guess, data.gamePrompt.hint_2) },
+        { text: data.gamePrompt.hint_3, used: hintUsedInGuess(guess, data.gamePrompt.hint_3) },
+      ]
+    );
+  }
 
   const createCounterChallenge = async () => {
     console.log({ game });
@@ -259,8 +269,8 @@
   };
 
   const hintUsedInGuess = (guess, hintText) => {
-    console.log(`hintUsedInGuess, ${guess._id}, ${hintText}`);
-    if (!guess.hintsUsed) {
+    console.log(`hintUsedInGuess, ${guess?._id}, ${hintText}`);
+    if (!guess?.hintsUsed) {
       console.log('no hints used');
       return false;
     }
@@ -327,12 +337,6 @@
     if (guess.guessedCorrectly) {
       success = true;
     }
-
-    hints = [
-      { text: data.gamePrompt.hint, used: hintUsedInGuess(guess, data.gamePrompt.hint) },
-      { text: data.gamePrompt.hint_2, used: hintUsedInGuess(guess, data.gamePrompt.hint_2) },
-      { text: data.gamePrompt.hint_3, used: hintUsedInGuess(guess, data.gamePrompt.hint_3) },
-    ];
 
     loading.set(false);
   });

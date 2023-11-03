@@ -41,10 +41,14 @@
   {/if}
 
   <div class="hintCopy">
-    {#if activeHint >= 0}
-      <p>{hints[activeHint].text}</p>
+    {#if hints?.length}
+      {#if activeHint >= 0}
+        <p>{hints[activeHint].text}</p>
+      {:else}
+        <p>{hintCta}</p>
+      {/if}
     {:else}
-      <p>{hintCta}</p>
+      <p>No hints available</p>
     {/if}
   </div>
 </div>
