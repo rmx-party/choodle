@@ -2,33 +2,69 @@
   import Button from '../../../../components/Button.svelte';
   import { readOnlyClient, readWriteClient } from '$lib/CMSUtils';
 
-  const deleteAllGames = async () => {
-    const challenges: any[] = await readOnlyClient.fetch('*[_type == "challenge"]');
+  let gameCount = 0;
+  let challengeCount = 0;
+  let guessCount = 0;
+  let pointCount = 0;
 
+  const deleteAllGames = async () => {
+    const games = await readWriteClient.fetch('*[_type == "cwfgame"]');
+    gameCount = games.length;
+    console.log({ gameCount });
+
+    const challenges: any[] = await readOnlyClient.fetch('*[_type == "challenge"]');
     for (const challenge of challenges) {
       await readWriteClient.patch(challenge._id).unset(['gameRef']).commit();
     }
 
-    await readWriteClient.delete({ query: '*[_type == "cwfgame"]' });
+    for (const game of games) {
+      await readWriteClient.delete({ query: `*[references("${game._id}")]` });
+      await readWriteClient.delete(game._id);
+      gameCount--;
+    }
   };
 
   const deleteAllChallenges = async () => {
-    await readWriteClient.delete({ query: '*[_type == "challenge"]' });
+    const challenges: any[] = await readOnlyClient.fetch('*[_type == "challenge"]');
+    challengeCount = challenges.length;
+    console.log({ challengeCount });
+    for (const challenge of challenges) {
+      await readWriteClient.delete({ query: `*[references("${challenge._id}")]` });
+      await readWriteClient.delete(challenge._id);
+      challengeCount--;
+    }
   };
 
   const deleteAllGuesses = async () => {
-    const challenges: any[] = await readOnlyClient.fetch('*[_type == "challenge"]');
-
-    for (const challenge of challenges) {
-      await readWriteClient.patch(challenge._id).unset(['gameRef']).commit();
+    const guesses = await readWriteClient.fetch('*[_type == "guess"]');
+    guessCount = guesses.length;
+    console.log({ guessCount });
+    for (const guess of guesses) {
+      try {
+        await readWriteClient.delete({ query: `*[references("${guess._id}")]` });
+        await readWriteClient.delete(guess._id);
+        guessCount--;
+      } catch (e) {
+        console.error(e);
+      }
     }
+  };
 
-    await readWriteClient.delete({ query: '*[_type == "guess"]' });
+  const deleteAllPoints = async () => {
+    const points = await readWriteClient.fetch('*[_type == "points"]');
+    pointCount = points.length;
+    console.log({ points });
+    for (const point of points) {
+      await readWriteClient.delete({ query: `*[references("${point._id}")]` });
+      await readWriteClient.delete(point._id);
+      pointCount--;
+    }
   };
 </script>
 
 <div>
-  <Button on:click={deleteAllGames}>Delete All Games</Button>
-  <Button on:click={deleteAllChallenges}>Delete All Challenges</Button>
-  <Button on:click={deleteAllGuesses}>Delete All Guesses</Button>
+  <Button on:click={deleteAllGames}>Delete All {gameCount} Games</Button>
+  <Button on:click={deleteAllChallenges}>Delete All {challengeCount} Challenges</Button>
+  <Button on:click={deleteAllGuesses}>Delete All {guessCount} Guesses</Button>
+  <Button on:click={deleteAllPoints}>Delete All {pointCount} Points</Button>
 </div>
