@@ -365,42 +365,18 @@
 
 <LayoutContainer class="no-pan">
   <div class="topBar" slot="topBar">
-    {#if choodleOwner}
-      <TopBar>
-        <div slot="topBarContent">
-          {@html toHTML(data.copy.guess_pageAuthorTopContent)}
-        </div>
-      </TopBar>
-    {:else}
-      <GuessingHUD {guessesRemaining} {guessesLimit}>
-        <div slot="content">
-          {@html toHTML(data.copy.guess_pageTopContent)}
-        </div>
-      </GuessingHUD>
-    {/if}
+    <GuessingHUD {guessesRemaining} {guessesLimit}>
+      <div slot="content">
+        {@html toHTML(data.copy.guess_pageTopContent)}
+      </div>
+    </GuessingHUD>
   </div>
 
   <ChoodleContainer --choodle-max-height-offset="27rem">
     <img src={bestImageUrl(data.choodle)} alt="" />
   </ChoodleContainer>
 
-  {#if choodleOwner}
-    <h3><strong>{data.gamePrompt.prompt.toUpperCase()}</strong></h3>
-    <div>
-      <Button colour="yellow" on:click={share}
-        >{copiedToClipboard
-          ? data.copy.guess_copiedToClipboard
-          : data.copy.guess_shareButtonText}</Button
-      >
-    </div>
-    <div>
-      <Button
-        on:click={() => {
-          goto('/game/cwf');
-        }}>{data.copy.guess_doneButtonText}</Button
-      >
-    </div>
-  {:else if success}
+  {#if success}
     <p class="success">{data.copy.guess_successMessageText}</p>
     <GuessInput
       format={data.gamePrompt.prompt.split('')}
