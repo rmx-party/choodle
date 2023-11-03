@@ -1,11 +1,11 @@
-import { browser } from '$app/environment';
-import localforage from 'localforage';
+import { browser } from "$app/environment";
+import localforage from "localforage";
 import {
   choodleCreatorEmailKey,
   choodleCreatorIdKey,
   choodleCreatorUsernameKey,
-} from '$lib/Configuration';
-import { readOnlyClient, readWriteClient } from '$lib/CMSUtils';
+} from "$lib/Configuration";
+import { readOnlyClient, readWriteClient } from "$lib/CMSUtils";
 
 export async function getDeviceId(): Promise<string> {
   if (!browser) return;
@@ -20,7 +20,7 @@ export async function getDeviceId(): Promise<string> {
     return uuid;
   } catch (e) {
     console.error(`getCreatorId failure, returning 'unknown'`, e);
-    return 'unknown';
+    return "unknown";
   }
 }
 
@@ -39,7 +39,9 @@ export async function getEmail(): Promise<string | undefined> {
 export async function getUsername(): Promise<string | undefined> {
   if (!browser) return;
   try {
-    const existingUsername = await localforage.getItem(choodleCreatorUsernameKey);
+    const existingUsername = await localforage.getItem(
+      choodleCreatorUsernameKey,
+    );
     if (existingUsername && existingUsername.length > 1) {
       return existingUsername;
     }
@@ -67,14 +69,17 @@ export const locateCreator = async ({
     username = await getUsername();
   }
   console.log(`locateCreator: ${deviceId} ${username} ${email}`);
-  let query = `*[_type == "creator"][deviceIds match "${deviceId}"`;
+  let query = `*[_type == "creator"]`;
+  if (deviceId && deviceId.length > 0) {
+    query += `[deviceIds match "${deviceId}"`;
+  }
   if (email && email.length > 0) {
     query += ` || email match "${email}"`;
   }
   if (username && username.length > 0) {
     query += ` || username match "${username}"`;
   }
-  query += ']';
+  query += "]";
   let creator = (await readOnlyClient.fetch(query))[0];
   // TODO: if there are multiple matches, we should consolidate them
   // TODO: if creator is in the backend, store the ID in browser so we don't have to keep asking on every page
@@ -82,8 +87,13 @@ export const locateCreator = async ({
   if (creator) {
     const patch = readWriteClient
       .patch(creator._id)
-      .setIfMissing({ deviceIds: [] })
-      .append('deviceIds', [deviceId]);
+      .setIfMissing({ deviceIds: [] });
+
+    if (
+      deviceId && deviceId.length > 0 && !creator.deviceIds.includes(deviceId)
+    ) {
+      patch.append("deviceIds", [deviceId]);
+    }
 
     if (username && username.length > 0) {
       patch.set({ username });
@@ -96,13 +106,13 @@ export const locateCreator = async ({
   } else {
     creator = await readWriteClient.create(
       {
-        _type: 'creator',
+        _type: "creator",
         username,
         email,
         deviceIds: [deviceId],
         choodles: [],
       },
-      { autoGenerateArrayKeys: true }
+      { autoGenerateArrayKeys: true },
     );
   }
   console.log({ creator });
