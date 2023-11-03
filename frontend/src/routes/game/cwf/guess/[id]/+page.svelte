@@ -2,7 +2,6 @@
   import { urlFor } from '$lib/PersistedImagesUtils.js';
   import { writable } from 'svelte/store';
   import GuessingHUD from '../../../../../components/GuessingHUD.svelte';
-  import TopBar from '../../../../../components/TopBar.svelte';
   import Button from '../../../../../components/Button.svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
@@ -93,7 +92,7 @@
 
   const locateGame = async ({ challengerId, guesserId, guessId }) => {
     const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults[]->{...}, player1->{...}, player2->{...}, challenge->{...}}`;
-    let locatedGame = (await readOnlyClient.fetch(query))[0];
+    let locatedGame = (await readOnlyClient.fetch(query))[0]; // FIXME: this assumes there is only ever one game per player pair, but we terminate a game streak and start a new one on guess failure
     console.log({ locatedGame });
     if (locatedGame && challengeHasBeenGuessed(locatedGame, data.challenge)) {
       console.log(
