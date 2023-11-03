@@ -322,7 +322,7 @@
 
     console.log({ choodleOwner });
 
-    if (choodleOwner) return loading.set(false);
+    if (choodleOwner) return goto(`/game/cwf/share/${data.challenge._id}`);
 
     guess = await locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id });
 
