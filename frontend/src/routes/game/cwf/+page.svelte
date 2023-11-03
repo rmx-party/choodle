@@ -90,13 +90,18 @@
       data.challenges
     );
 
-    const unAnsweredChallenges = fp.difference(currentPlayerChallenges, challengesInGames);
+    const unAnsweredChallenges = fp.differenceBy(
+      (challenge) => challenge._id,
+      currentPlayerChallenges,
+      challengesInGames
+    );
 
     const unAnsweredGames = fp.map(
       (builder) => builder.build,
       fp.map(GameBuilder.fromChallenge, unAnsweredChallenges)
     );
-    myGames = sortedByCreatedAt([...unAnsweredGames, ...myGames]);
+    // myGames = fp.uniqBy('_id', sortedByCreatedAt([...unAnsweredGames, ...myGames]));
+    myGames = fp.uniqBy('_id', sortedByCreatedAt([...myGames]));
 
     loading.set(false);
   });
