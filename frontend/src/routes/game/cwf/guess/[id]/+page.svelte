@@ -191,6 +191,7 @@
     }
 
     createGuess(true);
+    guessesRemaining--;
     cursorLocation.set(-1);
   };
 
@@ -207,6 +208,7 @@
       createGuess(null);
     }
 
+    guessesRemaining--;
     currentGuess.set([]);
     cursorLocation.set(0);
   };
@@ -214,7 +216,6 @@
   const submitGuess = () => {
     if ($currentGuess.length < data.gamePrompt.prompt.length) return;
 
-    guessesRemaining--;
     console.log(`checking answer, ${guessesRemaining} guesses left`);
 
     isCorrect($currentGuess, data.gamePrompt.prompt)
@@ -325,7 +326,7 @@
     if (choodleOwner) return goto(`/game/cwf/share/${data.challenge._id}`);
 
     guess = await locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id });
-    guessesRemaining = guessesLimit - guess.guesses.length;
+    guessesRemaining = guessesLimit - (guess?.guesses?.length || 0);
     if (guess.guessedCorrectly) {
       success = true;
     }
