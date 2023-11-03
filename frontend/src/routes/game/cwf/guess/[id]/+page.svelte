@@ -325,19 +325,17 @@
     if (choodleOwner) return goto(`/game/cwf/share/${data.challenge._id}`);
 
     guess = await locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id });
-
-    if (!choodleOwner) {
-      game = await locateGame({
-        challengerId: data.challenge.challenger._id,
-        guesserId: guesser._id,
-        guessId: guess._id,
-      });
-      console.log({ game });
-    }
-
+    guessesRemaining = guessesLimit - guess.guesses.length;
     if (guess.guessedCorrectly) {
       success = true;
     }
+
+    game = await locateGame({
+      challengerId: data.challenge.challenger._id,
+      guesserId: guesser._id,
+      guessId: guess._id,
+    });
+    console.log({ game });
 
     loading.set(false);
   });
