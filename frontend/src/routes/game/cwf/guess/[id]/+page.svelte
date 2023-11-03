@@ -29,6 +29,7 @@
   import { isNormalizedGameComplete, isPlayerInGame, normalizeGame } from '$lib/CWFGame';
 
   loadingMessage.set('loading');
+  loading.set(true);
 
   export let data;
   const currentGuess = writable([]);
