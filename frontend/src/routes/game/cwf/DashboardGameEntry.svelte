@@ -3,9 +3,9 @@
     streakCount,
     type StreakGuessingGame,
     type StreakGuessingGameChallenge,
-    type StreakGuessingGamePlayer,
+    type StreakGuessingGamePlayer, whichAction,
   } from '$lib/CWFGame';
-  import { goto } from '$app/navigation';
+  import {goto} from '$app/navigation';
   import fp from 'lodash/fp';
   import streakFlame from '$lib/assets/streak-flame.svg';
 
@@ -19,28 +19,23 @@
     return game.player1?.username || gameListUserUnknownText;
   };
 
-  const generateLinkFor = ({
-    currentChallenge,
-  }: {
-    currentChallenge: StreakGuessingGameChallenge;
-  }): string => {
-    if (currentChallenge.challenger._id === currentChoodler._id && !currentChallenge.choodle) {
-      return `/game/cwf/pick/${currentChallenge._id}`;
+  const generateLinkFor = (game: StreakGuessingGame): string => {
+    switch (whichAction(game)) {
+      case "pick":
+        return `/game/cwf/pick/${game.currentChallenge._id}`
+      case "guess":
+        return `/game/cwf/guess/${fp.last(game.guessResults)?.challenge?._id}`
+      case "share":
+        return `/game/cwf/share/${game.currentChallenge._id}`
     }
-
-    if (currentChallenge.challenger._id !== currentChoodler._id && !currentChallenge.choodle) {
-      return `/game/cwf/guess/${fp.last(game.guessResults)?.challenge?._id}`;
-    }
-
-    return `/game/cwf/guess/${currentChallenge._id}`;
-  };
+  }
 </script>
 
 <div class="game-entry">
   <a href={generateLinkFor(game)} on:click={() => goto(generateLinkFor(game))}
-    >{otherPlayerIn(game)}</a
+  >{otherPlayerIn(game)}</a
   >
-  <div class="game-entry-streak"><img src={streakFlame} />{streakCount(game)}</div>
+  <div class="game-entry-streak"><img src={streakFlame}/>{streakCount(game)}</div>
 </div>
 
 <style>
