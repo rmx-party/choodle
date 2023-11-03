@@ -1,15 +1,15 @@
-import { createClient, type ClientConfig } from '@sanity/client';
+import { type ClientConfig, createClient } from "@sanity/client";
 import {
   PUBLIC_SANITY_DATASET,
   PUBLIC_SANITY_PROJECT_ID,
   PUBLIC_SANITY_TOKEN,
-} from '$env/static/public';
+} from "$env/static/public";
 
 const baseConfig: ClientConfig = {
   projectId: PUBLIC_SANITY_PROJECT_ID,
   dataset: PUBLIC_SANITY_DATASET,
   token: PUBLIC_SANITY_TOKEN,
-  apiVersion: '2023-07-18',
+  apiVersion: "2023-07-18",
 };
 export const readWriteClient = createClient({
   ...baseConfig,
@@ -24,19 +24,22 @@ export const readOnlyClient = createClient({
 export const cachedReadOnlyClient = createClient({
   ...baseConfig,
   useCdn: true,
+  perspective: "published",
 });
 
 export const getChoodleById = async (choodleId: string) => {
-  const choodles = await readOnlyClient.fetch(`*[_type == "choodle" && _id == "${choodleId}"]`);
+  const choodles = await readOnlyClient.fetch(
+    `*[_type == "choodle" && _id == "${choodleId}"]`,
+  );
   return choodles[0];
 };
 
 export const addPoints = async (creatorId, amount, reason, challengeId) => {
   await readWriteClient.create({
-    _type: 'points',
+    _type: "points",
     creator: { _ref: creatorId },
     challenge: { _ref: challengeId },
-    game: 'defcon',
+    game: "defcon",
     amount,
     reason,
   });
