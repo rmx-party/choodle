@@ -47,7 +47,7 @@
       isOnline.set(false);
     });
 
-    preloadCode('/game/cwf/pick', '/game/cwf/draw', '/game/cwf/share', '/game/cwf/guess');
+    preloadCode('/game/cwf/pick', '/game/cwf/draw', '/game/cwf/share/*', '/game/cwf/guess/*');
   });
 </script>
 
