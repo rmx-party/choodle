@@ -5,6 +5,8 @@
   import { goto } from '$app/navigation';
   import MetaData from '../components/MetaData.svelte';
   import { browser } from '$app/environment';
+  import { onMount } from 'svelte';
+  import { loading } from '$lib/store';
 
   const resetViewportUnit = async () => {
     if (!browser) return;
@@ -13,9 +15,10 @@
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   };
 
-  setTimeout(async () => {
-    await resetViewportUnit();
-  }, 100);
+  onMount(async () => {
+    loading.set(false);
+    await resetViewportUnit(); // FIXME: use the layout component solution to this
+  });
 </script>
 
 <MetaData title="Oops!" themeColor="#fff" />
