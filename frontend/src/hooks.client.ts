@@ -1,8 +1,10 @@
-import { handleErrorWithSentry, Replay } from '@sentry/sveltekit';
-import * as Sentry from '@sentry/sveltekit';
+import { dev } from "$app/environment";
+import { handleErrorWithSentry, Replay } from "@sentry/sveltekit";
+import * as Sentry from "@sentry/sveltekit";
 
 Sentry.init({
-  dsn: 'https://6396667f7493703c96bed4717a086c02@o4506125009813504.ingest.sentry.io/4506125012762624',
+  dsn:
+    "https://6396667f7493703c96bed4717a086c02@o4506125009813504.ingest.sentry.io/4506125012762624",
   tracesSampleRate: 1.0,
 
   // This sets the sample rate to be 10%. You may want this to be 100% while
@@ -15,6 +17,7 @@ Sentry.init({
 
   // If you don't want to use Session Replay, just remove the line below:
   integrations: [new Replay()],
+  environment: dev ? "development" : "production",
 });
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`
