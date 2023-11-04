@@ -196,16 +196,16 @@
     }
 
     createGuess(true);
+    guessesRemaining--;
     cursorLocation.set(-1);
   };
 
   const handleIncorrectGuess = () => {
     console.log(`wrong`);
 
-    if (guessesRemaining < 1) {
+    if (guessesRemaining <= 1) {
       if (usernameRequired && !username.length) {
         console.log(`prompting for username`);
-        guessesRemaining++; // we already counted this guess but we're not gonna accept it yet
         promptForAndSetUsername();
         return;
       }
@@ -216,6 +216,7 @@
       createGuess(null);
     }
 
+    guessesRemaining--;
     currentGuess.set([]);
     cursorLocation.set(0);
   };
@@ -223,7 +224,6 @@
   const submitGuess = () => {
     if ($currentGuess.length < data.gamePrompt.prompt.length) return;
 
-    guessesRemaining--;
     console.log(`checking answer, ${guessesRemaining} guesses left`);
 
     isCorrect($currentGuess, data.gamePrompt.prompt)
