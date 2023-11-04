@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    isGameComplete,
     streakCount,
     type StreakGuessingGame,
     type StreakGuessingGameChallenge,
@@ -12,6 +13,8 @@
   export let currentChoodler: StreakGuessingGamePlayer;
   export let game: StreakGuessingGame;
   export let gameListUserUnknownText: string;
+  let gameOver: boolean = false;
+  $: gameOver = isGameComplete(game);
 
   const otherPlayerIn = (game: StreakGuessingGame) => {
     if (game.player1?._id === currentChoodler._id)
@@ -36,7 +39,7 @@
   };
 </script>
 
-<div class="game-entry">
+<div class="game-entry" class:game-over={gameOver}>
   <a href={generateLinkFor(game)} on:click={() => goto(generateLinkFor(game))}
     >{otherPlayerIn(game)}</a
   >
