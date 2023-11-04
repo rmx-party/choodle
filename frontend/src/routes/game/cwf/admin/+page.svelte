@@ -1,6 +1,8 @@
 <script lang="ts">
   import Button from '../../../../components/Button.svelte';
   import { readOnlyClient, readWriteClient } from '$lib/CMSUtils';
+  import { onMount } from 'svelte';
+  import { loading } from '$lib/store';
 
   let gameCount = 0;
   let challengeCount = 0;
@@ -60,6 +62,10 @@
       pointCount--;
     }
   };
+
+  onMount(() => {
+    loading.set(false);
+  });
 </script>
 
 <div>
