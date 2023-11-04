@@ -26,11 +26,12 @@
   import Dialog from '../../../../../components/Dialog.svelte';
   import localforage from 'localforage';
   import { isNormalizedGameComplete, isPlayerInGame, normalizeGame } from '$lib/CWFGame';
+  import type { PageData } from './$types';
 
   loading.set(true);
   loadingMessage.set('loading');
 
-  export let data;
+  export let data: PageData;
   const currentGuess = writable([]);
   const cursorLocation = writable(0);
 

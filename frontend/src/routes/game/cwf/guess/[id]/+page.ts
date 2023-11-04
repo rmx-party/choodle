@@ -1,5 +1,6 @@
 import { PUBLIC_ISR_BYPASS_TOKEN } from "$env/static/public";
-import { readOnlyClient } from "$lib/CMSUtils";
+import { cachedReadOnlyClient } from "$lib/CMSUtils";
+import type { PageLoad } from "./$types";
 
 export const config = {
   isr: {
@@ -8,8 +9,8 @@ export const config = {
   },
 };
 
-export async function load({ params }) {
-  const challenge = await readOnlyClient.fetch(
+export const load: PageLoad = async ({ params }) => {
+  const challenge = await cachedReadOnlyClient.fetch(
     `*[_type == "challenge" && _id == "${params.id}"]{..., challenger->{...}, choodle->{...}, gamePromptRef->{...}} [0]`,
   );
 
@@ -18,4 +19,4 @@ export async function load({ params }) {
     gamePrompt: challenge.gamePromptRef,
     choodle: challenge.choodle,
   };
-}
+};
