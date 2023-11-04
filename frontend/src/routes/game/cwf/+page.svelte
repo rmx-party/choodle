@@ -17,11 +17,13 @@
     StreakGuessingGame,
     StreakGuessingGamePlayer,
   } from '$lib/CWFGame';
-  import { isPlayerInGame, whoseTurn } from '$lib/CWFGame';
+  import { isGameComplete, isPlayerInGame, whoseTurn } from '$lib/CWFGame';
   import DashboardGameEntry from './DashboardGameEntry.svelte';
   import { GameBuilder } from '$lib/GameBuilder';
   import PixelImage from '../../../components/PixelImage.svelte';
+  import { fade, fly, slide } from 'svelte/transition';
 
+  loading.set(true);
   export let data;
   let currentChoodler: StreakGuessingGamePlayer;
   let hasDismissedStartScreen = false;
@@ -39,7 +41,7 @@
   let theirTurnGames: StreakGuessingGame[] = [];
   $: [myTurnGames, theirTurnGames] = fp.partition(isMyTurn, myGames);
 
-  let challengesInGames;
+  let challengesInMyGames;
   let currentPlayerChallenges;
 
   const challengesInGame = (game: StreakGuessingGame) => {
@@ -64,8 +66,6 @@
   });
 
   onMount(async () => {
-    loading.set(true);
-
     const emailFetch = getEmail();
     const usernameFetch = getUsername();
     const deviceIdFetch = getDeviceId();
@@ -84,24 +84,32 @@
     );
     console.log(`myGames`, myGames);
 
-    challengesInGames = fp.flatMapDeep(challengesInGame, myGames);
+    challengesInMyGames = fp.flatMapDeep(challengesInGame, myGames);
     currentPlayerChallenges = fp.filter(
       (challenge) => challenge.challenger?._id === currentChoodler._id,
       data.challenges
     );
 
-    const unAnsweredChallenges = fp.differenceBy(
-      (challenge) => challenge._id,
-      currentPlayerChallenges,
-      challengesInGames
+    const unAnsweredChallenges = fp.uniqBy(
+      '_id',
+      fp.differenceBy((challenge) => challenge._id, currentPlayerChallenges, challengesInMyGames)
+    );
+
+    // only challenges where there is no gameRef set
+    const unAnsweredChallengesWithoutGameRef = fp.filter(
+      (challenge) => !challenge.gameRef,
+      unAnsweredChallenges
     );
 
     const unAnsweredGames = fp.map(
       (builder) => builder.build,
-      fp.map(GameBuilder.fromChallenge, unAnsweredChallenges)
+      fp.map(GameBuilder.fromChallenge, unAnsweredChallengesWithoutGameRef)
     );
-    // myGames = fp.uniqBy('_id', sortedByCreatedAt([...unAnsweredGames, ...myGames]));
-    myGames = fp.uniqBy('_id', sortedByCreatedAt([...myGames]));
+    myGames = fp.reject(
+      isGameComplete,
+      fp.uniqBy('_id', sortedByCreatedAt([...unAnsweredGames, ...myGames]))
+    );
+    // myGames = fp.uniqBy('_id', sortedByCreatedAt([...myGames]));
 
     loading.set(false);
   });
@@ -109,8 +117,8 @@
 
 <MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url} />
 
-<LayoutContainer>
-  {#if !hasDismissedStartScreen}
+{#if !hasDismissedStartScreen}
+  <LayoutContainer>
     <PixelImage
       src={urlFor(data.copy.logoTwo).url()}
       width="80%"
@@ -128,7 +136,9 @@
       }}
       style="margin: 3rem auto;">{data.copy.dismissStartScreenButtonText}</Button
     >
-  {:else}
+  </LayoutContainer>
+{:else}
+  <LayoutContainer>
     <div>
       <PixelImage src={urlFor(data.copy.logoTwo).url()} width="80%" alt="" />
     </div>
@@ -150,7 +160,7 @@
     </section>
 
     {#if $activeTab === 'my games'}
-      <section class="tabContent my-games">
+      <section class="tabContent my-games" in:fly={{ x: -2000, y: 0, duration: 200 }}>
         <span class="game-list-heading">Your Turn</span>
         {#each myTurnGames as myTurnGame (myTurnGame._id)}
           <DashboardGameEntry
@@ -185,10 +195,12 @@
     {/if}
 
     {#if $activeTab === 'rules'}
-      {@html toHTML(data.copy.rules_content)}
+      <section class="tabContent my-games" in:fly={{ x: 2000, y: 0, duration: 200 }}>
+        {@html toHTML(data.copy.rules_content)}
+      </section>
     {/if}
-  {/if}
-</LayoutContainer>
+  </LayoutContainer>
+{/if}
 
 <style>
   .centre-container {

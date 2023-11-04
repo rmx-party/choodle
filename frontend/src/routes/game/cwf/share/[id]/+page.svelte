@@ -15,6 +15,7 @@
   import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
   import { loading, loadingMessage } from '$lib/store';
 
+  loading.set(true);
   loadingMessage.set('loading');
 
   export let data;

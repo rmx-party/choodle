@@ -14,6 +14,7 @@
   import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
   import MetaData from '../../../../../components/MetaData.svelte';
   import { readWriteClient } from '$lib/CMSUtils';
+  import { loading } from '$lib/store';
 
   export let data;
   let prompts: string[];
@@ -33,6 +34,7 @@
     prompts = fp.map('prompt')(data.records);
     initialPrompt = prompts[0];
     selectedPrompt.set(initialPrompt);
+    loading.set(false);
   });
 
   const rotatePrompts = () => {

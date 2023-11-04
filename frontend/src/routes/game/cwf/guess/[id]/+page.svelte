@@ -27,8 +27,8 @@
   import localforage from 'localforage';
   import { isNormalizedGameComplete, isPlayerInGame, normalizeGame } from '$lib/CWFGame';
 
-  loadingMessage.set('loading');
   loading.set(true);
+  loadingMessage.set('loading');
 
   export let data;
   const currentGuess = writable([]);
@@ -331,7 +331,10 @@
 
     console.log({ choodleOwner });
 
-    if (choodleOwner) return goto(`/game/cwf/share/${data.challenge._id}`);
+    if (choodleOwner) {
+      goto(`/game/cwf/share/${data.challenge._id}`);
+      return;
+    }
 
     guess = await locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id });
     guessesRemaining = guessesLimit - (guess?.guesses?.length || 0);

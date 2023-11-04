@@ -32,8 +32,8 @@
 </script>
 
 {#if $loading}
-  <div class="LoadingIndicator loading-backdrop" transition:blur={{ duration: 150 }}>
-    <div class="loading" in:fade={{ duration: 300 }}>
+  <div class="LoadingIndicator loading-backdrop no-pan" transition:blur={{ duration: 300 }}>
+    <div class="loading" in:blur={{ duration: 300 }}>
       <img
         class="loading-image"
         height="263"
@@ -120,5 +120,10 @@
 
   .not-loading {
     display: none;
+  }
+
+  .no-pan {
+    touch-action: pan-x pan-y;
+    touch-action: none;
   }
 </style>
