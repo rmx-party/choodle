@@ -102,7 +102,7 @@ export const locateCreator = async ({
     if (email && email.length > 0) {
       patch.set({ email });
     }
-    creator = await patch.commit({ autoGenerateArrayKeys: true });
+    creator = (await patch.commit({ autoGenerateArrayKeys: true })).results[0];
   } else {
     creator = await readWriteClient.create(
       {
