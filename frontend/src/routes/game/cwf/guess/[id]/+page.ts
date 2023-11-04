@@ -1,4 +1,12 @@
+import { PUBLIC_ISR_BYPASS_TOKEN } from "$env/static/public";
 import { readOnlyClient } from "$lib/CMSUtils";
+
+export const config = {
+  isr: {
+    expiration: 600,
+    bypassToken: PUBLIC_ISR_BYPASS_TOKEN,
+  },
+};
 
 export async function load({ params }) {
   const challenge = await readOnlyClient.fetch(
