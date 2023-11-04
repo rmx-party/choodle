@@ -38,18 +38,10 @@
   );
 
   onMount(async () => {
-    window.addEventListener('online', () => {
-      console.log('online');
-      isOnline.set(true);
-    });
-    window.addEventListener('offline', () => {
-      console.log('offline');
-      isOnline.set(false);
-    });
-
-    preloadCode('/game/cwf/pick', '/game/cwf/draw', '/game/cwf/share/*', '/game/cwf/guess/*');
+    preloadCode('/', '/game/cwf/pick', '/game/cwf/draw', '/game/cwf/share/*', '/game/cwf/guess/*');
   });
 </script>
 
+<svelte:window on:online={() => isOnline.set(true)} on:offline={() => isOnline.set(false)} />
 <LoadingIndicator {rotatingMessages} />
 <slot />
