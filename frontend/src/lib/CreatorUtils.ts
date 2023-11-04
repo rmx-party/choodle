@@ -83,6 +83,7 @@ export const locateCreator = async ({
   let creator = (await readOnlyClient.fetch(query))[0];
   // TODO: if there are multiple matches, we should consolidate them
   // TODO: if creator is in the backend, store the ID in browser so we don't have to keep asking on every page
+  // TODO: track changes to the creator through a store and subscribe to storage events to keep it fully synced
 
   if (creator) {
     const patch = readWriteClient
