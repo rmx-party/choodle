@@ -1,5 +1,6 @@
 <script lang="ts">
   import { urlFor } from '$lib/PersistedImagesUtils.js';
+  import { share, type Shareable } from '$lib/ShareUtils';
   import { writable } from 'svelte/store';
   import GuessingHUD from '../../../../../components/GuessingHUD.svelte';
   import Button from '../../../../../components/Button.svelte';
@@ -232,39 +233,7 @@
       : handleIncorrectGuess();
   };
 
-  const canShare = (shareable?): boolean => {
-    if (!browser) return false;
-    if (!navigator.share) return false;
-
-    return navigator.canShare(shareable);
-  };
-
-  const share = async (event: Event) => {
-    event.preventDefault();
-    if (!browser) return;
-
-    let gamePromptTiles = data.choodle.gamePrompt
-      ? fp.map((char) => (char === ' ' ? '⬜' : '🟨'), data.gamePrompt.prompt.split('')).join('')
-      : '';
-
-    const url = `${window.location.origin}/game/cwf/guess/${data.challenge._id}`;
-    const shareCopy = data.copy.share_messageText || '';
-    const text = [shareCopy, gamePromptTiles, url].join(`\n`);
-    const shareable = { text };
-
-    console.log(`sharing:`, shareable);
-
-    if (canShare(shareable)) {
-      console.log('Thanks for sharing!');
-      navigator.share(shareable);
-    } else {
-      console.log(`copied "${text}" to clipboard`);
-      await navigator.clipboard.writeText(text);
-      copiedToClipboard = true;
-    }
-  };
-
-  const afterHint = (hint) => {
+  const afterHint = async (hint) => {
     if (hintUsedInGuess(guess, hint.text)) {
       console.log(`hint already used ${hint.text}`);
       return;
@@ -272,7 +241,7 @@
 
     console.log(`adding ${hint.text} to the used hints on ${guess._id}`);
 
-    readWriteClient
+    guess = await readWriteClient
       .patch(guess._id)
       .setIfMissing({ hintsUsed: [] })
       .append('hintsUsed', [hint.text])
@@ -362,6 +331,69 @@
 
     return urlFor(bestImage).url();
   };
+
+  const shareTextNthTryCopy = (nthTry: number) => {
+    switch (nthTry) {
+      case 1:
+        return `1st`;
+      case 2:
+        return `2nd`;
+      case 3:
+        return `3rd`;
+      default:
+        return `${nthTry}th`;
+    }
+  };
+  const shareTextNthGuessCopy = (guess: string, n: number) => {
+    switch (n) {
+      case 0:
+        return `1️⃣ ${guess}`;
+      case 1:
+        return `2️⃣ ${guess}`;
+      case 2:
+        return `3️⃣ ${guess}`;
+      default:
+        return guess;
+    }
+  };
+  let shareTextSuccessMessage = ``;
+  $: shareTextSuccessMessage = `🏆 I guessed right on the ${shareTextNthTryCopy(
+    guessesLimit - guessesRemaining
+  )} try!`;
+  let shareTextFailureMessage = ``;
+  $: shareTextFailureMessage = `🫣 I couldn’t guess ${data.gamePrompt.prompt}!`;
+  let shareTextGuesses = ``;
+  $: shareTextGuesses = (guess?.guesses || []).map(shareTextNthGuessCopy).join(`\n`);
+
+  let shareTextStats = ``;
+  $: shareTextStats = `🛟 ${guess?.hintsUsed?.length || 0}
+🔥 ${game?.guessResults?.length || 0}`; // TODO: handle streak count appropriately for completed games
+  let newLine = `\n`;
+
+  const constructGuessShareable = (): Shareable => {
+    const shareCopy = success ? shareTextSuccessMessage : shareTextFailureMessage;
+    const text = [
+      shareCopy,
+      newLine,
+      newLine,
+      shareTextGuesses,
+      newLine,
+      newLine,
+      shareTextStats,
+    ].join(``);
+    const shareable = { text };
+    return shareable;
+  };
+
+  let copiedToClipboard = false;
+  function handleShare(event: MouseEvent): void {
+    event.preventDefault();
+    if (!browser) return;
+
+    share(constructGuessShareable(), (usedClipboard: boolean) => {
+      copiedToClipboard = usedClipboard;
+    });
+  }
 </script>
 
 <MetaData
@@ -400,6 +432,11 @@
       <Button colour="yellow" on:click={createCounterChallenge}>
         {data.copy.success_continueGameButtonText}
       </Button>
+      <Button on:click={handleShare}
+        >{copiedToClipboard
+          ? data.copy.guess_copiedToClipboard
+          : data.copy.guess_shareButtonText}</Button
+      >
       <Button
         on:click={() => {
           goto('/game/cwf');
@@ -430,6 +467,11 @@
         {data.copy.guess_failureNewGameButtonText}
       </Button>
       <div>
+        <Button on:click={handleShare}
+          >{copiedToClipboard
+            ? data.copy.guess_copiedToClipboard
+            : data.copy.guess_shareButtonText}</Button
+        >
         <Button
           on:click={() => {
             goto('/game/cwf');
