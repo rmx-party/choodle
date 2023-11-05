@@ -30,36 +30,50 @@
 
   let gamePrompt;
 
-  const canShare = (shareable?): boolean => {
+  type Shareable = {
+    text: string;
+    files?: File[];
+    title?: string;
+    url?: string;
+  };
+  const canShare = (shareable: Shareable): boolean => {
     if (!browser) return false;
     if (!navigator.share) return false;
 
     return navigator.canShare(shareable);
   };
 
-  const share = async (event: Event) => {
-    event.preventDefault();
+  const share = async (shareable: Shareable) => {
     if (!browser) return;
-
-    let gamePromptTiles = gamePrompt.prompt
-      ? fp.map((char) => (char === ' ' ? '⬜' : '🟨'), gamePrompt.prompt.split('')).join('')
-      : '';
-
-    const url = `${window.location.origin}/game/cwf/guess/${data.challenge._id}`;
-    const shareCopy = data.copy.share_messageText || '';
-    const text = [shareCopy, gamePromptTiles, url].join(`\n`);
-    const shareable = { text };
-
     console.log(`sharing:`, shareable);
 
     if (canShare(shareable)) {
       console.log('Thanks for sharing!');
       navigator.share(shareable);
     } else {
-      console.log(`copied "${text}" to clipboard`);
-      await navigator.clipboard.writeText(text);
+      console.log(`copied "${shareable.text}" to clipboard`);
+      await navigator.clipboard.writeText(shareable.text);
       copiedToClipboard = true;
     }
+  };
+
+  const constructChallengeShareable = (): Shareable => {
+    let gamePromptTiles = gamePrompt?.length
+      ? fp.map((char) => (char === ' ' ? '⬜' : '🟨'), gamePrompt.split('')).join('')
+      : '';
+
+    const url = `${window.location.origin}/game/cwf/guess/${data.challenge._id}`;
+    const shareCopy = data.copy.share_messageText || '';
+    const text = [shareCopy, gamePromptTiles, url].join(`\n`);
+    const shareable = { text };
+    return shareable;
+  };
+
+  const handleShare = async (event: Event) => {
+    event.preventDefault();
+    if (!browser) return;
+
+    share(constructChallengeShareable());
   };
 
   onMount(async () => {
@@ -72,7 +86,7 @@
     gamePrompt = data.challenge.gamePromptRef.prompt;
 
     console.log({ challenge: data.challenge });
-    choodleOwner = data.challenge.challenger._id === currentChoodler._id; // TODO: this is based on device+choodle, should be by creator account
+    choodleOwner = data.challenge.challenger._id === currentChoodler._id;
 
     // Store in localstorage on Draw:
     //  - all details we need to draw it here, including the image
@@ -127,7 +141,7 @@
 
   <h3><strong>{data.challenge.gamePromptRef.prompt.toUpperCase()}</strong></h3>
   <div>
-    <Button colour="yellow" on:click={share}
+    <Button colour="yellow" on:click={handleShare}
       >{copiedToClipboard
         ? data.copy.guess_copiedToClipboard
         : data.copy.guess_shareButtonText}</Button
