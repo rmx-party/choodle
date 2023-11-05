@@ -27,7 +27,7 @@ export const share = async (
     console.log("Thanks for sharing!");
     navigator.share(shareable);
   } else {
-    console.log(`copied "${shareable.text}" to clipboard`);
+    console.log(`copied text to clipboard:\n${shareable.text}`);
     await navigator.clipboard.writeText(shareable.text);
     copiedToClipboard = true;
   }
