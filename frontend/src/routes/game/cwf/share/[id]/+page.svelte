@@ -7,6 +7,7 @@
   import MetaData from '../../../../../components/MetaData.svelte';
   import { onMount } from 'svelte';
   import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils';
+  import { share, type Shareable } from '$lib/ShareUtils';
   import { browser } from '$app/environment';
   import fp from 'lodash/fp';
   import { toHTML } from '@portabletext/to-html';
@@ -30,33 +31,6 @@
 
   let gamePrompt;
 
-  type Shareable = {
-    text: string;
-    files?: File[];
-    title?: string;
-    url?: string;
-  };
-  const canShare = (shareable: Shareable): boolean => {
-    if (!browser) return false;
-    if (!navigator.share) return false;
-
-    return navigator.canShare(shareable);
-  };
-
-  const share = async (shareable: Shareable) => {
-    if (!browser) return;
-    console.log(`sharing:`, shareable);
-
-    if (canShare(shareable)) {
-      console.log('Thanks for sharing!');
-      navigator.share(shareable);
-    } else {
-      console.log(`copied "${shareable.text}" to clipboard`);
-      await navigator.clipboard.writeText(shareable.text);
-      copiedToClipboard = true;
-    }
-  };
-
   const constructChallengeShareable = (): Shareable => {
     let gamePromptTiles = gamePrompt?.length
       ? fp.map((char) => (char === ' ' ? '⬜' : '🟨'), gamePrompt.split('')).join('')
@@ -73,7 +47,9 @@
     event.preventDefault();
     if (!browser) return;
 
-    share(constructChallengeShareable());
+    share(constructChallengeShareable(), (usedClipboard) => {
+      copiedToClipboard = usedClipboard;
+    });
   };
 
   onMount(async () => {
