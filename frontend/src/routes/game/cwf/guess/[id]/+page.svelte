@@ -26,7 +26,7 @@
   import {closeDialog, loading, loadingMessage, openDialog} from '$lib/store';
   import Dialog from '../../../../../components/Dialog.svelte';
   import localforage from 'localforage';
-  import {isNormalizedGameComplete, isPlayerInGame, normalizeGame} from '$lib/CWFGame';
+  import {isNormalizedGameComplete, isPlayerInGame, normalizeGame, streakCount} from '$lib/CWFGame';
   import type {PageData} from './$types';
 
   loading.set(true);
@@ -370,7 +370,7 @@
   let shareTextStats = ``;
   $: {
     shareTextStats = `🛟 ${guess?.hintsUsed?.length || 0}
-🔥 ${game?.guessResults?.length || 0}`; // TODO: handle streak count appropriately for completed games
+🔥 ${(game && streakCount(game)) || 0}`; // TODO: handle streak count appropriately for completed games
   }
   let newLine = `\n`;
 
