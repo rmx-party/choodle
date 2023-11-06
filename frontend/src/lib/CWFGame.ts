@@ -75,7 +75,9 @@ export type StreakGuessingGameGuessResult = SanityDocumentMetadata & {
 
 export type StreakGuessingGamePlayer = SanityDocumentMetadata & {
   [key: string]: any
-} & {}
+} & {
+  username?: string
+}
 
 export type StreakGuessingGameDrawing = SanityDocumentMetadata & {
   [key: string]: any

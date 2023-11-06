@@ -1,4 +1,4 @@
-import {describe, expect, it} from "vitest";
+import {describe, expect, it, beforeEach} from "vitest";
 import {
   addGuessToGame,
   createCWFGame, createEmptyGameFromChallenge,
@@ -13,6 +13,7 @@ import type {
   StreakGuessingGamePlayer,
   StreakGuessingGamePrompt
 } from "$lib/CWFGame"
+import {GameBuilder} from "$lib/GameBuilder";
 
 describe("StreakGuessingGame", () => {
   const prompt: StreakGuessingGamePrompt = {_id: "", createdAt: ""}
@@ -510,3 +511,61 @@ describe("NormalizedCWFGame", () => {
     });
   });
 });
+
+describe("Game Play", () => {
+  let player1: StreakGuessingGamePlayer
+  let player2: StreakGuessingGamePlayer
+  let challenge: StreakGuessingGameChallenge
+
+  beforeEach(() => {
+    player1 = {
+      _id: "player-1",
+      deviceIds: ["1234"]
+    }
+    challenge = {
+      _id: "challenge-1",
+      challenger: player1,
+      prompt: {
+        _id: "prompt-1",
+        prompt: "Draw a Thing"
+      }
+    }
+  })
+
+  it("a challenge exists but drawing is not finished", () => {
+    const game = GameBuilder.fromChallenge(challenge).build
+
+    expect(streakCount(game)).toEqual(0)
+    expect(whoseTurn(game)).toEqual(player1)
+    expect(whichAction(game)).toEqual("draw")
+    expect(isGameComplete(game)).toEqual(false)
+  })
+
+  it("player 1 has drawn, but nobody has guessed", () => {
+    player1 = {...player1, username: "bob"}
+    challenge = {...challenge, challenger: player1, choodle: {_id: "drawing-1"}}
+
+    const game = GameBuilder.fromChallenge(challenge).build
+
+    expect(streakCount(game)).toEqual(0)
+    expect(whoseTurn(game)).toEqual(player1)
+    expect(whichAction(game)).toEqual("share")
+    expect(isGameComplete(game)).toEqual(false)
+  })
+
+  it("the first guesser guesses correctly in one try", () => {
+    player1 = {...player1, username: "bob"}
+    player2 = {...player1, username: "alice", deviceIds: ["9876"]}
+    challenge = {...challenge, challenger: player1, choodle: {_id: "drawing-1"}}
+
+    const game = GameBuilder
+      .fromChallenge(challenge)
+      .playerGuesses(player2, "correct word")
+      .build
+
+    expect(streakCount(game)).toEqual(1)
+    expect(whoseTurn(game)).toEqual(player2)
+    expect(whichAction(game)).toEqual("pick")
+    expect(isGameComplete(game)).toEqual(false)
+  });
+})
