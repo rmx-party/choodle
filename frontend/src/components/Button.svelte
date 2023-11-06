@@ -10,21 +10,21 @@
 {#if isOnline}
   <button class={`btn ${variant} ${colour}`} on:click {...$$restProps}>
     {#if icon && iconPosition == 'left'}
-      <img class="icon" src={icon} alt="" />
+      <img class="icon" src={icon} alt="left icon"/>
     {/if}
-    <slot />
+    <slot/>
     {#if icon && iconPosition == 'right'}
-      <img class="icon" src={icon} alt="" />
+      <img class="icon" src={icon} alt="right icon"/>
     {/if}
   </button>
 {:else}
   <button disabled class={`btn ${variant}  ${colour} disabled`} {...$$restProps}>
     {#if icon && iconPosition == 'left'}
-      <img class="icon" src={icon} alt="" />
+      <img class="icon" src={icon} alt="left icon"/>
     {/if}
-    <slot />
+    <slot/>
     {#if icon && iconPosition == 'right'}
-      <img class="icon" src={icon} alt="" />
+      <img class="icon" src={icon} alt="right icon"/>
     {/if}
   </button>
 {/if}
@@ -44,11 +44,10 @@
 
     backdrop-filter: blur(40px);
     background: #fff;
-    box-shadow:
-      0px 4px 24px 0px rgba(0, 0, 0, 0.01),
-      0px -2px 8px 0px rgba(0, 0, 0, 0.12) inset,
-      0px 2px 24px 0px rgba(255, 255, 255, 0.4) inset,
-      0px 1px 4px 0px rgba(0, 0, 0, 0.04);
+    box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.01),
+    0px -2px 8px 0px rgba(0, 0, 0, 0.12) inset,
+    0px 2px 24px 0px rgba(255, 255, 255, 0.4) inset,
+    0px 1px 4px 0px rgba(0, 0, 0, 0.04);
     backdrop-filter: blur(40px);
 
     color: var(--choodle-black);
@@ -89,9 +88,8 @@
   .btn:active,
   .btn.focus,
   .btn:focus {
-    box-shadow:
-      -1px -1px 1px 0px rgba(20, 21, 24, 0.09) inset,
-      2px 2px 4px 0px rgba(20, 21, 24, 0.16) inset;
+    box-shadow: -1px -1px 1px 0px rgba(20, 21, 24, 0.09) inset,
+    2px 2px 4px 0px rgba(20, 21, 24, 0.16) inset;
   }
 
   .primary {
@@ -115,11 +113,10 @@
     line-height: 120%; /* 1.8rem */
 
     backdrop-filter: blur(40px);
-    box-shadow:
-      0px 4px 24px 0px rgba(20, 21, 24, 0.1),
-      0px -2px 8px 0px rgba(20, 21, 24, 0.18) inset,
-      0px 2px 24px 0px rgba(255, 255, 255, 0.4) inset,
-      0px 1px 2px 0px rgba(20, 21, 24, 0.17);
+    box-shadow: 0px 4px 24px 0px rgba(20, 21, 24, 0.1),
+    0px -2px 8px 0px rgba(20, 21, 24, 0.18) inset,
+    0px 2px 24px 0px rgba(255, 255, 255, 0.4) inset,
+    0px 1px 2px 0px rgba(20, 21, 24, 0.17);
   }
 
   .primary.hover,
@@ -128,9 +125,8 @@
   .primary:active,
   .primary.focus,
   .primary:focus {
-    box-shadow:
-      -1px -1px 1px 0px rgba(20, 21, 24, 0.09) inset,
-      2px 2px 4px 0px rgba(20, 21, 24, 0.16) inset;
+    box-shadow: -1px -1px 1px 0px rgba(20, 21, 24, 0.09) inset,
+    2px 2px 4px 0px rgba(20, 21, 24, 0.16) inset;
   }
 
   .disabled {
