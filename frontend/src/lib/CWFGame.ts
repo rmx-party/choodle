@@ -43,6 +43,8 @@ export const addGuessToGame = (
 };
 
 export const isGameComplete = (game) => {
+  if (!game) return 0;
+  if (!game.guessResults) return 0;
   return isNormalizedGameComplete(normalizeGame(game).guessResults);
 };
 
@@ -97,10 +99,12 @@ export type StreakGuessingGame = SanityDocumentMetadata & {
   currentChallenge: StreakGuessingGameChallenge,
   player1: StreakGuessingGamePlayer,
   player2?: StreakGuessingGamePlayer,
-  guessResults: StreakGuessingGameGuessResult[],
+  guessResults?: StreakGuessingGameGuessResult[],
 }
 
-export const streakCount = (game: StreakGuessingGame): number => {
+export const streakCount = (game?: StreakGuessingGame): number => {
+  if (!game) return 0;
+  if (!game.guessResults) return 0;
   if (isGameComplete(game)) return 0;
 
   return fp.filter(guessResult => guessResult.guessedCorrectly, game.guessResults).length

@@ -183,6 +183,14 @@ describe("StreakGuessingGame", () => {
   })
 
   describe("streak counting", () => {
+    it("is zero when the game is undefined", () => {
+      expect(streakCount()).toEqual(0)
+    })
+
+    it("is zero when the game's guessResults are undefined", () => {
+      expect(streakCount({_id: "game-id", guessResults: undefined}))
+    });
+
     it("starts at zero", () => {
       expect(streakCount(emptyGame)).toBe(0)
     });
@@ -509,6 +517,17 @@ describe("NormalizedCWFGame", () => {
     it("is false when a guessResult contains null", () => {
       expect(isNormalizedGameComplete([true, true, null])).toBeFalsy();
     });
+  });
+});
+
+describe("streakCount", () => {
+  it("streakCount 0 when guessResults is empty", () => {
+    const game: StreakGuessingGame = {
+      _id: "",
+      guessResults: []
+    }
+
+    expect(streakCount(game)).toEqual(0)
   });
 });
 

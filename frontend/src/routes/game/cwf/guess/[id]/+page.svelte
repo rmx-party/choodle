@@ -371,7 +371,7 @@
   let shareTextStats = ``;
   $: {
     shareTextStats = `🛟 ${guess?.hintsUsed?.length || 0}
-🔥 ${(game?.guessresults?.length && streakCount(game)) || 0}`;
+🔥 ${streakCount(game)}`;
   }
   let newLine = `\n`;
 
