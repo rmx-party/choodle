@@ -14,12 +14,6 @@
     const games = await readWriteClient.fetch('*[_type == "cwfgame"]');
     gameCount = games.length;
     console.log({gameCount});
-
-    const challenges: any[] = await readOnlyClient.fetch('*[_type == "challenge"]');
-    for (const challenge of challenges) {
-      await readWriteClient.patch(challenge._id).unset(['gameRef']).commit();
-    }
-
     for (const game of games) {
       await readWriteClient.delete({query: `*[references("${game._id}")]`});
       await readWriteClient.delete(game._id);
