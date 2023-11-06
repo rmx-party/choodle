@@ -8,13 +8,17 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "test:unit": "vitest",
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:watch": "vitest",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
     "format": "prettier --plugin-search-dir . --write ."
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^2.1.0",
     "@sveltejs/kit": "^1.27.2",
+    "@sveltejs/vite-plugin-svelte": "^2.4.6",
+    "@testing-library/svelte": "^4.0.5",
     "@types/pngjs": "^6.0.3",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@typescript-eslint/parser": "^6.9.1",
@@ -22,6 +26,7 @@
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-svelte": "^2.34.0",
+    "jsdom": "^22.1.0",
     "prettier": "^3.0.3",
     "prettier-plugin-svelte": "^3.0.3",
     "svelte": "^4.2.2",
@@ -30,9 +35,7 @@
     "typescript": "^5.2.2",
     "vite": "^4.5.0",
     "vitest": "^0.34.6",
-    "vitest-dom": "^0.1.1",
-    "@sveltejs/vite-plugin-svelte": "^2.4.6",
-    "jsdom": "^22.1.0"
+    "vitest-dom": "^0.1.1"
   },
   "type": "module",
   "dependencies": {
