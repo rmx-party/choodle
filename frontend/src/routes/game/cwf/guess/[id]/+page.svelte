@@ -176,6 +176,7 @@
       guessResult.set({guessedCorrectly});
     }
     guess = await guessResult.commit({autoGenerateArrayKeys: true});
+    guessesRemaining = guessesLimit - guess.guesses.length
     console.log({guess});
 
     if (guessedCorrectly !== null) {
@@ -370,7 +371,7 @@
   let shareTextStats = ``;
   $: {
     shareTextStats = `🛟 ${guess?.hintsUsed?.length || 0}
-🔥 ${(game && streakCount(game)) || 0}`;
+🔥 ${(game?.guessresults?.length && streakCount(game)) || 0}`;
   }
   let newLine = `\n`;
 
