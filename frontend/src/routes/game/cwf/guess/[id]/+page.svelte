@@ -370,7 +370,7 @@
   let shareTextStats = ``;
   $: {
     shareTextStats = `🛟 ${guess?.hintsUsed?.length || 0}
-🔥 ${(game && streakCount(game)) || 0}`; // TODO: handle streak count appropriately for completed games
+🔥 ${(game && streakCount(game)) || 0}`;
   }
   let newLine = `\n`;
 
