@@ -4,18 +4,27 @@
   import Wordmark from '../../../components/Wordmark.svelte';
   import handDraw from '$lib/assets/hand-draw.svg';
   import Dialog from '../../../components/Dialog.svelte';
-  import {dialogState} from '$lib/store';
+  import {dialogState, loading} from '$lib/store';
+  import {onMount} from "svelte";
+  import GlobalNavHeader from "../../../components/GlobalNavHeader.svelte";
+  import {page} from '$app/stores';
+  import {urlFor} from '$lib/PersistedImagesUtils';
 
   function openTestDialog() {
     dialogState.update((dialogs) => {
       return {...dialogs, 'test-dialog': true};
     });
   }
+
+  onMount(() => {
+    loading.set(false)
+  })
 </script>
 
 <MetaData title="Choodle Components" themeColor="#FFFFFF"/>
 
 <div class="container">
+  <GlobalNavHeader logoUrl={urlFor($page.data.copy.logo)} logoLinkDestination={$page.data.copy.logoLinkDestination}/>
   <h1>Choodle Design Components</h1>
 
   <Button on:click={openTestDialog}>Open Dialog</Button>
