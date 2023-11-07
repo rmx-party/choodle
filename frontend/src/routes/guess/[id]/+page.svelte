@@ -71,7 +71,7 @@
     console.log({game});
     console.log({isPlayerInGame: isPlayerInGame(game, guesser)});
 
-    if (!isPlayerInGame(game, guesser)) goto(`/pick`);
+    if (!isPlayerInGame(game, guesser)) goto(`/`);
 
     console.log('creating the challenge and updating current challenge');
     const challengeId = `challenge-${window.crypto.randomUUID()}`;
@@ -86,7 +86,7 @@
       .patch(game._id, (p) => p.set({currentChallenge: {_ref: challengeId}}))
       .commit({autoGenerateArrayKeys: true});
     console.log(transaction);
-    goto(`/pick/${challengeId}`);
+    goto(`/${challengeId}`);
   };
 
   const challengeHasBeenGuessed = (game, challenge) => {
