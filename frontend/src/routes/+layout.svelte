@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { browser, dev } from '$app/environment';
-  import { isOnline } from '$lib/store';
-  import { webVitals } from '$lib/vitals';
+  import {browser, dev} from '$app/environment';
+  import {isOnline} from '$lib/store';
+  import {webVitals} from '$lib/vitals';
   import '$lib/assets/fonts.css';
-  import { onMount } from 'svelte';
+  import {onMount} from 'svelte';
   import '../app.css';
   import LoadingIndicator from '../components/LoadingIndicator.svelte';
-  import Bugsnag from '@bugsnag/js';
-  import { page } from '$app/stores';
+  import {page} from '$app/stores';
   import fp from 'lodash/fp';
-  import { preloadCode } from '$app/navigation';
+  import {preloadCode} from '$app/navigation';
 
   export let data;
 
@@ -20,10 +19,6 @@
       params: $page.params,
       analyticsId: data.analyticsId,
     });
-  }
-
-  if (browser && !dev) {
-    Bugsnag.start({ apiKey: '91931cee1cbae5feec1925a566386158' });
   }
 
   const rotatingMessages = fp.filter(
@@ -42,6 +37,6 @@
   });
 </script>
 
-<svelte:window on:online={() => isOnline.set(true)} on:offline={() => isOnline.set(false)} />
-<LoadingIndicator {rotatingMessages} />
-<slot />
+<svelte:window on:online={() => isOnline.set(true)} on:offline={() => isOnline.set(false)}/>
+<LoadingIndicator {rotatingMessages}/>
+<slot/>
