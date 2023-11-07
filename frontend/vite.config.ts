@@ -1,6 +1,6 @@
-import { sentrySvelteKit } from '@sentry/sveltekit';
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vitest/config';
+import {sentrySvelteKit} from '@sentry/sveltekit';
+import {sveltekit} from '@sveltejs/kit/vite';
+import {defineConfig} from 'vitest/config';
 import * as path from 'path';
 
 export default defineConfig({
@@ -22,10 +22,6 @@ export default defineConfig({
   ],
   build: {
     sourcemap: true,
-  },
-  test: {
-    include: ['src/**/*.{test,spec}.{js,ts}'],
-    reporters: ['default', 'html'],
   },
   define: {
     'process.env': process.env,
