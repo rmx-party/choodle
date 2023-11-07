@@ -24,7 +24,7 @@
     display: flex;
     justify-content: space-between;
     height: 44px;
-    background: var(--choodle-yelllow, #FEF40A);
+    background: var(--choodle-yellow, #FEF40A);
     align-content: center;
     align-items: center;
     flex-direction: row;
