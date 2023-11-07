@@ -24,42 +24,5 @@ export default {
       title: 'Creator ID',
       readOnly: true
     },
-    {
-      name: 'shouldMint',
-      type: 'boolean',
-      title: 'Should Mint?',
-      initialValue: true
-    },
-    {
-      name: 'mintedAt',
-      type: 'datetime',
-      title: 'Minted At'
-    },
-    {
-      name: 'tokenId',
-      type: 'string',
-      title: 'Token ID'
-    },
-    {
-      name: 'sentTo',
-      type: 'string',
-      title: 'Sent To'
-    },
-    {
-      name: 'sentAt',
-      type: 'datetime',
-      title: 'Sent At'
-    },
-    {
-      name: 'certificate',
-      type: 'image',
-      title: 'Generated Certificate'
-    },
-    {
-      name: 'gamePrompt',
-      type: 'string',
-      title: 'Selected Game Prompt',
-      readOnly: true
-    }
   ]
 }

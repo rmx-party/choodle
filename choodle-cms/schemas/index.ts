@@ -4,7 +4,7 @@ import choodleWithFriendsCopy from "./choodleWithFriendsCopy";
 import creator from './creator';
 import challenge from './challenge';
 import guess from "./guess";
-import cwfgame from "./cwfgame";
+import cwfgame from "./streak";
 
 export const schemaTypes = [
   choodle,

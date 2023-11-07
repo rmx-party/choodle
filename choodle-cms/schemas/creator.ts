@@ -9,11 +9,6 @@ export default {
       title: 'Username of creator',
     },
     {
-      name: 'email',
-      type: 'string',
-      title: 'Email address of creator, not verified',
-    },
-    {
       name: 'deviceIds',
       title: 'Device IDs associated with this creator',
       type: 'array',

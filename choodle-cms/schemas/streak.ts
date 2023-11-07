@@ -1,7 +1,7 @@
 export default {
-  name: 'cwfgame',
+  name: 'cwfgame', // FIXME: this should match the title, but we need to migrate.
   type: 'document',
-  title: 'CWF Game',
+  title: 'Streak',
   fields: [
     {
       name: 'player1',
