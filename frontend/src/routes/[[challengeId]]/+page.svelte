@@ -74,7 +74,7 @@
     if (!challengeId) {
       challengeId = '';
     }
-    goto(`/game/cwf/draw/${challengeId}`);
+    goto(`/draw/${challengeId}`);
   };
 </script>
 

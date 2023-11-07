@@ -72,7 +72,7 @@
     console.log({game});
     console.log({isPlayerInGame: isPlayerInGame(game, guesser)});
 
-    if (!isPlayerInGame(game, guesser)) goto(`/game/cwf/pick`);
+    if (!isPlayerInGame(game, guesser)) goto(`/pick`);
 
     console.log('creating the challenge and updating current challenge');
     const challengeId = `challenge-${window.crypto.randomUUID()}`;
@@ -87,7 +87,7 @@
       .patch(game._id, (p) => p.set({currentChallenge: {_ref: challengeId}}))
       .commit({autoGenerateArrayKeys: true});
     console.log(transaction);
-    goto(`/game/cwf/pick/${challengeId}`);
+    goto(`/pick/${challengeId}`);
   };
 
   const challengeHasBeenGuessed = (game, challenge) => {
@@ -308,7 +308,7 @@
     console.log({choodleOwner});
 
     if (choodleOwner) {
-      goto(`/game/cwf/share/${data.challenge._id}`);
+      goto(`/share/${data.challenge._id}`);
       return;
     }
 
@@ -472,7 +472,7 @@
       <Button
         colour="yellow"
         on:click={() => {
-          goto(`/game/cwf/pick`);
+          goto(`/pick`);
         }}
       >
         {data.copy.guess_failureNewGameButtonText}

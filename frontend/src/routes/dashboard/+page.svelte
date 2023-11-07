@@ -34,7 +34,7 @@
   let activeTab = writable(navItems[0]);
 
   const startGame = async () => {
-    await goto(`/game/cwf/pick`);
+    await goto(`/`);
   };
 
   let myTurnGames: StreakGuessingGame[] = [];

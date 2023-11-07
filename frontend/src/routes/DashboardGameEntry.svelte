@@ -6,7 +6,7 @@
     type StreakGuessingGameChallenge,
     type StreakGuessingGamePlayer,
   } from '$lib/CWFGame';
-  import { goto } from '$app/navigation';
+  import {goto} from '$app/navigation';
   import fp from 'lodash/fp';
   import streakFlame from '$lib/assets/streak-flame.svg';
 
@@ -23,27 +23,27 @@
   };
 
   const generateLinkFor = ({
-    currentChallenge,
-  }: {
+                             currentChallenge,
+                           }: {
     currentChallenge: StreakGuessingGameChallenge;
   }): string => {
     if (currentChallenge.challenger._id === currentChoodler._id && !currentChallenge.choodle) {
-      return `/game/cwf/pick/${currentChallenge._id}`;
+      return `/${currentChallenge._id}`;
     }
 
     if (currentChallenge.challenger._id !== currentChoodler._id && !currentChallenge.choodle) {
-      return `/game/cwf/guess/${fp.last(game.guessResults)?.challenge?._id}`;
+      return `/guess/${fp.last(game.guessResults)?.challenge?._id}`;
     }
 
-    return `/game/cwf/guess/${currentChallenge._id}`;
+    return `/guess/${currentChallenge._id}`;
   };
 </script>
 
 <div class="game-entry" class:game-over={gameOver}>
   <a href={generateLinkFor(game)} on:click={() => goto(generateLinkFor(game))}
-    >{otherPlayerIn(game)}</a
+  >{otherPlayerIn(game)}</a
   >
-  <div class="game-entry-streak"><img src={streakFlame} />{streakCount(game)}</div>
+  <div class="game-entry-streak"><img src={streakFlame}/>{streakCount(game)}</div>
 </div>
 
 <style>

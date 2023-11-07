@@ -72,7 +72,7 @@
     //   If the currentChoodler doesn't own it, redirect to guess page.
 
     if (!choodleOwner) {
-      goto(`/game/cwf/guess/${data.challenge._id}`);
+      goto(`/guess/${data.challenge._id}`);
       return;
     }
 

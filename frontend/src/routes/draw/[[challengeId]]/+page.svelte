@@ -73,9 +73,9 @@
 
     await clearStorage();
     if ($page.params.challengeId) {
-      await goto(`/game/cwf/share/${$page.params.challengeId}`);
+      await goto(`/share/${$page.params.challengeId}`);
     } else {
-      await goto(`/game/cwf/share/${challengeId}`);
+      await goto(`/share/${challengeId}`);
     }
   }
 
