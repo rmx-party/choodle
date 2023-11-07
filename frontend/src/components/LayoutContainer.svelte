@@ -1,13 +1,13 @@
 <script>
-  import { loading } from '$lib/store';
-  import { fade } from 'svelte/transition';
+  import {loading} from '$lib/store';
+  import {fade} from 'svelte/transition';
 </script>
 
 {#if !$loading}
   <div id="layoutContainer" transition:fade={{ duration: 100 }} {...$$restProps}>
-    <slot name="topBar" />
+    <slot name="topBar"/>
     <div id="flexLayout">
-      <slot />
+      <slot/>
     </div>
   </div>
 {/if}
@@ -23,7 +23,7 @@
     margin: 0 auto;
 
     width: 100%;
-    height: clamp(500px, 100svh, 900px);
+    height: clamp(500px, calc(100svh - 44px), 900px);
   }
 
   #flexLayout {
