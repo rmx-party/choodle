@@ -33,7 +33,7 @@
     "svelte-check": "^3.5.2",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
-    "vite": "^4.5.0",
+    "vite": "link:@sveltejs/kit/vite",
     "vitest": "^0.34.6",
     "vitest-dom": "^0.1.1"
   },
