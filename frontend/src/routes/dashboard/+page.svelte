@@ -21,12 +21,11 @@
   import DashboardGameEntry from '../DashboardGameEntry.svelte';
   import {GameBuilder} from '$lib/GameBuilder';
   import PixelImage from '../../components/PixelImage.svelte';
-  import {fade, fly, slide} from 'svelte/transition';
+  import {fly} from 'svelte/transition';
 
   loading.set(true);
   export let data;
   let currentChoodler: StreakGuessingGamePlayer;
-  let hasDismissedStartScreen = false;
 
   let myGames: StreakGuessingGame[] = [];
 
@@ -117,34 +116,13 @@
 
 <MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url}/>
 
-{#if !hasDismissedStartScreen}
-  <LayoutContainer>
-    <PixelImage
-      src={urlFor(data.copy.logoTwo).url()}
-      width="80%"
-      style="margin: 3rem auto;"
-      alt=""
-    />
-
-    {@html toHTML(data.copy.landing_content)}
-
-    <Button
-      variant="primary"
-      colour="yellow"
-      on:click={() => {
-        hasDismissedStartScreen = true;
-      }}
-      style="margin: 3rem auto;">{data.copy.dismissStartScreenButtonText}</Button
-    >
-  </LayoutContainer>
-{:else}
-  <LayoutContainer>
-    <div>
-      <PixelImage src={urlFor(data.copy.logoTwo).url()} width="80%" alt=""/>
-    </div>
-    <section class="nav-and-hud">
-      <nav>
-        {#each navItems as navItem}
+<LayoutContainer>
+  <div>
+    <PixelImage src={urlFor(data.copy.logoTwo).url()} width="80%" alt=""/>
+  </div>
+  <section class="nav-and-hud">
+    <nav>
+      {#each navItems as navItem}
           <span
             on:click={() => {
               activeTab.set(navItem);
@@ -153,54 +131,53 @@
           >
             {navItem}
           </span>
-        {/each}
-      </nav>
+      {/each}
+    </nav>
 
-      <span class="username">{currentChoodler.username}</span>
-    </section>
+    <span class="username">{currentChoodler.username}</span>
+  </section>
 
-    {#if $activeTab === 'my games'}
-      <section class="tabContent my-games" in:fly={{ x: -2000, y: 0, duration: 200 }}>
-        <span class="game-list-heading">Your Turn</span>
-        {#each myTurnGames as myTurnGame (myTurnGame._id)}
-          <DashboardGameEntry
-            {currentChoodler}
-            game={myTurnGame}
-            gameListUserUnknownText={data.copy.gameListUserUnknownText}
-          />
-        {:else}
-          <div class="centre-container">
-            <p>All caught up</p>
-          </div>
-        {/each}
+  {#if $activeTab === 'my games'}
+    <section class="tabContent my-games" in:fly={{ x: -2000, y: 0, duration: 200 }}>
+      <span class="game-list-heading">Your Turn</span>
+      {#each myTurnGames as myTurnGame (myTurnGame._id)}
+        <DashboardGameEntry
+          {currentChoodler}
+          game={myTurnGame}
+          gameListUserUnknownText={data.copy.gameListUserUnknownText}
+        />
+      {:else}
         <div class="centre-container">
-          <Button
-            variant="secondary"
-            colour="yellow"
-            on:click={startGame}
-            style="margin: 1rem auto; flex-grow: 0;"
-          >
-            {data.copy.startGameButtonText}
-          </Button>
+          <p>All caught up</p>
         </div>
-        <span class="game-list-heading">Their Turn</span>
-        {#each theirTurnGames as theirTurnGame (theirTurnGame._id)}
-          <DashboardGameEntry
-            {currentChoodler}
-            game={theirTurnGame}
-            gameListUserUnknownText={data.copy.gameListUserUnknownText}
-          />
-        {/each}
-      </section>
-    {/if}
+      {/each}
+      <div class="centre-container">
+        <Button
+          variant="secondary"
+          colour="yellow"
+          on:click={startGame}
+          style="margin: 1rem auto; flex-grow: 0;"
+        >
+          {data.copy.startGameButtonText}
+        </Button>
+      </div>
+      <span class="game-list-heading">Their Turn</span>
+      {#each theirTurnGames as theirTurnGame (theirTurnGame._id)}
+        <DashboardGameEntry
+          {currentChoodler}
+          game={theirTurnGame}
+          gameListUserUnknownText={data.copy.gameListUserUnknownText}
+        />
+      {/each}
+    </section>
+  {/if}
 
-    {#if $activeTab === 'rules'}
-      <section class="tabContent my-games" in:fly={{ x: 2000, y: 0, duration: 200 }}>
-        {@html toHTML(data.copy.rules_content)}
-      </section>
-    {/if}
-  </LayoutContainer>
-{/if}
+  {#if $activeTab === 'rules'}
+    <section class="tabContent my-games" in:fly={{ x: 2000, y: 0, duration: 200 }}>
+      {@html toHTML(data.copy.rules_content)}
+    </section>
+  {/if}
+</LayoutContainer>
 
 <style>
   .centre-container {
