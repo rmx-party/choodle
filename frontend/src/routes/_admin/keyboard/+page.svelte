@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { writable } from 'svelte/store';
-  import GuessingInterface from '../cwf/GuessingInterface.svelte';
+  import {writable} from 'svelte/store';
+  import GuessingInterface from '../../game/cwf/GuessingInterface.svelte';
 
   let cursorLocation = writable(0);
   let format = 'FOO BAR'.split('');
@@ -9,7 +9,7 @@
 </script>
 
 <strong>{format.join('')}</strong>
-<br />
+<br/>
 
 <GuessingInterface
   {format}

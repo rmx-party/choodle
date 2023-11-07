@@ -1,5 +1,5 @@
 <script>
-  import {loading} from '$lib/store';
+  import {loading} from '$lib/store.js';
 
   loading.set(true);
 </script>

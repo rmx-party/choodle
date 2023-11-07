@@ -1,19 +1,19 @@
 <script lang="ts">
-  import Button from '../../components/Button.svelte';
-  import MetaData from '../../components/MetaData.svelte';
-  import Wordmark from '../../components/Wordmark.svelte';
+  import Button from '../../../components/Button.svelte';
+  import MetaData from '../../../components/MetaData.svelte';
+  import Wordmark from '../../../components/Wordmark.svelte';
   import handDraw from '$lib/assets/hand-draw.svg';
-  import Dialog from '../../components/Dialog.svelte';
-  import { dialogState } from '$lib/store';
+  import Dialog from '../../../components/Dialog.svelte';
+  import {dialogState} from '$lib/store';
 
   function openTestDialog() {
     dialogState.update((dialogs) => {
-      return { ...dialogs, 'test-dialog': true };
+      return {...dialogs, 'test-dialog': true};
     });
   }
 </script>
 
-<MetaData title="Choodle Components" themeColor="#FFFFFF" />
+<MetaData title="Choodle Components" themeColor="#FFFFFF"/>
 
 <div class="container">
   <h1>Choodle Design Components</h1>
@@ -106,7 +106,7 @@
   <a>Link</a>
 
   <figure>
-    <img src="/choodle-bob-p2.png" width="100" />
+    <img src="/choodle-bob-p2.png" width="100"/>
     <figcaption>
       <strong>Caption-Bold</strong>
       Caption-Reg
@@ -114,7 +114,7 @@
   </figure>
 
   <h2>wordmark</h2>
-  <Wordmark />
+  <Wordmark/>
 
   <h2>Buttons</h2>
   <Button variant="primary" icon={handDraw}>primary</Button>
