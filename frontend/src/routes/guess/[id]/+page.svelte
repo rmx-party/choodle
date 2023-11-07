@@ -229,11 +229,11 @@
   };
 
   const submitGuess = () => {
-    if ($currentGuess.length < data.gamePrompt.prompt.length) return;
+    if ($currentGuess.length < data.gamePrompt?.prompt.length) return;
 
     console.log(`checking answer, ${guessesRemaining} guesses left`);
 
-    isCorrect($currentGuess, data.gamePrompt.prompt)
+    isCorrect($currentGuess, data.gamePrompt?.prompt)
       ? handleCorrectGuess()
       : handleIncorrectGuess();
   };
@@ -288,7 +288,7 @@
 
   const attemptToSubmitGuess = async (event: Event) => {
     if (!browser) return;
-    if ($currentGuess.length !== data.challenge.gamePrompt.prompt.length) return;
+    if ($currentGuess.length !== data.challenge?.gamePrompt?.prompt?.length) return;
 
     submitGuess();
     return;
@@ -451,34 +451,27 @@
       {data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}
     </p>
     <GuessInput
-      format={data.gamePrompt.prompt.split('')}
-      display={data.gamePrompt.prompt.split('').map((str) => str.toUpperCase())}
+      format={data.gamePrompt?.prompt.split('')}
+      display={data.gamePrompt?.prompt.split('').map((str) => str.toUpperCase())}
       cursorLocation={-1}
       --bgcolor="var(--choodle-yellow)"
     />
 
     <p><!-- layout placeholder --></p>
-    <div style={`height: 10rem; /* corresponds to game keyboard height */`}>
+    <div style={`height: 10rem; /* corresponds to game keyboard height */ display: flex; flex-direction: column;`}>
       <Button
         colour="yellow"
         on:click={() => {
-          goto(`/pick`);
+          goto(`/`);
         }}
       >
         {data.copy.guess_failureNewGameButtonText}
       </Button>
-      <div>
-        <Button on:click={handleShare}
-        >{copiedToClipboard
-          ? data.copy.guess_copiedToClipboard
-          : data.copy.guess_shareButtonText}</Button
-        >
-        <Button
-          on:click={() => {
-            goto('/dashboard');
-          }}>{data.copy.guess_doneButtonText}</Button
-        >
-      </div>
+      <Button on:click={handleShare}
+      >{copiedToClipboard
+        ? data.copy.guess_copiedToClipboard
+        : data.copy.guess_shareButtonText}</Button
+      >
     </div>
   {:else}
     {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
@@ -487,7 +480,7 @@
       <p><!-- layout placeholder --></p>
     {/if}
     <GuessingInterface
-      format={data.gamePrompt.prompt.split('')}
+      format={data.gamePrompt?.prompt.split('')}
       inputDisplay={currentGuess}
       {cursorLocation}
       onEnter={attemptToSubmitGuess}

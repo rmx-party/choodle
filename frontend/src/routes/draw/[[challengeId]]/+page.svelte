@@ -146,7 +146,7 @@
 <LayoutContainer>
   <div class="prompt" slot="topBar">
     <p class="daily-prompt">
-      <span><strong>{data.copy.draw_topBarInstructionText} </strong>{$gamePrompt.toUpperCase()}</span>
+      <span><strong>{data.copy.draw_topBarInstructionText} </strong>{$gamePrompt?.toUpperCase()}</span>
     </p>
   </div>
   <ChoodleBoard id="cwf-canvas" bind:this={child} {performSave}>
