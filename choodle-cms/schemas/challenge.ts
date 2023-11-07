@@ -4,19 +4,9 @@ export default {
   title: 'Choodle w/ Friends Challenge',
   fields: [
     {
-      name: 'gamePrompt',
-      type: 'string',
-      title: 'the prompt this challenge choodle is based on',
-    },
-    {
-      name: 'gameRef',
+      name: 'gameRef', // FIXME: migrate this to game
       type: 'reference',
       to: {type: 'cwfgame'}
-    },
-    {
-      name: 'game',
-      type: 'string',
-      title: 'the game this challenge is a part of',
     },
     {
       name: 'choodle',
@@ -25,7 +15,7 @@ export default {
       to: {type: 'choodle'}
     },
     {
-      name: 'gamePromptRef',
+      name: 'gamePromptRef', // FIXME: migrate this to gamePrompt
       title: 'the prompt this challenge choodle is based on',
       type: 'reference',
       to: {type: 'gamePrompt'}
