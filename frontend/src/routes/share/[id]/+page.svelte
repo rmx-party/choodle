@@ -123,13 +123,6 @@
       : data.copy.guess_shareButtonText}</Button
     >
   </div>
-  <div>
-    <Button
-      on:click={() => {
-        goto('/dashboard');
-      }}>{data.copy.guess_doneButtonText}</Button
-    >
-  </div>
 </LayoutContainer>
 
 <style>
