@@ -10,21 +10,21 @@
 {#if isOnline}
   <button class={`btn ${variant} ${colour}`} on:click {...$$restProps}>
     {#if icon && iconPosition == 'left'}
-      <img class="icon" src={icon} alt="left icon"/>
+      <img class="icon" src={icon} alt=""/>
     {/if}
     <slot/>
     {#if icon && iconPosition == 'right'}
-      <img class="icon" src={icon} alt="right icon"/>
+      <img class="icon" src={icon} alt=""/>
     {/if}
   </button>
 {:else}
   <button disabled class={`btn ${variant}  ${colour} disabled`} {...$$restProps}>
     {#if icon && iconPosition == 'left'}
-      <img class="icon" src={icon} alt="left icon"/>
+      <img class="icon" src={icon} alt=""/>
     {/if}
     <slot/>
     {#if icon && iconPosition == 'right'}
-      <img class="icon" src={icon} alt="right icon"/>
+      <img class="icon" src={icon} alt=""/>
     {/if}
   </button>
 {/if}

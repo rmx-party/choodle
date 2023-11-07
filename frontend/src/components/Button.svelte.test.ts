@@ -13,9 +13,26 @@ describe("Button", () => {
     }).not.toThrow()
   })
 
-  it("renders the specified icon on the left by default", () => {
-    const rendered = render(Button, {props: {icon: "the-icon.png"}})
+  it("renders the icon on the left by default", () => {
+    const rendered = render(SlotTest,
+      {props: {Component: Button, icon: 'the-icon'}})
 
-    expect(rendered.getByAltText("left icon").getAttribute("src")).toEqual("the-icon.png")
+    const button = rendered.getByRole("button")
+    const slot = rendered.getByTestId('slot')
+
+    console.log(button.innerHTML)
+    expect(button.children[0].getAttribute("src")).toEqual("the-icon")
+    expect(button.children[1]).toEqual(slot)
+  });
+
+  it("renders the icon on the right when specified", () => {
+    const rendered = render(SlotTest,
+      {props: {Component: Button, icon: 'the-icon', iconPosition: 'right'}})
+
+    const button = rendered.getByRole("button")
+    const slot = rendered.getByTestId('slot')
+
+    expect(button.children[0]).toEqual(slot)
+    expect(button.children[1].getAttribute("src")).toEqual("the-icon")
   });
 });
