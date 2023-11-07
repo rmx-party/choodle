@@ -15,7 +15,7 @@ export default {
       to: {type: 'choodle'}
     },
     {
-      name: 'gamePromptRef', // FIXME: migrate this to gamePrompt
+      name: 'gamePrompt', // FIXME: migrate this to gamePrompt
       title: 'the prompt this challenge choodle is based on',
       type: 'reference',
       to: {type: 'gamePrompt'}

@@ -44,7 +44,6 @@
       undoStack,
       canvas,
       {
-        gamePrompt: $gamePrompt || null,
         creatorId: await getDeviceId(),
       },
       challenger._id
@@ -60,8 +59,7 @@
         _type: 'challenge',
         choodle: {_ref: choodleId},
         challenger: {_ref: challenger._id},
-        gamePrompt: $gamePrompt,
-        gamePromptRef: {_ref: prompt._id},
+        gamePrompt: {_ref: prompt._id},
       });
     }
 
@@ -127,7 +125,7 @@
     console.log({challengeId: $page.params.challengeId});
     if ($page.params.challengeId) {
       challenge = await readOnlyClient.fetch(
-        `*[_type == "challenge" && _id == "${$page.params.challengeId}"]{..., challenger->{...}, choodle->{...}, gamePromptRef->{...}} [0]`
+        `*[_type == "challenge" && _id == "${$page.params.challengeId}"]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`
       );
       challenger = challenge.challenger._id;
       console.log({challenger});

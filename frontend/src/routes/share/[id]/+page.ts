@@ -1,9 +1,9 @@
-import { readOnlyClient } from "$lib/CMSUtils";
+import {readOnlyClient} from "$lib/CMSUtils";
 
-export async function load({ params }) {
+export async function load({params}) {
   return {
     challenge: readOnlyClient.fetch(
-      `*[_type == "challenge" && _id == "${params.id}"]{..., challenger->{...}, choodle->{...}, gamePromptRef->{...}} [0]`,
+      `*[_type == "challenge" && _id == "${params.id}"]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
     ),
   };
 }

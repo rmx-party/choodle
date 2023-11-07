@@ -289,7 +289,7 @@
 
   const attemptToSubmitGuess = async (event: Event) => {
     if (!browser) return;
-    if ($currentGuess.length !== data.challenge.gamePromptRef.prompt.length) return;
+    if ($currentGuess.length !== data.challenge.gamePrompt.prompt.length) return;
 
     submitGuess();
     return;

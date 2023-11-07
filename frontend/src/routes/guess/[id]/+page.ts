@@ -11,12 +11,12 @@ export const config = {
 
 export const load: PageLoad = async ({params}) => {
   const challenge = await cachedReadOnlyClient.fetch(
-    `*[_type == "challenge" && _id == "${params.id}"]{..., challenger->{...}, choodle->{...}, gamePromptRef->{...}} [0]`,
+    `*[_type == "challenge" && _id == "${params.id}"]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
   );
 
   return {
     challenge,
-    gamePrompt: challenge.gamePromptRef,
+    gamePrompt: challenge.gamePrompt,
     choodle: challenge.choodle,
   };
 };

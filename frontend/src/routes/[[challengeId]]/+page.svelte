@@ -65,8 +65,7 @@
       await readWriteClient
         .patch(challengeId)
         .set({
-          gamePrompt: gamePrompt.prompt,
-          gamePromptRef: {_ref: gamePrompt._id},
+          gamePrompt: {_ref: gamePrompt._id},
         })
         .commit();
     }
