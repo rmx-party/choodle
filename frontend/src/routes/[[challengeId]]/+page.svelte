@@ -81,12 +81,11 @@
 
 <LayoutContainer --layout-justify="space-evenly">
   <section class="pickPrompt">
-    {#if data.copy.logo}<img src={urlFor(data.copy.logo).url()}/>{/if}
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
     <output for="shuffle">{$selectedPrompt}</output>
     <br/>
-    <Button id="shuffle" on:click={handleShuffle}>{data.copy.pick_shuffleButtonText}</Button>
+    <Button id="shuffle" colour="black" on:click={handleShuffle}>{data.copy.pick_shuffleButtonText}</Button>
   </section>
 
   <div id="cta">

@@ -4,7 +4,7 @@
   export let icon: string | undefined = undefined;
   export let iconPosition: 'left' | 'right' = 'left';
 
-  export let colour: 'yellow' | 'white' = 'white';
+  export let colour: 'yellow' | 'white' | 'black' = 'white';
 </script>
 
 {#if isOnline}
@@ -68,6 +68,13 @@
   .yellow {
     background: var(--choodle-yellow);
     color: var(--choodle-black);
+  }
+
+  .black {
+    color: var(--colors-brand-white, #FFF);
+    border: 1px solid var(--choodle-yellow, #FEF40A);
+    background: var(--choodle-black, #141518);
+    box-shadow: 2px 2px 4px 0px #000 inset;
   }
 
   .secondary {
