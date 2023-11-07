@@ -1,11 +1,11 @@
 <script lang="ts">
   import {goto} from '$app/navigation';
   import {onMount} from 'svelte';
-  import Button from '../../../../components/Button.svelte';
+  import Button from '../../components/Button.svelte';
   import {getDeviceId, getEmail, getUsername, locateCreator} from '$lib/CreatorUtils';
-  import LayoutContainer from '../../../../components/LayoutContainer.svelte';
+  import LayoutContainer from '../../components/LayoutContainer.svelte';
   import {page} from '$app/stores';
-  import MetaData from '../../../../components/MetaData.svelte';
+  import MetaData from '../../components/MetaData.svelte';
   import {pageBackgroundDefault} from '$lib/Configuration';
   import {writable} from 'svelte/store';
   import fp from 'lodash/fp';
@@ -20,7 +20,7 @@
   import {isGameComplete, isPlayerInGame, whoseTurn} from '$lib/CWFGame';
   import DashboardGameEntry from '../DashboardGameEntry.svelte';
   import {GameBuilder} from '$lib/GameBuilder';
-  import PixelImage from '../../../../components/PixelImage.svelte';
+  import PixelImage from '../../components/PixelImage.svelte';
   import {fade, fly, slide} from 'svelte/transition';
 
   loading.set(true);

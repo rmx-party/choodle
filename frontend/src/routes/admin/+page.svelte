@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Button from '../../../../components/Button.svelte';
+  import Button from '../../components/Button.svelte';
   import {readOnlyClient, readWriteClient} from '$lib/CMSUtils';
   import {onMount} from 'svelte';
   import {loading} from '$lib/store';

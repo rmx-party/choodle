@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Keyboard from '../../../components/Keyboard.svelte';
-  import GuessInput from '../../../components/GuessInput.svelte';
-  import { writable } from 'svelte/store';
+  import Keyboard from '../components/Keyboard.svelte';
+  import GuessInput from '../components/GuessInput.svelte';
+  import {writable} from 'svelte/store';
 
   export let format: string[] = [];
   export let inputDisplay = writable([]);
@@ -86,8 +86,8 @@
   };
 </script>
 
-<GuessInput {format} display={$inputDisplay} cursorLocation={$cursorLocation} {reveal} />
+<GuessInput {format} display={$inputDisplay} cursorLocation={$cursorLocation} {reveal}/>
 
-<slot name="between" />
+<slot name="between"/>
 
-<Keyboard onKeyPress={handleKeyPress} {...$$restProps} />
+<Keyboard onKeyPress={handleKeyPress} {...$$restProps}/>

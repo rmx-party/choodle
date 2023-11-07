@@ -1,10 +1,10 @@
 <script lang="ts">
   import {urlFor} from '$lib/PersistedImagesUtils.js';
-  import TopBar from '../../../../../components/TopBar.svelte';
-  import Button from '../../../../../components/Button.svelte';
+  import TopBar from '../../../components/TopBar.svelte';
+  import Button from '../../../components/Button.svelte';
   import {goto} from '$app/navigation';
   import {page} from '$app/stores';
-  import MetaData from '../../../../../components/MetaData.svelte';
+  import MetaData from '../../../components/MetaData.svelte';
   import {onMount} from 'svelte';
   import {getDeviceId, getEmail, getUsername, locateCreator} from '$lib/CreatorUtils';
   import {share, type Shareable} from '$lib/ShareUtils';
@@ -12,8 +12,8 @@
   import fp from 'lodash/fp';
   import {toHTML} from '@portabletext/to-html';
   import {choodleYellow, pageBackgroundDefault} from '$lib/Configuration';
-  import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
-  import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
+  import LayoutContainer from '../../../components/LayoutContainer.svelte';
+  import ChoodleContainer from '../../../components/ChoodleContainer.svelte';
   import {loading, loadingMessage} from '$lib/store';
 
   loading.set(true);

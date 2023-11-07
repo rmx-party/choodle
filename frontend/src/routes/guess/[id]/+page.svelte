@@ -2,29 +2,29 @@
   import {urlFor} from '$lib/PersistedImagesUtils.js';
   import {share, type Shareable} from '$lib/ShareUtils';
   import {writable} from 'svelte/store';
-  import GuessingHUD from '../../../../../components/GuessingHUD.svelte';
-  import Button from '../../../../../components/Button.svelte';
+  import GuessingHUD from '../../../components/GuessingHUD.svelte';
+  import Button from '../../../components/Button.svelte';
   import {goto} from '$app/navigation';
   import {page} from '$app/stores';
-  import MetaData from '../../../../../components/MetaData.svelte';
+  import MetaData from '../../../components/MetaData.svelte';
   import {onMount} from 'svelte';
   import {getDeviceId, getEmail, getUsername, locateCreator} from '$lib/CreatorUtils';
   import {browser} from '$app/environment';
   import fp from 'lodash/fp';
   import GuessingInterface from '../../GuessingInterface.svelte';
-  import GuessInput from '../../../../../components/GuessInput.svelte';
+  import GuessInput from '../../../components/GuessInput.svelte';
   import {toHTML} from '@portabletext/to-html';
   import {
     choodleCreatorUsernameKey,
     choodleYellow,
     pageBackgroundDefault,
   } from '$lib/Configuration';
-  import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
-  import ChoodleContainer from '../../../../../components/ChoodleContainer.svelte';
+  import LayoutContainer from '../../../components/LayoutContainer.svelte';
+  import ChoodleContainer from '../../../components/ChoodleContainer.svelte';
   import {readOnlyClient, readWriteClient} from '$lib/CMSUtils';
   import Hints from '../../Hints.svelte';
   import {closeDialog, loading, loadingMessage, openDialog} from '$lib/store';
-  import Dialog from '../../../../../components/Dialog.svelte';
+  import Dialog from '../../../components/Dialog.svelte';
   import localforage from 'localforage';
   import {
     isNormalizedGameComplete,
@@ -32,7 +32,7 @@
     normalizeGame,
     streakCount,
   } from '$lib/CWFGame';
-  import type {PageData} from './$types';
+  import type {PageData} from '../../../../.svelte-kit/types/src/routes';
 
   loading.set(true);
   loadingMessage.set('loading');

@@ -1,20 +1,20 @@
 <script lang="ts">
-  import { writable } from 'svelte/store';
-  import { goto } from '$app/navigation';
+  import {writable} from 'svelte/store';
+  import {goto} from '$app/navigation';
   import fp from 'lodash/fp';
-  import { onMount } from 'svelte';
+  import {onMount} from 'svelte';
   import localforage from 'localforage';
-  import { choodlePromptKey } from '$lib/Configuration';
-  import { toHTML } from '@portabletext/to-html';
-  import { browser } from '$app/environment';
-  import { choodleYellow } from '$lib/Configuration';
-  import { page } from '$app/stores';
-  import { urlFor } from '$lib/PersistedImagesUtils';
-  import Button from '../../../../../components/Button.svelte';
-  import LayoutContainer from '../../../../../components/LayoutContainer.svelte';
-  import MetaData from '../../../../../components/MetaData.svelte';
-  import { readWriteClient } from '$lib/CMSUtils';
-  import { loading } from '$lib/store';
+  import {choodlePromptKey} from '$lib/Configuration';
+  import {toHTML} from '@portabletext/to-html';
+  import {browser} from '$app/environment';
+  import {choodleYellow} from '$lib/Configuration';
+  import {page} from '$app/stores';
+  import {urlFor} from '$lib/PersistedImagesUtils';
+  import Button from '../../../components/Button.svelte';
+  import LayoutContainer from '../../../components/LayoutContainer.svelte';
+  import MetaData from '../../../components/MetaData.svelte';
+  import {readWriteClient} from '$lib/CMSUtils';
+  import {loading} from '$lib/store';
 
   export let data;
   let prompts: string[];
@@ -66,7 +66,7 @@
         .patch(challengeId)
         .set({
           gamePrompt: gamePrompt.prompt,
-          gamePromptRef: { _ref: gamePrompt._id },
+          gamePromptRef: {_ref: gamePrompt._id},
         })
         .commit();
     }
@@ -78,15 +78,15 @@
   };
 </script>
 
-<MetaData url={$page.url} title={data.copy.defaultPageTitle} themeColor={choodleYellow} />
+<MetaData url={$page.url} title={data.copy.defaultPageTitle} themeColor={choodleYellow}/>
 
 <LayoutContainer --layout-justify="space-evenly">
   <section class="pickPrompt">
-    {#if data.copy.logo}<img src={urlFor(data.copy.logo).url()} />{/if}
+    {#if data.copy.logo}<img src={urlFor(data.copy.logo).url()}/>{/if}
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
     <output for="shuffle">{$selectedPrompt}</output>
-    <br />
+    <br/>
     <Button id="shuffle" on:click={handleShuffle}>{data.copy.pick_shuffleButtonText}</Button>
   </section>
 
