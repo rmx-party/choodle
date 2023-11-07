@@ -26,6 +26,16 @@ describe("GlobalNavHeader", () => {
     expect(image.getAttribute("src")).toEqual("logo-url")
   });
 
+  it("does not render the logo as a link when the supplied destination is empty string", () => {
+    const rendered = render(GlobalNavHeader,
+      {props: {logoUrl: "logo-url", logoLinkDestination: ""}})
+    const header = rendered.getByRole("banner")
+
+    let image = header.children[1];
+
+    expect(image.getAttribute("src")).toEqual("logo-url")
+  });
+
   it("renders the logo as a link to a destination when supplied", () => {
     const rendered = render(GlobalNavHeader,
       {props: {logoUrl: "logo-url", logoLinkDestination: "link-dest"}})

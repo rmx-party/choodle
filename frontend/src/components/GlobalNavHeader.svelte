@@ -5,10 +5,9 @@
   import handDrawIcon from '$lib/assets/hand-draw.svg'
   import listIcon from '$lib/assets/list-icon.svg'
 </script>
-
 <header>
   <a href="/"><img class="side-icon" src={handDrawIcon} alt=""/></a>
-  {#if logoLinkDestination}
+  {#if logoLinkDestination }
     <a href={logoLinkDestination}>
       <img class="logo" src={logoUrl} alt=""/>
     </a>
