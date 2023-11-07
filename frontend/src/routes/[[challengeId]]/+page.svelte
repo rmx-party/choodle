@@ -10,9 +10,9 @@
   import {choodleYellow} from '$lib/Configuration';
   import {page} from '$app/stores';
   import {urlFor} from '$lib/PersistedImagesUtils';
-  import Button from '../../../components/Button.svelte';
-  import LayoutContainer from '../../../components/LayoutContainer.svelte';
-  import MetaData from '../../../components/MetaData.svelte';
+  import Button from '../../components/Button.svelte';
+  import LayoutContainer from '../../components/LayoutContainer.svelte';
+  import MetaData from '../../components/MetaData.svelte';
   import {readWriteClient} from '$lib/CMSUtils';
   import {loading} from '$lib/store';
 
