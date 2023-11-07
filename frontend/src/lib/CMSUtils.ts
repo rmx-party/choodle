@@ -1,4 +1,4 @@
-import { type ClientConfig, createClient } from "@sanity/client";
+import {type ClientConfig, createClient} from "@sanity/client";
 import {
   PUBLIC_SANITY_DATASET,
   PUBLIC_SANITY_PROJECT_ID,
@@ -26,21 +26,3 @@ export const cachedReadOnlyClient = createClient({
   useCdn: true,
   perspective: "published",
 });
-
-export const getChoodleById = async (choodleId: string) => {
-  const choodles = await readOnlyClient.fetch(
-    `*[_type == "choodle" && _id == "${choodleId}"]`,
-  );
-  return choodles[0];
-};
-
-export const addPoints = async (creatorId, amount, reason, challengeId) => {
-  await readWriteClient.create({
-    _type: "points",
-    creator: { _ref: creatorId },
-    challenge: { _ref: challengeId },
-    game: "defcon",
-    amount,
-    reason,
-  });
-};
