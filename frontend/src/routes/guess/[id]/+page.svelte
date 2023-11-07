@@ -438,16 +438,14 @@
       --bgcolor="var(--choodle-yellow)"
     />
     <p><!-- layout placeholder --></p>
-    <div>
-      <Button colour="yellow" on:click={createCounterChallenge}>
-        {data.copy.success_continueGameButtonText}
-      </Button>
-      <Button colour="yellow" on:click={handleShare}
-      >{copiedToClipboard
-        ? data.copy.guess_copiedToClipboard
-        : data.copy.guess_shareButtonText}</Button
-      >
-    </div>
+    <Button colour="yellow" on:click={createCounterChallenge}>
+      {data.copy.success_continueGameButtonText}
+    </Button>
+    <Button colour="yellow" on:click={handleShare}
+    >{copiedToClipboard
+      ? data.copy.guess_copiedToClipboard
+      : data.copy.guess_shareButtonText}</Button
+    >
   {:else if guessesRemaining < 1}
     <p class="failure">
       {data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}
