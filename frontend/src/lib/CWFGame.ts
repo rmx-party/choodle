@@ -42,7 +42,7 @@ export const addGuessToGame = (
   };
 };
 
-export const isGameComplete = (game) => {
+export const isGameComplete = (game): boolean => {
   if (!game) return false;
   if (!game.guessResults) return false;
   return isNormalizedGameComplete(normalizeGame(game).guessResults);
