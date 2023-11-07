@@ -18,7 +18,7 @@
     StreakGuessingGamePlayer,
   } from '$lib/CWFGame';
   import {isGameComplete, isPlayerInGame, whoseTurn} from '$lib/CWFGame';
-  import DashboardGameEntry from '../DashboardGameEntry.svelte';
+  import DashboardGameEntry from '../../components/DashboardGameEntry.svelte';
   import {GameBuilder} from '$lib/GameBuilder';
   import PixelImage from '../../components/PixelImage.svelte';
   import {fly} from 'svelte/transition';

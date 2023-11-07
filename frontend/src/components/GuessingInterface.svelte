@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Keyboard from '../components/Keyboard.svelte';
-  import GuessInput from '../components/GuessInput.svelte';
+  import Keyboard from './Keyboard.svelte';
+  import GuessInput from './GuessInput.svelte';
   import {writable} from 'svelte/store';
 
   export let format: string[] = [];

@@ -11,7 +11,7 @@
   import {getDeviceId, getEmail, getUsername, locateCreator} from '$lib/CreatorUtils';
   import {browser} from '$app/environment';
   import fp from 'lodash/fp';
-  import GuessingInterface from '../../GuessingInterface.svelte';
+  import GuessingInterface from '../../../components/GuessingInterface.svelte';
   import GuessInput from '../../../components/GuessInput.svelte';
   import {toHTML} from '@portabletext/to-html';
   import {
@@ -22,7 +22,7 @@
   import LayoutContainer from '../../../components/LayoutContainer.svelte';
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte';
   import {readOnlyClient, readWriteClient} from '$lib/CMSUtils';
-  import Hints from '../../Hints.svelte';
+  import Hints from '../../../components/Hints.svelte';
   import {closeDialog, loading, loadingMessage, openDialog} from '$lib/store';
   import Dialog from '../../../components/Dialog.svelte';
   import localforage from 'localforage';
