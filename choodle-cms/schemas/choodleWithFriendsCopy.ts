@@ -14,9 +14,9 @@ export default {
       title: 'Choodle Logo'
     },
     {
-      name: 'logoTwo',
-      type: 'image',
-      title: 'Choodle Logo Alternative for white Backgrounds'
+      name: 'logoLinkDestination',
+      type: 'string',
+      title: 'Where clicking the logo takes the user.'
     },
     {
       name: 'landing_content',

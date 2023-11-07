@@ -118,7 +118,7 @@
 
 <LayoutContainer>
   <div>
-    <PixelImage src={urlFor(data.copy.logoTwo).url()} width="80%" alt=""/>
+    <PixelImage src={urlFor(data.copy.logo).url()} width="80%" alt=""/>
   </div>
   <section class="nav-and-hud">
     <nav>
