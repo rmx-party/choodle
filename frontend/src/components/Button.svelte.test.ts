@@ -35,4 +35,12 @@ describe("Button", () => {
     expect(button.children[0]).toEqual(slot)
     expect(button.children[1].getAttribute("src")).toEqual("the-icon")
   });
+
+  it("is disabled when offline", () => {
+    const rendered = render(Button, {props: {isOnline: false}})
+
+    const button = rendered.getByRole("button")
+
+    expect(button.getAttribute("disabled")).toBeFalsy()
+  });
 });
