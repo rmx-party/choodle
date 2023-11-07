@@ -9,11 +9,6 @@ export default {
       title: 'The page title for the game; this shows up on the share card.',
     },
     {
-      name: 'gameName',
-      type: 'string',
-      title: 'The game that this copy is for.',
-    },
-    {
       name: 'logo',
       type: 'image',
       title: 'Choodle Logo'
@@ -39,11 +34,6 @@ export default {
       name: 'gameListUserUnknownText',
       type: 'string',
       title: 'Text for unknown username',
-    },
-    {
-      name: 'dismissStartScreenButtonText',
-      type: 'string',
-      title: 'Dismiss Start Screen Button Text',
     },
     {
       name: 'startGameButtonText',
@@ -151,11 +141,6 @@ export default {
     {
       name: 'guess_failureMessageText',
       title: 'Guess Page Failure Message Text',
-      type: 'string',
-    },
-    {
-      name: 'guess_failureRightAnswerText',
-      title: 'Guess Page Failure Right Answer Text',
       type: 'string',
     },
     {
