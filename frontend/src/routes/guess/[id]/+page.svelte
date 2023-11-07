@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {urlFor} from '$lib/PersistedImagesUtils.js';
+  import {urlFor} from '$lib/PersistedImagesUtils';
   import {share, type Shareable} from '$lib/ShareUtils';
   import {writable} from 'svelte/store';
   import GuessingHUD from '../../../components/GuessingHUD.svelte';
@@ -30,7 +30,6 @@
     isNormalizedGameComplete,
     isPlayerInGame,
     normalizeGame,
-    streakCount,
   } from '$lib/CWFGame';
   import type {PageData} from '../../../../.svelte-kit/types/src/routes';
 

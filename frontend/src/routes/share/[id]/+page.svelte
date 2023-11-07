@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {urlFor} from '$lib/PersistedImagesUtils.js';
+  import {urlFor} from '$lib/PersistedImagesUtils';
   import TopBar from '../../../components/TopBar.svelte';
   import Button from '../../../components/Button.svelte';
   import {goto} from '$app/navigation';
