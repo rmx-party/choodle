@@ -1,5 +1,5 @@
 <div class="topBar-layout" {...$$restProps}>
-  <slot name="topBarContent" />
+  <slot name="topBarContent"/>
 </div>
 
 <style>
@@ -13,10 +13,5 @@
     align-items: center;
     justify-content: center;
     gap: 0.625rem;
-
-    border-radius: 0rem 0rem 0.75rem 0.75rem;
-    background: var(--choodle-yellow, #fef40a);
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(71.56488800048828px);
   }
 </style>
