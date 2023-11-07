@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let format: string[];
+  export let format: string[] = [];
   export let display: string[];
   export let cursorLocation: number;
   export let reveal: number[] = [];

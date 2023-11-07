@@ -9,6 +9,8 @@
   import {page} from '$app/stores';
   import fp from 'lodash/fp';
   import {preloadCode} from '$app/navigation';
+  import {urlFor} from "$lib/PersistedImagesUtils";
+  import GlobalNavHeader from "../components/GlobalNavHeader.svelte";
 
   export let data;
 
@@ -39,4 +41,5 @@
 
 <svelte:window on:online={() => isOnline.set(true)} on:offline={() => isOnline.set(false)}/>
 <LoadingIndicator {rotatingMessages}/>
+<GlobalNavHeader logoUrl={urlFor($page.data.copy.logo)} logoLinkDestination={$page.data.copy.logoLinkDestination}/>
 <slot/>

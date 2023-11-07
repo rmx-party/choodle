@@ -134,7 +134,7 @@
       {/each}
     </nav>
 
-    <span class="username">{currentChoodler.username}</span>
+    <span class="username">{currentChoodler?.username || "unnamed user"}</span>
   </section>
 
   {#if $activeTab === 'my games'}

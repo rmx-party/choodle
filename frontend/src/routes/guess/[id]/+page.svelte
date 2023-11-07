@@ -60,9 +60,9 @@
     hints = fp.filter(
       (h) => h.text,
       [
-        {text: data.gamePrompt.hint, used: hintUsedInGuess(guess, data.gamePrompt.hint)},
-        {text: data.gamePrompt.hint_2, used: hintUsedInGuess(guess, data.gamePrompt.hint_2)},
-        {text: data.gamePrompt.hint_3, used: hintUsedInGuess(guess, data.gamePrompt.hint_3)},
+        {text: data.gamePrompt?.hint, used: hintUsedInGuess(guess, data.gamePrompt?.hint)},
+        {text: data.gamePrompt?.hint_2, used: hintUsedInGuess(guess, data.gamePrompt?.hint_2)},
+        {text: data.gamePrompt?.hint_3, used: hintUsedInGuess(guess, data.gamePrompt?.hint_3)},
       ]
     );
   }
@@ -368,7 +368,7 @@
     )} try!`;
   }
   let shareTextFailureMessage = ``;
-  $: shareTextFailureMessage = `🫣 I couldn’t guess ${data.gamePrompt.prompt}!`;
+  $: shareTextFailureMessage = `🫣 I couldn’t guess ${data.gamePrompt?.prompt}!`;
   let shareTextGuesses = ``;
   $: shareTextGuesses = (guess?.guesses || []).map(shareTextNthGuessCopy).join(`\n`);
 
@@ -432,8 +432,8 @@
   {#if success}
     <p class="success">{data.copy.guess_successMessageText}</p>
     <GuessInput
-      format={data.gamePrompt.prompt.split('')}
-      display={data.gamePrompt.prompt.split('').map((str) => str.toUpperCase())}
+      format={data.gamePrompt?.prompt.split('')}
+      display={data.gamePrompt?.prompt.split('').map((str) => str.toUpperCase())}
       cursorLocation={-1}
       --bgcolor="var(--choodle-yellow)"
     />
