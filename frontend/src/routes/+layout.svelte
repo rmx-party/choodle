@@ -35,7 +35,7 @@
   );
 
   onMount(async () => {
-    preloadCode('/', '/game/cwf/pick', '/game/cwf/draw', '/game/cwf/share/*', '/game/cwf/guess/*');
+    preloadCode('/', '/draw', '/share/*', '/guess/*');
   });
 </script>
 
