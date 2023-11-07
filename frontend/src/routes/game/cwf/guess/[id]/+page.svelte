@@ -450,7 +450,7 @@
       >
       <Button
         on:click={() => {
-          goto('/game/cwf');
+          goto('/dashboard');
         }}
       >
         {data.copy.guess_doneButtonText}
@@ -485,7 +485,7 @@
         >
         <Button
           on:click={() => {
-            goto('/game/cwf');
+            goto('/dashboard');
           }}>{data.copy.guess_doneButtonText}</Button
         >
       </div>

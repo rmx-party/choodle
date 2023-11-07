@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
+  import {goto} from '$app/navigation';
   import Button from '../components/Button.svelte';
   import MetaData from '../components/MetaData.svelte';
-  import { toHTML } from '@portabletext/to-html';
+  import {toHTML} from '@portabletext/to-html';
   import opengraphChoodle from '$lib/assets/OpenGraph-Choodle-1200x630-2x.jpg';
-  import { page } from '$app/stores';
-  import { onMount } from 'svelte';
-  import { choodleYellow } from '$lib/Configuration';
-  import { loading } from '$lib/store';
-  import { PUBLIC_ISR_BYPASS_TOKEN } from '$env/static/public';
-  import { urlFor } from '$lib/PersistedImagesUtils';
+  import {page} from '$app/stores';
+  import {onMount} from 'svelte';
+  import {choodleYellow} from '$lib/Configuration';
+  import {loading} from '$lib/store';
+  import {PUBLIC_ISR_BYPASS_TOKEN} from '$env/static/public';
+  import {urlFor} from '$lib/PersistedImagesUtils';
 
   export const config = {
     isr: {
@@ -39,7 +39,7 @@
 
 <main id="main">
   <div id="top-box">
-    <img src={urlFor(data.copy.logo).url()} alt="Choodle logo" />
+    <img src={urlFor(data.copy.logo).url()} alt="Choodle logo"/>
   </div>
 
   <content id="content">
@@ -54,10 +54,6 @@
   >
     Play With Friends
   </Button>
-
-  <!-- <Button variant="primary" on:click={() => {goto('/draw')}}> -->
-  <!--   Draw -->
-  <!-- </Button> -->
 
   <div id="bottom-content">
     {@html toHTML(data.howto.bottom)}

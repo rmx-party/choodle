@@ -1,27 +1,27 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { onMount } from 'svelte';
-  import Button from '../../../components/Button.svelte';
-  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils';
-  import LayoutContainer from '../../../components/LayoutContainer.svelte';
-  import { page } from '$app/stores';
-  import MetaData from '../../../components/MetaData.svelte';
-  import { pageBackgroundDefault } from '$lib/Configuration';
-  import { writable } from 'svelte/store';
+  import {goto} from '$app/navigation';
+  import {onMount} from 'svelte';
+  import Button from '../../../../components/Button.svelte';
+  import {getDeviceId, getEmail, getUsername, locateCreator} from '$lib/CreatorUtils';
+  import LayoutContainer from '../../../../components/LayoutContainer.svelte';
+  import {page} from '$app/stores';
+  import MetaData from '../../../../components/MetaData.svelte';
+  import {pageBackgroundDefault} from '$lib/Configuration';
+  import {writable} from 'svelte/store';
   import fp from 'lodash/fp';
-  import { toHTML } from '@portabletext/to-html';
-  import { loading } from '$lib/store';
-  import { urlFor } from '$lib/PersistedImagesUtils';
+  import {toHTML} from '@portabletext/to-html';
+  import {loading} from '$lib/store';
+  import {urlFor} from '$lib/PersistedImagesUtils';
   import type {
     SanityDocumentMetadata,
     StreakGuessingGame,
     StreakGuessingGamePlayer,
   } from '$lib/CWFGame';
-  import { isGameComplete, isPlayerInGame, whoseTurn } from '$lib/CWFGame';
-  import DashboardGameEntry from './DashboardGameEntry.svelte';
-  import { GameBuilder } from '$lib/GameBuilder';
-  import PixelImage from '../../../components/PixelImage.svelte';
-  import { fade, fly, slide } from 'svelte/transition';
+  import {isGameComplete, isPlayerInGame, whoseTurn} from '$lib/CWFGame';
+  import DashboardGameEntry from '../DashboardGameEntry.svelte';
+  import {GameBuilder} from '$lib/GameBuilder';
+  import PixelImage from '../../../../components/PixelImage.svelte';
+  import {fade, fly, slide} from 'svelte/transition';
 
   loading.set(true);
   export let data;
@@ -30,7 +30,7 @@
 
   let myGames: StreakGuessingGame[] = [];
 
-  const navItems = ['my games', 'rules'];
+  const navItems = ['my games', 'rules  '];
   let activeTab = writable(navItems[0]);
 
   const startGame = async () => {
@@ -115,7 +115,7 @@
   });
 </script>
 
-<MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url} />
+<MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url}/>
 
 {#if !hasDismissedStartScreen}
   <LayoutContainer>
@@ -140,7 +140,7 @@
 {:else}
   <LayoutContainer>
     <div>
-      <PixelImage src={urlFor(data.copy.logoTwo).url()} width="80%" alt="" />
+      <PixelImage src={urlFor(data.copy.logoTwo).url()} width="80%" alt=""/>
     </div>
     <section class="nav-and-hud">
       <nav>
