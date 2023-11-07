@@ -442,18 +442,11 @@
       <Button colour="yellow" on:click={createCounterChallenge}>
         {data.copy.success_continueGameButtonText}
       </Button>
-      <Button on:click={handleShare}
+      <Button colour="yellow" on:click={handleShare}
       >{copiedToClipboard
         ? data.copy.guess_copiedToClipboard
         : data.copy.guess_shareButtonText}</Button
       >
-      <Button
-        on:click={() => {
-          goto('/dashboard');
-        }}
-      >
-        {data.copy.guess_doneButtonText}
-      </Button>
     </div>
   {:else if guessesRemaining < 1}
     <p class="failure">
