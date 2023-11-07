@@ -144,7 +144,11 @@
 />
 
 <LayoutContainer>
-  <Prompt prompt={$gamePrompt} instruction={data.copy.draw_topBarInstructionText} slot="topBar"/>
+  <div class="prompt" slot="topBar">
+    <p class="daily-prompt">
+      <span><strong>{data.copy.draw_topBarInstructionText} </strong>{$gamePrompt.toUpperCase()}</span>
+    </p>
+  </div>
   <ChoodleBoard id="cwf-canvas" bind:this={child} {performSave}>
     <ButtonMenu slot="buttons">
       <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
@@ -176,3 +180,14 @@
     </Dialog>
   </ChoodleBoard>
 </LayoutContainer>
+
+<style>
+  .prompt {
+    display: flex;
+    width: 100%;
+    padding: 1rem 1rem 0.75rem 1rem;
+    align-items: center;
+    gap: 0.625rem;
+
+  }
+</style>
