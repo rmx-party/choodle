@@ -1,20 +1,20 @@
 <script lang="ts">
-  import {urlFor} from '$lib/PersistedImagesUtils';
+  import { urlFor } from '$lib/PersistedImagesUtils';
   import TopBar from '../../../components/TopBar.svelte';
   import Button from '../../../components/Button.svelte';
-  import {goto} from '$app/navigation';
-  import {page} from '$app/stores';
+  import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
   import MetaData from '../../../components/MetaData.svelte';
-  import {onMount} from 'svelte';
-  import {getDeviceId, getEmail, getUsername, locateCreator} from '$lib/CreatorUtils';
-  import {share, type Shareable} from '$lib/ShareUtils';
-  import {browser} from '$app/environment';
+  import { onMount } from 'svelte';
+  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils';
+  import { share, type Shareable } from '$lib/ShareUtils';
+  import { browser } from '$app/environment';
   import fp from 'lodash/fp';
-  import {toHTML} from '@portabletext/to-html';
-  import {choodleYellow, pageBackgroundDefault} from '$lib/Configuration';
+  import { toHTML } from '@portabletext/to-html';
+  import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration';
   import LayoutContainer from '../../../components/LayoutContainer.svelte';
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte';
-  import {loading, loadingMessage} from '$lib/store';
+  import { loading, loadingMessage } from '$lib/store';
 
   loading.set(true);
   loadingMessage.set('loading');
@@ -36,10 +36,10 @@
       ? fp.map((char) => (char === ' ' ? '⬜' : '🟨'), gamePrompt.split('')).join('')
       : '';
 
-    const url = `${window.location.origin}/game/cwf/guess/${data.challenge._id}`;
+    const url = `${window.location.origin}/guess/${data.challenge._id}`;
     const shareCopy = data.copy.share_messageText || '';
     const text = [shareCopy, gamePromptTiles, url].join(`\n`);
-    const shareable = {text};
+    const shareable = { text };
     return shareable;
   };
 
@@ -57,11 +57,11 @@
 
     email = await getEmail();
     username = (await getUsername()) || '';
-    currentChoodler = await locateCreator({email, deviceId, username});
+    currentChoodler = await locateCreator({ email, deviceId, username });
 
     gamePrompt = data.challenge.gamePrompt.prompt;
 
-    console.log({challenge: data.challenge});
+    console.log({ challenge: data.challenge });
     choodleOwner = data.challenge.challenger._id === currentChoodler._id;
 
     // Store in localstorage on Draw:
@@ -76,7 +76,7 @@
       return;
     }
 
-    console.log({choodleOwner});
+    console.log({ choodleOwner });
 
     loading.set(false);
   });
@@ -112,15 +112,15 @@
   </div>
 
   <ChoodleContainer --choodle-max-height-offset="27rem">
-    <img src={bestImageUrl(data.challenge.choodle)} alt=""/>
+    <img src={bestImageUrl(data.challenge.choodle)} alt="" />
   </ChoodleContainer>
 
   <h3><strong>{data.challenge.gamePrompt.prompt.toUpperCase()}</strong></h3>
   <div>
     <Button colour="yellow" on:click={handleShare}
-    >{copiedToClipboard
-      ? data.copy.guess_copiedToClipboard
-      : data.copy.guess_shareButtonText}</Button
+      >{copiedToClipboard
+        ? data.copy.guess_copiedToClipboard
+        : data.copy.guess_shareButtonText}</Button
     >
   </div>
 </LayoutContainer>
