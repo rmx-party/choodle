@@ -1,78 +1,81 @@
-import fp from "lodash/fp";
+import fp from 'lodash/fp'
 
 export type NormalizedCWFGame = {
-  player1: string;
-  player2: string;
-  guessResults: boolean[];
-};
+  player1: string
+  player2: string
+  guessResults: boolean[]
+}
 
 export const isNormalizedGameComplete = (guessResults: boolean[]) => {
-  return fp.any((guess) => guess === false, guessResults);
-};
+  return fp.any((guess) => guess === false, guessResults)
+}
 
 export const normalizeGame = (game): NormalizedCWFGame => {
-  const normalizedGame = createCWFGame(game?.player1?._id, game?.player2?._id);
+  const normalizedGame = createCWFGame(game?.player1?._id, game?.player2?._id)
   return {
     ...game,
     ...normalizedGame,
-    guessResults: fp.map((result) => {
-      if ([true, false].includes(result)) return result;
-      return result.guessedCorrectly;
-    }, [
-      ...game.guessResults,
-    ]),
-  };
-};
+    guessResults: fp.map(
+      (result) => {
+        if ([true, false].includes(result)) return result
+        return result.guessedCorrectly
+      },
+      [...game.guessResults]
+    ),
+  }
+}
 
 export const createCWFGame = (player1Id, player2Id): NormalizedCWFGame => {
   return {
     player1: player1Id,
     player2: player2Id,
     guessResults: [],
-  };
-};
+  }
+}
 
 export const addGuessToGame = (
   game: NormalizedCWFGame,
-  guessResult: boolean,
+  guessResult: boolean
 ): NormalizedCWFGame => {
   return {
     ...game,
     guessResults: [...game.guessResults, guessResult],
-  };
-};
+  }
+}
 
 export const isGameComplete = (game): boolean => {
-  if (!game) return false;
-  if (!game.guessResults) return false;
-  return isNormalizedGameComplete(normalizeGame(game).guessResults);
-};
+  if (!game) return false
+  if (!game.guessResults) return false
+  return isNormalizedGameComplete(normalizeGame(game).guessResults)
+}
 
 export const normalizedGameStreakCount = (game: NormalizedCWFGame) => {
-  return fp.filter((result) => result, game.guessResults).length;
-};
+  return fp.filter((result) => result, game.guessResults).length
+}
 
 // non-normalized game
 
 export type SanityDocumentMetadata = {
   [key: string]: any
 } & {
-  _id: string,
-  _createdAt?: string,
+  _id: string
+  _createdAt?: string
 }
 
 export type StreakGuessingGamePrompt = SanityDocumentMetadata & {
   [key: string]: any
-} & {}
+} & {
+  prompt: string
+}
 
 export type StreakGuessingGameGuessResult = SanityDocumentMetadata & {
   [key: string]: any
 } & {
-  challenge: StreakGuessingGameChallenge,
-  guesser?: StreakGuessingGamePlayer,
-  guesses: string[],
-  hintsUsed?: string[],
-  guessedCorrectly?: boolean,
+  challenge: StreakGuessingGameChallenge
+  guesser?: StreakGuessingGamePlayer
+  guesses: string[]
+  hintsUsed?: string[]
+  guessedCorrectly?: boolean
 }
 
 export type StreakGuessingGamePlayer = SanityDocumentMetadata & {
@@ -88,33 +91,35 @@ export type StreakGuessingGameDrawing = SanityDocumentMetadata & {
 export type StreakGuessingGameChallenge = SanityDocumentMetadata & {
   [key: string]: any
 } & {
-  challenger: StreakGuessingGamePlayer,
-  prompt: StreakGuessingGamePrompt,
-  choodle?: StreakGuessingGameDrawing,
+  challenger: StreakGuessingGamePlayer
+  gamePrompt: StreakGuessingGamePrompt
+  choodle?: StreakGuessingGameDrawing
 }
 
 export type StreakGuessingGame = SanityDocumentMetadata & {
   [key: string]: any
 } & {
-  currentChallenge: StreakGuessingGameChallenge,
-  player1: StreakGuessingGamePlayer,
-  player2?: StreakGuessingGamePlayer,
-  guessResults?: StreakGuessingGameGuessResult[],
+  currentChallenge: StreakGuessingGameChallenge
+  player1: StreakGuessingGamePlayer
+  player2?: StreakGuessingGamePlayer
+  guessResults: StreakGuessingGameGuessResult[]
 }
 
 export const streakCount = (game?: StreakGuessingGame): number => {
-  if (!game) return 0;
-  if (!game.guessResults) return 0;
-  if (isGameComplete(game)) return 0;
+  if (!game) return 0
+  if (!game.guessResults) return 0
+  if (isGameComplete(game)) return 0
 
-  return fp.filter(guessResult => guessResult.guessedCorrectly, game.guessResults).length
+  return fp.filter((guessResult) => guessResult.guessedCorrectly, game.guessResults).length
 }
 
-export const createEmptyGameFromChallenge = (challenge: StreakGuessingGameChallenge): StreakGuessingGame => {
+export const createEmptyGameFromChallenge = (
+  challenge: StreakGuessingGameChallenge
+): StreakGuessingGame => {
   return {
     _id: challenge._id,
     createdAt: challenge.createdAt,
-    currentChallenge: {...challenge, challenger: challenge.challenger},
+    currentChallenge: { ...challenge, challenger: challenge.challenger },
     player1: challenge.challenger,
     guessResults: [],
   }
@@ -131,27 +136,31 @@ export const whoseTurn = (game: StreakGuessingGame): StreakGuessingGamePlayer =>
 
   const currentGuessResult = guessResultForCurrentChallenge(game)
   if (!currentGuessResult) return otherPlayer(game.currentChallenge.challenger, game)
-  if (currentGuessResult?.guessedCorrectly === undefined) return otherPlayer(game.currentChallenge.challenger, game)
+  if (currentGuessResult?.guessedCorrectly === undefined)
+    return otherPlayer(game.currentChallenge.challenger, game)
 
   return otherPlayer(game.currentChallenge.challenger, game)
 }
 
 export const guessResultForCurrentChallenge = (game: StreakGuessingGame) => {
-  return fp.find(guessResult => guessResult.challenge._id === game.currentChallenge._id, game.guessResults)
+  return fp.find(
+    (guessResult) => guessResult.challenge._id === game.currentChallenge._id,
+    game.guessResults
+  )
 }
 
 export const whichAction = (game: StreakGuessingGame): string => {
-  if (!game.currentChallenge.choodle) return "draw"
-  if (!game.player2) return "share"
+  if (!game.currentChallenge.choodle) return 'draw'
+  if (!game.player2) return 'share'
 
   const currentGuessResult = guessResultForCurrentChallenge(game)
   if (currentGuessResult && currentGuessResult.guessedCorrectly !== undefined) {
-    if (game.currentChallenge.prompt && !game.currentChallenge.choodle) return "draw"
+    if (game.currentChallenge.gamePrompt && !game.currentChallenge.choodle) return 'draw'
 
-    return "pick"
+    return 'pick'
   }
 
-  return "guess"
+  return 'guess'
 }
 
 export const isPlayerInGame = (game: StreakGuessingGame, player?: StreakGuessingGamePlayer) => {

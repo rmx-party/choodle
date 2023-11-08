@@ -30,7 +30,7 @@ describe('StreakGuessingGame', () => {
     _id: '',
     challenger: player1,
     createdAt: '',
-    prompt,
+    gamePrompt: prompt,
   }
   const drawing: StreakGuessingGameDrawing = {
     _id: 'drawing-1',
@@ -40,21 +40,21 @@ describe('StreakGuessingGame', () => {
     _id: '',
     challenger: player1,
     createdAt: '',
-    prompt: prompt,
+    gamePrompt: prompt,
     choodle: drawing,
   }
   const challengeThatHasBeenDrawnByPlayer2: StreakGuessingGameChallenge = {
     _id: '',
     challenger: player2,
     createdAt: '',
-    prompt: prompt,
+    gamePrompt: prompt,
     choodle: drawing,
   }
   const anotherChallengeThatHasBeenDrawnByPlayer2: StreakGuessingGameChallenge = {
     _id: 'another-challenge',
     challenger: player2,
     createdAt: '',
-    prompt: prompt,
+    gamePrompt: prompt,
     choodle: drawing,
   }
   const incompleteGuess: StreakGuessingGameGuessResult = {
@@ -561,7 +561,7 @@ describe('Game Play', () => {
     challenge = {
       _id: 'challenge-1',
       challenger: player1,
-      prompt: {
+      gamePrompt: {
         _id: 'prompt-1',
         prompt: 'Draw a Thing',
       },
@@ -600,5 +600,50 @@ describe('Game Play', () => {
     expect(whoseTurn(game)).toEqual(player2)
     expect(whichAction(game)).toEqual('pick')
     expect(isGameComplete(game)).toEqual(false)
+  })
+})
+
+describe('New game from an ended streak', () => {
+  let player1: StreakGuessingGamePlayer
+  let player2: StreakGuessingGamePlayer
+  let challenge: StreakGuessingGameChallenge
+
+  beforeEach(() => {
+    player1 = {
+      _id: 'player-1',
+      deviceIds: ['1234'],
+    }
+    challenge = {
+      _id: 'challenge-1',
+      challenger: player1,
+      gamePrompt: {
+        _id: 'prompt-1',
+        prompt: 'Draw a Thing',
+      },
+    }
+  })
+
+  it('creates a new game with the same players from an ended streak', () => {
+    player1 = { ...player1, username: 'bob' }
+    player2 = { ...player1, username: 'alice', deviceIds: ['9876'] }
+    challenge = { ...challenge, challenger: player1, choodle: { _id: 'drawing-1' } }
+
+    const prompt: StreakGuessingGamePrompt = { _id: '', prompt: 'correct answer' }
+    const choodle: StreakGuessingGameDrawing = { _id: '' }
+
+    const oldGame: StreakGuessingGame = GameBuilder.fromChallenge(challenge)
+      .playerGuesses(player2, 'correct answer')
+      .playerPicks(player2, prompt)
+      .playerDraws(player2, choodle)
+      .playerGuesses(player1, 'incorrect answer')
+      .playerGuesses(player1, 'incorrect answer')
+      .playerGuesses(player1, 'incorrect answer')
+
+    expect(isGameComplete(oldGame.build)).toBeTruthy()
+
+    const newGame = oldGame.playerPicks(player1, prompt)
+
+    expect(newGame.build.player1).toEqual(oldGame.build.guessResults.last.guesser)
+    expect(newGame.build.player2).toEqual(oldGame.build.guessResults.last.challenger)
   })
 })
