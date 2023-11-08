@@ -1,20 +1,20 @@
 <script lang="ts">
-  import {goto} from '$app/navigation';
-  import {onMount} from 'svelte';
+  import { goto } from '$app/navigation';
+  import { onMount } from 'svelte';
   import Button from '../../components/Button.svelte';
-  import {getDeviceId, getEmail, getUsername, locateCreator} from '$lib/CreatorUtils';
+  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils';
   import LayoutContainer from '../../components/LayoutContainer.svelte';
-  import {page} from '$app/stores';
+  import { page } from '$app/stores';
   import MetaData from '../../components/MetaData.svelte';
-  import {pageBackgroundDefault} from '$lib/Configuration';
+  import { pageBackgroundDefault } from '$lib/Configuration';
   import fp from 'lodash/fp';
-  import {loading} from '$lib/store';
+  import { loading } from '$lib/store';
   import type {
     SanityDocumentMetadata,
     StreakGuessingGame,
     StreakGuessingGamePlayer,
   } from '$lib/CWFGame';
-  import {isPlayerInGame} from '$lib/CWFGame';
+  import { isPlayerInGame } from '$lib/CWFGame';
   import DashboardGameEntry from '../../components/DashboardGameEntry.svelte';
 
   loading.set(true);
@@ -62,15 +62,20 @@
   });
 </script>
 
-<MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url}/>
+<MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url} />
 
 <LayoutContainer>
   <section class="hud">
-    <span class="username">{currentChoodler?.username || "unnamed user"}</span>
+    <span class="username">{currentChoodler?.username || 'unnamed user'}</span>
   </section>
 
   <div class="centre-container">
-    <Button variant="secondary" colour="yellow" on:click={startGame} style="margin: 1rem auto; flex-grow: 0;">
+    <Button
+      variant="secondary"
+      colour="yellow"
+      on:click={startGame}
+      style="margin: 1rem auto; flex-grow: 0;"
+    >
       {data.copy.startGameButtonText}
     </Button>
   </div>
