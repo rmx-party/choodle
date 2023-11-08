@@ -1,6 +1,7 @@
 import { readOnlyClient } from "$lib/CMSUtils";
+import type { PageLoad } from "./$types";
 
-export async function load() {
+export const load: PageLoad = async () => {
   return {
     games: readOnlyClient.fetch(
       `*[_type == "cwfgame"]{..., currentChallenge->{..., challenger->{...}}, player1->{...}, player2->{...}, guessResults[]->{..., challenge->{...}}} | order(_createdAt desc)`,
@@ -9,4 +10,4 @@ export async function load() {
       `*[_type == "challenge"]{..., challenger->{...}}`,
     ),
   };
-}
+};

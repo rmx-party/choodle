@@ -27,7 +27,7 @@
   import Dialog from '../../../components/Dialog.svelte'
   import localforage from 'localforage'
   import { isNormalizedGameComplete, isPlayerInGame, normalizeGame } from '$lib/CWFGame'
-  import type { PageData } from '../../../../.svelte-kit/types/src/routes'
+  import type { PageData } from './$types'
 
   loading.set(true)
   loadingMessage.set('loading')
