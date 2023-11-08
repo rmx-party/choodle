@@ -1,20 +1,20 @@
 <script lang="ts">
-  import {writable} from 'svelte/store';
-  import {goto} from '$app/navigation';
+  import { writable } from 'svelte/store';
+  import { goto } from '$app/navigation';
   import fp from 'lodash/fp';
-  import {onMount} from 'svelte';
+  import { onMount } from 'svelte';
   import localforage from 'localforage';
-  import {choodlePromptKey} from '$lib/Configuration';
-  import {toHTML} from '@portabletext/to-html';
-  import {browser} from '$app/environment';
-  import {choodleYellow} from '$lib/Configuration';
-  import {page} from '$app/stores';
-  import {urlFor} from '$lib/PersistedImagesUtils';
+  import { choodlePromptKey } from '$lib/Configuration';
+  import { toHTML } from '@portabletext/to-html';
+  import { browser } from '$app/environment';
+  import { choodleYellow } from '$lib/Configuration';
+  import { page } from '$app/stores';
+  import { urlFor } from '$lib/PersistedImagesUtils';
   import Button from '../../components/Button.svelte';
   import LayoutContainer from '../../components/LayoutContainer.svelte';
   import MetaData from '../../components/MetaData.svelte';
-  import {readWriteClient} from '$lib/CMSUtils';
-  import {loading} from '$lib/store';
+  import { readWriteClient } from '$lib/CMSUtils';
+  import { loading } from '$lib/store';
 
   export let data;
   let prompts: string[];
@@ -65,27 +65,30 @@
       await readWriteClient
         .patch(challengeId)
         .set({
-          gamePrompt: {_ref: gamePrompt._id},
+          gamePrompt: { _ref: gamePrompt._id },
         })
         .commit();
     }
 
     if (!challengeId) {
-      challengeId = '';
+      goto(`/draw`);
+    } else {
+      goto(`/draw/${challengeId}`);
     }
-    goto(`/draw/${challengeId}`);
   };
 </script>
 
-<MetaData url={$page.url} title={data.copy.defaultPageTitle} themeColor={choodleYellow}/>
+<MetaData url={$page.url} title={data.copy.defaultPageTitle} themeColor={choodleYellow} />
 
 <LayoutContainer --layout-justify="space-evenly">
   <section class="pickPrompt">
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
     <output for="shuffle">{$selectedPrompt}</output>
-    <br/>
-    <Button id="shuffle" colour="black" on:click={handleShuffle}>{data.copy.pick_shuffleButtonText}</Button>
+    <br />
+    <Button id="shuffle" colour="black" on:click={handleShuffle}
+      >{data.copy.pick_shuffleButtonText}</Button
+    >
   </section>
 
   <div id="cta">
