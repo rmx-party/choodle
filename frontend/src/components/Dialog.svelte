@@ -67,11 +67,12 @@
 
   :global([data-svelte-dialog-content].dialog) {
     height: auto;
-    width: auto;
+    width: 100%;
     max-height: 98dvh;
-    max-width: 100dvw;
+    max-width: 720px;
+    max-width: clamp(200px, 720px, 100dvw);
 
-    margin: 0;
+    margin: 0 auto;
     padding: 1rem 1rem 0;
     border-radius: 0.5rem 0.5rem 0 0;
     display: flex;
