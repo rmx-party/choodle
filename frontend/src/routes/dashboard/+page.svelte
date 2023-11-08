@@ -54,7 +54,10 @@
     // FIXME: make it so player is always here when we call isPlayerInGame
     myGames = fp.map(
       sortGuessResults,
-      fp.filter((game) => isPlayerInGame(game, currentChoodler), data.games)
+      fp.filter(
+        (game) => isPlayerInGame(game, currentChoodler),
+        fp.reject((game) => !game.player2?.username, data.games)
+      )
     )
     console.log(`myGames`, myGames)
 
