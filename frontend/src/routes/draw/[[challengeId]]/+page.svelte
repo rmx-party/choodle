@@ -1,139 +1,109 @@
 <script lang="ts">
-  import ChoodleBoard from '../../../components/ChoodleBoard.svelte';
-  import type {UndoStack} from '$lib/UndoStack';
-  import Prompt from '../../../components/Prompt.svelte';
-  import {writable} from 'svelte/store';
-  import {createUncommittedChoodle} from '$lib/ChoodleStorage';
-  import {getDeviceId, getEmail, getUsername, locateCreator} from '$lib/CreatorUtils';
-  import {browser} from '$app/environment';
-  import {clearStorage, getUndoStack} from '$lib/StorageStuff';
-  import {goto} from '$app/navigation';
-  import {onMount} from 'svelte';
-  import localforage from 'localforage';
+  import ChoodleBoard from '../../../components/ChoodleBoard.svelte'
+  import type { UndoStack } from '$lib/UndoStack'
+  import { createUncommittedChoodle } from '$lib/ChoodleStorage'
+  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils'
+  import { browser } from '$app/environment'
+  import { clearStorage, getUndoStack } from '$lib/StorageStuff'
+  import { goto } from '$app/navigation'
+  import { onMount } from 'svelte'
+  import localforage from 'localforage'
   import {
     choodleCreatorUsernameKey,
-    choodlePromptKey,
     choodleYellow,
     pageBackgroundDefault,
-  } from '$lib/Configuration';
-  import Button from '../../../components/Button.svelte';
-  import {loading, isOnline, loadingMessage, closeDialog, openDialog} from '$lib/store';
-  import {readOnlyClient} from '$lib/CMSUtils';
-  import LayoutContainer from '../../../components/LayoutContainer.svelte';
-  import ButtonMenu from '../../../components/ButtonMenu.svelte';
-  import Dialog from '../../../components/Dialog.svelte';
-  import MetaData from '../../../components/MetaData.svelte';
-  import {page} from '$app/stores';
+  } from '$lib/Configuration'
+  import Button from '../../../components/Button.svelte'
+  import { loading, isOnline, loadingMessage, closeDialog, openDialog } from '$lib/store'
+  import LayoutContainer from '../../../components/LayoutContainer.svelte'
+  import ButtonMenu from '../../../components/ButtonMenu.svelte'
+  import Dialog from '../../../components/Dialog.svelte'
+  import MetaData from '../../../components/MetaData.svelte'
+  import { page } from '$app/stores'
 
-  export let data;
+  export let data
 
-  let child;
-  let prompt;
-  let challenger;
-  let challenge;
+  let child
+  let challenger
+  let challenge
 
-  let creatorUsername: string;
-
-  const gamePrompt = writable<string | null>(null);
+  let creatorUsername: string
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
-    loadingMessage.set('saving');
-    loading.set(true);
-    let challengeId;
-    const {transaction, choodleId} = await createUncommittedChoodle(
+    loadingMessage.set('saving')
+    loading.set(true)
+    const { transaction, choodleId } = await createUncommittedChoodle(
       undoStack,
       canvas,
       {
         creatorId: await getDeviceId(),
       },
       challenger._id
-    );
+    )
 
-    if ($page.params.challengeId) {
-      console.log(`patching in the choodle ${choodleId} to challenge ${challenge._id}`);
-      transaction.patch($page.params.challengeId, (p) => p.set({choodle: {_ref: choodleId}}));
-    } else {
-      challengeId = `challenge-${window.crypto.randomUUID()}`;
-      transaction.create({
-        _id: challengeId,
-        _type: 'challenge',
-        choodle: {_ref: choodleId},
-        challenger: {_ref: challenger._id},
-        gamePrompt: {_ref: prompt._id},
-      });
-    }
+    console.log(
+      `patching in the choodle ${choodleId} to challenge ${data.challenge._id} with challenger ${challenger._id}`
+    )
+    transaction.patch(data.challenge._id, (p) =>
+      p.set({
+        choodle: { _ref: choodleId },
+        challenger: { _ref: challenger._id },
+      })
+    )
 
     const transactionResult = await transaction.commit({
       autoGenerateArrayKeys: true,
-    });
+    })
 
-    console.log({transactionResult});
+    console.log({ transactionResult })
 
-    await clearStorage();
-    if ($page.params.challengeId) {
-      await goto(`/share/${$page.params.challengeId}`);
+    await clearStorage()
+    await goto(`/share/${data.challenge._id}`)
+  }
+
+  const usernamePromptId = 'username-prompt'
+
+  // TODO: switch back for username driven gameplay after prod deploy
+  const usernameRequired = true
+  const attemptToSaveChoodleRequiringUsername = async (event: Event) => {
+    if (!browser) return
+
+    const undoStack = await getUndoStack()
+    if (undoStack.current === '') return loading.set(false)
+
+    if (creatorUsername.length > 0) {
+      closeDialog(usernamePromptId)
+      await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
+      child.save()
+      return
+    }
+
+    openDialog(usernamePromptId)
+  }
+  const attemptToSaveChoodle = async (event: Event) => {
+    if (!browser) return
+
+    const undoStack = await getUndoStack()
+    if (undoStack.current === '') return loading.set(false)
+
+    if (usernameRequired) {
+      return await attemptToSaveChoodleRequiringUsername(event)
     } else {
-      await goto(`/share/${challengeId}`);
+      child.save()
+      return
     }
   }
 
-  const usernamePromptId = 'username-prompt';
-
-  // TODO: switch back for username driven gameplay after prod deploy
-  const usernameRequired = true;
-  const attemptToSaveChoodleRequiringUsername = async (event: Event) => {
-    if (!browser) return;
-
-    const undoStack = await getUndoStack();
-    if (undoStack.current === '') return loading.set(false);
-
-    if (creatorUsername.length > 0) {
-      closeDialog(usernamePromptId);
-      await localforage.setItem(choodleCreatorUsernameKey, creatorUsername);
-      child.save();
-      return;
-    }
-
-    openDialog(usernamePromptId);
-  };
-  const attemptToSaveChoodle = async (event: Event) => {
-    if (!browser) return;
-
-    const undoStack = await getUndoStack();
-    if (undoStack.current === '') return loading.set(false);
-
-    if (usernameRequired) {
-      return await attemptToSaveChoodleRequiringUsername(event);
-    } else {
-      child.save();
-      return;
-    }
-  };
-
   onMount(async () => {
-    gamePrompt.set(await localforage.getItem(choodlePromptKey));
-    creatorUsername = (await getUsername()) || '';
+    creatorUsername = (await getUsername()) || ''
 
-    prompt = await readOnlyClient.fetch(
-      `*[_type == "gamePrompt" && prompt == "${$gamePrompt}"][0]`
-    );
-    console.log({prompt});
+    const deviceId = await getDeviceId()
+    const email = await getEmail()
 
-    const deviceId = await getDeviceId();
-    const email = await getEmail();
+    challenger = await locateCreator({ deviceId, email })
 
-    console.log({challengeId: $page.params.challengeId});
-    if ($page.params.challengeId) {
-      challenge = await readOnlyClient.fetch(
-        `*[_type == "challenge" && _id == "${$page.params.challengeId}"]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`
-      );
-      challenger = challenge.challenger._id;
-      console.log({challenger});
-    } else {
-      challenger = await locateCreator({deviceId, email});
-    }
-    loading.set(false);
-  });
+    loading.set(false)
+  })
 </script>
 
 <MetaData
@@ -146,14 +116,18 @@
 <LayoutContainer>
   <div class="prompt" slot="topBar">
     <p class="daily-prompt">
-      <span><strong>{data.copy.draw_topBarInstructionText} </strong>{$gamePrompt?.toUpperCase()}</span>
+      <span
+        ><strong
+          >{data.copy.draw_topBarInstructionText}
+        </strong>{data.challenge.gamePrompt.prompt?.toUpperCase()}</span
+      >
     </p>
   </div>
   <ChoodleBoard id="cwf-canvas" bind:this={child} {performSave}>
     <ButtonMenu slot="buttons">
       <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
       <Button on:click={attemptToSaveChoodle} isOnline={$isOnline} colour="yellow"
-      >{data.copy.draw_doneButtonText}</Button
+        >{data.copy.draw_doneButtonText}</Button
       >
     </ButtonMenu>
 
@@ -163,8 +137,8 @@
       <label
         for="creator-username"
         style="text-align: left; display: block; font-family: Dejavu Sans Bold;"
-      >username
-        <br/>
+        >username
+        <br />
         <input
           bind:value={creatorUsername}
           type="username"
@@ -188,6 +162,5 @@
     padding: 1rem 1rem 0.75rem 1rem;
     align-items: center;
     gap: 0.625rem;
-
   }
 </style>

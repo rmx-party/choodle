@@ -9,7 +9,6 @@
   import { browser } from '$app/environment'
   import { choodleYellow } from '$lib/Configuration'
   import { page } from '$app/stores'
-  import { urlFor } from '$lib/PersistedImagesUtils'
   import Button from '../../components/Button.svelte'
   import LayoutContainer from '../../components/LayoutContainer.svelte'
   import MetaData from '../../components/MetaData.svelte'
@@ -19,8 +18,6 @@
   export let data
   let prompts: string[]
   let initialPrompt: string
-  let challengeId: string | null = null
-  $: challengeId = $page.params.challengeId
 
   const selectedPrompt = writable('')
   if (browser) {
@@ -30,11 +27,23 @@
     })
   }
 
-  onMount(() => {
+  onMount(async () => {
     prompts = fp.map('prompt')(data.records)
     initialPrompt = prompts[0]
     selectedPrompt.set(initialPrompt)
     loading.set(false)
+
+    if (!data.challenge) {
+      data.challenge = await readWriteClient.create(
+        {
+          _id: `challenge-${window.crypto.randomUUID()}`,
+          _type: 'challenge',
+        },
+        {
+          autoGenerateArrayKeys: true,
+        }
+      )
+    }
   })
 
   const rotatePrompts = () => {
@@ -61,20 +70,16 @@
 
     const gamePrompt = fp.find((p) => p.prompt === prompt, data.records)
 
-    if ($page.params.challengeId) {
+    if (data.challenge) {
       await readWriteClient
-        .patch(challengeId)
+        .patch(data.challenge._id)
         .set({
           gamePrompt: { _ref: gamePrompt._id },
         })
         .commit()
     }
 
-    if (!challengeId) {
-      goto(`/draw`)
-    } else {
-      goto(`/draw/${challengeId}`)
-    }
+    goto(`/draw/${data.challenge._id}`)
   }
 </script>
 
