@@ -1,65 +1,65 @@
 <script lang="ts">
-  import { writable } from 'svelte/store';
-  import { goto } from '$app/navigation';
-  import fp from 'lodash/fp';
-  import { onMount } from 'svelte';
-  import localforage from 'localforage';
-  import { choodlePromptKey } from '$lib/Configuration';
-  import { toHTML } from '@portabletext/to-html';
-  import { browser } from '$app/environment';
-  import { choodleYellow } from '$lib/Configuration';
-  import { page } from '$app/stores';
-  import { urlFor } from '$lib/PersistedImagesUtils';
-  import Button from '../../components/Button.svelte';
-  import LayoutContainer from '../../components/LayoutContainer.svelte';
-  import MetaData from '../../components/MetaData.svelte';
-  import { readWriteClient } from '$lib/CMSUtils';
-  import { loading } from '$lib/store';
+  import { writable } from 'svelte/store'
+  import { goto } from '$app/navigation'
+  import fp from 'lodash/fp'
+  import { onMount } from 'svelte'
+  import localforage from 'localforage'
+  import { choodlePromptKey } from '$lib/Configuration'
+  import { toHTML } from '@portabletext/to-html'
+  import { browser } from '$app/environment'
+  import { choodleYellow } from '$lib/Configuration'
+  import { page } from '$app/stores'
+  import { urlFor } from '$lib/PersistedImagesUtils'
+  import Button from '../../components/Button.svelte'
+  import LayoutContainer from '../../components/LayoutContainer.svelte'
+  import MetaData from '../../components/MetaData.svelte'
+  import { readWriteClient } from '$lib/CMSUtils'
+  import { loading } from '$lib/store'
 
-  export let data;
-  let prompts: string[];
-  let initialPrompt: string;
-  let challengeId: string | null = null;
-  $: challengeId = $page.params.challengeId;
+  export let data
+  let prompts: string[]
+  let initialPrompt: string
+  let challengeId: string | null = null
+  $: challengeId = $page.params.challengeId
 
-  const selectedPrompt = writable('');
+  const selectedPrompt = writable('')
   if (browser) {
     selectedPrompt.subscribe((value) => {
-      console.log(`selected prompt: ${value}`);
-      localforage.setItem(choodlePromptKey, value);
-    });
+      console.log(`selected prompt: ${value}`)
+      localforage.setItem(choodlePromptKey, value)
+    })
   }
 
   onMount(() => {
-    prompts = fp.map('prompt')(data.records);
-    initialPrompt = prompts[0];
-    selectedPrompt.set(initialPrompt);
-    loading.set(false);
-  });
+    prompts = fp.map('prompt')(data.records)
+    initialPrompt = prompts[0]
+    selectedPrompt.set(initialPrompt)
+    loading.set(false)
+  })
 
   const rotatePrompts = () => {
-    console.log(prompts.length);
+    console.log(prompts.length)
     if (prompts.length >= 1) {
-      selectedPrompt.set(prompts.pop());
-      return;
+      selectedPrompt.set(prompts.pop())
+      return
     }
 
-    prompts = fp.map('prompt')(data.records);
-  };
+    prompts = fp.map('prompt')(data.records)
+  }
 
   const handleShuffle = (event: Event) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    rotatePrompts();
-  };
+    rotatePrompts()
+  }
 
   const proceed = async () => {
-    const prompt = $selectedPrompt;
-    if (!prompt) return;
+    const prompt = $selectedPrompt
+    if (!prompt) return
 
-    console.log(`proceeding with prompt ${prompt}`);
+    console.log(`proceeding with prompt ${prompt}`)
 
-    const gamePrompt = fp.find((p) => p.prompt === prompt, data.records);
+    const gamePrompt = fp.find((p) => p.prompt === prompt, data.records)
 
     if ($page.params.challengeId) {
       await readWriteClient
@@ -67,15 +67,15 @@
         .set({
           gamePrompt: { _ref: gamePrompt._id },
         })
-        .commit();
+        .commit()
     }
 
     if (!challengeId) {
-      goto(`/draw`);
+      goto(`/draw`)
     } else {
-      goto(`/draw/${challengeId}`);
+      goto(`/draw/${challengeId}`)
     }
-  };
+  }
 </script>
 
 <MetaData url={$page.url} title={data.copy.defaultPageTitle} themeColor={choodleYellow} />
