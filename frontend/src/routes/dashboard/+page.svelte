@@ -1,65 +1,65 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { onMount } from 'svelte';
-  import Button from '../../components/Button.svelte';
-  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils';
-  import LayoutContainer from '../../components/LayoutContainer.svelte';
-  import { page } from '$app/stores';
-  import MetaData from '../../components/MetaData.svelte';
-  import { pageBackgroundDefault } from '$lib/Configuration';
-  import fp from 'lodash/fp';
-  import { loading } from '$lib/store';
+  import { goto } from '$app/navigation'
+  import { onMount } from 'svelte'
+  import Button from '../../components/Button.svelte'
+  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils'
+  import LayoutContainer from '../../components/LayoutContainer.svelte'
+  import { page } from '$app/stores'
+  import MetaData from '../../components/MetaData.svelte'
+  import { pageBackgroundDefault } from '$lib/Configuration'
+  import fp from 'lodash/fp'
+  import { loading } from '$lib/store'
   import type {
     SanityDocumentMetadata,
     StreakGuessingGame,
     StreakGuessingGamePlayer,
-  } from '$lib/CWFGame';
-  import { isPlayerInGame } from '$lib/CWFGame';
-  import DashboardGameEntry from '../../components/DashboardGameEntry.svelte';
+  } from '$lib/CWFGame'
+  import { isPlayerInGame } from '$lib/CWFGame'
+  import DashboardGameEntry from '../../components/DashboardGameEntry.svelte'
 
-  loading.set(true);
+  loading.set(true)
 
-  export let data;
+  export let data
 
-  let currentChoodler: StreakGuessingGamePlayer;
-  let myGames: StreakGuessingGame[] = [];
+  let currentChoodler: StreakGuessingGamePlayer
+  let myGames: StreakGuessingGame[] = []
 
   const startGame = async () => {
-    await goto(`/`);
-  };
+    await goto(`/`)
+  }
 
   const sortedByCreatedAt = (
     thingsWithCreatedAt: SanityDocumentMetadata[]
   ): SanityDocumentMetadata[] => {
-    return fp.reverse(fp.sortBy(['_createdAt'], thingsWithCreatedAt));
-  };
+    return fp.reverse(fp.sortBy(['_createdAt'], thingsWithCreatedAt))
+  }
 
   const sortGuessResults = (game): StreakGuessingGame => ({
     ...game,
     guessResults: sortedByCreatedAt(game.guessResults),
-  });
+  })
 
   onMount(async () => {
-    const emailFetch = getEmail();
-    const usernameFetch = getUsername();
-    const deviceIdFetch = getDeviceId();
+    const emailFetch = getEmail()
+    const usernameFetch = getUsername()
+    const deviceIdFetch = getDeviceId()
     const creatorFetch = locateCreator({
       email: await emailFetch,
       username: await usernameFetch,
       deviceId: await deviceIdFetch,
-    }); // TODO: migrate global creator/player state to a store shared across pages
+    }) // TODO: migrate global creator/player state to a store shared across pages
 
-    currentChoodler = await creatorFetch;
+    currentChoodler = await creatorFetch
 
     // FIXME: make it so player is always here when we call isPlayerInGame
     myGames = fp.map(
       sortGuessResults,
       fp.filter((game) => isPlayerInGame(game, currentChoodler), data.games)
-    );
-    console.log(`myGames`, myGames);
+    )
+    console.log(`myGames`, myGames)
 
-    loading.set(false);
-  });
+    loading.set(false)
+  })
 </script>
 
 <MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url} />
