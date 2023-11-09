@@ -7,7 +7,7 @@
   import { page } from '$app/stores'
   import MetaData from '../../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
-  import fp from 'lodash/fp'
+  import { compose, filter, reject, reverse, sortBy, uniqBy, map } from 'lodash/fp'
   import { loading } from '$lib/store'
   import type {
     SanityDocumentMetadata,
@@ -32,7 +32,7 @@
   const sortedByCreatedAt = (
     thingsWithCreatedAt: SanityDocumentMetadata[]
   ): SanityDocumentMetadata[] => {
-    return fp.reverse(fp.sortBy(['_createdAt'], thingsWithCreatedAt))
+    return reverse(sortBy(['_createdAt'], thingsWithCreatedAt))
   }
 
   const sortGuessResults = (game): StreakGuessingGame => ({
@@ -51,13 +51,13 @@
     currentChoodler = await creatorFetch
 
     // // TODO: refactor to use flow style
-    myGames = fp.compose(
-      fp.reverse,
-      fp.uniqBy((game) => otherPlayer(currentChoodler, game).username),
-      fp.sortBy(['_createdAt']),
-      fp.map(sortGuessResults),
-      fp.filter((game) => isPlayerInGame(game, currentChoodler)),
-      fp.reject((game) => !game?.player2?.username)
+    myGames = compose(
+      reverse,
+      uniqBy((game) => otherPlayer(currentChoodler, game).username),
+      sortBy(['_createdAt']),
+      map(sortGuessResults),
+      filter((game) => isPlayerInGame(game, currentChoodler)),
+      reject((game) => !game?.player2?.username)
     )(data.games as StreakGuessingGame[])
 
     console.log(`myGames`, myGames)
