@@ -452,7 +452,7 @@
     </GuessingHUD>
   </div>
 
-  <ChoodleContainer --choodle-max-height-offset="31rem">
+  <ChoodleContainer --choodle-max-height-offset="31.5rem">
     <img src={bestImageUrl(data.choodle)} alt="" />
   </ChoodleContainer>
 
