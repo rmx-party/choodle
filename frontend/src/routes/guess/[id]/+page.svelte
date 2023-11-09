@@ -185,6 +185,10 @@
 
     if (guessedCorrectly !== null) {
       console.log('guess completed, adding to game')
+      game = {
+        ...game,
+        guessResults: [...(game.guessResults || []), guess],
+      }
       game = await readWriteClient
         .patch(game._id)
         .setIfMissing({ guessResults: [] })
