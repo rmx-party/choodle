@@ -17,7 +17,7 @@
     align-items: center;
     justify-content: center;
     padding: 0;
-    margin: 1rem;
+    margin: 0.5rem;
   }
 
   .choodle-container > :global(*) {
