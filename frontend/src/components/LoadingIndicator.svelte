@@ -1,34 +1,29 @@
 <script lang="ts">
-  import { loading, loadingMessage } from '$lib/store';
-  import { fade, blur } from 'svelte/transition';
-  import AnimatedEllipses from './AnimatedEllipses.svelte';
-  import { onMount } from 'svelte';
-  import { toHTML } from '@portabletext/to-html';
+  import { loading, loadingMessage } from '$lib/store'
+  import { fade, blur } from 'svelte/transition'
+  import AnimatedEllipses from './AnimatedEllipses.svelte'
+  import { onMount } from 'svelte'
+  import { toHTML } from '@portabletext/to-html'
 
-  export let rotatingMessages = [];
+  export let rotatingMessages = []
 
-  let messageIndex = -1;
-  let timeout;
-  let interval;
+  let messageIndex = -1
+  let interval
 
   onMount(() => {
     loading.subscribe((value) => {
-      console.log(`loading state: `, value);
-    });
+      console.log(`loading state: `, value)
+    })
 
-    if (rotatingMessages && rotatingMessages.length > 0)
-      timeout = setTimeout(() => {
-        messageIndex = 0;
-        interval = setInterval(() => {
-          messageIndex = (messageIndex + 1) % rotatingMessages.length;
-        }, 3000);
-      }, 1200);
+    if (rotatingMessages && rotatingMessages.length > 0) messageIndex = 0
+    interval = setInterval(() => {
+      messageIndex = (messageIndex + 1) % rotatingMessages.length
+    }, 3000)
 
     return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
-  });
+      clearInterval(interval)
+    }
+  })
 </script>
 
 {#if $loading}
@@ -48,15 +43,6 @@
               {@html toHTML(rotatingMessages[messageIndex])}
             </div>
           {/key}
-        {:else if $loadingMessage.length > 0}
-          <div class="message" transition:fade={{ duration: 300 }}>
-            <strong>
-              <span
-                >{$loadingMessage}
-                <AnimatedEllipses /></span
-              >
-            </strong>
-          </div>
         {/if}
       </div>
     </div>

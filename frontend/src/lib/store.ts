@@ -14,7 +14,7 @@ export const closeDialog = (id) => switchDialog(id, false);
 
 export const tokenId = writable(0);
 export const loading = writable(true);
-export const loadingMessage = writable("enhancing happiness");
+export const loadingMessage = writable("");
 export const isOnline = writable(true);
 
 export const imageData = writable("");
