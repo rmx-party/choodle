@@ -50,7 +50,6 @@
 
     currentChoodler = await creatorFetch
 
-    // // TODO: refactor to use flow style
     myGames = flow(
       map(sortGuessResults),
       reject((game) => !game?.player2?.username),
@@ -59,7 +58,7 @@
       uniqBy((game) => otherPlayer(currentChoodler, game).username)
     )(data.games as StreakGuessingGame[])
 
-    console.log(`myGames`, myGames)
+    console.log({ myGames })
 
     loading.set(false)
   })
@@ -68,9 +67,13 @@
 <MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url} />
 
 <LayoutContainer>
-  <section class="hud">
-    <span class="username">{currentChoodler?.username || 'unnamed user'}</span>
-  </section>
+  <p class="hud">
+    {#if currentChoodler?.username?.length}
+      Hi, <span class="username">{currentChoodler?.username || 'unnamed user'}</span>!
+    {:else}
+      Hi!
+    {/if}
+  </p>
 
   <div class="centre-container">
     <Button
@@ -104,10 +107,6 @@
   }
 
   .hud {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
     width: 100%;
     margin-top: 2rem;
   }
@@ -116,7 +115,7 @@
     display: inline-block;
     text-align: right;
     color: var(--text-text-primary, #141518);
-    background: var(--colors-brand-choodle-yellow, #fef40a);
+    background: var(--choodle-yellow, #fef40a);
 
     /* mobile/caption-bold */
     font-family: DejaVu Sans Bold;
