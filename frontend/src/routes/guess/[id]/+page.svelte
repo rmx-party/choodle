@@ -32,6 +32,8 @@
     isPlayerInGame,
     normalizeGame,
     type StreakGuessingGame,
+    type StreakGuessingGameChallenge,
+    type StreakGuessingGameDrawing,
     type StreakGuessingGameGuessResult,
     type StreakGuessingGamePlayer,
   } from '$lib/CWFGame'
@@ -58,10 +60,10 @@
   let game: StreakGuessingGame
   let disableKeyboard = false
 
-  let hints = []
+  let hints: { text: string; used: boolean }[] = []
   $: {
     hints = filter(
-      (h) => h.text,
+      (hint) => !!hint.text,
       [
         { text: data.gamePrompt?.hint, used: hintUsedInGuess(guess, data.gamePrompt?.hint) },
         { text: data.gamePrompt?.hint_2, used: hintUsedInGuess(guess, data.gamePrompt?.hint_2) },
@@ -100,7 +102,10 @@
     goto(`/${challengeId}`)
   }
 
-  const challengeHasBeenGuessed = (game, challenge) => {
+  const challengeHasBeenGuessed = (
+    game: StreakGuessingGame,
+    challenge: StreakGuessingGameChallenge
+  ) => {
     return isEmpty(
       filter((guessResult) => guessResult.challenge._id === challenge._id, game.guessResults)
     )
@@ -138,7 +143,11 @@
       console.log('update')
       console.log({ game: locatedGame })
       const patch = readWriteClient.patch(locatedGame._id)
-      if (locatedGame.guessResults.map((gr) => gr._id).includes(guess._id)) {
+      if (
+        locatedGame.guessResults
+          .map((gr: StreakGuessingGameGuessResult) => gr._id)
+          .includes(guess._id)
+      ) {
         console.log('we already have this guess')
       } else {
         console.log('adding a guessResult')
@@ -176,7 +185,7 @@
     return guess
   }
 
-  const isCorrect = (guess, answer): boolean => {
+  const isCorrect = (guess: StreakGuessingGameGuessResult, answer: string): boolean => {
     return guess.join('').toUpperCase() === answer.toUpperCase()
   }
 
@@ -244,7 +253,7 @@
   }
 
   const submitGuess = () => {
-    if ($currentGuess.length < data.gamePrompt?.prompt.length) return
+    if ($currentGuess?.length < data.gamePrompt?.prompt?.length) return
 
     console.log(`checking answer, ${guessesRemaining} guesses left`)
 
@@ -253,22 +262,22 @@
       : handleIncorrectGuess()
   }
 
-  const afterHint = async (hint) => {
-    if (hintUsedInGuess(guess, hint.text)) {
-      console.log(`hint already used ${hint.text}`)
+  const afterHint = async ({ text }: { text: string }) => {
+    if (hintUsedInGuess(guess, text)) {
+      console.log(`hint already used ${text}`)
       return
     }
 
-    console.log(`adding ${hint.text} to the used hints on ${guess._id}`)
+    console.log(`adding ${text} to the used hints on ${guess._id}`)
 
     guess = await readWriteClient
       .patch(guess._id)
       .setIfMissing({ hintsUsed: [] })
-      .append('hintsUsed', [hint.text])
+      .append('hintsUsed', [text])
       .commit()
   }
 
-  const hintUsedInGuess = (guess, hintText) => {
+  const hintUsedInGuess = (guess: StreakGuessingGameGuessResult, hintText: string) => {
     console.log(`hintUsedInGuess, ${guess?._id}, ${hintText}`)
     if (!guess?.hintsUsed) {
       console.log('no hints used')
@@ -301,7 +310,8 @@
     openDialog(usernamePromptId)
   }
 
-  const attemptToSubmitGuess = async (event: Event) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const attemptToSubmitGuess = async (_event?: Event) => {
     if (!browser) return
     if ($currentGuess.length !== data.challenge?.gamePrompt?.prompt?.length) return
 
@@ -341,7 +351,7 @@
     loading.set(false)
   })
 
-  const bestImageUrl = (choodle) => {
+  const bestImageUrl = (choodle: StreakGuessingGameDrawing) => {
     let bestImage = choodle.upScaledImage
 
     if (!bestImage) {
@@ -446,8 +456,8 @@
   {#if success}
     <p class="success">{data.copy.guess_successMessageText}</p>
     <GuessInput
-      format={data.gamePrompt?.prompt.split('')}
-      display={data.gamePrompt?.prompt.split('').map((str) => str.toUpperCase())}
+      format={data.gamePrompt?.prompt?.split('')}
+      display={data.gamePrompt?.prompt?.split('').map((str) => str.toUpperCase())}
       cursorLocation={-1}
       --bgcolor="var(--choodle-yellow)"
     />
@@ -465,8 +475,8 @@
       {data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}
     </p>
     <GuessInput
-      format={data.gamePrompt?.prompt.split('')}
-      display={data.gamePrompt?.prompt.split('').map((str) => str.toUpperCase())}
+      format={data.gamePrompt?.prompt?.split('')}
+      display={data.gamePrompt?.prompt?.split('').map((str) => str.toUpperCase())}
       cursorLocation={-1}
       --bgcolor="var(--choodle-yellow)"
     />
