@@ -8,7 +8,7 @@
   import { page } from '$app/stores'
   import MetaData from '../../../components/MetaData.svelte'
   import { onMount } from 'svelte'
-  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils'
+  import { getDeviceId, getUsername, locateCreator } from '$lib/CreatorUtils'
   import { browser } from '$app/environment'
   import fp from 'lodash/fp'
   import GuessingInterface from '../../../components/GuessingInterface.svelte'
@@ -26,7 +26,15 @@
   import { closeDialog, loading, loadingMessage, openDialog } from '$lib/store'
   import Dialog from '../../../components/Dialog.svelte'
   import localforage from 'localforage'
-  import { isNormalizedGameComplete, isPlayerInGame, normalizeGame } from '$lib/CWFGame'
+  import {
+    isGameComplete,
+    isNormalizedGameComplete,
+    isPlayerInGame,
+    normalizeGame,
+    type StreakGuessingGame,
+    type StreakGuessingGameGuessResult,
+    type StreakGuessingGamePlayer,
+  } from '$lib/CWFGame'
   import type { PageData } from './$types'
 
   loading.set(true)
@@ -43,12 +51,11 @@
   let choodleOwner = false
   let success = false
 
-  let deviceId
-  let email
+  let deviceId: string | undefined
   let username = ''
-  let guesser
-  let guess
-  let game
+  let guesser: StreakGuessingGamePlayer
+  let guess: StreakGuessingGameGuessResult
+  let game: StreakGuessingGame
   let disableKeyboard = false
 
   let hints = []
@@ -64,12 +71,9 @@
   }
 
   const createCounterChallenge = async () => {
-    console.log({ game })
-    console.log({ isPlayerInGame: isPlayerInGame(game, guesser) })
-
     if (!isPlayerInGame(game, guesser)) goto(`/`)
 
-    console.log('creating the challenge and updating current challenge')
+    console.log('creating the challenge and updating game state')
     const challengeId = `challenge-${window.crypto.randomUUID()}`
     const transaction = await readWriteClient
       .transaction()
@@ -293,9 +297,8 @@
   onMount(async () => {
     deviceId = await getDeviceId()
 
-    email = await getEmail()
     username = (await getUsername()) || ''
-    guesser = await locateCreator({ email, deviceId, username })
+    guesser = await locateCreator({ deviceId, username })
 
     console.log({ challenge: data.challenge })
     choodleOwner = data.challenge.challenger._id === guesser._id // TODO: this is based on device+choodle, should be by creator account
