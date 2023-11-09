@@ -9,7 +9,7 @@
   import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils'
   import { share, type Shareable } from '$lib/ShareUtils'
   import { browser } from '$app/environment'
-  import fp from 'lodash/fp'
+  import { map } from 'lodash/fp'
   import { toHTML } from '@portabletext/to-html'
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
@@ -34,7 +34,7 @@
 
   const constructChallengeShareable = (): Shareable => {
     let gamePromptTiles = gamePrompt?.length
-      ? fp.map((char) => (char === ' ' ? '⬜' : '🟨'), gamePrompt.split('')).join('')
+      ? map((char) => (char === ' ' ? '⬜' : '🟨'), gamePrompt.split('')).join('')
       : ''
 
     const url = `${window.location.origin}/guess/${data.challenge._id}`

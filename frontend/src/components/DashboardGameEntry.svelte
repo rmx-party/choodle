@@ -5,45 +5,45 @@
     type StreakGuessingGame,
     type StreakGuessingGameChallenge,
     type StreakGuessingGamePlayer,
-  } from '$lib/CWFGame';
-  import {goto} from '$app/navigation';
-  import fp from 'lodash/fp';
-  import streakFlame from '$lib/assets/streak-flame.svg';
+  } from '$lib/CWFGame'
+  import { goto } from '$app/navigation'
+  import { last } from 'lodash/fp'
+  import streakFlame from '$lib/assets/streak-flame.svg'
 
-  export let currentChoodler: StreakGuessingGamePlayer;
-  export let game: StreakGuessingGame;
-  export let gameListUserUnknownText: string;
-  let gameOver: boolean = false;
-  $: gameOver = isGameComplete(game);
+  export let currentChoodler: StreakGuessingGamePlayer
+  export let game: StreakGuessingGame
+  export let gameListUserUnknownText: string
+  let gameOver: boolean = false
+  $: gameOver = isGameComplete(game)
 
   const otherPlayerIn = (game: StreakGuessingGame) => {
     if (game.player1?._id === currentChoodler._id)
-      return game.player2?.username || gameListUserUnknownText;
-    return game.player1?.username || gameListUserUnknownText;
-  };
+      return game.player2?.username || gameListUserUnknownText
+    return game.player1?.username || gameListUserUnknownText
+  }
 
   const generateLinkFor = ({
-                             currentChallenge,
-                           }: {
-    currentChallenge: StreakGuessingGameChallenge;
+    currentChallenge,
+  }: {
+    currentChallenge: StreakGuessingGameChallenge
   }): string => {
     if (currentChallenge.challenger._id === currentChoodler._id && !currentChallenge.choodle) {
-      return `/${currentChallenge._id}`;
+      return `/${currentChallenge._id}`
     }
 
     if (currentChallenge.challenger._id !== currentChoodler._id && !currentChallenge.choodle) {
-      return `/guess/${fp.last(game.guessResults)?.challenge?._id}`;
+      return `/guess/${last(game.guessResults)?.challenge?._id}`
     }
 
-    return `/guess/${currentChallenge._id}`;
-  };
+    return `/guess/${currentChallenge._id}`
+  }
 </script>
 
 <div class="game-entry" class:game-over={gameOver}>
   <a href={generateLinkFor(game)} on:click={() => goto(generateLinkFor(game))}
-  >{otherPlayerIn(game)}</a
+    >{otherPlayerIn(game)}</a
   >
-  <div class="game-entry-streak"><img src={streakFlame}/>{streakCount(game)}</div>
+  <div class="game-entry-streak"><img src={streakFlame} />{streakCount(game)}</div>
 </div>
 
 <style>

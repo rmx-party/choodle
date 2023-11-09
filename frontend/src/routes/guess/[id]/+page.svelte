@@ -10,7 +10,7 @@
   import { onMount } from 'svelte'
   import { getDeviceId, getUsername, locateCreator } from '$lib/CreatorUtils'
   import { browser } from '$app/environment'
-  import fp from 'lodash/fp'
+  import { filter, find, isEmpty } from 'lodash/fp'
   import GuessingInterface from '../../../components/GuessingInterface.svelte'
   import GuessInput from '../../../components/GuessInput.svelte'
   import { toHTML } from '@portabletext/to-html'
@@ -60,7 +60,7 @@
 
   let hints = []
   $: {
-    hints = fp.filter(
+    hints = filter(
       (h) => h.text,
       [
         { text: data.gamePrompt?.hint, used: hintUsedInGuess(guess, data.gamePrompt?.hint) },
@@ -101,8 +101,8 @@
   }
 
   const challengeHasBeenGuessed = (game, challenge) => {
-    return fp.isEmpty(
-      fp.filter((guessResult) => guessResult.challenge._id === challenge._id, game.guessResults)
+    return isEmpty(
+      filter((guessResult) => guessResult.challenge._id === challenge._id, game.guessResults)
     )
   }
 
@@ -110,9 +110,9 @@
     const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults[]->{...}, player1->{...}, player2->{...}, challenge->{...}}`
     let locatedGames = await readOnlyClient.fetch(query)
     // Find the located game that has the guess we're looking for, or the challenge.
-    let locatedGame = fp.find(
+    let locatedGame = find(
       (game) =>
-        fp.find((guessResult) => guessResult._id === guessId, game.guessResults) ||
+        find((guessResult) => guessResult._id === guessId, game.guessResults) ||
         game.currentChallenge?._ref === data.challenge._id,
       locatedGames
     )

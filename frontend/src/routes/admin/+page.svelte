@@ -3,7 +3,7 @@
   import { readWriteClient } from '$lib/CMSUtils'
   import { onMount } from 'svelte'
   import { loading } from '$lib/store'
-  import fp from 'lodash/fp'
+  import { reject, uniqBy } from 'lodash/fp'
 
   const queries = {
     choodle: `*[_type == "choodle"]`,
@@ -67,12 +67,9 @@
         .subscribe((update) => {
           console.log(queries[type], { update })
           if (update.result) {
-            records[type] = fp.uniqBy('_id', [...records[type], update.result])
+            records[type] = uniqBy('_id', [...records[type], update.result])
           } else if (update.previous) {
-            records[type] = fp.uniqBy(
-              '_id',
-              fp.reject({ _id: update.previous?._id }, records[type])
-            )
+            records[type] = uniqBy('_id', reject({ _id: update.previous?._id }, records[type]))
           }
         })
     })

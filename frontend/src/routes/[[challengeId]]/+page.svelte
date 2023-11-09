@@ -1,7 +1,7 @@
 <script lang="ts">
   import { writable } from 'svelte/store'
   import { goto } from '$app/navigation'
-  import fp from 'lodash/fp'
+  import { find, map } from 'lodash/fp'
   import { onMount } from 'svelte'
   import localforage from 'localforage'
   import { choodlePromptKey } from '$lib/Configuration'
@@ -28,7 +28,7 @@
   }
 
   onMount(async () => {
-    prompts = fp.map('prompt')(data.records)
+    prompts = map('prompt')(data.records)
     initialPrompt = prompts[0]
     selectedPrompt.set(initialPrompt)
     loading.set(false)
@@ -53,7 +53,7 @@
       return
     }
 
-    prompts = fp.map('prompt')(data.records)
+    prompts = map('prompt')(data.records)
   }
 
   const handleShuffle = (event: Event) => {
@@ -68,7 +68,7 @@
 
     console.log(`proceeding with prompt ${prompt}`)
 
-    const gamePrompt = fp.find((p) => p.prompt === prompt, data.records)
+    const gamePrompt = find((p) => p.prompt === prompt, data.records)
 
     if (data.challenge) {
       await readWriteClient
