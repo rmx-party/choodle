@@ -1,68 +1,69 @@
 <script lang="ts">
-  import { urlFor } from '$lib/PersistedImagesUtils';
-  import TopBar from '../../../components/TopBar.svelte';
-  import Button from '../../../components/Button.svelte';
-  import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
-  import MetaData from '../../../components/MetaData.svelte';
-  import { onMount } from 'svelte';
-  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils';
-  import { share, type Shareable } from '$lib/ShareUtils';
-  import { browser } from '$app/environment';
-  import fp from 'lodash/fp';
-  import { toHTML } from '@portabletext/to-html';
-  import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration';
-  import LayoutContainer from '../../../components/LayoutContainer.svelte';
-  import ChoodleContainer from '../../../components/ChoodleContainer.svelte';
-  import { loading, loadingMessage } from '$lib/store';
+  import { urlFor } from '$lib/PersistedImagesUtils'
+  import TopBar from '../../../components/TopBar.svelte'
+  import Button from '../../../components/Button.svelte'
+  import { goto } from '$app/navigation'
+  import { page } from '$app/stores'
+  import MetaData from '../../../components/MetaData.svelte'
+  import { onMount } from 'svelte'
+  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils'
+  import { share, type Shareable } from '$lib/ShareUtils'
+  import { browser } from '$app/environment'
+  import fp from 'lodash/fp'
+  import { toHTML } from '@portabletext/to-html'
+  import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
+  import LayoutContainer from '../../../components/LayoutContainer.svelte'
+  import ChoodleContainer from '../../../components/ChoodleContainer.svelte'
+  import { loading, loadingMessage } from '$lib/store'
+  import type { PageData } from './$types'
 
-  loading.set(true);
-  loadingMessage.set('loading');
+  loading.set(true)
+  loadingMessage.set('loading')
 
-  export let data;
+  export let data: PageData
 
-  let choodleOwner = false;
-  let copiedToClipboard = false;
+  let choodleOwner = false
+  let copiedToClipboard = false
 
-  let deviceId;
-  let email;
-  let username = '';
-  let currentChoodler;
+  let deviceId
+  let email
+  let username = ''
+  let currentChoodler
 
-  let gamePrompt;
+  let gamePrompt
 
   const constructChallengeShareable = (): Shareable => {
     let gamePromptTiles = gamePrompt?.length
       ? fp.map((char) => (char === ' ' ? '⬜' : '🟨'), gamePrompt.split('')).join('')
-      : '';
+      : ''
 
-    const url = `${window.location.origin}/guess/${data.challenge._id}`;
-    const shareCopy = data.copy.share_messageText || '';
-    const text = [shareCopy, gamePromptTiles, url].join(`\n`);
-    const shareable = { text };
-    return shareable;
-  };
+    const url = `${window.location.origin}/guess/${data.challenge._id}`
+    const shareCopy = data.copy.share_messageText || ''
+    const text = [shareCopy, gamePromptTiles, url].join(`\n`)
+    const shareable = { text }
+    return shareable
+  }
 
   const handleShare = async (event: Event) => {
-    event.preventDefault();
-    if (!browser) return;
+    event.preventDefault()
+    if (!browser) return
 
     share(constructChallengeShareable(), (usedClipboard) => {
-      copiedToClipboard = usedClipboard;
-    });
-  };
+      copiedToClipboard = usedClipboard
+    })
+  }
 
   onMount(async () => {
-    deviceId = await getDeviceId();
+    deviceId = await getDeviceId()
 
-    email = await getEmail();
-    username = (await getUsername()) || '';
-    currentChoodler = await locateCreator({ email, deviceId, username });
+    email = await getEmail()
+    username = (await getUsername()) || ''
+    currentChoodler = await locateCreator({ email, deviceId, username })
 
-    gamePrompt = data.challenge.gamePrompt.prompt;
+    gamePrompt = data.challenge.gamePrompt.prompt
 
-    console.log({ challenge: data.challenge });
-    choodleOwner = data.challenge.challenger._id === currentChoodler._id;
+    console.log({ challenge: data.challenge })
+    choodleOwner = data.challenge.challenger._id === currentChoodler._id
 
     // Store in localstorage on Draw:
     //  - all details we need to draw it here, including the image
@@ -72,24 +73,24 @@
     //   If the currentChoodler doesn't own it, redirect to guess page.
 
     if (!choodleOwner) {
-      goto(`/guess/${data.challenge._id}`);
-      return;
+      goto(`/guess/${data.challenge._id}`)
+      return
     }
 
-    console.log({ choodleOwner });
+    console.log({ choodleOwner })
 
-    loading.set(false);
-  });
+    loading.set(false)
+  })
 
   const bestImageUrl = (choodle) => {
-    let bestImage = choodle.upScaledImage;
+    let bestImage = choodle.upScaledImage
 
     if (!bestImage) {
-      bestImage = choodle.image;
+      bestImage = choodle.image
     }
 
-    return urlFor(bestImage).url();
-  };
+    return urlFor(bestImage).url()
+  }
 </script>
 
 <MetaData
