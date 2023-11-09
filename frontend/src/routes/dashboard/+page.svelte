@@ -14,12 +14,12 @@
     StreakGuessingGame,
     StreakGuessingGamePlayer,
   } from '$lib/CWFGame'
-  import { isPlayerInGame } from '$lib/CWFGame'
+  import { isPlayerInGame, otherPlayer } from '$lib/CWFGame'
   import DashboardGameEntry from '../../components/DashboardGameEntry.svelte'
 
   loading.set(true)
 
-  export let data
+  export let data: PageData
 
   let currentChoodler: StreakGuessingGamePlayer
   let myGames: StreakGuessingGame[] = []
@@ -51,14 +51,14 @@
 
     currentChoodler = await creatorFetch
 
-    // FIXME: make it so player is always here when we call isPlayerInGame
-    myGames = fp.map(
-      sortGuessResults,
-      fp.filter(
-        (game) => isPlayerInGame(game, currentChoodler),
-        fp.reject((game) => !game.player2?.username, data.games)
-      )
-    )
+    myGames = fp.compose(
+      fp.reverse,
+      fp.uniqBy((game) => otherPlayer(currentChoodler, game).username),
+      fp.sortBy(['_createdAt']),
+      fp.map(sortGuessResults),
+      fp.filter((game) => isPlayerInGame(game, currentChoodler)),
+      fp.reject((game) => !game?.player2?.username)
+    )(data.games as StreakGuessingGame[])
     console.log(`myGames`, myGames)
 
     loading.set(false)
