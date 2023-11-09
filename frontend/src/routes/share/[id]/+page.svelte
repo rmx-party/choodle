@@ -117,7 +117,7 @@
   </ChoodleContainer>
 
   <h3><strong>{data.challenge?.gamePrompt?.prompt?.toUpperCase()}</strong></h3>
-  <div>
+  <div class="cta">
     <Button colour="yellow" on:click={handleShare}
       >{copiedToClipboard
         ? data.copy.guess_copiedToClipboard
@@ -129,5 +129,8 @@
 <style>
   .topBar {
     width: 100%;
+  }
+  .cta {
+    margin-top: 3rem;
   }
 </style>
