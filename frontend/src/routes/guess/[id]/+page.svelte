@@ -465,14 +465,18 @@
       --bgcolor="var(--choodle-yellow)"
     />
     <p><!-- layout placeholder --></p>
-    <Button colour="yellow" on:click={createCounterChallenge}>
-      {data.copy.success_continueGameButtonText}
-    </Button>
-    <Button colour="yellow" on:click={handleShare}
-      >{copiedToClipboard
-        ? data.copy.guess_copiedToClipboard
-        : data.copy.guess_shareButtonText}</Button
+    <div
+      style={`height: 10rem; /* corresponds to game keyboard height */ display: flex; flex-direction: column;`}
     >
+      <Button colour="yellow" on:click={createCounterChallenge}>
+        {data.copy.success_continueGameButtonText}
+      </Button>
+      <Button colour="yellow" on:click={handleShare}
+        >{copiedToClipboard
+          ? data.copy.guess_copiedToClipboard
+          : data.copy.guess_shareButtonText}</Button
+      >
+    </div>
   {:else if guessesRemaining < 1}
     <p class="failure">
       {data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}
