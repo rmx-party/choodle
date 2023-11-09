@@ -115,13 +115,14 @@
 
 <LayoutContainer>
   <div class="prompt" slot="topBar">
-    <p class="daily-prompt">
-      <span
-        ><strong
-          >{data.copy.draw_topBarInstructionText}
-        </strong>{data.challenge?.gamePrompt?.prompt?.toUpperCase()}</span
-      >
-    </p>
+    <span class="daily-prompt">
+      <h3>
+        <strong>
+          {data.copy.draw_topBarInstructionText}
+        </strong>
+        {data.challenge?.gamePrompt?.prompt?.toUpperCase()}
+      </h3>
+    </span>
   </div>
   <ChoodleBoard id="cwf-canvas" bind:this={child} {performSave}>
     <ButtonMenu slot="buttons">
