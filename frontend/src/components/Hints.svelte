@@ -1,24 +1,24 @@
 <script lang="ts">
-  import lifeSaverIcon from '$lib/assets/mdi_lifebuoy.svg';
-  import redX from '$lib/assets/red_x.svg';
+  import lifeSaverIcon from '$lib/assets/mdi_lifebuoy.svg'
+  import redX from '$lib/assets/red_x.svg'
 
   export type hint = {
-    used: boolean;
-    text: string;
-  };
-  export let hints: hint[] = [];
-  export let hintCta = '';
-  export let activeHint = -1;
+    used: boolean
+    text: string
+  }
+  export let hints: hint[] = []
+  export let hintCta = ''
+  export let activeHint = -1
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  export let afterHint = (hint: hint) => {};
+  export let afterHint = (hint: hint) => {}
 
   const activateHint = (index) => () => {
-    activeHint = index;
-    hints[index].used = true;
+    activeHint = index
+    hints[index].used = true
 
-    afterHint(hints[index]);
-  };
+    afterHint(hints[index])
+  }
 </script>
 
 <div class="hintsContainer">
@@ -59,7 +59,7 @@
     flex-direction: column;
     gap: 0.5rem;
     width: 100%;
-    padding: 0.5rem 0;
+    padding: 0.25rem 0;
     text-align: center;
   }
 
@@ -78,7 +78,7 @@
     justify-content: center;
     gap: 0.5rem;
     border-radius: 0.125rem;
-    background: var(--colors-greyscale-200, #d3d3d3);
+    background: var(--choodle-yellow);
     width: 2rem;
     height: 2rem;
     border: none;
