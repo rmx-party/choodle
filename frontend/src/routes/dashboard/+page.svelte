@@ -16,6 +16,7 @@
   } from '$lib/CWFGame'
   import { isPlayerInGame, otherPlayer } from '$lib/CWFGame'
   import DashboardGameEntry from '../../components/DashboardGameEntry.svelte'
+  import type { PageData } from './$types'
 
   loading.set(true)
 
