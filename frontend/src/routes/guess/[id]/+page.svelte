@@ -543,10 +543,6 @@
     width: 100%;
   }
 
-  p {
-    margin: 0.5rem;
-  }
-
   .failure {
     color: red;
   }
