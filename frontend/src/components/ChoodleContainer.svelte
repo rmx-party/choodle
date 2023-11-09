@@ -8,8 +8,8 @@
     flex-grow: 1;
     aspect-ratio: 3/4;
 
-    max-height: clamp(100px, 100%, calc(100vh - var(--choodle-max-height-offset, 60svh)));
-    max-width: min(100%, 100vw);
+    max-height: clamp(100px, 100%, calc(100svh - var(--choodle-max-height-offset, 60svh)));
+    max-width: min(100%, 100svw);
   }
 
   .choodle-container {
