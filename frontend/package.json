@@ -25,6 +25,7 @@
     "@vitest/ui": "^0.34.6",
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-lodash-fp": "2.2.0-a1",
     "eslint-plugin-svelte": "^2.34.0",
     "jsdom": "^22.1.0",
     "prettier": "^3.0.3",
