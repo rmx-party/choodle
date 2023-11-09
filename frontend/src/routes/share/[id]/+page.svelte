@@ -60,7 +60,7 @@
     username = (await getUsername()) || ''
     currentChoodler = await locateCreator({ email, deviceId, username })
 
-    gamePrompt = data.challenge.gamePrompt.prompt
+    gamePrompt = data.challenge?.gamePrompt?.prompt
 
     console.log({ challenge: data.challenge })
     choodleOwner = data.challenge.challenger._id === currentChoodler._id
@@ -116,7 +116,7 @@
     <img src={bestImageUrl(data.challenge.choodle)} alt="" />
   </ChoodleContainer>
 
-  <h3><strong>{data.challenge.gamePrompt.prompt.toUpperCase()}</strong></h3>
+  <h3><strong>{data.challenge?.gamePrompt?.prompt?.toUpperCase()}</strong></h3>
   <div>
     <Button colour="yellow" on:click={handleShare}
       >{copiedToClipboard
