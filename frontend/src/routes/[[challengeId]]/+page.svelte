@@ -91,7 +91,6 @@
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
     <output for="shuffle">{$selectedPrompt}</output>
-    <br />
     <Button id="shuffle" colour="black" on:click={handleShuffle}
       >{data.copy.pick_shuffleButtonText}</Button
     >
@@ -107,10 +106,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  .pickPrompt img {
-    max-width: 100%;
   }
 
   output {
