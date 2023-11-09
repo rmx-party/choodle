@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { browser, dev } from '$app/environment'
+  import { browser } from '$app/environment'
   import { isOnline } from '$lib/store'
   import { webVitals } from '$lib/vitals'
   import '$lib/assets/fonts.css'
@@ -7,7 +7,7 @@
   import '../app.css'
   import LoadingIndicator from '../components/LoadingIndicator.svelte'
   import { page } from '$app/stores'
-  import { filter } from 'lodash/fp'
+  import filter from 'lodash/fp/filter'
   import { preloadCode } from '$app/navigation'
   import { urlFor } from '$lib/PersistedImagesUtils'
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'

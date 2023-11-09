@@ -7,7 +7,12 @@
   import { page } from '$app/stores'
   import MetaData from '../../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
-  import { filter, reject, uniqBy, map, orderBy, flow } from 'lodash/fp'
+  import filter from 'lodash/fp/filter'
+  import reject from 'lodash/fp/reject'
+  import uniqBy from 'lodash/fp/uniqBy'
+  import map from 'lodash/fp/map'
+  import orderBy from 'lodash/fp/orderBy'
+  import flow from 'lodash/fp/flow'
   import { loading } from '$lib/store'
   import type {
     SanityDocumentMetadata,

@@ -3,7 +3,8 @@
   import { readWriteClient } from '$lib/CMSUtils'
   import { onMount } from 'svelte'
   import { loading } from '$lib/store'
-  import { reject, uniqBy } from 'lodash/fp'
+  import reject from 'lodash/fp/reject'
+  import uniqBy from 'lodash/fp/uniqBy'
 
   const queries = {
     choodle: `*[_type == "choodle"]`,

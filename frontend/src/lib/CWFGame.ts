@@ -1,4 +1,7 @@
-import { any, filter, find, map } from "lodash/fp";
+import any from "lodash/fp/any";
+import map from "lodash/fp/map";
+import filter from "lodash/fp/filter";
+import find from "lodash/fp/find";
 
 export type NormalizedCWFGame = {
   player1: string;

@@ -1,7 +1,8 @@
 <script lang="ts">
   import { writable } from 'svelte/store'
   import { goto } from '$app/navigation'
-  import { find, map } from 'lodash/fp'
+  import find from 'lodash/fp/find'
+  import map from 'lodash/fp/map'
   import { onMount } from 'svelte'
   import localforage from 'localforage'
   import { choodlePromptKey } from '$lib/Configuration'

@@ -9,7 +9,7 @@
   import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils'
   import { share, type Shareable } from '$lib/ShareUtils'
   import { browser } from '$app/environment'
-  import { map } from 'lodash/fp'
+  import map from 'lodash/fp/map'
   import { toHTML } from '@portabletext/to-html'
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'

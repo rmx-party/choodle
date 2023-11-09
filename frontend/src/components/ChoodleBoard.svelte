@@ -7,7 +7,7 @@
   import { maximumSize } from '$lib/Calculations'
   import type { Dimensiony } from '$lib/Calculations'
   import { crunchCanvasToUrl, applyCrunchToCanvas } from '$lib/ImageUtils'
-  import { debounce } from 'lodash/fp'
+  import debounce from 'lodash/fp/debounce'
 
   export let id: string
 

@@ -7,7 +7,7 @@ import type {
 } from "$lib/CWFGame";
 import { v4 as uuid } from "uuid";
 import { isGameComplete, otherPlayer, whoseTurn } from "$lib/CWFGame";
-import { findIndex } from "lodash/fp";
+import findIndex from "lodash/fp/findIndex";
 
 const GUESS_LIMIT = 3;
 

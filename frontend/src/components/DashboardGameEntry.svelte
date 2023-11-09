@@ -7,7 +7,7 @@
     type StreakGuessingGamePlayer,
   } from '$lib/CWFGame'
   import { goto } from '$app/navigation'
-  import { last } from 'lodash/fp'
+  import last from 'lodash/fp/last'
   import streakFlame from '$lib/assets/streak-flame.svg'
 
   export let currentChoodler: StreakGuessingGamePlayer
