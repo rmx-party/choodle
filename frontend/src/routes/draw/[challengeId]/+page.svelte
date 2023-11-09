@@ -65,7 +65,7 @@
 
   // TODO: switch back for username driven gameplay after prod deploy
   const usernameRequired = true
-  const attemptToSaveChoodleRequiringUsername = async (event: Event) => {
+  const attemptToSaveChoodleRequiringUsername = async (_event: Event) => {
     if (!browser) return
 
     const undoStack = await getUndoStack()

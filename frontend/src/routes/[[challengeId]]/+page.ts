@@ -1,5 +1,5 @@
 import { cachedReadOnlyClient, readOnlyClient } from "$lib/CMSUtils";
-import { shuffle } from "lodash/fp";
+import shuffle from "lodash/fp/shuffle";
 import { error } from "@sveltejs/kit";
 
 export async function load({ params }) {
