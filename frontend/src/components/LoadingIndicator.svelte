@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { loading, loadingMessage } from '$lib/store'
+  import { loading } from '$lib/store'
   import { fade, blur } from 'svelte/transition'
-  import AnimatedEllipses from './AnimatedEllipses.svelte'
   import { onMount } from 'svelte'
   import { toHTML } from '@portabletext/to-html'
 
