@@ -75,6 +75,7 @@
   }
 
   const createCounterChallenge = async () => {
+    if (!browser) return
     if (!isPlayerInGame(game, guesser)) goto(`/`)
 
     console.log('creating the challenge and updating game state')
