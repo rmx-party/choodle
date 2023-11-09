@@ -119,7 +119,7 @@
       <span
         ><strong
           >{data.copy.draw_topBarInstructionText}
-        </strong>{data.challenge.gamePrompt.prompt?.toUpperCase()}</span
+        </strong>{data.challenge?.gamePrompt?.prompt?.toUpperCase()}</span
       >
     </p>
   </div>

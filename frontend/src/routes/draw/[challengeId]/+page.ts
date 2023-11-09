@@ -1,9 +1,10 @@
-import { readOnlyClient } from '$lib/CMSUtils'
+import { readOnlyClient } from "$lib/CMSUtils";
+import type { PageLoad } from "../$types";
 
-export async function load({ params }) {
-  const challenge = await readOnlyClient.fetch(
-    `*[_type == "challenge" && _id == "${params.challengeId}"]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`
-  )
+export const load: PageLoad = async ({ params }) => {
+  const challenge = readOnlyClient.fetch(
+    `*[_type == "challenge" && _id == "${params.challengeId}"]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
+  );
 
-  return { challenge }
-}
+  return { challenge };
+};
