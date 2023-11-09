@@ -75,16 +75,26 @@
 
     console.log('creating the challenge and updating game state')
     const challengeId = `challenge-${window.crypto.randomUUID()}`
-    const transaction = await readWriteClient
-      .transaction()
-      .create({
-        _id: challengeId,
-        _type: 'challenge',
-        challenger: { _ref: guesser._id },
-        gameRef: { _ref: game._id },
+    const transaction = readWriteClient.transaction().create({
+      _id: challengeId,
+      _type: 'challenge',
+      challenger: { _ref: guesser._id },
+      gameRef: { _ref: game._id },
+    })
+
+    if (isGameComplete(game)) {
+      console.log('streak is ended, creating a new game')
+      transaction.create({
+        _type: 'cwfgame',
+        player1: { _ref: guesser._id },
+        player2: { _ref: data.challenge.challenger._id },
+        currentChallenge: { _ref: challengeId },
       })
-      .patch(game._id, (p) => p.set({ currentChallenge: { _ref: challengeId } }))
-      .commit({ autoGenerateArrayKeys: true })
+    } else {
+      transaction.patch(game._id, (p) => p.set({ currentChallenge: { _ref: challengeId } }))
+    }
+    await transaction.commit({ autoGenerateArrayKeys: true })
+
     console.log(transaction)
     goto(`/${challengeId}`)
   }
