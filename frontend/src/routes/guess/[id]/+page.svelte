@@ -203,7 +203,7 @@
       guessResult.set({ guessedCorrectly })
     }
     guess = await guessResult.commit({ autoGenerateArrayKeys: true })
-    guessesRemaining = guessesLimit - guess.guesses.length
+    guessesRemaining = guessesLimit - (guess?.guesses?.length || 0)
     console.log({ guess })
 
     if (guessedCorrectly !== null) {
