@@ -452,7 +452,7 @@
     </GuessingHUD>
   </div>
 
-  <ChoodleContainer --choodle-max-height-offset="26rem">
+  <ChoodleContainer --choodle-max-height-offset="26.5rem">
     <img src={bestImageUrl(data.choodle)} alt="" />
   </ChoodleContainer>
 
@@ -491,7 +491,7 @@
       <Button colour="yellow" on:click={createCounterChallenge}>
         {data.copy.guess_failureNewGameButtonText}
       </Button>
-      <Button on:click={handleShare}
+      <Button colour="yellow" on:click={handleShare}
         >{copiedToClipboard
           ? data.copy.guess_copiedToClipboard
           : data.copy.guess_shareButtonText}</Button
