@@ -1,83 +1,100 @@
 <script lang="ts">
-  import Button from '../../components/Button.svelte';
-  import {readOnlyClient, readWriteClient} from '$lib/CMSUtils';
-  import {onMount} from 'svelte';
-  import {loading} from '$lib/store';
+  import Button from '../../components/Button.svelte'
+  import { readWriteClient } from '$lib/CMSUtils'
+  import { onMount } from 'svelte'
+  import { loading } from '$lib/store'
+  import fp from 'lodash/fp'
 
-  let gameCount = 0;
-  let challengeCount = 0;
-  let guessCount = 0;
-  let pointCount = 0;
-  let creatorCount = 0;
+  const queries = {
+    choodle: `*[_type == "choodle"]`,
+    cwfgame: `*[_type == "cwfgame"]`,
+    challenge: `*[_type == "challenge"]`,
+    guess: `*[_type == "guess"]`,
+    creator: `*[_type == "creator"]`,
+  }
+  const records = {
+    choodle: [],
+    cwfgame: [],
+    challenge: [],
+    guess: [],
+    creator: [],
+  }
 
-  const deleteAllGames = async () => {
-    const games = await readWriteClient.fetch('*[_type == "cwfgame"]');
-    gameCount = games.length;
-    console.log({gameCount});
-    for (const game of games) {
-      await readWriteClient.delete({query: `*[references("${game._id}")]`});
-      await readWriteClient.delete(game._id);
-      gameCount--;
+  const deleteAll = async (type) => {
+    records[type] = await readWriteClient.fetch(queries[type])
+    for (const { _id } of records[type]) {
+      await deleteOne(_id)
     }
-  };
+  }
 
-  const deleteAllChallenges = async () => {
-    const challenges: any[] = await readOnlyClient.fetch('*[_type == "challenge"]');
-    challengeCount = challenges.length;
-    console.log({challengeCount});
-    for (const challenge of challenges) {
-      await readWriteClient.delete({query: `*[references("${challenge._id}")]`});
-      await readWriteClient.delete(challenge._id);
-      challengeCount--;
+  const deleteOne = async (id) => {
+    try {
+      await readWriteClient.delete(id)
+    } catch (e) {
+      console.log(`error deleting ${id}`, e.message)
+      const related = await readWriteClient.fetch(`*[references("${id}")]`)
+      console.log(`trying to delete related items`, related)
+      related.forEach(async (item) => {
+        console.log(`unsetting refs from`, item)
+
+        await readWriteClient
+          .patch(item._id)
+          .unset([
+            'challenge',
+            'currentChallenge',
+            'creator',
+            'guesser',
+            'challenger',
+            'gameRef',
+            'gamePromptRef',
+            'guessResults',
+            'choodle',
+            'player1',
+            'player2',
+          ])
+          .commit()
+      })
+      console.log(`retrying delete of ${id}`)
+      await deleteOne(id)
     }
-  };
+  }
 
-  const deleteAllGuesses = async () => {
-    const guesses = await readWriteClient.fetch('*[_type == "guess"]');
-    guessCount = guesses.length;
-    console.log({guessCount});
-    for (const guess of guesses) {
-      try {
-        await readWriteClient.delete({query: `*[references("${guess._id}")]`});
-        await readWriteClient.delete(guess._id);
-        guessCount--;
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  };
+  onMount(async () => {
+    ;['challenge', 'choodle', 'cwfgame', 'guess', 'creator'].forEach(async (type) => {
+      await readWriteClient.fetch(queries[type]).then((items) => (records[type] = items))
+      readWriteClient
+        .listen(queries[type], {}, { includePreviousRevision: true })
+        .subscribe((update) => {
+          console.log(queries[type], { update })
+          if (update.result) {
+            records[type] = fp.uniqBy('_id', [...records[type], update.result])
+          } else if (update.previous) {
+            records[type] = fp.uniqBy(
+              '_id',
+              fp.reject({ _id: update.previous?._id }, records[type])
+            )
+          }
+        })
+    })
 
-  const deleteAllPoints = async () => {
-    const points = await readWriteClient.fetch('*[_type == "points"]');
-    pointCount = points.length;
-    console.log({points});
-    for (const point of points) {
-      await readWriteClient.delete({query: `*[references("${point._id}")]`});
-      await readWriteClient.delete(point._id);
-      pointCount--;
-    }
-  };
-
-  const deleteAllCreators = async () => {
-    const creators = await readWriteClient.fetch('*[_type == "creator"]');
-    creatorCount = creators.length;
-    console.log({creators});
-    for (const creator of creators) {
-      await readWriteClient.delete({query: `*[references("${creator._id}")]`});
-      await readWriteClient.delete(creator._id);
-      creatorCount--;
-    }
-  };
-
-  onMount(() => {
-    loading.set(false);
-  });
+    loading.set(false)
+  })
 </script>
 
 <div>
-  <Button on:click={deleteAllGames}>Delete All {gameCount} Games</Button>
-  <Button on:click={deleteAllChallenges}>Delete All {challengeCount} Challenges</Button>
-  <Button on:click={deleteAllGuesses}>Delete All {guessCount} Guesses</Button>
-  <Button on:click={deleteAllPoints}>Delete All {pointCount} Points</Button>
-  <Button on:click={deleteAllCreators}>Delete All {creatorCount} Creators</Button>
+  <Button on:click={() => deleteAll('choodle')}
+    >Delete All {records['choodle']?.length || 0} Choodles</Button
+  >
+  <Button on:click={() => deleteAll('cwfgame')}
+    >Delete All {records['cwfgame']?.length || 0} Games</Button
+  >
+  <Button on:click={() => deleteAll('challenge')}
+    >Delete All {records['challenge']?.length || 0} Challenges</Button
+  >
+  <Button on:click={() => deleteAll('guess')}
+    >Delete All {records['guess']?.length || 0} Guesses</Button
+  >
+  <Button on:click={() => deleteAll('creator')}
+    >Delete All {records['creator']?.length || 0} Creators</Button
+  >
 </div>
