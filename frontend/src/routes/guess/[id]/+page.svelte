@@ -89,6 +89,7 @@
         player1: { _ref: guesser._id },
         player2: { _ref: data.challenge.challenger._id },
         currentChallenge: { _ref: challengeId },
+        guessResults: [],
       })
     } else {
       transaction.patch(game._id, (p) => p.set({ currentChallenge: { _ref: challengeId } }))
@@ -474,12 +475,7 @@
     <div
       style={`height: 10rem; /* corresponds to game keyboard height */ display: flex; flex-direction: column;`}
     >
-      <Button
-        colour="yellow"
-        on:click={() => {
-          goto(`/`)
-        }}
-      >
+      <Button colour="yellow" on:click={createCounterChallenge}>
         {data.copy.guess_failureNewGameButtonText}
       </Button>
       <Button on:click={handleShare}
