@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation'
   import { onMount } from 'svelte'
   import Button from '../../components/Button.svelte'
-  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils'
+  import { getDeviceId, getUsername, locateCreator } from '$lib/CreatorUtils'
   import LayoutContainer from '../../components/LayoutContainer.svelte'
   import { page } from '$app/stores'
   import MetaData from '../../components/MetaData.svelte'
@@ -40,17 +40,16 @@
   })
 
   onMount(async () => {
-    const emailFetch = getEmail()
     const usernameFetch = getUsername()
     const deviceIdFetch = getDeviceId()
     const creatorFetch = locateCreator({
-      email: await emailFetch,
       username: await usernameFetch,
       deviceId: await deviceIdFetch,
     }) // TODO: migrate global creator/player state to a store shared across pages
 
     currentChoodler = await creatorFetch
 
+    // // TODO: refactor to use flow style
     myGames = fp.compose(
       fp.reverse,
       fp.uniqBy((game) => otherPlayer(currentChoodler, game).username),
@@ -59,6 +58,7 @@
       fp.filter((game) => isPlayerInGame(game, currentChoodler)),
       fp.reject((game) => !game?.player2?.username)
     )(data.games as StreakGuessingGame[])
+
     console.log(`myGames`, myGames)
 
     loading.set(false)
