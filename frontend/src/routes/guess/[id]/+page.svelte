@@ -256,6 +256,11 @@
   }
 
   const submitGuess = () => {
+    if (username.length < 1) {
+      openDialog(usernamePromptId)
+      return
+    }
+
     if ($currentGuess?.length < data.gamePrompt?.prompt?.length) return
 
     console.log(`checking answer, ${guessesRemaining} guesses left`)
