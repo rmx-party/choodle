@@ -15,6 +15,7 @@
   import MetaData from '../../components/MetaData.svelte'
   import { readWriteClient } from '$lib/CMSUtils'
   import { loading } from '$lib/store'
+  import { clearStorage } from '$lib/StorageStuff'
 
   export let data
   let prompts: string[]
@@ -66,6 +67,8 @@
   const proceed = async () => {
     const prompt = $selectedPrompt
     if (!prompt) return
+
+    clearStorage()
 
     console.log(`proceeding with prompt ${prompt}`)
 
