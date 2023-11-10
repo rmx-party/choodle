@@ -5,7 +5,7 @@
   import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils'
   import { browser } from '$app/environment'
   import { clearStorage, getUndoStack } from '$lib/StorageStuff'
-  import { goto } from '$app/navigation'
+  import { goto, preloadData } from '$app/navigation'
   import { onMount } from 'svelte'
   import localforage from 'localforage'
   import {
@@ -56,6 +56,8 @@
     })
 
     console.log({ transactionResult })
+
+    preloadData(`/share/${data.challenge._id}`)
 
     await clearStorage()
     await goto(`/share/${data.challenge._id}`)
