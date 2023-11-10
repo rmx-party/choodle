@@ -1,13 +1,9 @@
 <script lang="ts">
-  import { writable } from 'svelte/store'
-  import { goto } from '$app/navigation'
+  import { goto, preloadData } from '$app/navigation'
   import find from 'lodash/fp/find'
   import map from 'lodash/fp/map'
   import { onMount } from 'svelte'
-  import localforage from 'localforage'
-  import { choodlePromptKey } from '$lib/Configuration'
   import { toHTML } from '@portabletext/to-html'
-  import { browser } from '$app/environment'
   import { choodleYellow } from '$lib/Configuration'
   import { page } from '$app/stores'
   import Button from '../../components/Button.svelte'
@@ -20,21 +16,15 @@
   export let data
   let prompts: string[]
   let initialPrompt: string
-
-  const selectedPrompt = writable('')
-  if (browser) {
-    selectedPrompt.subscribe((value) => {
-      console.log(`selected prompt: ${value}`)
-      localforage.setItem(choodlePromptKey, value)
-    })
-  }
+  let selectedPrompt: string | undefined
+  $: prompts = map('prompt')(data.records)
 
   onMount(async () => {
-    prompts = map('prompt')(data.records)
     initialPrompt = prompts[0]
-    selectedPrompt.set(initialPrompt)
+    selectedPrompt = initialPrompt
     loading.set(false)
 
+    // TODO: also if the user doesn't own this challenge, we should create a new one instead
     if (!data.challenge) {
       data.challenge = await readWriteClient.create(
         {
@@ -51,10 +41,11 @@
   const rotatePrompts = () => {
     console.log(prompts.length)
     if (prompts.length >= 1) {
-      selectedPrompt.set(prompts.pop())
+      selectedPrompt = prompts.pop()
       return
     }
 
+    console.log(`no more prompts, resetting`)
     prompts = map('prompt')(data.records)
   }
 
@@ -65,14 +56,11 @@
   }
 
   const proceed = async () => {
-    const prompt = $selectedPrompt
-    if (!prompt) return
+    if (!selectedPrompt) return
 
-    clearStorage()
+    console.log(`proceeding with prompt ${selectedPrompt}`)
 
-    console.log(`proceeding with prompt ${prompt}`)
-
-    const gamePrompt = find((p) => p.prompt === prompt, data.records)
+    const gamePrompt = find((p) => p.prompt === selectedPrompt, data.records)
 
     if (data.challenge) {
       await readWriteClient
@@ -82,6 +70,10 @@
         })
         .commit()
     }
+
+    preloadData(`/draw/${data.challenge._id}`)
+
+    clearStorage()
 
     goto(`/draw/${data.challenge._id}`)
   }
@@ -93,14 +85,16 @@
   <section class="pickPrompt">
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
-    <output for="shuffle">{$selectedPrompt}</output>
+    <output for="shuffle">{selectedPrompt}</output>
     <Button id="shuffle" colour="black" on:click={handleShuffle}
       >{data.copy.pick_shuffleButtonText}</Button
     >
   </section>
 
   <div id="cta">
-    <Button variant="primary" on:click={proceed}>{data.copy.pick_doneButtonText}</Button>
+    <Button variant="primary" online={data.challenge} on:click={proceed}
+      >{data.copy.pick_doneButtonText}</Button
+    >
   </div>
 </LayoutContainer>
 
