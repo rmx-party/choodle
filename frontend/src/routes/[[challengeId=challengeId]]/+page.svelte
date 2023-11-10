@@ -12,12 +12,13 @@
   import { readWriteClient } from '$lib/CMSUtils'
   import { loading } from '$lib/store'
   import { clearStorage } from '$lib/StorageStuff'
+  import shuffle from 'lodash/fp/shuffle'
 
   export let data
   let prompts: string[]
   let initialPrompt: string
   let selectedPrompt: string | undefined
-  $: prompts = map('prompt')(data.records)
+  $: prompts = shuffle(map('prompt')(data.records))
 
   onMount(async () => {
     initialPrompt = prompts[0]

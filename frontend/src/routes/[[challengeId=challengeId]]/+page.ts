@@ -1,5 +1,4 @@
 import { cachedReadOnlyClient, readOnlyClient } from "$lib/CMSUtils";
-import shuffle from "lodash/fp/shuffle";
 import { error } from "@sveltejs/kit";
 
 import { PUBLIC_ISR_BYPASS_TOKEN } from "$env/static/public";
@@ -25,9 +24,7 @@ export const load: PageLoad = async ({ params }) => {
   }
 
   return {
-    records: shuffle(
-      await cachedReadOnlyClient.fetch(`*[_type == "gamePrompt"]`),
-    ),
+    records: cachedReadOnlyClient.fetch(`*[_type == "gamePrompt"]`),
     challenge,
   };
 };
