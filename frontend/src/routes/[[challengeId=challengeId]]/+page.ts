@@ -2,7 +2,17 @@ import { cachedReadOnlyClient, readOnlyClient } from "$lib/CMSUtils";
 import shuffle from "lodash/fp/shuffle";
 import { error } from "@sveltejs/kit";
 
-export async function load({ params }) {
+import { PUBLIC_ISR_BYPASS_TOKEN } from "$env/static/public";
+import type { PageLoad } from "./$types";
+
+export const config = {
+  isr: {
+    expiration: 1440,
+    bypassToken: PUBLIC_ISR_BYPASS_TOKEN,
+  },
+};
+
+export const load: PageLoad = async ({ params }) => {
   let challenge;
   if (params.challengeId) {
     challenge = await readOnlyClient.fetch(
@@ -20,4 +30,4 @@ export async function load({ params }) {
     ),
     challenge,
   };
-}
+};
