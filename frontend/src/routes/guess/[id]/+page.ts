@@ -1,6 +1,6 @@
-import {PUBLIC_ISR_BYPASS_TOKEN} from "$env/static/public";
-import {cachedReadOnlyClient} from "$lib/CMSUtils";
-import type {PageLoad} from "../../../../.svelte-kit/types/src/routes";
+import { PUBLIC_ISR_BYPASS_TOKEN } from "$env/static/public";
+import { cachedReadOnlyClient } from "$lib/CMSUtils";
+import type { PageLoad } from "./$types";
 
 export const config = {
   isr: {
@@ -9,7 +9,7 @@ export const config = {
   },
 };
 
-export const load: PageLoad = async ({params}) => {
+export const load: PageLoad = async ({ params }) => {
   const challenge = await cachedReadOnlyClient.fetch(
     `*[_type == "challenge" && _id == "${params.id}"]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
   );
