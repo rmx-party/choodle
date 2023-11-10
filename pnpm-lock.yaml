@@ -493,7 +493,7 @@ packages:
       '@ledgerhq/logs': 6.10.1
       axios: 1.4.0(debug@4.3.4)
       bignumber.js: 9.1.1
-      crypto-js: 4.1.1
+      crypto-js: 4.2.0
     transitivePeerDependencies:
       - debug
     dev: true
@@ -1926,8 +1926,8 @@ packages:
     resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==}
     dev: true
 
-  /crypto-js@4.1.1:
-    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
+  /crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
     dev: true
 
   /dashdash@1.14.1:
