@@ -35,7 +35,7 @@
   )
 
   onMount(async () => {
-    preloadCode('/', '/dashboard', '/draw', '/draw/*', '/share/*', '/guess/*')
+    preloadCode('/', '/dashboard', '/draw/*', '/share/*', '/guess/*')
   })
 </script>
 
