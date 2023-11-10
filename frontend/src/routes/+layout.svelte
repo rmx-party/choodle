@@ -7,10 +7,10 @@
   import '../app.css'
   import LoadingIndicator from '../components/LoadingIndicator.svelte'
   import { page } from '$app/stores'
-  import filter from 'lodash/fp/filter'
   import { preloadCode } from '$app/navigation'
   import { urlFor } from '$lib/PersistedImagesUtils'
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'
+  import compact from 'lodash/fp/compact'
 
   export let data
 
@@ -23,16 +23,13 @@
     })
   }
 
-  const rotatingMessages = filter(
-    (msg) => msg,
-    [
-      data.copy?.loadingMessage1,
-      data.copy?.loadingMessage2,
-      data.copy?.loadingMessage3,
-      data.copy?.loadingMessage4,
-      data.copy?.loadingMessage5,
-    ]
-  )
+  const rotatingMessages = compact([
+    data.copy?.loadingMessage1,
+    data.copy?.loadingMessage2,
+    data.copy?.loadingMessage3,
+    data.copy?.loadingMessage4,
+    data.copy?.loadingMessage5,
+  ])
 
   onMount(async () => {
     preloadCode('/', '/dashboard', '/draw/*', '/share/*', '/guess/*')
@@ -42,7 +39,7 @@
 <svelte:window on:online={() => isOnline.set(true)} on:offline={() => isOnline.set(false)} />
 <LoadingIndicator {rotatingMessages} />
 <GlobalNavHeader
-  logoUrl={urlFor($page.data.copy.logo)}
+  logoUrl={urlFor($page.data.copy.logo).url()}
   logoLinkDestination={$page.data.copy.logoLinkDestination}
 />
 <slot />
