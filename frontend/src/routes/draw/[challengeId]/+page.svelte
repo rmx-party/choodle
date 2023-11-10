@@ -58,6 +58,7 @@
     console.log({ transactionResult })
 
     preloadData(`/share/${data.challenge._id}`)
+    preloadData(`/guess/${data.challenge._id}`)
 
     await clearStorage()
     await goto(`/share/${data.challenge._id}`)
