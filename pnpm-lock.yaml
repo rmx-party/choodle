@@ -468,7 +468,7 @@ packages:
       '@ledgerhq/errors': 6.14.0
       '@ledgerhq/logs': 6.10.1
       '@ledgerhq/types-live': 6.38.1
-      axios: 1.4.0(debug@4.3.4)
+      axios: 1.6.1(debug@4.3.4)
       eip55: 2.1.1
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
@@ -491,7 +491,7 @@ packages:
       '@ledgerhq/hw-transport': 6.28.8
       '@ledgerhq/hw-transport-mocker': 6.27.19
       '@ledgerhq/logs': 6.10.1
-      axios: 1.4.0(debug@4.3.4)
+      axios: 1.6.1(debug@4.3.4)
       bignumber.js: 9.1.1
       crypto-js: 4.1.1
     transitivePeerDependencies:
@@ -1486,8 +1486,8 @@ packages:
     resolution: {integrity: sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==}
     dev: true
 
-  /axios@1.4.0(debug@4.3.4):
-    resolution: {integrity: sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==}
+  /axios@1.6.1(debug@4.3.4):
+    resolution: {integrity: sha512-vfBmhDpKafglh0EldBEbVuoe7DyAavGSLWhuSm5ZSEKQnHhBf0xAAwybbNH1IkrJNGnS/VG4I5yxig1pCEXE4g==}
     dependencies:
       follow-redirects: 1.15.2(debug@4.3.4)
       form-data: 4.0.0
