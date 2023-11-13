@@ -121,8 +121,13 @@ export default {
       type: "string",
     },
     {
-      name: "guess_shareButtonText",
-      title: "Guess Page Share Button Text",
+      name: "guess_shareButtonTextSuccess",
+      title: "Guess Page Share Button Text for Success",
+      type: "string",
+    },
+    {
+      name: "guess_shareButtonTextFailure",
+      title: "Guess Page Share Button Text for Failure",
       type: "string",
     },
     {

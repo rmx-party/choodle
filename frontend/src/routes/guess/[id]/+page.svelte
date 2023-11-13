@@ -497,13 +497,13 @@
       <Button variant="primary" colour="yellow" on:click={handleShare}
         >{copiedToClipboard
           ? data.copy.guess_copiedToClipboard
-          : data.copy.guess_shareButtonText}</Button
+          : data.copy.guess_shareButtonTextSuccess}</Button
       >
     {:else if guessesRemaining < 1}
       <Button variant="primary" colour="yellow" on:click={handleShare}
         >{copiedToClipboard
           ? data.copy.guess_copiedToClipboard
-          : data.copy.guess_shareButtonText}</Button
+          : data.copy.guess_shareButtonTextFailure}</Button
       >
     {/if}
   </LayoutContainer>
