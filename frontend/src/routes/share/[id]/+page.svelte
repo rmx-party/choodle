@@ -112,7 +112,6 @@
     <img src={bestImageUrl(data.challenge.choodle)} alt="" />
   </ChoodleContainer>
 
-  <h3><strong>{data.challenge?.gamePrompt?.prompt?.toUpperCase()}</strong></h3>
   <Button variant="primary" colour="yellow" on:click={handleShare}
     >{copiedToClipboard
       ? data.copy.guess_copiedToClipboard
