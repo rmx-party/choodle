@@ -113,20 +113,18 @@
   </ChoodleContainer>
 
   <h3><strong>{data.challenge?.gamePrompt?.prompt?.toUpperCase()}</strong></h3>
-  <div class="cta">
-    <Button colour="yellow" on:click={handleShare}
-      >{copiedToClipboard
-        ? data.copy.guess_copiedToClipboard
-        : data.copy.guess_shareButtonText}</Button
-    >
-  </div>
+  <Button variant="primary" colour="yellow" on:click={handleShare}
+    >{copiedToClipboard
+      ? data.copy.guess_copiedToClipboard
+      : data.copy.guess_shareButtonText}</Button
+  >
 </LayoutContainer>
 
 <style>
   .top-content {
-    margin-top: 2rem;
+    margin: 2rem 0 1rem;
   }
-  .cta {
+  :global(.primary) {
     margin-top: 3rem;
   }
 </style>
