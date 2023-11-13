@@ -104,13 +104,9 @@
 />
 
 <LayoutContainer class="no-pan">
-  <div class="topBar" slot="topBar">
-    <TopBar>
-      <div slot="topBarContent">
-        {@html toHTML(data.copy.guess_pageAuthorTopContent)}
-      </div>
-    </TopBar>
-  </div>
+  <section class="top-content">
+    {@html toHTML(data.copy.guess_pageAuthorTopContent)}
+  </section>
 
   <ChoodleContainer --choodle-max-height-offset="27rem">
     <img src={bestImageUrl(data.challenge.choodle)} alt="" />
@@ -127,8 +123,8 @@
 </LayoutContainer>
 
 <style>
-  .topBar {
-    width: 100%;
+  .top-content {
+    margin-top: 2rem;
   }
   .cta {
     margin-top: 3rem;
