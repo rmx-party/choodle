@@ -485,13 +485,9 @@
   <LayoutContainer class="no-pan">
     <section class="top-content">
       {#if success}
-        {@html toHTML(data.copy.guess_pageTopContent)}
-        <p class="success">{data.copy.guess_successMessageText}</p>
+        {@html toHTML(data.copy.guess_pageTopContentSuccess)}
       {:else}
-        {@html toHTML(data.copy.guess_pageTopContent)}
-        <p class="failure">
-          {data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}
-        </p>
+        {@html toHTML(data.copy.guess_pageTopContentFailure)}
       {/if}
     </section>
 

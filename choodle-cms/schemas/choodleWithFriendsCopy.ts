@@ -104,8 +104,14 @@ export default {
       of: [{ type: "block" }],
     },
     {
-      name: "guess_pageTopContent",
-      title: "Guess Page Top Content",
+      name: "guess_pageTopContentSuccess",
+      title: "Guess Page Top Content for Success",
+      type: "array",
+      of: [{ type: "block" }],
+    },
+    {
+      name: "guess_pageTopContentFailure",
+      title: "Guess Page Top Content for Failure",
       type: "array",
       of: [{ type: "block" }],
     },
