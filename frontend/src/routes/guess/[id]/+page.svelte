@@ -14,7 +14,6 @@
   import find from 'lodash/fp/find'
   import isEmpty from 'lodash/fp/isEmpty'
   import GuessingInterface from '../../../components/GuessingInterface.svelte'
-  import GuessInput from '../../../components/GuessInput.svelte'
   import { toHTML } from '@portabletext/to-html'
   import {
     choodleCreatorUsernameKey,
@@ -40,6 +39,7 @@
     type StreakGuessingGamePlayer,
   } from '$lib/CWFGame'
   import type { PageData } from './$types'
+  import TextMessageBubble from '../../../components/TextMessageBubble.svelte'
 
   loading.set(true)
   loadingMessage.set('loading')
@@ -54,6 +54,8 @@
 
   let choodleOwner = false
   let success = false
+  let stillGuessing: boolean
+  $: stillGuessing = !success && guessesRemaining > 0
 
   let deviceId: string | undefined
   let username = ''
@@ -411,9 +413,10 @@
   }
   let newLine = `\n`
 
-  const constructGuessShareable = (): Shareable => {
-    const shareCopy = success ? shareTextSuccessMessage : shareTextFailureMessage
-    const text = [
+  let shareable: Shareable
+  $: {
+    let shareCopy = success ? shareTextSuccessMessage : shareTextFailureMessage
+    let text = [
       shareCopy,
       newLine,
       newLine,
@@ -422,8 +425,7 @@
       newLine,
       shareTextStats,
     ].join(``)
-    const shareable = { text }
-    return shareable
+    shareable = { text }
   }
 
   let copiedToClipboard = false
@@ -432,7 +434,7 @@
     event.preventDefault()
     if (!browser) return
 
-    share(constructGuessShareable(), (usedClipboard: boolean) => {
+    share(shareable, (usedClipboard: boolean) => {
       copiedToClipboard = usedClipboard
     })
   }
@@ -448,65 +450,20 @@
   bgColor={pageBackgroundDefault}
 />
 
-<LayoutContainer class="no-pan">
-  <div class="topBar" slot="topBar">
-    <GuessingHUD {guessesRemaining} {guessesLimit}>
-      <div slot="content">
-        {@html toHTML(data.copy.guess_pageTopContent)}
-      </div>
-    </GuessingHUD>
-  </div>
-
-  <ChoodleContainer --choodle-max-height-offset="31.5rem">
-    <img src={bestImageUrl(data.choodle)} alt="" />
-  </ChoodleContainer>
-
-  {#if success}
-    <p class="success">{data.copy.guess_successMessageText}</p>
-    <GuessInput
-      format={data.gamePrompt?.prompt?.split('')}
-      display={data.gamePrompt?.prompt?.split('').map((str) => str.toUpperCase())}
-      cursorLocation={-1}
-      --bgcolor="var(--choodle-yellow)"
-    />
-    <p><!-- layout placeholder --></p>
-    <div
-      style={`height: 10rem; /* corresponds to game keyboard height */ display: flex; flex-direction: column;`}
-    >
-      <Button colour="yellow" on:click={createCounterChallenge}>
-        {data.copy.success_continueGameButtonText}
-      </Button>
-      <Button colour="yellow" on:click={handleShare}
-        >{copiedToClipboard
-          ? data.copy.guess_copiedToClipboard
-          : data.copy.guess_shareButtonText}</Button
-      >
+{#if stillGuessing}
+  <LayoutContainer class="no-pan">
+    <div class="topBar" slot="topBar">
+      <GuessingHUD {guessesRemaining} {guessesLimit}>
+        <div slot="content">
+          {@html toHTML(data.copy.guess_pageTopContent)}
+        </div>
+      </GuessingHUD>
     </div>
-  {:else if guessesRemaining < 1}
-    <p class="failure">
-      {data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}
-    </p>
-    <GuessInput
-      format={data.gamePrompt?.prompt?.split('')}
-      display={data.gamePrompt?.prompt?.split('').map((str) => str.toUpperCase())}
-      cursorLocation={-1}
-      --bgcolor="var(--choodle-yellow)"
-    />
 
-    <p><!-- layout placeholder --></p>
-    <div
-      style={`height: 10rem; /* corresponds to game keyboard height */ display: flex; flex-direction: column;`}
-    >
-      <Button colour="yellow" on:click={createCounterChallenge}>
-        {data.copy.guess_failureNewGameButtonText}
-      </Button>
-      <Button colour="yellow" on:click={handleShare}
-        >{copiedToClipboard
-          ? data.copy.guess_copiedToClipboard
-          : data.copy.guess_shareButtonText}</Button
-      >
-    </div>
-  {:else}
+    <ChoodleContainer --choodle-max-height-offset="31.5rem">
+      <img src={bestImageUrl(data.choodle)} alt="" />
+    </ChoodleContainer>
+
     {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
       <p class="failure">{data.copy.guess_incorrectFeedbackText}</p>
     {:else}
@@ -523,33 +480,68 @@
         <Hints {hints} hintCta={data.copy.guess_needHintCtaText} {afterHint} />
       </div>
     </GuessingInterface>
-  {/if}
-  <Dialog id={usernamePromptId} onClose={submitGuess}>
-    <header slot="header">{data.copy.draw_usernameHeader}</header>
-    <div>{data.copy.draw_usernameInstructions}</div>
-    <label
-      for="creator-username"
-      style="text-align: left; display: block; font-family: Dejavu Sans Bold;"
-      >username
-      <br />
-      <input
-        bind:value={username}
-        type="username"
-        id="creator-username"
-        name="creatorusername"
-        placeholder={data.copy.draw_usernamePlaceholder}
-        style="width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;"
-      />
-    </label>
-    <Button on:click={promptForAndSetUsername} variant="primary" colour="yellow">
-      {data.copy.draw_usernameSaveButtonText}
-    </Button>
-  </Dialog>
-</LayoutContainer>
+  </LayoutContainer>
+{:else}
+  <LayoutContainer class="no-pan">
+    <section class="top-content">
+      {#if success}
+        {@html toHTML(data.copy.guess_pageTopContent)}
+        <p class="success">{data.copy.guess_successMessageText}</p>
+      {:else}
+        {@html toHTML(data.copy.guess_pageTopContent)}
+        <p class="failure">
+          {data.copy.guess_failureMessageText ? data.copy.guess_failureMessageText : ' '}
+        </p>
+      {/if}
+    </section>
+
+    <TextMessageBubble>{shareable.text}</TextMessageBubble>
+
+    {#if success}
+      <Button variant="primary" colour="yellow" on:click={handleShare}
+        >{copiedToClipboard
+          ? data.copy.guess_copiedToClipboard
+          : data.copy.guess_shareButtonText}</Button
+      >
+    {:else if guessesRemaining < 1}
+      <Button variant="primary" colour="yellow" on:click={handleShare}
+        >{copiedToClipboard
+          ? data.copy.guess_copiedToClipboard
+          : data.copy.guess_shareButtonText}</Button
+      >
+    {/if}
+  </LayoutContainer>
+{/if}
+
+<Dialog id={usernamePromptId} onClose={submitGuess}>
+  <header slot="header">{data.copy.draw_usernameHeader}</header>
+  <div>{data.copy.draw_usernameInstructions}</div>
+  <label
+    for="creator-username"
+    style="text-align: left; display: block; font-family: Dejavu Sans Bold;"
+    >username
+    <br />
+    <input
+      bind:value={username}
+      type="username"
+      id="creator-username"
+      name="creatorusername"
+      placeholder={data.copy.draw_usernamePlaceholder}
+      style="width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;"
+    />
+  </label>
+  <Button on:click={promptForAndSetUsername} variant="primary" colour="yellow">
+    {data.copy.draw_usernameSaveButtonText}
+  </Button>
+</Dialog>
 
 <style>
   .topBar {
     width: 100%;
+  }
+
+  .top-content {
+    margin: 3rem 0;
   }
 
   .failure {
