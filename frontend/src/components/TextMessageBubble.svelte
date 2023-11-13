@@ -4,23 +4,24 @@
 
 <style>
   .frame {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 16.5625rem;
     height: 9.375rem;
     background-image: url($lib/assets/text-bubble.svg);
     background-repeat: no-repeat;
     overflow: hidden;
-    padding: 0.5rem;
+    padding: 0.2rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   output {
-    color: var(--colors-brand-white, #fff);
-    padding: 1rem;
     border-radius: 1rem;
-    background-color: #0c81fd;
-    white-space: pre-wrap;
     text-align: left;
+    white-space: pre-wrap;
+
+    color: var(--colors-brand-white, #fff);
+    background-color: #0c81fd;
 
     font-family:
       system-ui,
