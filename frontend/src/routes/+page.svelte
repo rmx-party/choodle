@@ -7,49 +7,28 @@
   import { page } from '$app/stores'
   import MetaData from '../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
-  import filter from 'lodash/fp/filter'
-  import reject from 'lodash/fp/reject'
-  import uniqBy from 'lodash/fp/uniqBy'
-  import map from 'lodash/fp/map'
-  import orderBy from 'lodash/fp/orderBy'
-  import flow from 'lodash/fp/flow'
   import { loading } from '$lib/store'
-  import type {
-    SanityDocumentMetadata,
-    StreakGuessingGame,
-    StreakGuessingGamePlayer,
-  } from '$lib/CWFGame'
-  import { isPlayerInGame, otherPlayer } from '$lib/CWFGame'
-  import DashboardGameEntry from '../components/DashboardGameEntry.svelte'
+  import type { StreakGuessingGameChallenge, StreakGuessingGamePlayer } from '$lib/CWFGame'
   import type { PageData } from '../../.svelte-kit/types/src/routes'
   import { pickPath } from '$lib/routes'
   import { toHTML } from '@portabletext/to-html'
+  import { readOnlyClient } from '$lib/CMSUtils'
+  import map from 'lodash/fp/map'
+  import isEmpty from 'lodash/fp/isEmpty'
 
   loading.set(true)
 
   export let data: PageData
 
   let currentChoodler: StreakGuessingGamePlayer
-  let myGames: StreakGuessingGame[] = []
+  let challenges = []
 
-  const isFirstTime = async () => {
-    return true
-  }
+  let isFirstTime: boolean
+  $: isFirstTime = isEmpty(challenges)
 
   const startGame = async () => {
     await goto(pickPath())
   }
-
-  const sortedByCreatedAt = (
-    thingsWithCreatedAt: SanityDocumentMetadata[]
-  ): SanityDocumentMetadata[] => {
-    return orderBy(['_createdAt'], ['desc'], thingsWithCreatedAt)
-  }
-
-  const sortGuessResults = (game: StreakGuessingGame): StreakGuessingGame => ({
-    ...game,
-    guessResults: sortedByCreatedAt(game.guessResults),
-  })
 
   onMount(async () => {
     const usernameFetch = getUsername()
@@ -61,15 +40,20 @@
 
     currentChoodler = await creatorFetch
 
-    myGames = flow(
-      map(sortGuessResults),
-      reject((game) => !game?.player2?.username),
-      filter((game) => isPlayerInGame(game, currentChoodler)),
-      orderBy(['_createdAt'], ['desc']),
-      uniqBy((game) => otherPlayer(currentChoodler, game).username)
-    )(data.games as StreakGuessingGame[])
-
-    console.log({ myGames })
+    challenges = [
+      ...(await readOnlyClient.fetch(
+        `*[_type == "challenge" && challenger._ref == $creatorId]{..., choodle->{...}} | order(_createdAt desc)`,
+        { creatorId: currentChoodler._id }
+      )),
+      ...map(
+        (guess) => guess.challenge,
+        await readOnlyClient.fetch(
+          `*[_type == "guess" && guesser._ref == $creatorId]{..., challenge->{..., choodle->{...}}} | order(_createdAt desc)`,
+          { creatorId: currentChoodler._id }
+        )
+      ),
+    ]
+    console.log(challenges)
 
     loading.set(false)
   })
@@ -77,7 +61,7 @@
 
 <MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url} />
 
-{#if isFirstTime()}
+{#if isFirstTime}
   <LayoutContainer>
     {@html toHTML(data.copy.landing_content)}
 
@@ -103,29 +87,6 @@
         Hi!
       {/if}
     </p>
-
-    <div class="centre-container">
-      <Button
-        variant="secondary"
-        colour="yellow"
-        on:click={startGame}
-        style="margin: 1rem auto; flex-grow: 0;"
-      >
-        {data.copy.startGameButtonText}
-      </Button>
-    </div>
-
-    {#each myGames as myGame (myGame._id)}
-      <DashboardGameEntry
-        {currentChoodler}
-        game={myGame}
-        gameListUserUnknownText={data.copy.gameListUserUnknownText}
-      />
-    {:else}
-      <div class="centre-container">
-        <p>All caught up</p>
-      </div>
-    {/each}
   </LayoutContainer>
 {/if}
 
