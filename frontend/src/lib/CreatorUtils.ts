@@ -20,18 +20,6 @@ export async function getDeviceId(): Promise<string> {
   }
 }
 
-export async function getEmail(): Promise<string | undefined> {
-  if (!browser) return
-  try {
-    const existingEmail = await localforage.getItem(choodleCreatorEmailKey)
-    if (existingEmail && existingEmail.length > 1) {
-      return existingEmail
-    }
-  } catch (e) {
-    return undefined
-  }
-}
-
 export async function getUsername(): Promise<string | undefined> {
   if (!browser) return
   try {
@@ -47,28 +35,20 @@ export async function getUsername(): Promise<string | undefined> {
 export const locateCreator = async ({
   username,
   deviceId,
-  email,
 }: {
   username?: string | undefined
   deviceId?: string | undefined
-  email?: string | undefined
 }) => {
   if (!deviceId) {
     deviceId = await getDeviceId()
   }
-  if (!email) {
-    email = await getEmail()
-  }
   if (!username) {
     username = await getUsername()
   }
-  console.log(`locateCreator: ${deviceId} ${username} ${email}`)
+  console.log(`locateCreator: ${deviceId} ${username}`)
   let query = `*[_type == "creator"]`
   if (deviceId && deviceId.length > 0) {
     query += `[deviceIds match "${deviceId}"`
-  }
-  if (email && email.length > 0) {
-    query += ` || email match "${email}"`
   }
   if (username && username.length > 0) {
     query += ` || username match "${username}"`
@@ -90,16 +70,12 @@ export const locateCreator = async ({
       patch.set({ username })
     }
 
-    if (email && email.length > 0) {
-      patch.set({ email })
-    }
     creator = await patch.commit({ autoGenerateArrayKeys: true })
   } else {
     creator = await readWriteClient.create(
       {
         _type: 'creator',
         username,
-        email,
         deviceIds: [deviceId],
         choodles: [],
       },
