@@ -17,6 +17,7 @@
   import MetaData from '../../../components/MetaData.svelte'
   import { page } from '$app/stores'
   import { guessPath, sharePath } from '$lib/routes'
+  import { readWriteClient } from '$lib/CMSUtils'
 
   export let data
 
@@ -24,7 +25,7 @@
   let challenger
   let challenge
 
-  let creatorUsername: string
+  let username: string
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loadingMessage.set('saving')
@@ -71,7 +72,8 @@
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false)
 
-    if (creatorUsername.length > 0) {
+    if (username.length > 0) {
+      await readWriteClient.patch(challenger._id).set({ username }).commit()
       closeDialog(usernamePromptId)
       child.save()
       return
@@ -97,7 +99,7 @@
     const deviceId = await getDeviceId()
 
     challenger = await locateCreator({ deviceId })
-    creatorUsername = challenger.username
+    username = challenger.username
 
     loading.set(false)
   })
@@ -138,7 +140,7 @@
         >username
         <br />
         <input
-          bind:value={creatorUsername}
+          bind:value={username}
           type="username"
           id="creator-username"
           name="creatorusername"

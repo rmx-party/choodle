@@ -272,7 +272,7 @@
       console.log('there was a username, closing the dialog')
       disableKeyboard = false
       closeDialog(usernamePromptId)
-      guesser = await locateCreator({ username, deviceId })
+      await readWriteClient.patch(guesser._id).set({ username }).commit()
       submitGuess()
       return
     }
@@ -294,6 +294,7 @@
   onMount(async () => {
     deviceId = await getDeviceId()
     guesser = await locateCreator({ deviceId })
+    username = guesser.username
 
     console.log({ challenge: data.challenge })
     choodleOwner = data.challenge.challenger._id === guesser._id // TODO: this is based on device+choodle, should be by creator account
