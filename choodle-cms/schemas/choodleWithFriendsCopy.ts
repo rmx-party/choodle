@@ -25,6 +25,12 @@ export default {
       of: [{type: 'block'}],
     },
     {
+      name: 'landing_content_first_time',
+      title: 'Content for first time users on the landing page',
+      type: 'array',
+      of: [{type: 'block'}],
+    },
+    {
       name: 'landing_image',
       title: 'Image for the landing page',
       type: 'image',

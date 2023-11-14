@@ -8,13 +8,15 @@
   import MetaData from '../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import { loading } from '$lib/store'
-  import type { StreakGuessingGameChallenge, StreakGuessingGamePlayer } from '$lib/CWFGame'
+  import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
   import type { PageData } from '../../.svelte-kit/types/src/routes'
   import { pickPath } from '$lib/routes'
   import { toHTML } from '@portabletext/to-html'
   import { readOnlyClient } from '$lib/CMSUtils'
   import map from 'lodash/fp/map'
   import isEmpty from 'lodash/fp/isEmpty'
+  import orderBy from 'lodash/fp/orderBy'
+  import DashboardDrawing from '../components/DashboardDrawing.svelte'
 
   loading.set(true)
 
@@ -40,19 +42,23 @@
 
     currentChoodler = await creatorFetch
 
-    challenges = [
-      ...(await readOnlyClient.fetch(
-        `*[_type == "challenge" && challenger._ref == $creatorId]{..., choodle->{...}} | order(_createdAt desc)`,
-        { creatorId: currentChoodler._id }
-      )),
-      ...map(
-        (guess) => guess.challenge,
-        await readOnlyClient.fetch(
-          `*[_type == "guess" && guesser._ref == $creatorId]{..., challenge->{..., choodle->{...}}} | order(_createdAt desc)`,
+    challenges = orderBy(
+      ['_updatedAt'],
+      ['desc'],
+      [
+        ...(await readOnlyClient.fetch(
+          `*[_type == "challenge" && challenger._ref == $creatorId]{..., choodle->{...}} | order(_createdAt desc)`,
           { creatorId: currentChoodler._id }
-        )
-      ),
-    ]
+        )),
+        ...map(
+          (guess) => guess.challenge,
+          await readOnlyClient.fetch(
+            `*[_type == "guess" && guesser._ref == $creatorId]{..., challenge->{..., choodle->{...}}} | order(_createdAt desc)`,
+            { creatorId: currentChoodler._id }
+          )
+        ),
+      ]
+    )
     console.log(challenges)
 
     loading.set(false)
@@ -63,7 +69,17 @@
 
 {#if isFirstTime}
   <LayoutContainer>
-    {@html toHTML(data.copy.landing_content)}
+    <p class="hud">
+      {#if currentChoodler?.username?.length}
+        Hi, <span class="username">{currentChoodler?.username || 'unnamed user'}</span>!
+      {:else}
+        Hi!
+      {/if}
+    </p>
+
+    <section class="landing-content">
+      {@html toHTML(data.copy.landing_content_first_time)}
+    </section>
 
     <div class="centre-container">
       <Button
@@ -76,7 +92,9 @@
       </Button>
     </div>
 
-    {@html toHTML(data.copy.landing_content_bottom)}
+    <section class="landing-content">
+      {@html toHTML(data.copy.landing_content_bottom)}
+    </section>
   </LayoutContainer>
 {:else}
   <LayoutContainer>
@@ -87,10 +105,36 @@
         Hi!
       {/if}
     </p>
+
+    <section class="landing-content">
+      {@html toHTML(data.copy.landing_content)}
+
+      {@html toHTML(data.copy.landing_content_bottom)}
+    </section>
+
+    <section class="drawings">
+      {#each challenges as challenge}
+        <DashboardDrawing drawing={challenge.choodle} />
+      {/each}
+    </section>
   </LayoutContainer>
 {/if}
 
 <style>
+  section {
+    margin-top: 1.5rem;
+  }
+
+  section.drawings {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start;
+    align-items: flex-start;
+  }
+
   .centre-container {
     display: flex;
     align-items: center;
