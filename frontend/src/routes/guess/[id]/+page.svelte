@@ -77,37 +77,6 @@
     )
   }
 
-  const createCounterChallenge = async () => {
-    if (!browser) return
-    if (!isPlayerInGame(game, guesser)) goto(`/`)
-
-    console.log('creating the challenge and updating game state')
-    const challengeId = `challenge-${window.crypto.randomUUID()}`
-    const transaction = readWriteClient.transaction().create({
-      _id: challengeId,
-      _type: 'challenge',
-      challenger: { _ref: guesser._id },
-      gameRef: { _ref: game._id },
-    })
-
-    if (isGameComplete(game)) {
-      console.log('streak is ended, creating a new game')
-      transaction.create({
-        _type: 'cwfgame',
-        player1: { _ref: guesser._id },
-        player2: { _ref: data.challenge.challenger._id },
-        currentChallenge: { _ref: challengeId },
-        guessResults: [],
-      })
-    } else {
-      transaction.patch(game._id, (p) => p.set({ currentChallenge: { _ref: challengeId } }))
-    }
-    await transaction.commit({ autoGenerateArrayKeys: true })
-
-    console.log(transaction)
-    goto(pickPath(challengeId))
-  }
-
   const challengeHasBeenGuessed = (
     game: StreakGuessingGame,
     challenge: StreakGuessingGameChallenge
