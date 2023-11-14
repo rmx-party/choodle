@@ -1,10 +1,14 @@
 <script lang="ts">
   import { urlFor } from '$lib/PersistedImagesUtils'
+  import { sharePath } from '$lib/routes'
 
   export let drawing
+  export let challengeId
 </script>
 
-<img src={urlFor(drawing.image).url()} alt="" />
+<a href={sharePath(challengeId)}>
+  <img src={urlFor(drawing.image).url()} alt="" />
+</a>
 
 <style>
   img {

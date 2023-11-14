@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { dashboardPath, pickPath } from '$lib/routes'
+
   export let logoUrl: string | undefined
   export let logoLinkDestination: string | undefined = undefined
 
@@ -7,7 +9,7 @@
 </script>
 
 <header class="no-pan">
-  <a href="/"><img class="side-icon" src={handDrawIcon} alt="" /></a>
+  <a href={pickPath()}><img class="side-icon" src={handDrawIcon} alt="" /></a>
   {#if logoLinkDestination}
     <a href={logoLinkDestination}>
       <img class="logo" src={logoUrl} alt="" />
@@ -15,7 +17,7 @@
   {:else}
     <img class="logo" src={logoUrl} alt="" />
   {/if}
-  <a href="/dashboard">
+  <a href={dashboardPath()}>
     <img class="side-icon" src={listIcon} alt="" />
   </a>
 </header>

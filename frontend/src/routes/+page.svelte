@@ -114,7 +114,7 @@
 
     <section class="drawings">
       {#each challenges as challenge}
-        <DashboardDrawing drawing={challenge.choodle} />
+        <DashboardDrawing challengeId={challenge._id} drawing={challenge.choodle} />
       {/each}
     </section>
   </LayoutContainer>
