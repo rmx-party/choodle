@@ -7,7 +7,7 @@
   import { browser } from '$app/environment'
   import { onMount } from 'svelte'
   import { loading } from '$lib/store'
-  import { dashboardPath } from '$lib/routes.js'
+  import { dashboardPath } from '$lib/routes'
 
   const resetViewportUnit = async () => {
     if (!browser) return
