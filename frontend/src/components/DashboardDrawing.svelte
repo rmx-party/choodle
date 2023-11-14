@@ -4,9 +4,11 @@
 
   export let drawing
   export let challengeId
+
+  export let linkDestination
 </script>
 
-<a href={sharePath(challengeId)}>
+<a href={linkDestination}>
   <img src={urlFor(drawing.image).url()} alt="" />
 </a>
 

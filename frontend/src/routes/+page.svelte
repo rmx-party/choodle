@@ -10,7 +10,7 @@
   import { loading } from '$lib/store'
   import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
   import type { PageData } from '../../.svelte-kit/types/src/routes'
-  import { pickPath } from '$lib/routes'
+  import { guessPath, pickPath, sharePath } from '$lib/routes'
   import { toHTML } from '@portabletext/to-html'
   import { readOnlyClient } from '$lib/CMSUtils'
   import map from 'lodash/fp/map'
@@ -32,6 +32,15 @@
     await goto(pickPath())
   }
 
+  const shareOrPickPathFor = (choodlerId, challenge) => {
+    if (!choodlerId) return guessPath(challenge._id)
+
+    if (choodlerId !== challenge.challenger._id) {
+      return guessPath(challenge._id)
+    }
+    return sharePath(challenge._id)
+  }
+
   onMount(async () => {
     const usernameFetch = getUsername()
     const deviceIdFetch = getDeviceId()
@@ -47,13 +56,13 @@
       ['desc'],
       [
         ...(await readOnlyClient.fetch(
-          `*[_type == "challenge" && challenger._ref == $creatorId]{..., choodle->{...}} | order(_createdAt desc)`,
+          `*[_type == "challenge" && challenger._ref == $creatorId]{..., challenger->{...}, choodle->{...}} | order(_createdAt desc)`,
           { creatorId: currentChoodler._id }
         )),
         ...map(
           (guess) => guess.challenge,
           await readOnlyClient.fetch(
-            `*[_type == "guess" && guesser._ref == $creatorId]{..., challenge->{..., choodle->{...}}} | order(_createdAt desc)`,
+            `*[_type == "guess" && guesser._ref == $creatorId]{..., challenge->{..., challenger->{...}, choodle->{...}}} | order(_createdAt desc)`,
             { creatorId: currentChoodler._id }
           )
         ),
@@ -114,7 +123,11 @@
 
     <section class="drawings">
       {#each challenges as challenge}
-        <DashboardDrawing challengeId={challenge._id} drawing={challenge.choodle} />
+        <DashboardDrawing
+          challengeId={challenge._id}
+          drawing={challenge.choodle}
+          linkDestination={shareOrPickPathFor(currentChoodler._id, challenge)}
+        />
       {/each}
     </section>
   </LayoutContainer>
