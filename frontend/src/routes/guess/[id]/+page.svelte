@@ -22,11 +22,8 @@
   import Hints from '../../../components/Hints.svelte'
   import { closeDialog, loading, loadingMessage, openDialog } from '$lib/store'
   import Dialog from '../../../components/Dialog.svelte'
-  import localforage from 'localforage'
   import {
-    isGameComplete,
     isNormalizedGameComplete,
-    isPlayerInGame,
     normalizeGame,
     type StreakGuessingGame,
     type StreakGuessingGameChallenge,
@@ -36,7 +33,7 @@
   } from '$lib/CWFGame'
   import type { PageData } from './$types'
   import TextMessageBubble from '../../../components/TextMessageBubble.svelte'
-  import { pickPath, sharePath } from '$lib/routes'
+  import { sharePath } from '$lib/routes'
 
   loading.set(true)
   loadingMessage.set('loading')
