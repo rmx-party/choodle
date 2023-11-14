@@ -1,11 +1,11 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
   import { onMount } from 'svelte'
-  import Button from '../../components/Button.svelte'
+  import Button from '../components/Button.svelte'
   import { getDeviceId, getUsername, locateCreator } from '$lib/CreatorUtils'
-  import LayoutContainer from '../../components/LayoutContainer.svelte'
+  import LayoutContainer from '../components/LayoutContainer.svelte'
   import { page } from '$app/stores'
-  import MetaData from '../../components/MetaData.svelte'
+  import MetaData from '../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import filter from 'lodash/fp/filter'
   import reject from 'lodash/fp/reject'
@@ -20,8 +20,8 @@
     StreakGuessingGamePlayer,
   } from '$lib/CWFGame'
   import { isPlayerInGame, otherPlayer } from '$lib/CWFGame'
-  import DashboardGameEntry from '../../components/DashboardGameEntry.svelte'
-  import type { PageData } from './$types'
+  import DashboardGameEntry from '../components/DashboardGameEntry.svelte'
+  import type { PageData } from '../../.svelte-kit/types/src/routes'
   import { pickPath } from '$lib/routes'
 
   loading.set(true)
