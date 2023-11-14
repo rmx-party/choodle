@@ -61,19 +61,17 @@
   const proceed = async () => {
     if (!selectedPrompt) return
 
+    const gamePrompt = find((p) => p.prompt === selectedPrompt, data.records)
     console.log(`proceeding with prompt ${selectedPrompt}`)
 
-    const gamePrompt = find((p) => p.prompt === selectedPrompt, data.records)
+    loading.set(true)
 
-    if (data.challenge) {
-      await readWriteClient
-        .patch(data.challenge._id)
-        .set({
-          gamePrompt: { _ref: gamePrompt._id },
-        })
-        .commit()
-    }
-
+    await readWriteClient
+      .patch(data.challenge._id)
+      .set({
+        gamePrompt: { _ref: gamePrompt._id },
+      })
+      .commit()
     preloadData(`/draw/${data.challenge._id}`)
 
     clearStorage()
