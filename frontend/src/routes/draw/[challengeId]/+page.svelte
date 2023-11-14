@@ -24,7 +24,7 @@
   let child
   let challenger
 
-  let username: string
+  let username: string | undefined
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loadingMessage.set('saving')
