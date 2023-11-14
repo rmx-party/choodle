@@ -1,24 +1,25 @@
 <script>
-  import Button from '../components/Button.svelte';
+  import Button from '../components/Button.svelte'
 
-  import Wordmark from '../components/Wordmark.svelte';
-  import { goto } from '$app/navigation';
-  import MetaData from '../components/MetaData.svelte';
-  import { browser } from '$app/environment';
-  import { onMount } from 'svelte';
-  import { loading } from '$lib/store';
+  import Wordmark from '../components/Wordmark.svelte'
+  import { goto } from '$app/navigation'
+  import MetaData from '../components/MetaData.svelte'
+  import { browser } from '$app/environment'
+  import { onMount } from 'svelte'
+  import { loading } from '$lib/store'
+  import { dashboardPath } from '$lib/routes.js'
 
   const resetViewportUnit = async () => {
-    if (!browser) return;
+    if (!browser) return
     // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
-    const vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  };
+    const vh = window.innerHeight * 0.01
+    document.documentElement.style.setProperty('--vh', `${vh}px`)
+  }
 
   onMount(async () => {
-    loading.set(false);
-    await resetViewportUnit(); // FIXME: use the layout component solution to this
-  });
+    loading.set(false)
+    await resetViewportUnit() // FIXME: use the layout component solution to this
+  })
 </script>
 
 <MetaData title="Oops!" themeColor="#fff" />
@@ -37,7 +38,7 @@
     alt="A doodle of the painter Bob Ross, slightly smiling"
   />
 
-  <Button variant="big primary yellow" on:click={() => goto('/')}>Back Home</Button>
+  <Button variant="big primary yellow" on:click={() => goto(dashboardPath())}>Back Home</Button>
 
   <p><strong>Having trouble?</strong> <a href="mailto:help@choodle.xyz">Email us</a></p>
 

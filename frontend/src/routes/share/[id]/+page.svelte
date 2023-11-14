@@ -16,6 +16,7 @@
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte'
   import { loading, loadingMessage } from '$lib/store'
   import type { PageData } from './$types'
+  import { guessPath } from '$lib/routes'
 
   loading.set(true)
   loadingMessage.set('loading')
@@ -73,7 +74,7 @@
     //   If the currentChoodler doesn't own it, redirect to guess page.
 
     if (!choodleOwner) {
-      goto(`/guess/${data.challenge._id}`)
+      goto(guessPath(data.challenge._id))
       return
     }
 

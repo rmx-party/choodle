@@ -22,6 +22,7 @@
   import { isPlayerInGame, otherPlayer } from '$lib/CWFGame'
   import DashboardGameEntry from '../../components/DashboardGameEntry.svelte'
   import type { PageData } from './$types'
+  import { pickPath } from '$lib/routes'
 
   loading.set(true)
 
@@ -31,7 +32,7 @@
   let myGames: StreakGuessingGame[] = []
 
   const startGame = async () => {
-    await goto(`/`)
+    await goto(pickPath())
   }
 
   const sortedByCreatedAt = (

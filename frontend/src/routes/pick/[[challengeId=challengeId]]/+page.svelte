@@ -6,13 +6,14 @@
   import { toHTML } from '@portabletext/to-html'
   import { choodleYellow } from '$lib/Configuration'
   import { page } from '$app/stores'
-  import Button from '../../components/Button.svelte'
-  import LayoutContainer from '../../components/LayoutContainer.svelte'
-  import MetaData from '../../components/MetaData.svelte'
+  import Button from '../../../components/Button.svelte'
+  import LayoutContainer from '../../../components/LayoutContainer.svelte'
+  import MetaData from '../../../components/MetaData.svelte'
   import { readWriteClient } from '$lib/CMSUtils'
   import { loading } from '$lib/store'
   import { clearStorage } from '$lib/StorageStuff'
   import shuffle from 'lodash/fp/shuffle'
+  import { drawPath } from '$lib/routes'
 
   export let data
   let prompts: string[]
@@ -76,7 +77,7 @@
 
     clearStorage()
 
-    goto(`/draw/${data.challenge._id}`)
+    goto(drawPath(data.challenge._id))
   }
 </script>
 

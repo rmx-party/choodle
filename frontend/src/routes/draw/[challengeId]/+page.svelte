@@ -20,6 +20,7 @@
   import Dialog from '../../../components/Dialog.svelte'
   import MetaData from '../../../components/MetaData.svelte'
   import { page } from '$app/stores'
+  import { guessPath, sharePath } from '$lib/routes'
 
   export let data
 
@@ -57,11 +58,11 @@
 
     console.log({ transactionResult })
 
-    preloadData(`/share/${data.challenge._id}`)
-    preloadData(`/guess/${data.challenge._id}`)
+    preloadData(sharePath(data.challenge._id))
+    preloadData(guessPath(data.challenge._id))
 
     await clearStorage()
-    await goto(`/share/${data.challenge._id}`)
+    await goto(sharePath(data.challenge._id))
   }
 
   const usernamePromptId = 'username-prompt'

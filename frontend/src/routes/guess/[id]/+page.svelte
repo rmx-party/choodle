@@ -40,6 +40,7 @@
   } from '$lib/CWFGame'
   import type { PageData } from './$types'
   import TextMessageBubble from '../../../components/TextMessageBubble.svelte'
+  import { pickPath, sharePath } from '$lib/routes'
 
   loading.set(true)
   loadingMessage.set('loading')
@@ -104,7 +105,7 @@
     await transaction.commit({ autoGenerateArrayKeys: true })
 
     console.log(transaction)
-    goto(`/${challengeId}`)
+    goto(pickPath(challengeId))
   }
 
   const challengeHasBeenGuessed = (
@@ -341,7 +342,7 @@
     console.log({ choodleOwner })
 
     if (choodleOwner) {
-      goto(`/share/${data.challenge._id}`)
+      goto(sharePath(data.challenge._id))
       return
     }
 
