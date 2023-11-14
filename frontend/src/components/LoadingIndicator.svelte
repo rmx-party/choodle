@@ -3,11 +3,12 @@
   import { fade, blur } from 'svelte/transition'
   import { onMount } from 'svelte'
   import { toHTML } from '@portabletext/to-html'
+  import { navigating } from '$app/stores'
 
   export let rotatingMessages = []
 
   let messageIndex = -1
-  let interval
+  let interval: string | number | undefined
 
   onMount(() => {
     loading.subscribe((value) => {
@@ -25,7 +26,7 @@
   })
 </script>
 
-{#if $loading}
+{#if $navigating || $loading}
   <div class="LoadingIndicator loading-backdrop no-pan" transition:blur={{ duration: 300 }}>
     <div class="loading" in:blur={{ duration: 300 }}>
       <img
@@ -72,6 +73,7 @@
     padding: 0;
 
     background: white;
+    overflow: hidden;
   }
 
   /* loading element style */
