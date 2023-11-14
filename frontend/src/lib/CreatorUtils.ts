@@ -25,12 +25,10 @@ export const locateCreator = async ({ deviceId }: { deviceId?: string | undefine
     deviceId = await getDeviceId()
   }
   console.log(`locateCreator: ${deviceId}`)
-  let query = `*[_type == "creator"]`
-  if (deviceId && deviceId.length > 0) {
-    query += `[deviceIds match "${deviceId}"`
-  }
-  query += ']'
-  let creator = (await readOnlyClient.fetch(query))[0]
+  let creator = await readOnlyClient.fetch(
+    `*[_type == "creator"][deviceIds match "$deviceId"][0]`,
+    { deviceId }
+  )
 
   if (!creator) {
     creator = await readWriteClient.create(
