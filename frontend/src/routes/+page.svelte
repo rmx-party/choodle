@@ -23,6 +23,7 @@
   import DashboardGameEntry from '../components/DashboardGameEntry.svelte'
   import type { PageData } from '../../.svelte-kit/types/src/routes'
   import { pickPath } from '$lib/routes'
+  import { toHTML } from '@portabletext/to-html'
 
   loading.set(true)
 
@@ -30,6 +31,10 @@
 
   let currentChoodler: StreakGuessingGamePlayer
   let myGames: StreakGuessingGame[] = []
+
+  const isFirstTime = async () => {
+    return true
+  }
 
   const startGame = async () => {
     await goto(pickPath())
@@ -72,38 +77,57 @@
 
 <MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url} />
 
-<LayoutContainer>
-  <p class="hud">
-    {#if currentChoodler?.username?.length}
-      Hi, <span class="username">{currentChoodler?.username || 'unnamed user'}</span>!
-    {:else}
-      Hi!
-    {/if}
-  </p>
+{#if isFirstTime()}
+  <LayoutContainer>
+    {@html toHTML(data.copy.landing_content)}
 
-  <div class="centre-container">
-    <Button
-      variant="secondary"
-      colour="yellow"
-      on:click={startGame}
-      style="margin: 1rem auto; flex-grow: 0;"
-    >
-      {data.copy.startGameButtonText}
-    </Button>
-  </div>
-
-  {#each myGames as myGame (myGame._id)}
-    <DashboardGameEntry
-      {currentChoodler}
-      game={myGame}
-      gameListUserUnknownText={data.copy.gameListUserUnknownText}
-    />
-  {:else}
     <div class="centre-container">
-      <p>All caught up</p>
+      <Button
+        variant="secondary"
+        colour="yellow"
+        on:click={startGame}
+        style="margin: 1rem auto; flex-grow: 0;"
+      >
+        {data.copy.startGameButtonText}
+      </Button>
     </div>
-  {/each}
-</LayoutContainer>
+
+    {@html toHTML(data.copy.landing_content_bottom)}
+  </LayoutContainer>
+{:else}
+  <LayoutContainer>
+    <p class="hud">
+      {#if currentChoodler?.username?.length}
+        Hi, <span class="username">{currentChoodler?.username || 'unnamed user'}</span>!
+      {:else}
+        Hi!
+      {/if}
+    </p>
+
+    <div class="centre-container">
+      <Button
+        variant="secondary"
+        colour="yellow"
+        on:click={startGame}
+        style="margin: 1rem auto; flex-grow: 0;"
+      >
+        {data.copy.startGameButtonText}
+      </Button>
+    </div>
+
+    {#each myGames as myGame (myGame._id)}
+      <DashboardGameEntry
+        {currentChoodler}
+        game={myGame}
+        gameListUserUnknownText={data.copy.gameListUserUnknownText}
+      />
+    {:else}
+      <div class="centre-container">
+        <p>All caught up</p>
+      </div>
+    {/each}
+  </LayoutContainer>
+{/if}
 
 <style>
   .centre-container {
