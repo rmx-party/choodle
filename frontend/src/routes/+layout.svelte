@@ -11,8 +11,9 @@
   import { urlFor } from '$lib/PersistedImagesUtils'
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'
   import compact from 'lodash/fp/compact'
+  import type { LayoutData } from './$types'
 
-  export let data
+  export let data: LayoutData
 
   console.log('analytics ID', data.analyticsId)
   $: if (browser && data.analyticsId) {
