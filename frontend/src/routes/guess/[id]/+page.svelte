@@ -189,7 +189,7 @@
     console.log(`right answer, you won the thing`)
     success = true
 
-    if (usernameRequired && !username.length) {
+    if (usernameRequired && !username?.length) {
       promptForAndSetUsername()
       return
     }
@@ -203,7 +203,7 @@
     console.log(`wrong`)
 
     if (guessesRemaining <= 1) {
-      if (usernameRequired && !username.length) {
+      if (usernameRequired && !username?.length) {
         console.log(`prompting for username`)
         promptForAndSetUsername()
         return
@@ -221,7 +221,7 @@
   }
 
   const submitGuess = () => {
-    if (username.length < 1) {
+    if (username?.length < 1) {
       openDialog(usernamePromptId)
       return
     }
@@ -268,7 +268,7 @@
     console.log('prompting for username')
     if (!browser) return
 
-    if (username.length > 0) {
+    if (username?.length > 0) {
       console.log('there was a username, closing the dialog')
       disableKeyboard = false
       closeDialog(usernamePromptId)

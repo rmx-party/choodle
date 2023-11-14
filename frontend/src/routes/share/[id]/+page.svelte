@@ -54,6 +54,7 @@
   onMount(async () => {
     deviceId = await getDeviceId()
     currentChoodler = await locateCreator({ deviceId })
+    console.log(currentChoodler)
 
     gamePrompt = data.challenge?.gamePrompt?.prompt
 

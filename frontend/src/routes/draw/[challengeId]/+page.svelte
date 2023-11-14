@@ -72,7 +72,7 @@
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false)
 
-    if (username.length > 0) {
+    if (username?.length > 0) {
       await readWriteClient.patch(challenger._id).set({ username }).commit()
       closeDialog(usernamePromptId)
       child.save()
