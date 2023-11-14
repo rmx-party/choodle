@@ -8,18 +8,14 @@
   import { page } from '$app/stores'
   import MetaData from '../../../components/MetaData.svelte'
   import { onMount } from 'svelte'
-  import { getDeviceId, getUsername, locateCreator } from '$lib/CreatorUtils'
+  import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
   import { browser } from '$app/environment'
   import filter from 'lodash/fp/filter'
   import find from 'lodash/fp/find'
   import isEmpty from 'lodash/fp/isEmpty'
   import GuessingInterface from '../../../components/GuessingInterface.svelte'
   import { toHTML } from '@portabletext/to-html'
-  import {
-    choodleCreatorUsernameKey,
-    choodleYellow,
-    pageBackgroundDefault,
-  } from '$lib/Configuration'
+  import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte'
   import { readOnlyClient, readWriteClient } from '$lib/CMSUtils'
@@ -279,7 +275,6 @@
       console.log('there was a username, closing the dialog')
       disableKeyboard = false
       closeDialog(usernamePromptId)
-      await localforage.setItem(choodleCreatorUsernameKey, username)
       guesser = await locateCreator({ username, deviceId })
       submitGuess()
       return
@@ -301,9 +296,7 @@
 
   onMount(async () => {
     deviceId = await getDeviceId()
-
-    username = (await getUsername()) || ''
-    guesser = await locateCreator({ deviceId, username })
+    guesser = await locateCreator({ deviceId })
 
     console.log({ challenge: data.challenge })
     choodleOwner = data.challenge.challenger._id === guesser._id // TODO: this is based on device+choodle, should be by creator account

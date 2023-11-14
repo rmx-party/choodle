@@ -5,7 +5,7 @@
   import { page } from '$app/stores'
   import MetaData from '../../../components/MetaData.svelte'
   import { onMount } from 'svelte'
-  import { getDeviceId, getUsername, locateCreator } from '$lib/CreatorUtils'
+  import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
   import { share, type Shareable } from '$lib/ShareUtils'
   import { browser } from '$app/environment'
   import map from 'lodash/fp/map'
@@ -26,7 +26,6 @@
   let copiedToClipboard = false
 
   let deviceId
-  let username = ''
   let currentChoodler
 
   let gamePrompt
@@ -54,9 +53,7 @@
 
   onMount(async () => {
     deviceId = await getDeviceId()
-
-    username = (await getUsername()) || ''
-    currentChoodler = await locateCreator({ deviceId, username })
+    currentChoodler = await locateCreator({ deviceId })
 
     gamePrompt = data.challenge?.gamePrompt?.prompt
 

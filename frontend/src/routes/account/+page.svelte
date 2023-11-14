@@ -2,23 +2,18 @@
   import { browser } from '$app/environment'
   import {
     choodleCreatorIdKey,
-    choodleCreatorUsernameKey,
     choodlePersistedCreatorIdKey,
     choodlePromptKey,
     choodleUndoKey,
   } from '$lib/Configuration'
-  import { locateCreator, getUsername, getDeviceId } from '$lib/CreatorUtils'
+  import { locateCreator, getDeviceId } from '$lib/CreatorUtils'
   import localforage from 'localforage'
   import { onMount } from 'svelte'
   import Button from '../../components/Button.svelte'
 
   let creator
 
-  const accountLocalDataKeys: string[] = [
-    choodleCreatorUsernameKey,
-    choodleCreatorIdKey,
-    choodlePersistedCreatorIdKey,
-  ]
+  const accountLocalDataKeys: string[] = [choodleCreatorIdKey, choodlePersistedCreatorIdKey]
   let accountLocalDataValues: Record<string, string | null> = {}
   const choodleLocalDataKeys: string[] = [choodleUndoKey, choodlePromptKey]
   let choodleLocalDataValues: Record<string, string | null> = {}
@@ -49,7 +44,6 @@
     if (!browser) return
 
     creator = await locateCreator({
-      username: await getUsername(),
       deviceId: await getDeviceId(),
     }) // TODO: migrate global creator/player state to a store shared across pages
     console.log({ creator })

@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation'
   import { onMount } from 'svelte'
   import Button from '../components/Button.svelte'
-  import { getDeviceId, getUsername, locateCreator } from '$lib/CreatorUtils'
+  import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
   import LayoutContainer from '../components/LayoutContainer.svelte'
   import { page } from '$app/stores'
   import MetaData from '../components/MetaData.svelte'
@@ -42,10 +42,8 @@
   }
 
   onMount(async () => {
-    const usernameFetch = getUsername()
     const deviceIdFetch = getDeviceId()
     const creatorFetch = locateCreator({
-      username: await usernameFetch,
       deviceId: await deviceIdFetch,
     }) // TODO: migrate global creator/player state to a store shared across pages
 

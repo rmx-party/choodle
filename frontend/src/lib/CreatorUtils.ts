@@ -1,6 +1,6 @@
 import { browser } from '$app/environment'
 import localforage from 'localforage'
-import { choodleCreatorIdKey, choodleCreatorUsernameKey } from '$lib/Configuration'
+import { choodleCreatorIdKey } from '$lib/Configuration'
 import { readOnlyClient, readWriteClient } from '$lib/CMSUtils'
 
 export async function getDeviceId(): Promise<string> {
@@ -20,38 +20,14 @@ export async function getDeviceId(): Promise<string> {
   }
 }
 
-export async function getUsername(): Promise<string | undefined> {
-  if (!browser) return
-  try {
-    const existingUsername = await localforage.getItem(choodleCreatorUsernameKey)
-    if (existingUsername && existingUsername.length > 1) {
-      return existingUsername
-    }
-  } catch (e) {
-    return undefined
-  }
-}
-
-export const locateCreator = async ({
-  username,
-  deviceId,
-}: {
-  username?: string | undefined
-  deviceId?: string | undefined
-}) => {
+export const locateCreator = async ({ deviceId }: { deviceId?: string | undefined }) => {
   if (!deviceId) {
     deviceId = await getDeviceId()
   }
-  if (!username) {
-    username = await getUsername()
-  }
-  console.log(`locateCreator: ${deviceId} ${username}`)
+  console.log(`locateCreator: ${deviceId}`)
   let query = `*[_type == "creator"]`
   if (deviceId && deviceId.length > 0) {
     query += `[deviceIds match "${deviceId}"`
-  }
-  if (username && username.length > 0) {
-    query += ` || username match "${username}"`
   }
   query += ']'
   let creator = (await readOnlyClient.fetch(query))[0]
@@ -66,16 +42,11 @@ export const locateCreator = async ({
       patch.append('deviceIds', [deviceId])
     }
 
-    if (username && username.length > 0) {
-      patch.set({ username })
-    }
-
     creator = await patch.commit({ autoGenerateArrayKeys: true })
   } else {
     creator = await readWriteClient.create(
       {
         _type: 'creator',
-        username,
         deviceIds: [deviceId],
         choodles: [],
       },

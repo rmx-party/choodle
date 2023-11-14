@@ -2,17 +2,13 @@
   import ChoodleBoard from '../../../components/ChoodleBoard.svelte'
   import type { UndoStack } from '$lib/UndoStack'
   import { createUncommittedChoodle } from '$lib/ChoodleStorage'
-  import { getDeviceId, getUsername, locateCreator } from '$lib/CreatorUtils'
+  import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
   import { browser } from '$app/environment'
   import { clearStorage, getUndoStack } from '$lib/StorageStuff'
   import { goto, preloadData } from '$app/navigation'
   import { onMount } from 'svelte'
   import localforage from 'localforage'
-  import {
-    choodleCreatorUsernameKey,
-    choodleYellow,
-    pageBackgroundDefault,
-  } from '$lib/Configuration'
+  import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
   import Button from '../../../components/Button.svelte'
   import { loading, isOnline, loadingMessage, closeDialog, openDialog } from '$lib/store'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
@@ -77,7 +73,6 @@
 
     if (creatorUsername.length > 0) {
       closeDialog(usernamePromptId)
-      await localforage.setItem(choodleCreatorUsernameKey, creatorUsername)
       child.save()
       return
     }
@@ -99,11 +94,10 @@
   }
 
   onMount(async () => {
-    creatorUsername = (await getUsername()) || ''
-
     const deviceId = await getDeviceId()
 
     challenger = await locateCreator({ deviceId })
+    creatorUsername = challenger.username
 
     loading.set(false)
   })
