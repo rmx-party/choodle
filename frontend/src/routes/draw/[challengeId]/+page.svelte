@@ -7,7 +7,6 @@
   import { clearStorage, getUndoStack } from '$lib/StorageStuff'
   import { goto, preloadData } from '$app/navigation'
   import { onMount } from 'svelte'
-  import localforage from 'localforage'
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
   import Button from '../../../components/Button.svelte'
   import { loading, isOnline, loadingMessage, closeDialog, openDialog } from '$lib/store'
@@ -18,12 +17,12 @@
   import { page } from '$app/stores'
   import { guessPath, sharePath } from '$lib/routes'
   import { readWriteClient } from '$lib/CMSUtils'
+  import type { PageData } from './$types'
 
-  export let data
+  export let data: PageData
 
   let child
   let challenger
-  let challenge
 
   let username: string
 

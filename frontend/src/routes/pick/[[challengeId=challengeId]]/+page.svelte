@@ -14,8 +14,9 @@
   import { clearStorage } from '$lib/StorageStuff'
   import shuffle from 'lodash/fp/shuffle'
   import { drawPath } from '$lib/routes'
+  import type { PageData } from './$types'
 
-  export let data
+  export let data: PageData
   let prompts: string[]
   let initialPrompt: string
   let selectedPrompt: string | undefined
