@@ -1,52 +1,46 @@
-import { browser } from "$app/environment";
-import localforage from "localforage";
-import {
-  choodleCreatorEmailKey,
-  choodleCreatorIdKey,
-  choodleCreatorUsernameKey,
-} from "$lib/Configuration";
-import { readOnlyClient, readWriteClient } from "$lib/CMSUtils";
+import { browser } from '$app/environment'
+import localforage from 'localforage'
+import { choodleCreatorIdKey, choodleCreatorUsernameKey } from '$lib/Configuration'
+import { readOnlyClient, readWriteClient } from '$lib/CMSUtils'
 
 export async function getDeviceId(): Promise<string> {
-  if (!browser) return;
+  if (!browser) return
   try {
-    const existingId = await localforage.getItem(choodleCreatorIdKey);
+    const existingId = await localforage.getItem(choodleCreatorIdKey)
     if (existingId && existingId.length > 1) {
-      return existingId;
+      return existingId
     }
 
-    const uuid = window.crypto.randomUUID();
-    await localforage.setItem(choodleCreatorIdKey, uuid);
-    return uuid;
+    const uuid = window.crypto.randomUUID()
+    await localforage.setItem(choodleCreatorIdKey, uuid)
+    return uuid
   } catch (e) {
-    console.error(`getCreatorId failure, returning 'unknown'`, e);
-    return "unknown";
+    console.error(`getCreatorId failure, returning 'unknown'`, e)
+    return 'unknown'
   }
 }
 
 export async function getEmail(): Promise<string | undefined> {
-  if (!browser) return;
+  if (!browser) return
   try {
-    const existingEmail = await localforage.getItem(choodleCreatorEmailKey);
+    const existingEmail = await localforage.getItem(choodleCreatorEmailKey)
     if (existingEmail && existingEmail.length > 1) {
-      return existingEmail;
+      return existingEmail
     }
   } catch (e) {
-    return undefined;
+    return undefined
   }
 }
 
 export async function getUsername(): Promise<string | undefined> {
-  if (!browser) return;
+  if (!browser) return
   try {
-    const existingUsername = await localforage.getItem(
-      choodleCreatorUsernameKey,
-    );
+    const existingUsername = await localforage.getItem(choodleCreatorUsernameKey)
     if (existingUsername && existingUsername.length > 1) {
-      return existingUsername;
+      return existingUsername
     }
   } catch (e) {
-    return undefined;
+    return undefined
   }
 }
 
@@ -55,67 +49,63 @@ export const locateCreator = async ({
   deviceId,
   email,
 }: {
-  username?: string | undefined;
-  deviceId?: string | undefined;
-  email?: string | undefined;
+  username?: string | undefined
+  deviceId?: string | undefined
+  email?: string | undefined
 }) => {
   if (!deviceId) {
-    deviceId = await getDeviceId();
+    deviceId = await getDeviceId()
   }
   if (!email) {
-    email = await getEmail();
+    email = await getEmail()
   }
   if (!username) {
-    username = await getUsername();
+    username = await getUsername()
   }
-  console.log(`locateCreator: ${deviceId} ${username} ${email}`);
-  let query = `*[_type == "creator"]`;
+  console.log(`locateCreator: ${deviceId} ${username} ${email}`)
+  let query = `*[_type == "creator"]`
   if (deviceId && deviceId.length > 0) {
-    query += `[deviceIds match "${deviceId}"`;
+    query += `[deviceIds match "${deviceId}"`
   }
   if (email && email.length > 0) {
-    query += ` || email match "${email}"`;
+    query += ` || email match "${email}"`
   }
   if (username && username.length > 0) {
-    query += ` || username match "${username}"`;
+    query += ` || username match "${username}"`
   }
-  query += "]";
-  let creator = (await readOnlyClient.fetch(query))[0];
+  query += ']'
+  let creator = (await readOnlyClient.fetch(query))[0]
   // TODO: if there are multiple matches, we should consolidate them
   // TODO: if creator is in the backend, store the ID in browser so we don't have to keep asking on every page
   // TODO: track changes to the creator through a store and subscribe to storage events to keep it fully synced
 
   if (creator) {
-    const patch = readWriteClient
-      .patch(creator._id)
-      .setIfMissing({ deviceIds: [] });
+    const patch = readWriteClient.patch(creator._id).setIfMissing({ deviceIds: [] })
 
-    if (
-      deviceId && deviceId.length > 0 && !creator.deviceIds.includes(deviceId)
-    ) {
-      patch.append("deviceIds", [deviceId]);
+    if (deviceId && deviceId.length > 0 && !creator.deviceIds.includes(deviceId)) {
+      patch.append('deviceIds', [deviceId])
     }
 
     if (username && username.length > 0) {
-      patch.set({ username });
+      patch.set({ username })
     }
 
     if (email && email.length > 0) {
-      patch.set({ email });
+      patch.set({ email })
     }
-    creator = await patch.commit({ autoGenerateArrayKeys: true });
+    creator = await patch.commit({ autoGenerateArrayKeys: true })
   } else {
     creator = await readWriteClient.create(
       {
-        _type: "creator",
+        _type: 'creator',
         username,
         email,
         deviceIds: [deviceId],
         choodles: [],
       },
-      { autoGenerateArrayKeys: true },
-    );
+      { autoGenerateArrayKeys: true }
+    )
   }
-  console.log({ creator });
-  return creator;
-};
+  console.log({ creator })
+  return creator
+}

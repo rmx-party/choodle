@@ -1,12 +1,11 @@
 <script lang="ts">
   import { urlFor } from '$lib/PersistedImagesUtils'
-  import TopBar from '../../../components/TopBar.svelte'
   import Button from '../../../components/Button.svelte'
   import { goto } from '$app/navigation'
   import { page } from '$app/stores'
   import MetaData from '../../../components/MetaData.svelte'
   import { onMount } from 'svelte'
-  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils'
+  import { getDeviceId, getUsername, locateCreator } from '$lib/CreatorUtils'
   import { share, type Shareable } from '$lib/ShareUtils'
   import { browser } from '$app/environment'
   import map from 'lodash/fp/map'
@@ -27,7 +26,6 @@
   let copiedToClipboard = false
 
   let deviceId
-  let email
   let username = ''
   let currentChoodler
 
@@ -57,9 +55,8 @@
   onMount(async () => {
     deviceId = await getDeviceId()
 
-    email = await getEmail()
     username = (await getUsername()) || ''
-    currentChoodler = await locateCreator({ email, deviceId, username })
+    currentChoodler = await locateCreator({ deviceId, username })
 
     gamePrompt = data.challenge?.gamePrompt?.prompt
 

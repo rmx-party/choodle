@@ -2,7 +2,7 @@
   import ChoodleBoard from '../../../components/ChoodleBoard.svelte'
   import type { UndoStack } from '$lib/UndoStack'
   import { createUncommittedChoodle } from '$lib/ChoodleStorage'
-  import { getDeviceId, getEmail, getUsername, locateCreator } from '$lib/CreatorUtils'
+  import { getDeviceId, getUsername, locateCreator } from '$lib/CreatorUtils'
   import { browser } from '$app/environment'
   import { clearStorage, getUndoStack } from '$lib/StorageStuff'
   import { goto, preloadData } from '$app/navigation'
@@ -102,9 +102,8 @@
     creatorUsername = (await getUsername()) || ''
 
     const deviceId = await getDeviceId()
-    const email = await getEmail()
 
-    challenger = await locateCreator({ deviceId, email })
+    challenger = await locateCreator({ deviceId })
 
     loading.set(false)
   })

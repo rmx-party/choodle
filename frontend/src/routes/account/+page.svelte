@@ -1,64 +1,61 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
+  import { browser } from '$app/environment'
   import {
-    choodleCreatorEmailKey,
     choodleCreatorIdKey,
     choodleCreatorUsernameKey,
     choodlePersistedCreatorIdKey,
     choodlePromptKey,
     choodleUndoKey,
-  } from '$lib/Configuration';
-  import { locateCreator, getEmail, getUsername, getDeviceId } from '$lib/CreatorUtils';
-  import localforage from 'localforage';
-  import { onMount } from 'svelte';
-  import Button from '../../components/Button.svelte';
+  } from '$lib/Configuration'
+  import { locateCreator, getUsername, getDeviceId } from '$lib/CreatorUtils'
+  import localforage from 'localforage'
+  import { onMount } from 'svelte'
+  import Button from '../../components/Button.svelte'
 
-  let creator;
+  let creator
 
   const accountLocalDataKeys: string[] = [
-    choodleCreatorEmailKey,
     choodleCreatorUsernameKey,
     choodleCreatorIdKey,
     choodlePersistedCreatorIdKey,
-  ];
-  let accountLocalDataValues: Record<string, string | null> = {};
-  const choodleLocalDataKeys: string[] = [choodleUndoKey, choodlePromptKey];
-  let choodleLocalDataValues: Record<string, string | null> = {};
+  ]
+  let accountLocalDataValues: Record<string, string | null> = {}
+  const choodleLocalDataKeys: string[] = [choodleUndoKey, choodlePromptKey]
+  let choodleLocalDataValues: Record<string, string | null> = {}
 
   const clearAccountLocalData = async () => {
     accountLocalDataKeys.forEach(async (key) => {
-      await localforage.removeItem(key);
-    });
-    await refreshLocalData();
-  };
+      await localforage.removeItem(key)
+    })
+    await refreshLocalData()
+  }
   const clearChoodleLocalData = async () => {
     choodleLocalDataKeys.forEach(async (key) => {
-      await localforage.removeItem(key);
-    });
-    await refreshLocalData();
-  };
+      await localforage.removeItem(key)
+    })
+    await refreshLocalData()
+  }
 
   const refreshLocalData = async () => {
     accountLocalDataKeys.forEach(async (key: string) => {
-      accountLocalDataValues[key] = await localforage.getItem(key);
-    });
+      accountLocalDataValues[key] = await localforage.getItem(key)
+    })
     choodleLocalDataKeys.forEach(async (key: string) => {
-      choodleLocalDataValues[key] = await localforage.getItem(key);
-    });
-  };
+      choodleLocalDataValues[key] = await localforage.getItem(key)
+    })
+  }
 
   onMount(async () => {
-    if (!browser) return;
+    if (!browser) return
 
     creator = await locateCreator({
-      email: await getEmail(),
       username: await getUsername(),
       deviceId: await getDeviceId(),
-    }); // TODO: migrate global creator/player state to a store shared across pages
-    console.log({ creator });
+    }) // TODO: migrate global creator/player state to a store shared across pages
+    console.log({ creator })
 
-    refreshLocalData();
-  });
+    refreshLocalData()
+  })
 </script>
 
 <h1>Account Management</h1>
