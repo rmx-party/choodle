@@ -31,19 +31,8 @@ export const locateCreator = async ({ deviceId }: { deviceId?: string | undefine
   }
   query += ']'
   let creator = (await readOnlyClient.fetch(query))[0]
-  // TODO: if there are multiple matches, we should consolidate them
-  // TODO: if creator is in the backend, store the ID in browser so we don't have to keep asking on every page
-  // TODO: track changes to the creator through a store and subscribe to storage events to keep it fully synced
 
-  if (creator) {
-    const patch = readWriteClient.patch(creator._id).setIfMissing({ deviceIds: [] })
-
-    if (deviceId && deviceId.length > 0 && !creator.deviceIds.includes(deviceId)) {
-      patch.append('deviceIds', [deviceId])
-    }
-
-    creator = await patch.commit({ autoGenerateArrayKeys: true })
-  } else {
+  if (!creator) {
     creator = await readWriteClient.create(
       {
         _type: 'creator',
@@ -53,6 +42,7 @@ export const locateCreator = async ({ deviceId }: { deviceId?: string | undefine
       { autoGenerateArrayKeys: true }
     )
   }
+
   console.log({ creator })
   return creator
 }
