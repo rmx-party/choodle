@@ -114,9 +114,7 @@
   </ChoodleContainer>
 
   <Button variant="primary" colour="yellow" on:click={handleShare}
-    >{copiedToClipboard
-      ? data.copy.guess_copiedToClipboard
-      : data.copy.guess_shareButtonText}</Button
+    >{copiedToClipboard ? data.copy.guess_copiedToClipboard : data.copy.share_buttonText}</Button
   >
 </LayoutContainer>
 

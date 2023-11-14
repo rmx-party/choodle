@@ -108,6 +108,11 @@ export default {
       type: 'string',
     },
     {
+      name: 'share_buttonText',
+      title: 'Share Page Button Text',
+      type: 'string',
+    },
+    {
       name: 'guess_pageAuthorTopContent',
       title: 'Challenge Share Page Top Content For Author',
       type: 'array',
