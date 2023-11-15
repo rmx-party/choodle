@@ -36,21 +36,23 @@
   >
     <img class="logo" src={urlFor($page.data.copy.logo).url()} alt="" />
     <div class="loading" transition:fade={{ duration: 300 }}>
-      <img
-        class="loading-image"
-        height="263"
-        width="174"
-        src="/choodle-bob-p2.png"
-        alt="A doodle of the painter Bob Ross, slightly smiling"
-      />
-      <div class="messageContainer">
-        {#if messageIndex >= 0 && rotatingMessages?.length > 0}
-          {#key messageIndex}
-            <div class="message" transition:fade={{ duration: 300 }}>
-              {@html toHTML(rotatingMessages[messageIndex])}
-            </div>
-          {/key}
-        {/if}
+      <div class="group">
+        <img
+          class="loading-image"
+          height="263"
+          width="174"
+          src="/choodle-bob-p2.png"
+          alt="A doodle of the painter Bob Ross, slightly smiling"
+        />
+        <div class="messageContainer">
+          {#if messageIndex >= 0 && rotatingMessages?.length > 0}
+            {#key messageIndex}
+              <div class="message" transition:fade={{ duration: 300 }}>
+                {@html toHTML(rotatingMessages[messageIndex])}
+              </div>
+            {/key}
+          {/if}
+        </div>
       </div>
     </div>
   </div>
@@ -80,12 +82,21 @@
 
   /* loading element style */
   .loading {
-    width: 100%;
-    height: 100%;
+    width: 100svw;
+    height: 90svh;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+  }
+
+  .group {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .logo {
@@ -99,8 +110,10 @@
     display: block;
     position: relative;
     width: 100%;
+    height: auto;
     max-width: 500px;
     text-align: center;
+    margin-bottom: 6rem;
   }
 
   .message {
