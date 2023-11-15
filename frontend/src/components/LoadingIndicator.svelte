@@ -27,8 +27,8 @@
 </script>
 
 {#if $navigating || $loading}
-  <div class="LoadingIndicator loading-backdrop no-pan" transition:blur={{ duration: 300 }}>
-    <div class="loading" in:blur={{ duration: 300 }}>
+  <div class="LoadingIndicator loading-backdrop no-pan" out:fade={{ duration: 300 }}>
+    <div class="loading" transition:fade={{ duration: 300 }}>
       <img
         class="loading-image"
         height="263"
