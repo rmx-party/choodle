@@ -5,7 +5,7 @@
   --choodle-yellow: #fef40a;
   --choodle-red: #c11f1f;
   --choodle-black: #141518;
-  --color-link: #051bdc;
+  --color-link: var(--choodle-black);
   --page-background-color: var(--choodle-yellow);
 
   --choodle-max-height-offset: 60svh;
