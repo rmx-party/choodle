@@ -20,7 +20,7 @@
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte'
   import { readOnlyClient, readWriteClient } from '$lib/CMSUtils'
   import Hints from '../../../components/Hints.svelte'
-  import { closeDialog, loading, loadingMessage, openDialog } from '$lib/store'
+  import { closeDialog, loading, openDialog } from '$lib/store'
   import Dialog from '../../../components/Dialog.svelte'
   import {
     isNormalizedGameComplete,
@@ -36,7 +36,6 @@
   import { sharePath } from '$lib/routes'
 
   loading.set(true)
-  loadingMessage.set('loading')
 
   export let data: PageData
   const currentGuess = writable([])
@@ -47,6 +46,13 @@
   let guessesLimit = 3
 
   let choodleOwner = false
+  $: choodleOwner = data.challenge.challenger._id === guesser?._id
+  $: {
+    if (browser && choodleOwner) {
+      goto(sharePath(data.challenge._id))
+    }
+  }
+
   let success = false
   let stillGuessing: boolean
   $: stillGuessing = !success && guessesRemaining > 0
@@ -297,14 +303,6 @@
     username = guesser.username
 
     console.log({ challenge: data.challenge })
-    choodleOwner = data.challenge.challenger._id === guesser._id // TODO: this is based on device+choodle, should be by creator account
-
-    console.log({ choodleOwner })
-
-    if (choodleOwner) {
-      goto(sharePath(data.challenge._id))
-      return
-    }
 
     guess = await locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id })
     guessesRemaining = guessesLimit - (guess?.guesses?.length || 0)
