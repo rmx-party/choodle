@@ -12,7 +12,7 @@
   const usernamePromptId = 'username-prompt'
 </script>
 
-<Dialog id={usernamePromptId}>
+<Dialog id={usernamePromptId} enableCloseButton={false}>
   <header slot="header">{headerContent}</header>
   <div>{instructionsContent}</div>
   <label

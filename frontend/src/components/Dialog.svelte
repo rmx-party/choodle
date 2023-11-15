@@ -1,47 +1,51 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
-  import { onMount } from 'svelte';
-  import { DialogOverlay, DialogContent } from 'svelte-accessible-dialog';
-  import { dialogState } from '$lib/store';
-  import closeBtn from '$lib/assets/icon-close-32px.svg';
+  import { browser } from '$app/environment'
+  import { onMount } from 'svelte'
+  import { DialogOverlay, DialogContent } from 'svelte-accessible-dialog'
+  import { dialogState } from '$lib/store'
+  import closeBtn from '$lib/assets/icon-close-32px.svg'
 
-  export let initialOpen = false;
-  let isOpen: boolean;
-  export let onClose = () => {};
-  export let id: string;
+  export let initialOpen = false
+  let isOpen: boolean
+  export let onClose = () => {}
+  export let id: string
+
+  export let enableCloseButton = true
 
   onMount(() => {
-    isOpen = initialOpen;
+    isOpen = initialOpen
 
     return () => {
       dialogState.update((dialogs) => {
-        console.info(`Unmounting Dialog ${id}...`, dialogs);
-        delete dialogs[id];
-        return dialogs;
-      });
-    };
-  });
+        console.info(`Unmounting Dialog ${id}...`, dialogs)
+        delete dialogs[id]
+        return dialogs
+      })
+    }
+  })
 
   dialogState.subscribe((dialogs) => {
-    isOpen = dialogs[id];
-    console.info(`Subscription: Dialog ${id} is ${dialogs[id] ? 'open' : 'closed'}`, dialogs);
-  });
+    isOpen = dialogs[id]
+    console.info(`Subscription: Dialog ${id} is ${dialogs[id] ? 'open' : 'closed'}`, dialogs)
+  })
 
   function dismiss() {
     dialogState.update((dialogs) => {
-      return { ...dialogs, [id]: false };
-    });
+      return { ...dialogs, [id]: false }
+    })
 
-    onClose?.();
+    onClose?.()
   }
 </script>
 
 {#if browser}
-  <DialogOverlay {id} {isOpen} onDismiss={dismiss} class={`overlay`}>
+  <DialogOverlay {id} {isOpen} onDismiss={enableCloseButton ? dismiss : () => {}} class={`overlay`}>
     <DialogContent aria-label="Dialog" class={`dialog`}>
-      <button class="close-btn" on:click={dismiss}
-        ><img src={closeBtn} alt="icon of an X for exit" title="close dialog" /></button
-      >
+      {#if enableCloseButton}
+        <button class="close-btn" on:click={enableCloseButton ? dismiss : () => {}}>
+          <img src={closeBtn} alt="icon of an X for exit" title="close dialog" />
+        </button>
+      {/if}
 
       <div class="content">
         <slot name="header" />

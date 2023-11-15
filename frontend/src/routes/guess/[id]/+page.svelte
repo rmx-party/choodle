@@ -28,6 +28,7 @@
   import TextMessageBubble from '../../../components/TextMessageBubble.svelte'
   import { sharePath } from '$lib/routes'
   import uniq from 'lodash/fp/uniq'
+  import UserNameModal from '../../../components/UserNameModal.svelte'
 
   loading.set(true)
 
@@ -394,27 +395,14 @@
   </LayoutContainer>
 {/if}
 
-<Dialog id={usernamePromptId} onClose={submitGuess}>
-  <header slot="header">{data.copy.draw_usernameHeader}</header>
-  <div>{data.copy.draw_usernameInstructions}</div>
-  <label
-    for="creator-username"
-    style="text-align: left; display: block; font-family: Dejavu Sans Bold;"
-    >username
-    <br />
-    <input
-      bind:value={username}
-      type="username"
-      id="creator-username"
-      name="creatorusername"
-      placeholder={data.copy.draw_usernamePlaceholder}
-      style="width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;"
-    />
-  </label>
-  <Button on:click={promptForAndSetUsername} variant="primary" colour="yellow">
-    {data.copy.draw_usernameSaveButtonText}
-  </Button>
-</Dialog>
+<UserNameModal
+  headerContent={data.copy.draw_usernameHeader}
+  instructionsContent={data.copy.draw_usernameInstructions}
+  placeholderContent={data.copy.draw_usernamePlaceholder}
+  saveButtonText={data.copy.draw_usernameSaveButtonText}
+  bind:usernameValue={username}
+  onClick={promptForAndSetUsername}
+/>
 
 <style>
   .topBar {
