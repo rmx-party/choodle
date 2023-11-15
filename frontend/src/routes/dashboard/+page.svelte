@@ -22,6 +22,7 @@
   import type { PageData } from '../../../.svelte-kit/types/src/routes'
   import type { Writable } from 'svelte/store'
   import uniqBy from 'lodash/fp/uniqBy'
+  import { urlFor } from '$lib/PersistedImagesUtils'
 
   loading.set(true)
 
@@ -91,6 +92,10 @@
 
     <section class="landing-content">
       {@html toHTML(data.copy.landing_content_first_time)}
+    </section>
+
+    <section>
+      <img src={urlFor(data.copy.landing_image).url()} alt="" />
     </section>
 
     <div class="centre-container">
