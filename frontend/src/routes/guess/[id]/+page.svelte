@@ -514,7 +514,7 @@
   }
 
   .failure {
-    color: red;
+    color: var(--choodle-red);
   }
 
   [slot='between'] {
