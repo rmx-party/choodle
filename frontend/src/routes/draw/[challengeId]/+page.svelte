@@ -30,6 +30,7 @@
   let username: string | undefined
   $: {
     if ($challenger?.username?.length) {
+      // Assign this once when the user loads, don't fight with the input binding
       username = $challenger.username
     }
   }
