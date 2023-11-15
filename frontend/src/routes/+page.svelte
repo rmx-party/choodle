@@ -26,7 +26,6 @@
 
   export let data: PageData
 
-  // let currentChoodler: StreakGuessingGamePlayer
   let challenges: StreakGuessingGameChallenge[] = []
 
   const currentChoodler: Writable<StreakGuessingGamePlayer> = getContext('choodler')
@@ -82,8 +81,8 @@
 {#if isFirstTime}
   <LayoutContainer>
     <p class="hud">
-      {#if currentChoodler?.username?.length}
-        Hi, <span class="username">{currentChoodler?.username || 'unnamed user'}</span>!
+      {#if $currentChoodler?.username?.length}
+        Hi, <span class="username">{$currentChoodler?.username || 'unnamed user'}</span>!
       {:else}
         Hi!
       {/if}
@@ -111,8 +110,8 @@
 {:else}
   <LayoutContainer>
     <p class="hud">
-      {#if currentChoodler?.username?.length}
-        Hi, <span class="username">{currentChoodler?.username || 'unnamed user'}</span>!
+      {#if $currentChoodler?.username?.length}
+        Hi, <span class="username">{$currentChoodler?.username || 'unnamed user'}</span>!
       {:else}
         Hi!
       {/if}
@@ -125,11 +124,11 @@
     </section>
 
     <section class="drawings">
-      {#each challenges as challenge}
+      {#each challenges as challenge (challenge._id)}
         <DashboardDrawing
           challengeId={challenge._id}
           drawing={challenge.choodle}
-          linkDestination={shareOrPickPathFor(currentChoodler._id, challenge)}
+          linkDestination={shareOrPickPathFor($currentChoodler?._id, challenge)}
         />
       {/each}
     </section>
