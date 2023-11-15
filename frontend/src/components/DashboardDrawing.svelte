@@ -1,15 +1,13 @@
 <script lang="ts">
+  import type { StreakGuessingGameDrawing } from '$lib/CWFGame'
   import { urlFor } from '$lib/PersistedImagesUtils'
-  import { sharePath } from '$lib/routes'
 
-  export let drawing
-  export let challengeId
-
-  export let linkDestination
+  export let drawing: StreakGuessingGameDrawing
+  export let linkDestination: string
 </script>
 
 <a href={linkDestination}>
-  <img src={urlFor(drawing.image).url()} alt="" />
+  <img loading="lazy" src={urlFor(drawing.image).url()} alt="" width="168" height="228" />
 </a>
 
 <style>
