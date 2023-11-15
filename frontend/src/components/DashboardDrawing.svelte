@@ -17,5 +17,6 @@
     flex-shrink: 0;
     border-radius: 8px;
     border: 1px solid #000;
+    image-rendering: pixelated;
   }
 </style>
