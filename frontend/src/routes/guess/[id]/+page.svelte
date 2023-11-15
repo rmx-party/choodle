@@ -151,6 +151,8 @@
           _type: 'guess',
           guesser: { _ref: guesserId },
           challenge: { _ref: data.challenge._id },
+          guesses: [],
+          hintsUsed: [],
         },
         { autoGenerateArrayKeys: true }
       )
@@ -162,8 +164,16 @@
     return guess.join('').toUpperCase() === answer.toUpperCase()
   }
 
-  const createGuess = async (guessedCorrectly: boolean | null) => {
+  const createGuess = async (guessedCorrectly: boolean | undefined) => {
     console.log(`adding guess, resolving result to`, guessedCorrectly)
+
+    // Optimistic local update ahead of the network request
+    guess = {
+      ...guess,
+      guesses: [...(guess.guesses || []), $currentGuess.join('')],
+      guessedCorrectly,
+    }
+
     const guessResult = readWriteClient
       .patch(guess._id)
       .setIfMissing({ guesses: [] })
@@ -173,11 +183,11 @@
       guessResult.set({ guessedCorrectly })
     }
     guess = await guessResult.commit({ autoGenerateArrayKeys: true })
-    guessesRemaining = guessesLimit - (guess?.guesses?.length || 0)
     console.log({ guess })
 
     if (guessedCorrectly !== null) {
       console.log('guess completed, adding to game')
+      // Optimistic local update ahead of the network request
       game = {
         ...game,
         guessResults: [...(game.guessResults || []), guess],
@@ -242,7 +252,7 @@
 
   const afterHint = async ({ text }: { text: string }) => {
     if (hintUsedInGuess(guess, text)) {
-      console.log(`hint already used ${text}`)
+      console.log(`hint already used: \n${text}`)
       return
     }
 
@@ -256,9 +266,8 @@
   }
 
   const hintUsedInGuess = (guess: StreakGuessingGameGuessResult, hintText: string) => {
-    console.log(`hintUsedInGuess, ${guess?._id}, ${hintText}`)
+    if (!guess) return true // Block hint reveals until a guessResult entity is loaded
     if (!guess?.hintsUsed) {
-      console.log('no hints used')
       return false
     }
 
