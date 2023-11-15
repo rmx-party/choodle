@@ -8,8 +8,7 @@
   import MetaData from '../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import { loading } from '$lib/store'
-  import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
-  import type { PageData } from '../../.svelte-kit/types/src/routes'
+  import type { StreakGuessingGameChallenge, StreakGuessingGamePlayer } from '$lib/CWFGame'
   import { guessPath, pickPath, sharePath } from '$lib/routes'
   import { toHTML } from '@portabletext/to-html'
   import { readOnlyClient } from '$lib/CMSUtils'
@@ -17,13 +16,14 @@
   import isEmpty from 'lodash/fp/isEmpty'
   import orderBy from 'lodash/fp/orderBy'
   import DashboardDrawing from '../components/DashboardDrawing.svelte'
+  import type { PageData } from './$types'
 
   loading.set(true)
 
   export let data: PageData
 
   let currentChoodler: StreakGuessingGamePlayer
-  let challenges = []
+  let challenges: StreakGuessingGameChallenge[] = []
 
   let isFirstTime: boolean
   $: isFirstTime = isEmpty(challenges)
