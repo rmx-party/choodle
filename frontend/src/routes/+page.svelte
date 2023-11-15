@@ -125,8 +125,9 @@
     </section>
 
     <section class="drawings">
-      {#each challenges as challenge (challenge._id)}
+      {#each challenges as challenge, index (challenge._id)}
         <DashboardDrawing
+          {index}
           drawing={challenge.choodle}
           linkDestination={shareOrPickPathFor($currentChoodler?._id, challenge)}
         />
