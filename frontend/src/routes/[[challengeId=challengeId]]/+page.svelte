@@ -93,7 +93,7 @@
   </section>
 
   <div id="cta">
-    <Button variant="primary" online={data.challenge} on:click={proceed}
+    <Button variant="primary" online={data.challenge} on:click={proceed} offline={!data.challenge}
       >{data.copy.pick_doneButtonText}</Button
     >
   </div>
