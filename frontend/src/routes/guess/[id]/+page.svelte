@@ -127,13 +127,13 @@
 
   const handleCorrectGuess = () => {
     console.log(`right answer, you won the thing`)
-    success = true
 
     if (usernameRequired && !username?.length) {
       promptForAndSetUsername()
       return
     }
 
+    success = true
     createGuess(true)
     guessesRemaining--
     cursorLocation.set(-1)
