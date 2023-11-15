@@ -2,11 +2,11 @@
   import ChoodleBoard from '../../../components/ChoodleBoard.svelte'
   import type { UndoStack } from '$lib/UndoStack'
   import { createUncommittedChoodle } from '$lib/ChoodleStorage'
-  import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
+  import { getDeviceId } from '$lib/CreatorUtils'
   import { browser } from '$app/environment'
   import { clearStorage, getUndoStack } from '$lib/StorageStuff'
   import { goto, preloadData } from '$app/navigation'
-  import { onMount } from 'svelte'
+  import { getContext, onMount } from 'svelte'
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
   import Button from '../../../components/Button.svelte'
   import { loading, isOnline, loadingMessage, closeDialog, openDialog } from '$lib/store'
@@ -18,13 +18,22 @@
   import { guessPath, sharePath } from '$lib/routes'
   import { readWriteClient } from '$lib/CMSUtils'
   import type { PageData } from './$types'
+  import type { Writable } from 'svelte/store'
+  import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
 
   export let data: PageData
 
-  let child
-  let challenger
+  let child: ChoodleBoard
+  const deviceId: Writable<string> = getContext('deviceId')
+  const challenger: Writable<StreakGuessingGamePlayer> = getContext('choodler')
 
   let username: string | undefined
+  $: {
+    if ($challenger?.username?.length) {
+      username = $challenger.username
+    }
+  }
+  $: console.log(`draw page react`, { challenger: $challenger, deviceId: $deviceId })
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
     loadingMessage.set('saving')
@@ -35,16 +44,16 @@
       {
         creatorId: await getDeviceId(),
       },
-      challenger._id
+      $challenger._id
     )
 
     console.log(
-      `patching in the choodle ${choodleId} to challenge ${data.challenge._id} with challenger ${challenger._id}`
+      `patching in the choodle ${choodleId} to challenge ${data.challenge._id} with challenger ${$challenger._id}`
     )
     transaction.patch(data.challenge._id, (p) =>
       p.set({
         choodle: { _ref: choodleId },
-        challenger: { _ref: challenger._id },
+        challenger: { _ref: $challenger._id },
       })
     )
 
@@ -72,7 +81,7 @@
     if (undoStack.current === '') return loading.set(false)
 
     if (username?.length > 0) {
-      await readWriteClient.patch(challenger._id).set({ username }).commit()
+      await readWriteClient.patch($challenger._id).set({ username }).commit()
       closeDialog(usernamePromptId)
       child.save()
       return
@@ -93,15 +102,6 @@
       return
     }
   }
-
-  onMount(async () => {
-    const deviceId = await getDeviceId()
-
-    challenger = await locateCreator({ deviceId })
-    username = challenger.username
-
-    loading.set(false)
-  })
 </script>
 
 <MetaData
