@@ -19,7 +19,7 @@
   import isEmpty from 'lodash/fp/isEmpty'
   import orderBy from 'lodash/fp/orderBy'
   import DashboardDrawing from '../../components/DashboardDrawing.svelte'
-  import type { PageData } from '../../../.svelte-kit/types/src/routes'
+  import type { PageData } from './$types'
   import type { Writable } from 'svelte/store'
   import uniqBy from 'lodash/fp/uniqBy'
   import { urlFor } from '$lib/PersistedImagesUtils'
