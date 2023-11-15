@@ -143,9 +143,8 @@
     challengeId: string | undefined
   }) => {
     console.log('locateGuess')
-    const query = `*[_type == "guess"][guesser._ref match "${guesserId}" && challenge._ref match "${challengeId}"]`
-    let guess = (await readOnlyClient.fetch(query))[0]
-    console.log(guess)
+    const query = `*[_type == "guess"][guesser._ref match "${guesserId}" && challenge._ref match "${challengeId}"][0]`
+    guess = await readOnlyClient.fetch(query)
     if (!guess) {
       console.log('create a new guess')
       guess = await readWriteClient.create(
@@ -157,8 +156,7 @@
         { autoGenerateArrayKeys: true }
       )
     }
-    console.log('returning that guess')
-    return guess
+    console.log({ guess })
   }
 
   const isCorrect = (guess: StreakGuessingGameGuessResult, answer: string): boolean => {
@@ -300,7 +298,12 @@
   }
 
   $: {
-    if (guesser && guess) {
+    if (!guess && guesser) {
+      locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id })
+    }
+  }
+  $: {
+    if (!game && guesser && guess) {
       locateGame({
         challengerId: data.challenge.challenger._id,
         guesserId: guesser._id,
@@ -313,10 +316,6 @@
     deviceId = await getDeviceId()
     guesser = await locateCreator({ deviceId })
     username = guesser.username
-
-    console.log({ challenge: data.challenge })
-
-    guess = await locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id })
 
     loading.set(false)
   })
