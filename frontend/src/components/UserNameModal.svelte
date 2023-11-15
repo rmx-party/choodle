@@ -21,6 +21,7 @@
     >username
     <br />
     <input
+      autofocus
       bind:value={usernameValue}
       type="username"
       id="creator-username"
