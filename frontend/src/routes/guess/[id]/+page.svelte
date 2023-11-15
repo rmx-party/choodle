@@ -454,23 +454,25 @@
   </LayoutContainer>
 {:else if guess}
   <LayoutContainer class="no-pan">
-    <section class="top-content">
-      {#if success}
-        {@html toHTML(data.copy.guess_pageTopContentSuccess)}
-      {:else}
-        {@html toHTML(data.copy.guess_pageTopContentFailure)}
-      {/if}
-    </section>
-
-    <TextMessageBubble>{shareable.text}</TextMessageBubble>
-
     {#if success}
+      <section class="top-content">
+        {@html toHTML(data.copy.guess_pageTopContentSuccess)}
+      </section>
+
+      <TextMessageBubble>{shareable.text}</TextMessageBubble>
+
       <Button variant="primary" colour="yellow" on:click={handleShare}
         >{copiedToClipboard
           ? data.copy.guess_copiedToClipboard
           : data.copy.guess_shareButtonTextSuccess}</Button
       >
-    {:else if guessesRemaining < 1}
+    {:else}
+      <section class="top-content">
+        {@html toHTML(data.copy.guess_pageTopContentFailure)}
+      </section>
+
+      <TextMessageBubble>{shareable.text}</TextMessageBubble>
+
       <Button variant="primary" colour="yellow" on:click={handleShare}
         >{copiedToClipboard
           ? data.copy.guess_copiedToClipboard
