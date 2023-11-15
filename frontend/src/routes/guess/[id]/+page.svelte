@@ -60,7 +60,6 @@
   $: stillGuessing = !success && guessesRemaining > 0
 
   let deviceId: string | undefined
-  let username = ''
   let guesser: StreakGuessingGamePlayer
   let guess: StreakGuessingGameGuessResult
   let game: StreakGuessingGame
@@ -159,7 +158,7 @@
     console.log({ guess })
   }
 
-  const isCorrect = (guess: StreakGuessingGameGuessResult, answer: string): boolean => {
+  const isCorrect = (guess: string[], answer: string): boolean => {
     return guess.join('').toUpperCase() === answer.toUpperCase()
   }
 
@@ -227,7 +226,7 @@
   }
 
   const submitGuess = () => {
-    if (username?.length < 1) {
+    if (1 > username?.length) {
       openDialog(usernamePromptId)
       return
     }
@@ -297,6 +296,14 @@
     return
   }
 
+  let username: string | undefined
+  $: {
+    if (guesser?.username?.length) {
+      // Assign this once when the user loads, don't fight with the input binding
+      username = guesser.username
+    }
+  }
+
   $: {
     if (!guess && guesser) {
       locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id })
@@ -315,7 +322,6 @@
   onMount(async () => {
     deviceId = await getDeviceId()
     guesser = await locateCreator({ deviceId })
-    username = guesser.username
 
     loading.set(false)
   })
