@@ -12,7 +12,6 @@
   import { loading, isOnline, closeDialog, openDialog } from '$lib/store'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
-  import Dialog from '../../../components/Dialog.svelte'
   import MetaData from '../../../components/MetaData.svelte'
   import { page } from '$app/stores'
   import { guessPath, sharePath } from '$lib/routes'
@@ -20,12 +19,14 @@
   import type { PageData } from './$types'
   import type { Writable } from 'svelte/store'
   import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
+  import UserNameModal from '../../../components/UserNameModal.svelte'
 
   export let data: PageData
 
   let child: ChoodleBoard
   const deviceId: Writable<string> = getContext('deviceId')
   const challenger: Writable<StreakGuessingGamePlayer> = getContext('choodler')
+  const usernamePromptId = 'username-prompt'
 
   let username: string | undefined
   $: {
@@ -69,8 +70,6 @@
     await clearStorage()
     await goto(sharePath(data.challenge._id))
   }
-
-  const usernamePromptId = 'username-prompt'
 
   // TODO: switch back for username driven gameplay after prod deploy
   const usernameRequired = true
@@ -133,30 +132,17 @@
         >{data.copy.draw_doneButtonText}</Button
       >
     </ButtonMenu>
-
-    <Dialog id={usernamePromptId}>
-      <header slot="header">{data.copy.draw_usernameHeader}</header>
-      <div>{data.copy.draw_usernameInstructions}</div>
-      <label
-        for="creator-username"
-        style="text-align: left; display: block; font-family: Dejavu Sans Bold;"
-        >username
-        <br />
-        <input
-          bind:value={username}
-          type="username"
-          id="creator-username"
-          name="creatorusername"
-          placeholder={data.copy.draw_usernamePlaceholder}
-          style="width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;"
-        />
-      </label>
-      <Button on:click={attemptToSaveChoodle} variant="primary" colour="yellow">
-        {data.copy.draw_usernameSaveButtonText}
-      </Button>
-    </Dialog>
   </ChoodleBoard>
 </LayoutContainer>
+
+<UserNameModal
+  headerContent={data.copy.draw_usernameHeader}
+  instructionsContent={data.copy.draw_usernameInstructions}
+  placeholderContent={data.copy.draw_usernamePlaceholder}
+  saveButtonText={data.copy.draw_usernameSaveButtonText}
+  bind:usernameValue={username}
+  onClick={attemptToSaveChoodle}
+/>
 
 <style>
   .prompt {
