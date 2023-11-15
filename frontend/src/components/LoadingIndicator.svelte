@@ -1,33 +1,38 @@
 <script lang="ts">
   import { loading } from '$lib/store'
-  import { fade, blur } from 'svelte/transition'
+  import { fade } from 'svelte/transition'
   import { onMount } from 'svelte'
   import { toHTML } from '@portabletext/to-html'
   import { navigating } from '$app/stores'
 
-  export let rotatingMessages = []
+  export let rotatingMessages: unknown[] = []
 
+  // eslint-disable-next-line no-undef
+  let interval: string | number | NodeJS.Timeout | undefined
   let messageIndex = -1
-  let interval: string | number | undefined
+
+  loading.subscribe((value) => {
+    console.log(`loading state change: `, value)
+  })
 
   onMount(() => {
-    loading.subscribe((value) => {
-      console.log(`loading state: `, value)
-    })
-
-    if (rotatingMessages && rotatingMessages.length > 0) messageIndex = 0
-    interval = setInterval(() => {
-      messageIndex = (messageIndex + 1) % rotatingMessages.length
-    }, 3000)
-
-    return () => {
-      clearInterval(interval)
+    if (rotatingMessages?.length > 0) {
+      messageIndex = 0
+      interval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % rotatingMessages.length
+      }, 3000)
     }
+
+    return () => clearInterval(interval)
   })
 </script>
 
 {#if $navigating || $loading}
-  <div class="LoadingIndicator loading-backdrop no-pan" out:fade={{ duration: 300 }}>
+  <div
+    class="LoadingIndicator loading-backdrop no-pan"
+    in:fade={{ delay: 30, duration: 300 }}
+    out:fade={{ duration: 300 }}
+  >
     <div class="loading" transition:fade={{ duration: 300 }}>
       <img
         class="loading-image"
@@ -37,7 +42,7 @@
         alt="A doodle of the painter Bob Ross, slightly smiling"
       />
       <div class="messageContainer">
-        {#if messageIndex >= 0 && rotatingMessages.length > 0}
+        {#if messageIndex >= 0 && rotatingMessages?.length > 0}
           {#key messageIndex}
             <div class="message" transition:fade={{ duration: 300 }}>
               {@html toHTML(rotatingMessages[messageIndex])}
@@ -53,11 +58,6 @@
 
 <style>
   :root {
-    --light-color: rgba(10, 10, 220, 0.2);
-    --dark-color: rgba(10, 10, 220, 1);
-    --radius: 64px;
-    --ring-width: 4px;
-
     text-align: center;
     position: relative;
   }
