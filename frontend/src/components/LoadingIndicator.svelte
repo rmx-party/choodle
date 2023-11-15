@@ -22,7 +22,7 @@
       messageIndex = 0
       interval = setInterval(() => {
         messageIndex = (messageIndex + 1) % rotatingMessages.length
-      }, 4000)
+      }, 6000)
     }
 
     return () => clearInterval(interval)
