@@ -10,8 +10,6 @@
   import { getContext, onMount } from 'svelte'
   import { browser } from '$app/environment'
   import filter from 'lodash/fp/filter'
-  import find from 'lodash/fp/find'
-  import isEmpty from 'lodash/fp/isEmpty'
   import GuessingInterface from '../../../components/GuessingInterface.svelte'
   import { toHTML } from '@portabletext/to-html'
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
@@ -22,10 +20,6 @@
   import { closeDialog, loading, openDialog } from '$lib/store'
   import Dialog from '../../../components/Dialog.svelte'
   import {
-    isNormalizedGameComplete,
-    normalizeGame,
-    type StreakGuessingGame,
-    type StreakGuessingGameChallenge,
     type StreakGuessingGameDrawing,
     type StreakGuessingGameGuessResult,
     type StreakGuessingGamePlayer,
@@ -63,7 +57,6 @@
   $: stillGuessing = !success && guessesRemaining > 0
 
   let guess: StreakGuessingGameGuessResult
-  let game: StreakGuessingGame
   let disableKeyboard = false
 
   let hints: { text: string; used: boolean }[] = []
@@ -76,63 +69,6 @@
         { text: data.gamePrompt?.hint_3, used: hintUsedInGuess(guess, data.gamePrompt?.hint_3) },
       ]
     )
-  }
-
-  const challengeHasBeenGuessed = (
-    game: StreakGuessingGame,
-    challenge: StreakGuessingGameChallenge
-  ) => {
-    return isEmpty(
-      filter((guessResult) => guessResult.challenge._id === challenge._id, game.guessResults)
-    )
-  }
-
-  const locateGame = async ({ challengerId, guesserId, guessId }) => {
-    const query = `*[_type == "cwfgame"][(player1._ref match "${challengerId}" && player2._ref match "${guesserId}") || (player1._ref match "${guesserId}" && player2._ref match "${challengerId}")]{..., guessResults[]->{...}, player1->{...}, player2->{...}, challenge->{...}}`
-    let locatedGames = await readOnlyClient.fetch(query)
-    // Find the located game that has the guess we're looking for, or the challenge.
-    let locatedGame = find(
-      (game) =>
-        find((guessResult) => guessResult._id === guessId, game.guessResults) ||
-        game.currentChallenge?._ref === data.challenge._id,
-      locatedGames
-    )
-    console.log({ locatedGame })
-    if (locatedGame && challengeHasBeenGuessed(locatedGame, data.challenge)) {
-      console.log(
-        'this challenge has already been guessed within this game, do not create or update the game'
-      )
-      return locatedGame
-    }
-    if (!locatedGame || isNormalizedGameComplete([...normalizeGame(locatedGame).guessResults])) {
-      console.log('create')
-      locatedGame = await readWriteClient.create(
-        {
-          _type: 'cwfgame',
-          player1: { _ref: challengerId },
-          player2: { _ref: guesserId },
-          currentChallenge: { _ref: data.challenge._id },
-        },
-        { autoGenerateArrayKeys: true }
-      )
-    } else {
-      console.log('update')
-      console.log({ game: locatedGame })
-      const patch = readWriteClient.patch(locatedGame._id)
-      if (
-        locatedGame.guessResults
-          .map((gr: StreakGuessingGameGuessResult) => gr._id)
-          .includes(guess._id)
-      ) {
-        console.log('we already have this guess')
-      } else {
-        console.log('adding a guessResult')
-        patch.append('guessResults', [{ _ref: guessId }])
-      }
-      patch.commit({ autoGenerateArrayKeys: true })
-    }
-
-    game = locatedGame
   }
 
   export const locateGuess = async ({
@@ -187,20 +123,6 @@
     }
     guess = await guessResult.commit({ autoGenerateArrayKeys: true })
     console.log({ guess })
-
-    if (guessedCorrectly !== null) {
-      console.log('guess completed, adding to game')
-      // Optimistic local update ahead of the network request
-      game = {
-        ...game,
-        guessResults: [...(game.guessResults || []), guess],
-      }
-      game = await readWriteClient
-        .patch(game._id)
-        .setIfMissing({ guessResults: [] })
-        .append('guessResults', [{ _ref: guess._id }])
-        .commit({ autoGenerateArrayKeys: true })
-    }
   }
 
   const handleCorrectGuess = () => {
@@ -320,15 +242,6 @@
       locateGuess({ guesserId: $guesser._id, challengeId: data.challenge._id })
     }
   }
-  $: {
-    if (!game && $guesser && guess) {
-      locateGame({
-        challengerId: data.challenge.challenger._id,
-        guesserId: $guesser._id,
-        guessId: guess._id,
-      })
-    }
-  }
 
   onMount(async () => {
     loading.set(false)
@@ -380,7 +293,6 @@
   let shareTextStats = ``
   $: {
     shareTextStats = `🛟 ${uniq(guess?.hintsUsed || []).length}`
-    //🔥 ${streakCount(game)}`;
   }
   let newLine = `\n`
 
