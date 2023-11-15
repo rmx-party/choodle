@@ -44,6 +44,7 @@
   // TODO: CMS manageed
   let guessesRemaining = 3
   let guessesLimit = 3
+  $: guessesRemaining = guessesLimit - (guess?.guesses?.length || 0)
 
   let choodleOwner = false
   $: choodleOwner = data.challenge.challenger._id === guesser?._id
@@ -316,7 +317,6 @@
     console.log({ challenge: data.challenge })
 
     guess = await locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id })
-    guessesRemaining = guessesLimit - (guess?.guesses?.length || 0)
 
     loading.set(false)
   })
