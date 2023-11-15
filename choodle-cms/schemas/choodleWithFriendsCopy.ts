@@ -91,12 +91,8 @@ export default {
     {
       name: 'draw_usernameHeader',
       title: 'Header of the Username entry page',
-      type: 'string',
-    },
-    {
-      name: 'draw_usernameInstructions',
-      title: 'Instructions under the header for username input',
-      type: 'string',
+      type: 'array',
+      of: [{type: 'block'}],
     },
     {
       name: 'draw_usernamePlaceholder',

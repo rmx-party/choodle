@@ -397,7 +397,6 @@
 
 <UserNameModal
   headerContent={data.copy.draw_usernameHeader}
-  instructionsContent={data.copy.draw_usernameInstructions}
   placeholderContent={data.copy.draw_usernamePlaceholder}
   saveButtonText={data.copy.draw_usernameSaveButtonText}
   bind:usernameValue={username}

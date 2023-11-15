@@ -1,9 +1,9 @@
 <script>
   import Dialog from '~/components/Dialog.svelte'
   import Button from '~/components/Button.svelte'
+  import { toHTML } from '@portabletext/to-html'
 
   export let headerContent
-  export let instructionsContent
   export let placeholderContent
   export let saveButtonText
   export let usernameValue
@@ -13,8 +13,7 @@
 </script>
 
 <Dialog id={usernamePromptId} enableCloseButton={false}>
-  <header slot="header">{headerContent}</header>
-  <div>{instructionsContent}</div>
+  <header slot="header">{@html toHTML(headerContent)}</header>
   <label
     for="creator-username"
     style="text-align: left; display: block; font-family: Dejavu Sans Bold;"
