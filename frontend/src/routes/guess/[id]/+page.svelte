@@ -33,6 +33,7 @@
   import type { PageData } from './$types'
   import TextMessageBubble from '../../../components/TextMessageBubble.svelte'
   import { sharePath } from '$lib/routes'
+  import uniq from 'lodash/fp/uniq'
 
   loading.set(true)
 
@@ -276,7 +277,6 @@
 
   const usernamePromptId = 'username-prompt'
 
-  // TODO: switch back for username driven gameplay after prod deploy
   const usernameRequired = true
   const promptForAndSetUsername = async () => {
     console.log('prompting for username')
@@ -373,13 +373,11 @@
       guessesLimit - guessesRemaining
     )} try!`
   }
-  let shareTextFailureMessage = ``
   $: shareTextFailureMessage = `🫣 I couldn’t guess ${data.gamePrompt?.prompt}!`
-  let shareTextGuesses = ``
   $: shareTextGuesses = (guess?.guesses || []).map(shareTextNthGuessCopy).join(`\n`)
   let shareTextStats = ``
   $: {
-    shareTextStats = `🛟 ${guess?.hintsUsed?.length || 0}`
+    shareTextStats = `🛟 ${uniq(guess?.hintsUsed || []).length}`
     //🔥 ${streakCount(game)}`;
   }
   let newLine = `\n`
