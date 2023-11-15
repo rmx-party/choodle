@@ -5,6 +5,7 @@
   import { toHTML } from '@portabletext/to-html'
   import { navigating, page } from '$app/stores'
   import { urlFor } from '$lib/PersistedImagesUtils'
+  import PixelImage from './PixelImage.svelte'
 
   export let rotatingMessages: unknown[] = []
 
@@ -34,13 +35,19 @@
     in:fade={{ delay: 30, duration: 300 }}
     out:fade={{ duration: 300 }}
   >
-    <img class="logo" src={urlFor($page.data.copy.logo).url()} alt="" />
+    <PixelImage
+      class="logo"
+      src={urlFor($page.data.copy.logo).url()}
+      alt=""
+      height={32}
+      width={100}
+    />
     <div class="loading" transition:fade={{ duration: 300 }}>
       <div class="group">
-        <img
+        <PixelImage
           class="loading-image"
-          height="263"
-          width="174"
+          height={263}
+          width={174}
           src="/choodle-bob-p2.png"
           alt="A doodle of the painter Bob Ross, slightly smiling"
         />
@@ -99,14 +106,11 @@
     justify-content: center;
   }
 
-  .logo {
+  :global(.logo) {
     width: 100px;
     height: 32px;
-    flex-shrink: 0;
-    margin: 0.5rem 1rem;
-  }
-  img {
-    image-rendering: pixelated;
+    flex-shrink: 1;
+    margin: 0.42rem 1rem;
   }
 
   .messageContainer {
