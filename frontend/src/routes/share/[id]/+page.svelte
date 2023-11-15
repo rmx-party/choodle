@@ -5,7 +5,6 @@
   import { page } from '$app/stores'
   import MetaData from '../../../components/MetaData.svelte'
   import { getContext, onMount } from 'svelte'
-  import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
   import { share, type Shareable } from '$lib/ShareUtils'
   import { browser } from '$app/environment'
   import map from 'lodash/fp/map'
@@ -26,27 +25,27 @@
   const currentChoodler: Writable<StreakGuessingGamePlayer> = getContext('choodler')
 
   let choodleOwner = true
-    $: choodleOwner = data.challenge.challenger._id === $currentChoodler?._id
+  $: choodleOwner = data.challenge.challenger._id === $currentChoodler?._id
   $: {
-    if (!choodleOwner) {
+    if (browser && !choodleOwner) {
       goto(guessPath(data.challenge._id))
     }
   }
 
   let copiedToClipboard = false
 
-    $: gamePrompt = data.challenge?.gamePrompt?.prompt
+  $: gamePrompt = data.challenge?.gamePrompt?.prompt
   let gamePromptTiles = ''
-    $: {
+  $: {
     gamePromptTiles = gamePrompt?.length
       ? map((char) => (char === ' ' ? '⬜' : '🟨'), gamePrompt.split('')).join('')
       : ''
   }
 
-    $: shareUrl = browser ? `${window.location.origin}/guess/${data.challenge._id}` : ''
+  $: shareUrl = browser ? `${window.location.origin}/guess/${data.challenge._id}` : ''
   $: challengeShareText = [data.copy.share_messageText, gamePromptTiles, shareUrl].join(`\n`)
   let challengeShareable: Shareable
-  $: challengeShareable = { text: challengeShareText}
+  $: challengeShareable = { text: challengeShareText }
 
   const handleShare = async (event: Event) => {
     event.preventDefault()
@@ -58,7 +57,6 @@
   }
 
   onMount(async () => {
-
     // Store in localstorage on Draw:
     //  - all details we need to draw it here, including the image
 
