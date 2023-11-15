@@ -1,14 +1,13 @@
 <script lang="ts">
   import { urlFor } from '$lib/PersistedImagesUtils'
   import { share, type Shareable } from '$lib/ShareUtils'
-  import { writable } from 'svelte/store'
+  import { writable, type Writable } from 'svelte/store'
   import GuessingHUD from '../../../components/GuessingHUD.svelte'
   import Button from '../../../components/Button.svelte'
   import { goto } from '$app/navigation'
   import { page } from '$app/stores'
   import MetaData from '../../../components/MetaData.svelte'
-  import { onMount } from 'svelte'
-  import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
+  import { getContext, onMount } from 'svelte'
   import { browser } from '$app/environment'
   import filter from 'lodash/fp/filter'
   import find from 'lodash/fp/find'
@@ -37,6 +36,9 @@
 
   loading.set(true)
 
+  const guesser: Writable<StreakGuessingGamePlayer> = getContext('choodler')
+  $: console.log(`guess page react`, { guesser: $guesser })
+
   export let data: PageData
   const currentGuess = writable([])
   const cursorLocation = writable(0)
@@ -47,7 +49,7 @@
   $: guessesRemaining = guessesLimit - (guess?.guesses?.length || 0)
 
   let choodleOwner = false
-  $: choodleOwner = data.challenge.challenger._id === guesser?._id
+  $: choodleOwner = data.challenge.challenger._id === $guesser?._id
   $: {
     if (browser && choodleOwner) {
       goto(sharePath(data.challenge._id))
@@ -59,8 +61,6 @@
   let stillGuessing: boolean
   $: stillGuessing = !success && guessesRemaining > 0
 
-  let deviceId: string | undefined
-  let guesser: StreakGuessingGamePlayer
   let guess: StreakGuessingGameGuessResult
   let game: StreakGuessingGame
   let disableKeyboard = false
@@ -247,7 +247,7 @@
     }
 
     console.log(`adding ${text} to the used hints on ${guess._id}`)
-
+    guess = { ...guess, hintsUsed: [...(guess.hintsUsed || []), text] }
     guess = await readWriteClient
       .patch(guess._id)
       .setIfMissing({ hintsUsed: [] })
@@ -277,7 +277,7 @@
       console.log('there was a username, closing the dialog')
       disableKeyboard = false
       closeDialog(usernamePromptId)
-      await readWriteClient.patch(guesser._id).set({ username }).commit()
+      await readWriteClient.patch($guesser._id).set({ username }).commit()
       submitGuess()
       return
     }
@@ -298,31 +298,28 @@
 
   let username: string | undefined
   $: {
-    if (guesser?.username?.length) {
+    if ($guesser?.username?.length) {
       // Assign this once when the user loads, don't fight with the input binding
-      username = guesser.username
+      username = $guesser.username
     }
   }
 
   $: {
-    if (!guess && guesser) {
-      locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id })
+    if (!guess && $guesser) {
+      locateGuess({ guesserId: $guesser._id, challengeId: data.challenge._id })
     }
   }
   $: {
-    if (!game && guesser && guess) {
+    if (!game && $guesser && guess) {
       locateGame({
         challengerId: data.challenge.challenger._id,
-        guesserId: guesser._id,
+        guesserId: $guesser._id,
         guessId: guess._id,
       })
     }
   }
 
   onMount(async () => {
-    deviceId = await getDeviceId()
-    guesser = await locateCreator({ deviceId })
-
     loading.set(false)
   })
 
