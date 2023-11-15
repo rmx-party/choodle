@@ -14,7 +14,8 @@ export const config = {
 
 export const load: PageLoad = async ({ params }) => {
   const challenge = readOnlyClient.fetch(
-    `*[_type == "challenge" && _id == "${params.challengeId}"]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
+    `*[_type == "challenge" && _id == $challengeId]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
+    { challengeId: params.challengeId },
   );
 
   return { challenge };
