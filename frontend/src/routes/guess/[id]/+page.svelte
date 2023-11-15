@@ -421,7 +421,7 @@
   bgColor={pageBackgroundDefault}
 />
 
-{#if stillGuessing}
+{#if guess && stillGuessing}
   <LayoutContainer class="no-pan">
     <div class="topBar" slot="topBar">
       <GuessingHUD {guessesRemaining} {guessesLimit}>
@@ -452,7 +452,7 @@
       </div>
     </GuessingInterface>
   </LayoutContainer>
-{:else}
+{:else if guess}
   <LayoutContainer class="no-pan">
     <section class="top-content">
       {#if success}

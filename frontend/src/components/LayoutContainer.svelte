@@ -1,13 +1,14 @@
 <script>
-  import {loading} from '$lib/store';
-  import {fade} from 'svelte/transition';
+  import { navigating } from '$app/stores'
+  import { loading } from '$lib/store'
+  import { fade } from 'svelte/transition'
 </script>
 
-{#if !$loading}
-  <div id="layoutContainer" transition:fade={{ duration: 100 }} {...$$restProps}>
-    <slot name="topBar"/>
+{#if !$navigating && !$loading}
+  <div id="layoutContainer" transition:fade={{ duration: 300 }} {...$$restProps}>
+    <slot name="topBar" />
     <div id="flexLayout">
-      <slot/>
+      <slot />
     </div>
   </div>
 {/if}
