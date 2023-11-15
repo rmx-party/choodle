@@ -72,7 +72,7 @@
     margin: 0;
     padding: 0;
 
-    background: white;
+    background: #f7f7f7;
     overflow: hidden;
   }
 
