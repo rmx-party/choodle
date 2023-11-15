@@ -53,7 +53,8 @@
     }
   }
 
-  let success = false
+  $: success = !!guess?.guessedCorrectly
+
   let stillGuessing: boolean
   $: stillGuessing = !success && guessesRemaining > 0
 
@@ -316,9 +317,6 @@
 
     guess = await locateGuess({ guesserId: guesser._id, challengeId: data.challenge._id })
     guessesRemaining = guessesLimit - (guess?.guesses?.length || 0)
-    if (guess.guessedCorrectly) {
-      success = true
-    }
 
     loading.set(false)
   })
