@@ -130,7 +130,7 @@
       patch.commit({ autoGenerateArrayKeys: true })
     }
 
-    return locatedGame
+    game = locatedGame
   }
 
   export const locateGuess = async ({
@@ -297,6 +297,16 @@
     return
   }
 
+  $: {
+    if (guesser && guess) {
+      locateGame({
+        challengerId: data.challenge.challenger._id,
+        guesserId: guesser._id,
+        guessId: guess._id,
+      })
+    }
+  }
+
   onMount(async () => {
     deviceId = await getDeviceId()
     guesser = await locateCreator({ deviceId })
@@ -309,13 +319,6 @@
     if (guess.guessedCorrectly) {
       success = true
     }
-
-    game = await locateGame({
-      challengerId: data.challenge.challenger._id,
-      guesserId: guesser._id,
-      guessId: guess._id,
-    })
-    console.log({ game })
 
     loading.set(false)
   })
@@ -354,6 +357,7 @@
         return guess
     }
   }
+
   let shareTextSuccessMessage = ``
   $: {
     shareTextSuccessMessage = `🏆 I guessed right on the ${shareTextNthTryCopy(
@@ -364,7 +368,6 @@
   $: shareTextFailureMessage = `🫣 I couldn’t guess ${data.gamePrompt?.prompt}!`
   let shareTextGuesses = ``
   $: shareTextGuesses = (guess?.guesses || []).map(shareTextNthGuessCopy).join(`\n`)
-
   let shareTextStats = ``
   $: {
     shareTextStats = `🛟 ${guess?.hintsUsed?.length || 0}`
