@@ -14,7 +14,7 @@
   import { clearStorage } from '$lib/StorageStuff'
   import shuffle from 'lodash/fp/shuffle'
   import { drawPath } from '$lib/routes'
-  import type { PageData } from '../../../.svelte-kit/types/src/routes'
+  import type { PageData } from './$types'
 
   export let data: PageData
   let prompts: string[]
@@ -60,6 +60,7 @@
 
   const proceed = async () => {
     if (!selectedPrompt) return
+    if (!data.challenge?._id) return
 
     const gamePrompt = find((p) => p.prompt === selectedPrompt, data.records)
     console.log(`proceeding with prompt ${selectedPrompt}`)
@@ -67,16 +68,16 @@
     loading.set(true)
 
     await readWriteClient
-      .patch(data.challenge._id)
+      .patch(data.challenge?._id)
       .set({
         gamePrompt: { _ref: gamePrompt._id },
       })
       .commit()
-    preloadData(`/draw/${data.challenge._id}`)
+    preloadData(drawPath(data.challenge?._id))
 
     clearStorage()
 
-    goto(drawPath(data.challenge._id))
+    goto(drawPath(data.challenge?._id))
   }
 </script>
 
