@@ -3,7 +3,8 @@
   import { fade } from 'svelte/transition'
   import { onMount } from 'svelte'
   import { toHTML } from '@portabletext/to-html'
-  import { navigating } from '$app/stores'
+  import { navigating, page } from '$app/stores'
+  import { urlFor } from '$lib/PersistedImagesUtils'
 
   export let rotatingMessages: unknown[] = []
 
@@ -33,6 +34,7 @@
     in:fade={{ delay: 30, duration: 300 }}
     out:fade={{ duration: 300 }}
   >
+    <img class="logo" src={urlFor($page.data.copy.logo).url()} alt="" />
     <div class="loading" transition:fade={{ duration: 300 }}>
       <img
         class="loading-image"
@@ -84,6 +86,13 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+  }
+
+  .logo {
+    width: 100px;
+    height: 32px;
+    flex-shrink: 0;
+    margin: 0.5rem 1rem;
   }
 
   .messageContainer {
