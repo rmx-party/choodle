@@ -3,7 +3,7 @@
   import { isOnline } from '$lib/store'
   import { webVitals } from '$lib/vitals'
   import '$lib/assets/fonts.css'
-  import { onMount } from 'svelte'
+  import { onMount, setContext } from 'svelte'
   import '../app.css'
   import LoadingIndicator from '../components/LoadingIndicator.svelte'
   import { page } from '$app/stores'
@@ -12,8 +12,15 @@
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'
   import compact from 'lodash/fp/compact'
   import type { LayoutData } from './$types'
+  import { writable } from 'svelte/store'
+  import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
 
   export let data: LayoutData
+
+  const deviceId = writable()
+  const choodler = writable()
+  setContext('deviceId', deviceId)
+  setContext('choodler', choodler)
 
   console.log('analytics ID', data.analyticsId)
   $: if (browser && data.analyticsId) {
@@ -33,6 +40,9 @@
   ])
 
   onMount(async () => {
+    deviceId.set(await getDeviceId())
+    choodler.set(await locateCreator($deviceId))
+    console.log(`layout context`, { choodler: $choodler, deviceId: $deviceId })
     preloadCode('/', '/pick/*', '/draw/*', '/share/*', '/guess/*', '/offline')
   })
 </script>
