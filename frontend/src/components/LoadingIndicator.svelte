@@ -104,6 +104,8 @@
     height: 32px;
     flex-shrink: 0;
     margin: 0.5rem 1rem;
+  }
+  img {
     image-rendering: pixelated;
   }
 
