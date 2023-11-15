@@ -1,10 +1,10 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
   import { getContext, onMount } from 'svelte'
-  import Button from '../components/Button.svelte'
-  import LayoutContainer from '../components/LayoutContainer.svelte'
+  import Button from '../../components/Button.svelte'
+  import LayoutContainer from '../../components/LayoutContainer.svelte'
   import { page } from '$app/stores'
-  import MetaData from '../components/MetaData.svelte'
+  import MetaData from '../../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import { loading } from '$lib/store'
   import type {
@@ -18,8 +18,8 @@
   import map from 'lodash/fp/map'
   import isEmpty from 'lodash/fp/isEmpty'
   import orderBy from 'lodash/fp/orderBy'
-  import DashboardDrawing from '../components/DashboardDrawing.svelte'
-  import type { PageData } from './$types'
+  import DashboardDrawing from '../../components/DashboardDrawing.svelte'
+  import type { PageData } from '../../../.svelte-kit/types/src/routes'
   import type { Writable } from 'svelte/store'
   import uniqBy from 'lodash/fp/uniqBy'
 
