@@ -21,6 +21,7 @@
   import DashboardDrawing from '../components/DashboardDrawing.svelte'
   import type { PageData } from './$types'
   import type { Writable } from 'svelte/store'
+  import uniqBy from 'lodash/fp/uniqBy'
 
   loading.set(true)
 
@@ -61,13 +62,13 @@
     )) as StreakGuessingGameGuessResult[]
   }
   $: {
-    challenges = orderBy(
-      ['_updatedAt'],
-      ['desc']
-    )([
-      ...myChallenges,
-      ...map((guess) => guess.challenge, myGuesses),
-    ]) as StreakGuessingGameChallenge[]
+    challenges = uniqBy(
+      '_id',
+      orderBy(
+        ['_updatedAt'],
+        ['desc']
+      )([...myChallenges, ...map((guess) => guess.challenge, myGuesses)])
+    ) as StreakGuessingGameChallenge[]
   }
   $: $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
 
