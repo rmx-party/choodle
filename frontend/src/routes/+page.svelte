@@ -142,12 +142,11 @@
 
   section.drawings {
     display: flex;
-    width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-around;
-    align-content: flex-start;
-    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.4rem;
+    margin: 2rem auto;
   }
 
   .centre-container {
