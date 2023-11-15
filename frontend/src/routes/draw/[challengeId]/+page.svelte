@@ -9,7 +9,7 @@
   import { getContext, onMount } from 'svelte'
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
   import Button from '../../../components/Button.svelte'
-  import { loading, isOnline, loadingMessage, closeDialog, openDialog } from '$lib/store'
+  import { loading, isOnline, closeDialog, openDialog } from '$lib/store'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
   import Dialog from '../../../components/Dialog.svelte'
@@ -36,7 +36,6 @@
   $: console.log(`draw page react`, { challenger: $challenger, deviceId: $deviceId })
 
   async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
-    loadingMessage.set('saving')
     loading.set(true)
     const { transaction, choodleId } = await createUncommittedChoodle(
       undoStack,
@@ -102,6 +101,10 @@
       return
     }
   }
+
+  onMount(async () => {
+    loading.set(false)
+  })
 </script>
 
 <MetaData
