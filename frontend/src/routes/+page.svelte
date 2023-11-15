@@ -1,14 +1,17 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
-  import { onMount } from 'svelte'
+  import { getContext, onMount } from 'svelte'
   import Button from '../components/Button.svelte'
-  import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
   import LayoutContainer from '../components/LayoutContainer.svelte'
   import { page } from '$app/stores'
   import MetaData from '../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import { loading } from '$lib/store'
-  import type { StreakGuessingGameChallenge, StreakGuessingGamePlayer } from '$lib/CWFGame'
+  import type {
+    StreakGuessingGameChallenge,
+    StreakGuessingGameGuessResult,
+    StreakGuessingGamePlayer,
+  } from '$lib/CWFGame'
   import { guessPath, pickPath, sharePath } from '$lib/routes'
   import { toHTML } from '@portabletext/to-html'
   import { readOnlyClient } from '$lib/CMSUtils'
@@ -17,13 +20,17 @@
   import orderBy from 'lodash/fp/orderBy'
   import DashboardDrawing from '../components/DashboardDrawing.svelte'
   import type { PageData } from './$types'
+  import type { Writable } from 'svelte/store'
 
   loading.set(true)
 
   export let data: PageData
 
-  let currentChoodler: StreakGuessingGamePlayer
+  // let currentChoodler: StreakGuessingGamePlayer
   let challenges: StreakGuessingGameChallenge[] = []
+
+  const currentChoodler: Writable<StreakGuessingGamePlayer> = getContext('choodler')
+  $: console.log(`dashboard page react`, { currentChoodler: $currentChoodler })
 
   let isFirstTime: boolean
   $: isFirstTime = isEmpty(challenges)
@@ -41,32 +48,56 @@
     return sharePath(challenge._id)
   }
 
-  onMount(async () => {
-    const deviceIdFetch = getDeviceId()
-    const creatorFetch = locateCreator({
-      deviceId: await deviceIdFetch,
-    }) // TODO: migrate global creator/player state to a store shared across pages
-
-    currentChoodler = await creatorFetch
-
+  let myChallenges: StreakGuessingGameChallenge[] = []
+  let myGuesses: StreakGuessingGameGuessResult[] = []
+  const fetchChoodlerChallenges = async (choodlerId: string) => {
+    if (!choodlerId) return
+    myChallenges = (await readOnlyClient.fetch(
+      `*[_type == "challenge" && challenger._ref == $choodlerId]{..., challenger->{...}, choodle->{...}} | order(_createdAt desc)`,
+      { choodlerId }
+    )) as StreakGuessingGameChallenge[]
+    myGuesses = (await readOnlyClient.fetch(
+      `*[_type == "guess" && guesser._ref == $choodlerId]{..., challenge->{..., challenger->{...}, choodle->{...}}} | order(_createdAt desc)`,
+      { choodlerId }
+    )) as StreakGuessingGameGuessResult[]
+  }
+  $: {
     challenges = orderBy(
       ['_updatedAt'],
-      ['desc'],
-      [
-        ...(await readOnlyClient.fetch(
-          `*[_type == "challenge" && challenger._ref == $creatorId]{..., challenger->{...}, choodle->{...}} | order(_createdAt desc)`,
-          { creatorId: currentChoodler._id }
-        )),
-        ...map(
-          (guess) => guess.challenge,
-          await readOnlyClient.fetch(
-            `*[_type == "guess" && guesser._ref == $creatorId]{..., challenge->{..., challenger->{...}, choodle->{...}}} | order(_createdAt desc)`,
-            { creatorId: currentChoodler._id }
-          )
-        ),
-      ]
-    )
-    console.log(challenges)
+      ['desc']
+    )([
+      ...myChallenges,
+      ...map((guess) => guess.challenge, myGuesses),
+    ]) as StreakGuessingGameChallenge[]
+  }
+  $: $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
+
+  onMount(async () => {
+    // const deviceIdFetch = getDeviceId()
+    // const creatorFetch = locateCreator({
+    //   deviceId: await deviceIdFetch,
+    // }) // TODO: migrate global creator/player state to a store shared across pages
+
+    // currentChoodler = await creatorFetch
+
+    // challenges = orderBy(
+    //   ['_updatedAt'],
+    //   ['desc'],
+    //   [
+    //     ...(await readOnlyClient.fetch(
+    //       `*[_type == "challenge" && challenger._ref == $creatorId]{..., challenger->{...}, choodle->{...}} | order(_createdAt desc)`,
+    //       { creatorId: $currentChoodler._id }
+    //     )),
+    //     ...map(
+    //       (guess) => guess.challenge,
+    //       await readOnlyClient.fetch(
+    //         `*[_type == "guess" && guesser._ref == $creatorId]{..., challenge->{..., challenger->{...}, choodle->{...}}} | order(_createdAt desc)`,
+    //         { creatorId: $currentChoodler._id }
+    //       )
+    //     ),
+    //   ]
+    // )
+    // console.log({ challenges })
 
     loading.set(false)
   })
