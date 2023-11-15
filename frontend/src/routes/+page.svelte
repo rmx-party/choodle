@@ -73,32 +73,6 @@
   $: $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
 
   onMount(async () => {
-    // const deviceIdFetch = getDeviceId()
-    // const creatorFetch = locateCreator({
-    //   deviceId: await deviceIdFetch,
-    // }) // TODO: migrate global creator/player state to a store shared across pages
-
-    // currentChoodler = await creatorFetch
-
-    // challenges = orderBy(
-    //   ['_updatedAt'],
-    //   ['desc'],
-    //   [
-    //     ...(await readOnlyClient.fetch(
-    //       `*[_type == "challenge" && challenger._ref == $creatorId]{..., challenger->{...}, choodle->{...}} | order(_createdAt desc)`,
-    //       { creatorId: $currentChoodler._id }
-    //     )),
-    //     ...map(
-    //       (guess) => guess.challenge,
-    //       await readOnlyClient.fetch(
-    //         `*[_type == "guess" && guesser._ref == $creatorId]{..., challenge->{..., challenger->{...}, choodle->{...}}} | order(_createdAt desc)`,
-    //         { creatorId: $currentChoodler._id }
-    //       )
-    //     ),
-    //   ]
-    // )
-    // console.log({ challenges })
-
     loading.set(false)
   })
 </script>
