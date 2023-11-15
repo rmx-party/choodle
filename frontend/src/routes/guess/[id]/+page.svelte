@@ -45,8 +45,8 @@
   const cursorLocation = writable(0)
 
   // TODO: CMS manageed
-  let guessesRemaining = 3
   let guessesLimit = 3
+  let guessesRemaining = 3
   $: guessesRemaining = guessesLimit - (guess?.guesses?.length || 0)
 
   let choodleOwner = false
@@ -59,7 +59,7 @@
 
   $: success = !!guess?.guessedCorrectly
 
-  let stillGuessing: boolean
+  let stillGuessing: boolean = false
   $: stillGuessing = !success && guessesRemaining > 0
 
   let guess: StreakGuessingGameGuessResult
@@ -143,6 +143,7 @@
     challengeId: string | undefined
   }) => {
     console.log('locateGuess')
+    loading.set(true)
     const query = `*[_type == "guess"][guesser._ref match "${guesserId}" && challenge._ref match "${challengeId}"][0]`
     guess = await readOnlyClient.fetch(query)
     if (!guess) {
@@ -158,6 +159,7 @@
         { autoGenerateArrayKeys: true }
       )
     }
+    loading.set(false)
     console.log({ guess })
   }
 
