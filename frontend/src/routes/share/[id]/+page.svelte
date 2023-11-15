@@ -4,7 +4,7 @@
   import { goto } from '$app/navigation'
   import { page } from '$app/stores'
   import MetaData from '../../../components/MetaData.svelte'
-  import { onMount } from 'svelte'
+  import { getContext, onMount } from 'svelte'
   import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
   import { share, type Shareable } from '$lib/ShareUtils'
   import { browser } from '$app/environment'
@@ -13,67 +13,54 @@
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte'
-  import { loading, loadingMessage } from '$lib/store'
+  import { loading } from '$lib/store'
   import type { PageData } from './$types'
   import { guessPath } from '$lib/routes'
+  import type { Writable } from 'svelte/store'
+  import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
 
   loading.set(true)
-  loadingMessage.set('loading')
 
   export let data: PageData
 
-  let choodleOwner = false
+  const currentChoodler: Writable<StreakGuessingGamePlayer> = getContext('choodler')
+
+  let choodleOwner = true
+    $: choodleOwner = data.challenge.challenger._id === $currentChoodler?._id
+  $: {
+    if (!choodleOwner) {
+      goto(guessPath(data.challenge._id))
+    }
+  }
+
   let copiedToClipboard = false
 
-  let deviceId
-  let currentChoodler
-
-  let gamePrompt
-
-  const constructChallengeShareable = (): Shareable => {
-    let gamePromptTiles = gamePrompt?.length
+    $: gamePrompt = data.challenge?.gamePrompt?.prompt
+  let gamePromptTiles = ''
+    $: {
+    gamePromptTiles = gamePrompt?.length
       ? map((char) => (char === ' ' ? '⬜' : '🟨'), gamePrompt.split('')).join('')
       : ''
-
-    const url = `${window.location.origin}/guess/${data.challenge._id}`
-    const shareCopy = data.copy.share_messageText || ''
-    const text = [shareCopy, gamePromptTiles, url].join(`\n`)
-    const shareable = { text }
-    return shareable
   }
+
+    $: shareUrl = browser ? `${window.location.origin}/guess/${data.challenge._id}` : ''
+  $: challengeShareText = [data.copy.share_messageText, gamePromptTiles, shareUrl].join(`\n`)
+  let challengeShareable: Shareable
+  $: challengeShareable = { text: challengeShareText}
 
   const handleShare = async (event: Event) => {
     event.preventDefault()
     if (!browser) return
 
-    share(constructChallengeShareable(), (usedClipboard) => {
+    share(challengeShareable, (usedClipboard) => {
       copiedToClipboard = usedClipboard
     })
   }
 
   onMount(async () => {
-    deviceId = await getDeviceId()
-    currentChoodler = await locateCreator({ deviceId })
-    console.log(currentChoodler)
-
-    gamePrompt = data.challenge?.gamePrompt?.prompt
-
-    console.log({ challenge: data.challenge })
-    choodleOwner = data.challenge.challenger._id === currentChoodler._id
 
     // Store in localstorage on Draw:
     //  - all details we need to draw it here, including the image
-
-    // If the challenge is in localstorage, render it immediately.
-    // Wait for it to load.
-    //   If the currentChoodler doesn't own it, redirect to guess page.
-
-    if (!choodleOwner) {
-      goto(guessPath(data.challenge._id))
-      return
-    }
-
-    console.log({ choodleOwner })
 
     loading.set(false)
   })
