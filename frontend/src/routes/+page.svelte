@@ -77,7 +77,7 @@
   })
 </script>
 
-<MetaData title={data.copy.defaultPageTitle} themeColor={pageBackgroundDefault} url={$page.url} />
+<MetaData title={data.copy.defaultPageTitle} bgColor={pageBackgroundDefault} url={$page.url} />
 
 {#if isFirstTime}
   <LayoutContainer>
