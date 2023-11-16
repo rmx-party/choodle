@@ -21,7 +21,9 @@
   import DashboardDrawing from '../../components/DashboardDrawing.svelte'
   import type { PageData } from './$types'
   import type { Writable } from 'svelte/store'
+  import flow from 'lodash/fp/flow'
   import uniqBy from 'lodash/fp/uniqBy'
+  import reject from 'lodash/fp/reject'
   import { urlFor } from '$lib/PersistedImagesUtils'
   import UserWelcomeMessage from '../../components/UserWelcomeMessage.svelte'
 
@@ -64,13 +66,15 @@
     )) as StreakGuessingGameGuessResult[]
   }
   $: {
-    challenges = uniqBy(
-      '_id',
-      orderBy(
-        ['_updatedAt'],
-        ['desc']
-      )([...myChallenges, ...map((guess) => guess.challenge, myGuesses)])
-    ) as StreakGuessingGameChallenge[]
+    challenges = flow(
+      reject((challenge: StreakGuessingGameChallenge) => !challenge.choodle),
+      orderBy(['_updatedAt'], ['desc']),
+      uniqBy('_id')
+    )([
+      ...myChallenges,
+      ...map((guess) => guess.challenge, myGuesses),
+    ] as StreakGuessingGameChallenge[])
+
   }
   $: $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
 
