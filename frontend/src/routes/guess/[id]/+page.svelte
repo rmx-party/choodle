@@ -18,11 +18,10 @@
   import { readOnlyClient, readWriteClient } from '$lib/CMSUtils'
   import Hints from '../../../components/Hints.svelte'
   import { closeDialog, loading, openDialog } from '$lib/store'
-  import Dialog from '../../../components/Dialog.svelte'
-  import {
-    type StreakGuessingGameDrawing,
-    type StreakGuessingGameGuessResult,
-    type StreakGuessingGamePlayer,
+  import type {
+    StreakGuessingGameDrawing,
+    StreakGuessingGameGuessResult,
+    StreakGuessingGamePlayer,
   } from '$lib/CWFGame'
   import type { PageData } from './$types'
   import TextMessageBubble from '../../../components/TextMessageBubble.svelte'
@@ -40,7 +39,7 @@
   const cursorLocation = writable(0)
 
   // TODO: CMS manageed
-  let guessesLimit = 3
+  const guessesLimit = 3
   let guessesRemaining = 3
   $: guessesRemaining = guessesLimit - (guess?.guesses?.length || 0)
 
