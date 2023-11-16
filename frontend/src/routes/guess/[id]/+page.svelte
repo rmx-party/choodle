@@ -242,7 +242,7 @@
   }
 
   $: {
-    if (!guess && $guesser?_id && data.challenge?._id) {
+    if (!guess && $guesser?._id && data.challenge?._id) {
       locateGuess({ guesserId: $guesser._id, challengeId: data.challenge._id })
     }
   }
