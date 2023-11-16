@@ -1,24 +1,24 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
-  import { backgroundColour } from '$lib/Configuration';
-  import { setDynamicBackground } from '$lib/DynamicBackground';
+  import { browser } from '$app/environment'
+  import { choodleYellow } from '$lib/Configuration'
+  import { setDynamicBackground } from '$lib/DynamicBackground'
 
-  export let url: URL | string | undefined = undefined;
-  export let title: string | undefined = undefined;
-  export let imageUrl: string | undefined = undefined;
-  export let imageAlt: string | undefined = undefined;
-  export let width: number | string | undefined = undefined;
-  export let height: number | string | undefined = undefined;
-  export let description: string | undefined = undefined;
-  export let themeColor: string | null = backgroundColour;
-  export let bgColor: string | null = themeColor;
+  export let url: URL | string | undefined = undefined
+  export let title: string | undefined = undefined
+  export let imageUrl: string | undefined = undefined
+  export let imageAlt: string | undefined = undefined
+  export let width: number | string | undefined = undefined
+  export let height: number | string | undefined = undefined
+  export let description: string | undefined = undefined
+  export let themeColor: string | null = choodleYellow
+  export let bgColor: string | null = themeColor
 
   if (browser && themeColor) {
-    console.log('setting theme color', themeColor);
-    document?.querySelector('meta[name=theme-color]')?.setAttribute('content', `${themeColor}`);
+    console.log('setting theme color', themeColor)
+    document?.querySelector('meta[name=theme-color]')?.setAttribute('content', `${themeColor}`)
   }
   if (browser && bgColor) {
-    setDynamicBackground(bgColor);
+    setDynamicBackground(bgColor)
   }
 </script>
 
