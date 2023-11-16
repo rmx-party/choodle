@@ -79,10 +79,11 @@
     challengeId: string | undefined
   }) => {
     console.log('locateGuess')
+    if (!guesserId || !challengeId) return
     loading.set(true)
     const query = `*[_type == "guess"][guesser._ref match "${guesserId}" && challenge._ref match "${challengeId}"][0]`
     guess = await readOnlyClient.fetch(query)
-    if (!guess) {
+    if (!guess?._id) {
       console.log('create a new guess')
       guess = await readWriteClient.create(
         {
@@ -238,7 +239,7 @@
   }
 
   $: {
-    if (!guess && $guesser) {
+    if (!guess && $guesser?_id && data.challenge?._id) {
       locateGuess({ guesserId: $guesser._id, challengeId: data.challenge._id })
     }
   }
