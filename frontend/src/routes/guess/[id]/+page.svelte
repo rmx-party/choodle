@@ -80,11 +80,13 @@
   }) => {
     console.log('locateGuess')
     if (!guesserId || !challengeId) return
+    console.log('locateGuess', { guesserId, challengeId })
     loading.set(true)
     const query = `*[_type == "guess"][guesser._ref match "${guesserId}" && challenge._ref match "${challengeId}"][0]`
     guess = await readOnlyClient.fetch(query)
+    console.log({ guess })
     if (!guess?._id) {
-      console.log('create a new guess')
+      console.log('no guess found, creating a new guess')
       guess = await readWriteClient.create(
         {
           _type: 'guess',
@@ -97,6 +99,7 @@
       )
     }
     loading.set(false)
+    if (!guess) throw new Error(`no guess could be found or created`)
     console.log({ guess })
   }
 
