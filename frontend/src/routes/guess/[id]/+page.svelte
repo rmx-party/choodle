@@ -79,7 +79,7 @@
     challengeId: string | undefined
   }) => {
     console.log('locateGuess')
-    if (!guesserId || !challengeId) return
+    if (!guesserId || !challengeId || choodleOwner) return
     console.log('locateGuess', { guesserId, challengeId })
     loading.set(true)
     const query = `*[_type == "guess"][guesser._ref match "${guesserId}" && challenge._ref match "${challengeId}"][0]`
@@ -242,7 +242,7 @@
   }
 
   $: {
-    if (!guess && $guesser?._id && data.challenge?._id) {
+    if (!guess && $guesser?._id && data.challenge?._id && !choodleOwner) {
       locateGuess({ guesserId: $guesser._id, challengeId: data.challenge._id })
     }
   }
