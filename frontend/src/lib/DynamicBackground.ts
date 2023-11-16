@@ -1,9 +1,9 @@
-import { browser } from '$app/environment';
-import { backgroundColour } from './Configuration';
+import { browser } from "$app/environment";
+import { pageBackgroundDefault } from "./Configuration";
 
-export const setDynamicBackground = async (bgcolor = backgroundColour) => {
+export const setDynamicBackground = async (bgcolor = pageBackgroundDefault) => {
   if (!browser) return;
 
   let root = document.documentElement;
-  root.style.setProperty('--page-background-color', bgcolor);
+  root.style.setProperty("--page-background-color", bgcolor);
 };
