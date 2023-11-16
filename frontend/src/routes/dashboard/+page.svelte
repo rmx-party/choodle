@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
-  import { getContext, onMount } from 'svelte'
+  import { getContext } from 'svelte'
   import Button from '../../components/Button.svelte'
   import LayoutContainer from '../../components/LayoutContainer.svelte'
   import { page } from '$app/stores'
@@ -75,12 +75,9 @@
       ...map((guess) => guess.challenge, myGuesses),
     ] as StreakGuessingGameChallenge[])
 
+    challenges?.length && loading.set(false)
   }
   $: $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
-
-  onMount(async () => {
-    loading.set(false)
-  })
 </script>
 
 <MetaData title={data.copy.defaultPageTitle} bgColor={pageBackgroundDefault} url={$page.url} />
