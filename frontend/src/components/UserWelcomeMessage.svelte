@@ -6,12 +6,12 @@
   const currentChoodler: Writable<StreakGuessingGamePlayer> = getContext('choodler')
 </script>
 
-<h3 class="hud">
+<h3 class="hello-user">
   <strong>
     {#if $currentChoodler?.username?.length}
-      👋 Hi <span class="username">{$currentChoodler?.username || 'unnamed user'}</span>!
+      👋 Hi <span class="username">{$currentChoodler.username}</span>
     {:else}
-      👋 Hi!
+      👋 Hi
     {/if}
     <br />
     Welcome Home!
@@ -19,7 +19,7 @@
 </h3>
 
 <style>
-  .hud {
+  .hello-user {
     width: 100%;
     margin-top: 2rem;
   }
