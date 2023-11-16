@@ -98,6 +98,9 @@
       >{data.copy.pick_doneButtonText}</Button
     >
   </div>
+  <section class="content">
+    {@html toHTML(data.copy.landing_content_bottom)}
+  </section>
 </LayoutContainer>
 
 <style>
