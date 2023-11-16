@@ -4,12 +4,12 @@
   export let logoUrl: string | undefined
   export let logoLinkDestination: string | undefined = undefined
 
-  import handDrawIcon from '$lib/assets/hand-draw.svg'
-  import listIcon from '$lib/assets/list-icon.svg'
+  import newGameIcon from '$lib/assets/m.nav-icon-pick.svg'
+  import listIcon from '$lib/assets/m.nav-icon-dash.svg'
 </script>
 
 <header class="no-pan">
-  <a href={pickPath()}><img class="side-icon" src={handDrawIcon} alt="" /></a>
+  <a href={pickPath()}><img class="side-icon" src={newGameIcon} alt="" /></a>
   {#if logoLinkDestination}
     <a href={logoLinkDestination}>
       <img class="logo" src={logoUrl} alt="" />
@@ -26,8 +26,8 @@
   header {
     display: flex;
     justify-content: space-between;
-    height: 44px;
-    background: var(--choodle-yellow, #fef40a);
+    height: 2.75rem;
+    background: var(--choodle-yellow);
     align-content: center;
     align-items: center;
     flex-direction: row;
@@ -44,13 +44,13 @@
 
   .logo {
     width: 100px;
-    height: 32px;
+    height: 2rem;
     flex-shrink: 0;
   }
 
   .side-icon {
-    width: 26px;
-    height: 26px;
+    width: 2rem;
+    height: 2rem;
     flex-shrink: 0;
   }
 
