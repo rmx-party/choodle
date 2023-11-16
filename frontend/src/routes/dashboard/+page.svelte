@@ -136,13 +136,23 @@
     margin-top: 1.5rem;
   }
 
-  section.drawings {
+  .drawings {
+    width: calc(
+      (var(--drawing-grid-img-width) * var(--drawing-grid-columns)) +
+        (var(--drawing-grid-gap) * (var(--drawing-grid-columns) - 1))
+    );
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
-    gap: 0.4rem;
+    gap: var(--drawing-grid-gap);
     margin: 2rem auto;
+  }
+
+  @media (min-width: 550px) {
+    .drawings {
+      --drawing-grid-columns: 3;
+    }
   }
 
   .centre-container {

@@ -24,8 +24,8 @@
     display: block;
   }
   img {
-    width: 168px;
-    height: 228px;
+    width: var(--drawing-grid-img-width);
+    height: var(--drawing-grid-img-height);
     border-radius: 8px;
     border: 1px solid #000;
     image-rendering: pixelated;

@@ -9,6 +9,11 @@
   --page-background-color: var(--choodle-yellow);
 
   --choodle-max-height-offset: 60svh;
+
+  --drawing-grid-img-width: 168px;
+  --drawing-grid-img-height: 228px;
+  --drawing-grid-columns: 2;
+  --drawing-grid-gap: 0.4rem;
 }
 
 html,

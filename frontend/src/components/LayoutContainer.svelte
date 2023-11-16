@@ -38,7 +38,7 @@
     padding: 0 1rem;
     width: 100%;
     height: 100%;
-    max-width: 500px;
+    max-width: 720px;
 
     justify-content: var(--layout-justify, flex-start);
   }
