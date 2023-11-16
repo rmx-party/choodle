@@ -14,7 +14,7 @@
   let messageIndex = -1
 
   loading.subscribe((value) => {
-    console.log(`loading state change: `, value)
+    console.info(`loading state change: `, value)
   })
 
   onMount(() => {
