@@ -23,6 +23,7 @@
   import type { Writable } from 'svelte/store'
   import uniqBy from 'lodash/fp/uniqBy'
   import { urlFor } from '$lib/PersistedImagesUtils'
+  import UserWelcomeMessage from '../../components/UserWelcomeMessage.svelte'
 
   loading.set(true)
 
@@ -82,13 +83,7 @@
 
 {#if isFirstTime}
   <LayoutContainer>
-    <p class="hud">
-      {#if $currentChoodler?.username?.length}
-        Hi, <span class="username">{$currentChoodler?.username || 'unnamed user'}</span>!
-      {:else}
-        Hi!
-      {/if}
-    </p>
+    <UserWelcomeMessage />
 
     <section class="landing-content">
       {@html toHTML(data.copy.landing_content_first_time)}
@@ -115,13 +110,7 @@
   </LayoutContainer>
 {:else}
   <LayoutContainer>
-    <p class="hud">
-      {#if $currentChoodler?.username?.length}
-        Hi, <span class="username">{$currentChoodler?.username || 'unnamed user'}</span>!
-      {:else}
-        Hi!
-      {/if}
-    </p>
+    <UserWelcomeMessage />
 
     <section class="landing-content">
       {@html toHTML(data.copy.landing_content)}
@@ -159,24 +148,5 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .hud {
-    width: 100%;
-    margin-top: 2rem;
-  }
-
-  .username {
-    display: inline-block;
-    text-align: right;
-    color: var(--text-text-primary, #141518);
-    background: var(--choodle-yellow, #fef40a);
-
-    /* mobile/caption-bold */
-    font-family: DejaVu Sans Bold;
-    font-size: 0.875rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 120%; /* 1.05rem */
   }
 </style>
