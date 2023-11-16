@@ -1,7 +1,7 @@
 <script lang="ts">
   import { urlFor } from '$lib/PersistedImagesUtils'
   import Button from '../../../components/Button.svelte'
-  import { goto } from '$app/navigation'
+  import { goto, preloadData } from '$app/navigation'
   import { page } from '$app/stores'
   import MetaData from '../../../components/MetaData.svelte'
   import { getContext, onMount } from 'svelte'
@@ -61,6 +61,7 @@
     //  - all details we need to draw it here, including the image
 
     loading.set(false)
+    preloadData(guessPath(data.challenge._id))
   })
 
   const bestImageUrl = (choodle) => {
