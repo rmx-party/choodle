@@ -96,7 +96,7 @@
 
     <div class="centre-container">
       <Button
-        variant="secondary"
+        variant="primary"
         colour="yellow"
         on:click={startGame}
         style="margin: 1rem auto; flex-grow: 0;"
