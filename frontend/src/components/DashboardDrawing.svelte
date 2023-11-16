@@ -10,7 +10,7 @@
 
 <a class="drawing" href={linkDestination} transition:fade={{ duration: 100 }}>
   <img
-    loading={index < 4 ? 'eager' : 'lazy'}
+    loading={index < 12 ? 'eager' : 'lazy'}
     src={urlFor(drawing.image).url()}
     alt=""
     width="168"
