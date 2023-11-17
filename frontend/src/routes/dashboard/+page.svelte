@@ -3,7 +3,7 @@
   import { getContext } from 'svelte'
   import Button from '../../components/Button.svelte'
   import LayoutContainer from '../../components/LayoutContainer.svelte'
-  import { page } from '$app/stores'
+  import { navigating, page } from '$app/stores'
   import MetaData from '../../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import { loading } from '$lib/store'
@@ -76,7 +76,7 @@
       ...map((guess) => guess.challenge, myGuesses),
     ] as StreakGuessingGameChallenge[])
   }
-  $: $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
+  $: $navigating && $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
 </script>
 
 <MetaData title={data.copy.defaultPageTitle} bgColor={pageBackgroundDefault} url={$page.url} />
