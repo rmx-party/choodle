@@ -23,6 +23,8 @@
   export let data: PageData
 
   let child: ChoodleBoard | undefined
+  let childSave: () => Promise<void> | undefined
+
   const deviceId: Writable<string> = getContext('deviceId')
   const challenger: Writable<StreakGuessingGamePlayer> = getContext('choodler')
   const usernamePromptId = 'username-prompt'
@@ -37,7 +39,12 @@
   $: console.log(`draw page react`, { challenger: $challenger, deviceId: $deviceId })
 
   const performSave = async (undoStack: UndoStack, canvas: HTMLCanvasElement) => {
-    if (!browser || !data.challenge || !$deviceId || $challenger?.username) return
+    console.log(`performSave called`, {
+      challenger: $challenger,
+      deviceId: $deviceId,
+      challenge: data.challenge,
+    })
+    if (!browser || !data.challenge || !$deviceId || !$challenger?.username) return
     loading.set(true)
     const { transaction, choodleId } = await createUncommittedChoodle(
       undoStack,
@@ -83,13 +90,21 @@
       loading.set(true)
       challenger.set(await readWriteClient.patch($challenger._id).set({ username }).commit())
       closeDialog(usernamePromptId)
-      if (!child?.save) throw new Error(`the child is null`)
-      child.save()
+      if (!data.challenge || !$deviceId || !$challenger)
+        throw new Error(`prerequisite failed`, {
+          challenge: data.challenge,
+          deviceId: $deviceId,
+          challenger: $challenger,
+        })
+      if (!childSave) throw new Error(`the child is null, requiring username`)
+      childSave()
+      // child.save()
       return
     }
 
     openDialog(usernamePromptId)
   }
+
   const attemptToSaveChoodle = async () => {
     if (!browser) return
     console.log(`attempting to save, debug state: `, {
@@ -97,21 +112,22 @@
       challenge: data.challenge,
       deviceId: $deviceId,
       child,
-      childSave: child?.save,
+      childSave,
     })
 
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false)
 
     if (usernameRequired) {
-      return await attemptToSaveChoodleRequiringUsername().catch((e) => {
-        uncaughtErrors.set([...$uncaughtErrors, { error: e, message: e.message }])
+      return await attemptToSaveChoodleRequiringUsername().catch((error) => {
+        console.error(`error in attempt to save choodle`, { error })
+        uncaughtErrors.set([...$uncaughtErrors, { error }])
         loading.set(false)
       })
     } else {
       if (!data.challenge || !$deviceId || $challenger?.username) return
       loading.set(true)
-      if (!child?.save) throw new Error(`the child is null`)
+      if (!child?.save) throw new Error(`the child is null, username not required`)
       child.save()
       return
     }
@@ -140,7 +156,7 @@
       </h3>
     </span>
   </div>
-  <ChoodleBoard id="cwf-canvas" bind:this={child} {performSave}>
+  <ChoodleBoard id="cwf-canvas" bind:this={child} bind:save={childSave} {performSave}>
     <ButtonMenu slot="buttons">
       <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
       <Button on:click={attemptToSaveChoodle} isOnline={$isOnline} colour="yellow"
