@@ -2,7 +2,6 @@
   import ChoodleBoard from '../../../components/ChoodleBoard.svelte'
   import type { UndoStack } from '$lib/UndoStack'
   import { createUncommittedChoodle } from '$lib/ChoodleStorage'
-  import { getDeviceId } from '$lib/CreatorUtils'
   import { browser } from '$app/environment'
   import { clearStorage, getUndoStack } from '$lib/StorageStuff'
   import { goto, preloadData } from '$app/navigation'
@@ -37,13 +36,14 @@
   }
   $: console.log(`draw page react`, { challenger: $challenger, deviceId: $deviceId })
 
-  async function performSave(undoStack: UndoStack, canvas: HTMLCanvasElement) {
+  const performSave = async (undoStack: UndoStack, canvas: HTMLCanvasElement) => {
+    if (!browser || !data.challenge || !$deviceId || $challenger?.username) return
     loading.set(true)
     const { transaction, choodleId } = await createUncommittedChoodle(
       undoStack,
       canvas,
       {
-        creatorId: await getDeviceId(),
+        creatorId: $deviceId,
       },
       $challenger._id
     )
@@ -73,13 +73,14 @@
 
   // TODO: switch back for username driven gameplay after prod deploy
   const usernameRequired = true
-  const attemptToSaveChoodleRequiringUsername = async (_event: Event) => {
+  const attemptToSaveChoodleRequiringUsername = async () => {
     if (!browser) return
 
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false)
 
     if (username?.length > 0) {
+      loading.set(true)
       await readWriteClient.patch($challenger._id).set({ username }).commit()
       closeDialog(usernamePromptId)
       child.save()
@@ -88,15 +89,17 @@
 
     openDialog(usernamePromptId)
   }
-  const attemptToSaveChoodle = async (event: Event) => {
+  const attemptToSaveChoodle = async () => {
     if (!browser) return
 
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false)
 
     if (usernameRequired) {
-      return await attemptToSaveChoodleRequiringUsername(event)
+      return await attemptToSaveChoodleRequiringUsername()
     } else {
+      if (!data.challenge || !$deviceId || $challenger?.username) return
+      loading.set(true)
       child.save()
       return
     }
