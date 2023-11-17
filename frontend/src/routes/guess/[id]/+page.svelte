@@ -83,8 +83,12 @@
     console.log('locateGuess', { guesserId, challengeId })
     $loading || loading.set(true)
     alreadyLookingForGuess = true
-    const query = `*[_type == "guess"][guesser._ref match "${guesserId}" && challenge._ref match "${challengeId}"][0]`
-    guess = await readOnlyClient.fetch(query)
+
+    const query = `*[_type == "guess"][guesser._ref == $guesserId && challenge._ref == $challengeId][0]`
+    guess = await readOnlyClient.fetch(query, { guesserId, challengeId }).catch((error) => {
+      uncaughtErrors.set([...$uncaughtErrors, { error }])
+    }
+
     console.log(`locateGuess GET`, { guess })
     if (!guess?._id) {
       console.log('no guess found, creating a new guess')
