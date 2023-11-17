@@ -9,10 +9,10 @@ export default defineConfig({
     sentrySvelteKit({
       adapter: "vercel",
       autoUploadSourceMaps: true,
-      // sourceMapsUploadOptions: {
-      //   org: "rmx-party",
-      //   project: "javascript-sveltekit",
-      // },
+      sourceMapsUploadOptions: {
+        org: "rmx-party",
+        project: "javascript-sveltekit",
+      },
       autoInstrument: {
         load: true,
         serverLoad: false,
