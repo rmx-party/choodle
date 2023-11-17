@@ -4,25 +4,17 @@
   import Wordmark from '../components/Wordmark.svelte'
   import { goto } from '$app/navigation'
   import MetaData from '../components/MetaData.svelte'
-  import { browser } from '$app/environment'
   import { onMount } from 'svelte'
   import { loading } from '$lib/store'
   import { dashboardPath } from '$lib/routes'
+  import { pageBackgroundDefault } from '$lib/Configuration'
 
-  const resetViewportUnit = async () => {
-    if (!browser) return
-    // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
-    const vh = window.innerHeight * 0.01
-    document.documentElement.style.setProperty('--vh', `${vh}px`)
-  }
-
-  onMount(async () => {
+  onMount(() => {
     loading.set(false)
-    await resetViewportUnit() // FIXME: use the layout component solution to this
   })
 </script>
 
-<MetaData title="Oops!" themeColor="#fff" />
+<MetaData title="Oops!" themeColor={pageBackgroundDefault} />
 
 <div class="container">
   <div id="top-box">
@@ -74,6 +66,7 @@
     margin-top: 2rem;
     margin-bottom: 1.5rem;
     object-fit: contain;
+    image-rendering: pixelated;
   }
 
   footer {
