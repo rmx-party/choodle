@@ -64,9 +64,18 @@
     hints = filter(
       (hint) => !!hint.text,
       [
-        { text: data.gamePrompt?.hint, used: hintUsedInGuess(guess, data.gamePrompt?.hint) },
-        { text: data.gamePrompt?.hint_2, used: hintUsedInGuess(guess, data.gamePrompt?.hint_2) },
-        { text: data.gamePrompt?.hint_3, used: hintUsedInGuess(guess, data.gamePrompt?.hint_3) },
+        {
+          text: data.challenge?.gamePrompt?.hint,
+          used: hintUsedInGuess(guess, data.challenge?.gamePrompt?.hint),
+        },
+        {
+          text: data.challenge?.gamePrompt?.hint_2,
+          used: hintUsedInGuess(guess, data.challenge?.gamePrompt?.hint_2),
+        },
+        {
+          text: data.challenge?.gamePrompt?.hint_3,
+          used: hintUsedInGuess(guess, data.challenge?.gamePrompt?.hint_3),
+        },
       ]
     )
   }
