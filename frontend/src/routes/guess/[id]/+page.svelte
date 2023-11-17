@@ -245,7 +245,7 @@
     if (!guess && $guesser?._id && data.challenge?._id && !choodleOwner) {
       locateGuess({ guesserId: $guesser._id, challengeId: data.challenge._id }).catch((error) => {
         uncaughtErrors.set([...$uncaughtErrors, { error }])
-      }
+      })
     }
   }
 
@@ -275,6 +275,7 @@
         return `${nthTry}th`
     }
   }
+
   const shareTextNthGuessCopy = (guess: string, n: number) => {
     switch (n) {
       case 0:
