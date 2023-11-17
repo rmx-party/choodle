@@ -8,7 +8,7 @@
   import { getContext, onMount } from 'svelte'
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
   import Button from '../../../components/Button.svelte'
-  import { loading, isOnline, closeDialog, openDialog } from '$lib/store'
+  import { loading, isOnline, closeDialog, openDialog, uncaughtErrors } from '$lib/store'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
   import MetaData from '../../../components/MetaData.svelte'
@@ -81,8 +81,9 @@
 
     if (username?.length > 0) {
       loading.set(true)
-      await readWriteClient.patch($challenger._id).set({ username }).commit()
+      challenger.set(await readWriteClient.patch($challenger._id).set({ username }).commit())
       closeDialog(usernamePromptId)
+      if (!child?.save) throw new Error(`the child is null`)
       child.save()
       return
     }
@@ -91,15 +92,26 @@
   }
   const attemptToSaveChoodle = async () => {
     if (!browser) return
+    console.log(`attempting to save, debug state: `, {
+      challenger: $challenger,
+      challenge: data.challenge,
+      deviceId: $deviceId,
+      child,
+      childSave: child?.save,
+    })
 
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false)
 
     if (usernameRequired) {
-      return await attemptToSaveChoodleRequiringUsername()
+      return await attemptToSaveChoodleRequiringUsername().catch((e) => {
+        uncaughtErrors.set([...$uncaughtErrors, { error: e, message: e.message }])
+        loading.set(false)
+      })
     } else {
       if (!data.challenge || !$deviceId || $challenger?.username) return
       loading.set(true)
+      if (!child?.save) throw new Error(`the child is null`)
       child.save()
       return
     }
