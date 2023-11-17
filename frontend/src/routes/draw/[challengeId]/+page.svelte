@@ -78,10 +78,19 @@
     await goto(sharePath(data.challenge._id))
   }
 
+  $: prerequisitesForSavingMet = !!$deviceId && !!$challenger?._id && !!data.challenge
   // TODO: switch back for username driven gameplay after prod deploy
   const usernameRequired = true
   const attemptToSaveChoodleRequiringUsername = async () => {
     if (!browser) return
+    if (!data.challenge || !$deviceId || !$challenger?._id) {
+      console.warn(`prerequisite failed`, {
+        challenge: data.challenge,
+        deviceId: $deviceId,
+        challenger: $challenger,
+      })
+      throw new Error(`prerequisite failed in attempt to save choodle`)
+    }
 
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false)
@@ -90,12 +99,6 @@
       loading.set(true)
       challenger.set(await readWriteClient.patch($challenger._id).set({ username }).commit())
       closeDialog(usernamePromptId)
-      if (!data.challenge || !$deviceId || !$challenger)
-        throw new Error(`prerequisite failed`, {
-          challenge: data.challenge,
-          deviceId: $deviceId,
-          challenger: $challenger,
-        })
       if (!childSave) throw new Error(`the child is null, requiring username`)
       childSave()
       // child.save()
@@ -164,7 +167,7 @@
       <Button
         id="draw-save-button"
         on:click={attemptToSaveChoodle}
-        isOnline={$isOnline}
+        isOnline={$isOnline && prerequisitesForSavingMet}
         colour="yellow">{data.copy.draw_doneButtonText}</Button
       >
     </ButtonMenu>
