@@ -14,7 +14,7 @@
   let messageIndex = -1
 
   loading.subscribe((value) => {
-    console.info(`loading state change: `, value)
+    console.info(`loading state change: `, value, { navigating: $navigating })
   })
 
   onMount(() => {
