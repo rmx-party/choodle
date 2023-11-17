@@ -158,9 +158,14 @@
   </div>
   <ChoodleBoard id="cwf-canvas" bind:this={child} bind:save={childSave} {performSave}>
     <ButtonMenu slot="buttons">
-      <Button on:click={child.undo} colour="yellow">{data.copy.draw_undoButtonText}</Button>
-      <Button on:click={attemptToSaveChoodle} isOnline={$isOnline} colour="yellow"
-        >{data.copy.draw_doneButtonText}</Button
+      <Button id="draw-undo-button" on:click={child.undo} colour="yellow"
+        >{data.copy.draw_undoButtonText}</Button
+      >
+      <Button
+        id="draw-save-button"
+        on:click={attemptToSaveChoodle}
+        isOnline={$isOnline}
+        colour="yellow">{data.copy.draw_doneButtonText}</Button
       >
     </ButtonMenu>
   </ChoodleBoard>

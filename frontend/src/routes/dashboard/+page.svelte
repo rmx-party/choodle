@@ -97,6 +97,7 @@
 
     <div class="centre-container">
       <Button
+        id="dashboard-first-start-game-btn"
         variant="primary"
         colour="yellow"
         on:click={startGame}

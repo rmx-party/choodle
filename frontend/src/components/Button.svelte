@@ -1,14 +1,15 @@
 <script lang="ts">
-  export let variant = 'secondary';
-  export let isOnline = true;
-  export let icon: string | undefined = undefined;
-  export let iconPosition: 'left' | 'right' = 'left';
+  export let id: string | undefined = undefined
+  export let variant = 'secondary'
+  export let isOnline = true
+  export let icon: string | undefined = undefined
+  export let iconPosition: 'left' | 'right' = 'left'
 
-  export let colour: 'yellow' | 'white' | 'black' = 'white';
+  export let colour: 'yellow' | 'white' | 'black' = 'white'
 </script>
 
 {#if isOnline}
-  <button class={`btn ${variant} ${colour}`} on:click {...$$restProps}>
+  <button {id} class={`btn ${variant} ${colour}`} on:click {...$$restProps}>
     {#if icon && iconPosition == 'left'}
       <img class="icon" src={icon} alt="" />
     {/if}
@@ -18,7 +19,7 @@
     {/if}
   </button>
 {:else}
-  <button disabled class={`btn ${variant}  ${colour} disabled`} {...$$restProps}>
+  <button {id} disabled class={`btn ${variant}  ${colour} disabled`} {...$$restProps}>
     {#if icon && iconPosition == 'left'}
       <img class="icon" src={icon} alt="" />
     {/if}

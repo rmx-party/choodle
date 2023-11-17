@@ -9,15 +9,15 @@
 </script>
 
 <header class="no-pan">
-  <a href={pickPath()}><img class="side-icon" src={newGameIcon} alt="" /></a>
+  <a id="top-new-game-link" href={pickPath()}><img class="side-icon" src={newGameIcon} alt="" /></a>
   {#if logoLinkDestination}
-    <a href={logoLinkDestination}>
+    <a id="top-logo-link" href={logoLinkDestination}>
       <img class="logo" src={logoUrl} alt="" />
     </a>
   {:else}
     <img class="logo" src={logoUrl} alt="" />
   {/if}
-  <a href={dashboardPath()}>
+  <a id="top-dashboard-link" href={dashboardPath()}>
     <img class="side-icon" src={listIcon} alt="" />
   </a>
 </header>

@@ -29,7 +29,7 @@
       style="width: 100%; padding: 1rem 0.5rem; border-radius: 0.25rem; margin: 0.5rem 0;"
     />
   </label>
-  <Button on:click={onClick} variant="primary" colour="yellow">
+  <Button id="save-username-btn" on:click={onClick} variant="primary" colour="yellow">
     {saveButtonText}
   </Button>
 </Dialog>
