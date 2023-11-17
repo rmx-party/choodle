@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment'
-  import { isOnline } from '$lib/store'
+  import { isOnline, loading } from '$lib/store'
   import { webVitals } from '$lib/vitals'
   import '$lib/assets/fonts.css'
   import { onMount, setContext } from 'svelte'
@@ -12,7 +12,7 @@
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'
   import compact from 'lodash/fp/compact'
   import type { LayoutData } from './$types'
-  import { get, writable, type Writable } from 'svelte/store'
+  import { writable, type Writable } from 'svelte/store'
   import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
   import { handleChoodleUncaughtError } from '$lib/errorHandling'
   import ErrorBoundary from '../components/ErrorBoundary.svelte'
@@ -45,9 +45,12 @@
     data.copy?.loadingMessage5,
   ])
 
-  onMount(async () => {
+  const handleInitialDeviceId = async () => {
     deviceId.set(await getDeviceId())
-    // choodler.set(await locateCreator($deviceId)) // TODO: re-fetch this where needed
+  }
+  $: browser && !$deviceId && handleInitialDeviceId()
+
+  onMount(async () => {
     preloadCode('/', '/pick/*', '/draw/*', '/share/*', '/guess/*', '/offline')
   })
 
@@ -62,11 +65,13 @@
     console.log(`new device ID`, idValueChange)
     if (!idValueChange) return
     if (idValueChange !== $deviceId || $choodler === undefined) {
+      $loading || loading.set(true)
       console.log(`getting creator from device ID`, idValueChange)
       const creator = await locateCreator({ deviceId: idValueChange })
       console.log(`found creator`, creator)
       choodler.set(creator)
       localStorage.setItem(choodleCreatorIdKey, idValueChange)
+      loading.set(false) // This is only sometimes correct, a push/delete queue or map of pending operations model will be better
     }
   }
   deviceId.subscribe(handleNewDeviceId)
