@@ -12,16 +12,14 @@ export const config = {
 };
 
 export const load: PageLoad = async ({ params }) => {
-  let challenge;
-  if (params.challengeId) {
-    challenge = await readOnlyClient.fetch(
-      `*[_type == "challenge" && _id == "${params.challengeId}"][0]`,
-    );
-
-    if (!challenge) {
-      throw error(404);
-    }
-  }
+  const { challengeId } = params;
+  const challenge = readOnlyClient.fetch(
+    `*[_type == "challenge" && _id == $challengeId][0]`,
+    { challengeId },
+  ).catch((err) => {
+    console.error(`load failure`, err);
+    throw error(404, `cms load failure for challenge id ${challengeId}`);
+  });
 
   return {
     records: cachedReadOnlyClient.fetch(`*[_type == "gamePrompt"]`),
