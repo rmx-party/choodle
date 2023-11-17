@@ -90,9 +90,11 @@
       {@html toHTML(data.copy.landing_content_first_time)}
     </section>
 
-    <section>
-      <img src={urlFor(data.copy.landing_image).url()} alt="" />
-    </section>
+    {#if data.copy.landing_image}
+      <section>
+        <img src={urlFor(data.copy.landing_image).url()} alt="" />
+      </section>
+    {/if}
 
     <div class="centre-container">
       <Button
