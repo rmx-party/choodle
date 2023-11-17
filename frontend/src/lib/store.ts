@@ -1,27 +1,22 @@
-import { writable } from "svelte/store";
+import { type Writable, writable } from "svelte/store";
 
-export const uncaughtErrors = writable([]);
+export const uncaughtErrors: Writable<unknown[]> = writable([]);
 
 export type DialogState = {
   [domId: string]: boolean;
 };
-export const dialogState = writable<DialogState>({});
+export const dialogState: Writable<DialogState> = writable<DialogState>({});
 export const switchDialog = (id: string, open: boolean) => {
   dialogState.update((dialogs) => {
     return { ...dialogs, [id]: open };
   });
 };
-export const openDialog = (id) => switchDialog(id, true);
-export const closeDialog = (id) => switchDialog(id, false);
+export const openDialog = (id: string) => switchDialog(id, true);
+export const closeDialog = (id: string) => switchDialog(id, false);
 
-export const tokenId = writable(0);
-export const loading = writable(true);
-export const loadingMessage = writable("");
-export const isOnline = writable(true);
+export const tokenId: Writable<number> = writable(0);
+export const loading: Writable<boolean> = writable(true);
+export const loadingMessage: Writable<string> = writable("");
+export const isOnline: Writable<boolean> = writable(true);
 
-export const imageData = writable("");
-export const nftTitle = writable("");
-export const nftAlt = writable("");
-export const nftDescription = writable("");
-
-export const filterState = writable("all");
+export const filterState: Writable<string> = writable("all");
