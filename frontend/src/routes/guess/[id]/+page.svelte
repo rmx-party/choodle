@@ -87,7 +87,7 @@
     const query = `*[_type == "guess"][guesser._ref == $guesserId && challenge._ref == $challengeId][0]`
     guess = await readOnlyClient.fetch(query, { guesserId, challengeId }).catch((error) => {
       uncaughtErrors.set([...$uncaughtErrors, { error }])
-    }
+    })
 
     console.log(`locateGuess GET`, { guess })
     if (!guess?._id) {
