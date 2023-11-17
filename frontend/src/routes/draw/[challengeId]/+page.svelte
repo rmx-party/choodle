@@ -22,7 +22,7 @@
 
   export let data: PageData
 
-  let child: ChoodleBoard
+  let child: ChoodleBoard | undefined
   const deviceId: Writable<string> = getContext('deviceId')
   const challenger: Writable<StreakGuessingGamePlayer> = getContext('choodler')
   const usernamePromptId = 'username-prompt'
