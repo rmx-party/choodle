@@ -55,6 +55,7 @@
   let myChallenges: StreakGuessingGameChallenge[] = []
   let myGuesses: StreakGuessingGameGuessResult[] = []
   const fetchChoodlerChallenges = async (choodlerId: string) => {
+    $loading || loading.set(true)
     if (!choodlerId) return
     myChallenges = (await readOnlyClient.fetch(
       `*[_type == "challenge" && challenger._ref == $choodlerId]{..., challenger->{...}, choodle->{...}} | order(_createdAt desc)`,
@@ -76,7 +77,9 @@
       ...map((guess) => guess.challenge, myGuesses),
     ] as StreakGuessingGameChallenge[])
   }
-  $: !$navigating && $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
+  $: {
+    !$navigating && $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
+  }
 </script>
 
 <MetaData title={data.copy.defaultPageTitle} bgColor={pageBackgroundDefault} url={$page.url} />
