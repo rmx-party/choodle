@@ -12,15 +12,17 @@
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'
   import compact from 'lodash/fp/compact'
   import type { LayoutData } from './$types'
-  import { writable } from 'svelte/store'
+  import { get, writable, type Writable } from 'svelte/store'
   import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
   import { handleChoodleUncaughtError } from '$lib/errorHandling'
   import ErrorBoundary from '../components/ErrorBoundary.svelte'
+  import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
+  import { choodleCreatorIdKey } from '$lib/Configuration'
 
   export let data: LayoutData
 
-  const deviceId = writable()
-  const choodler = writable()
+  const deviceId: Writable<string | undefined> = writable()
+  const choodler: Writable<StreakGuessingGamePlayer | undefined> = writable()
   setContext('deviceId', deviceId)
   setContext('choodler', choodler)
 
@@ -45,14 +47,36 @@
 
   onMount(async () => {
     deviceId.set(await getDeviceId())
-    choodler.set(await locateCreator($deviceId))
-    console.log(`layout context`, { choodler: $choodler, deviceId: $deviceId })
+    // choodler.set(await locateCreator($deviceId)) // TODO: re-fetch this where needed
     preloadCode('/', '/pick/*', '/draw/*', '/share/*', '/guess/*', '/offline')
   })
+
+  const handleStorageEvent = async (event: StorageEvent) => {
+    console.log(`storage event`, event)
+    if (event.key === choodleCreatorIdKey) {
+      const newDeviceId = await getDeviceId()
+      deviceId.set(newDeviceId)
+    }
+  }
+  const handleNewDeviceId = async (idValueChange: string | undefined) => {
+    console.log(`new device ID`, idValueChange)
+    if (!idValueChange) return
+    if (idValueChange !== $deviceId || $choodler === undefined) {
+      console.log(`getting creator from device ID`, idValueChange)
+      const creator = await locateCreator({ deviceId: idValueChange })
+      console.log(`found creator`, creator)
+      choodler.set(creator)
+      localStorage.setItem(choodleCreatorIdKey, idValueChange)
+    }
+  }
+  deviceId.subscribe(handleNewDeviceId)
+
+  $: console.log(`layout context`, { choodler: $choodler, deviceId: $deviceId })
 </script>
 
 <svelte:window
   on:error={handleChoodleUncaughtError}
+  on:storage={handleStorageEvent}
   on:online={() => isOnline.set(true)}
   on:offline={() => isOnline.set(false)}
 />
