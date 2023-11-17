@@ -176,11 +176,11 @@
       return
     }
 
-    if ($currentGuess?.length < data.gamePrompt?.prompt?.length) return
+    if ($currentGuess?.length < data.challenge?.gamePrompt?.prompt?.length) return
 
     console.log(`checking answer, ${guessesRemaining} guesses left`)
 
-    isCorrect($currentGuess, data.gamePrompt?.prompt)
+    isCorrect($currentGuess, data.challenge?.gamePrompt?.prompt)
       ? handleCorrectGuess()
       : handleIncorrectGuess()
   }
@@ -302,7 +302,7 @@
       guessesLimit - guessesRemaining
     )} try!`
   }
-  $: shareTextFailureMessage = `🫣 I couldn’t guess ${data.gamePrompt?.prompt}!`
+  $: shareTextFailureMessage = `🫣 I couldn’t guess ${data.challenge?.gamePrompt?.prompt}!`
   $: shareTextGuesses = (guess?.guesses || []).map(shareTextNthGuessCopy).join(`\n`)
   let shareTextStats = ``
   $: {
@@ -340,7 +340,7 @@
 <MetaData
   url={$page.url}
   title={data.copy.defaultPageTitle}
-  imageUrl={bestImageUrl(data.choodle)}
+  imageUrl={bestImageUrl(data.challenge?.choodle)}
   width="430"
   height="932"
   themeColor={choodleYellow}
@@ -358,7 +358,7 @@
     </div>
 
     <ChoodleContainer --choodle-max-height-offset="31.5rem">
-      <img src={bestImageUrl(data.choodle)} alt="" />
+      <img src={bestImageUrl(data.challenge?.choodle)} alt="" />
     </ChoodleContainer>
 
     {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
@@ -367,7 +367,7 @@
       <p><!-- layout placeholder --></p>
     {/if}
     <GuessingInterface
-      format={data.gamePrompt?.prompt.split('')}
+      format={data.challenge?.gamePrompt?.prompt.split('')}
       inputDisplay={currentGuess}
       {cursorLocation}
       onEnter={attemptToSubmitGuess}
