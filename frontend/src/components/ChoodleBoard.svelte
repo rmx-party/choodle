@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { loading, loadingMessage } from '$lib/store'
+  import { loading } from '$lib/store'
   import { browser } from '$app/environment'
   import { getUndoStack, setUndoStack } from '$lib/StorageStuff'
   import { onMount } from 'svelte'
@@ -8,10 +8,16 @@
   import type { Dimensiony } from '$lib/Calculations'
   import { crunchCanvasToUrl, applyCrunchToCanvas } from '$lib/ImageUtils'
   import debounce from 'lodash/fp/debounce'
+  import type { UndoStack } from '$lib/UndoStack'
 
   export let id: string
 
-  export let performSave = (..._args) => null
+  export let performSave: (
+    undoStack: UndoStack,
+    canvas: HTMLCanvasElement
+  ) => Promise<void> = async (..._args) => {
+    _args
+  }
 
   let isDrawing = false
   let canvas: HTMLCanvasElement
@@ -49,14 +55,13 @@
     drawImageFromDataURL(dataURL, ctx)
   }
 
-  export const save = async (_event: Event) => {
+  export const save = async () => {
     if (!browser) return
     loading.set(true)
 
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false)
 
-    loadingMessage.set('saving your choodle')
     await performSave(undoStack, canvas)
 
     clearCanvas(id)
