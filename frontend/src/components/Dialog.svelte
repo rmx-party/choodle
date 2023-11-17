@@ -5,15 +5,17 @@
   import { dialogState } from '$lib/store'
   import closeBtn from '$lib/assets/icon-close-32px.svg'
 
-  export let initialOpen = false
-  let isOpen: boolean
   export let onClose = () => {}
   export let id: string
-
   export let enableCloseButton = true
+  let isOpen: boolean = false
+  $: isOpen = $dialogState[id]
 
   onMount(() => {
-    isOpen = initialOpen
+    dialogState.update((dialogs) => {
+      console.info(`Mounting Dialog ${id}...`, dialogs)
+      return { ...dialogs, [id]: isOpen }
+    })
 
     return () => {
       dialogState.update((dialogs) => {
@@ -22,11 +24,6 @@
         return dialogs
       })
     }
-  })
-
-  dialogState.subscribe((dialogs) => {
-    isOpen = dialogs[id]
-    console.info(`Subscription: Dialog ${id} is ${dialogs[id] ? 'open' : 'closed'}`, dialogs)
   })
 
   function dismiss() {
