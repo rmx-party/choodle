@@ -64,6 +64,7 @@
       `*[_type == "guess" && guesser._ref == $choodlerId]{..., challenge->{..., challenger->{...}, choodle->{...}}} | order(_createdAt desc)`,
       { choodlerId }
     )) as StreakGuessingGameGuessResult[]
+    loading.set(false)
   }
   $: {
     challenges = flow(
@@ -74,8 +75,6 @@
       ...myChallenges,
       ...map((guess) => guess.challenge, myGuesses),
     ] as StreakGuessingGameChallenge[])
-
-    challenges?.length && loading.set(false)
   }
   $: $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
 </script>
