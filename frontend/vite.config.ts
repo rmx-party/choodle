@@ -1,14 +1,14 @@
-import {sentrySvelteKit} from '@sentry/sveltekit';
-import {sveltekit} from '@sveltejs/kit/vite';
-import {defineConfig} from 'vitest/config';
-import * as path from 'path';
+import {  sentrySvelteKi t } from "@sentry/sveltekit";
+import { sveltekit } from "@sveltejs/kit/vite";
+import { defineConfig } from "vitest/config";
+import * as path from "path";
 
 export default defineConfig({
   // plugins: [sveltekit()],
   plugins: [
     sentrySvelteKit({
-      adapter: 'vercel',
-      autoUploadSourceMaps: false,
+      adapter: "vercel",
+      autoUploadSourceMaps: true,
       // sourceMapsUploadOptions: {
       //   org: "rmx-party",
       //   project: "javascript-sveltekit",
@@ -24,11 +24,11 @@ export default defineConfig({
     sourcemap: true,
   },
   define: {
-    'process.env': process.env,
+    "process.env": process.env,
   },
   resolve: {
     alias: {
-      '~': path.resolve(__dirname, 'src'),
+      "~": path.resolve(__dirname, "src"),
     },
   },
 });
