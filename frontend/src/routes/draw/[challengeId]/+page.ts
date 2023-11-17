@@ -1,4 +1,4 @@
-import { readOnlyClient } from "$lib/CMSUtils";
+import { cachedReadOnlyClient, readOnlyClient } from "$lib/CMSUtils";
 import type { PageLoad } from "./$types";
 import {
   PUBLIC_ISR_BYPASS_TOKEN,
@@ -12,11 +12,27 @@ export const config = {
   },
 };
 
+const slug = "draw";
+
 export const load: PageLoad = async ({ params }) => {
+  const pageContent = cachedReadOnlyClient.fetch(
+    `*[_type == "pageContent" && pageSlug == $slug][0]`,
+    { slug },
+  ).catch((error) => {
+    console.error(`load failure`, error);
+    throw new error(404, `cms load failure for pageContent slug ${slug}`);
+  });
+
   const challenge = readOnlyClient.fetch(
     `*[_type == "challenge" && _id == $challengeId]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
     { challengeId: params.challengeId },
-  );
+  ).catch((error) => {
+    console.error(`load failure`, error);
+    throw new error(
+      404,
+      `cms load failure for challenge id ${params.challengeId}`,
+    );
+  });
 
-  return { challenge };
+  return { pageContent, challenge };
 };
