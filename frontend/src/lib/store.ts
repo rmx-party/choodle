@@ -1,5 +1,7 @@
 import { writable } from "svelte/store";
 
+export const uncaughtErrors = writable([]);
+
 export type DialogState = {
   [domId: string]: boolean;
 };
