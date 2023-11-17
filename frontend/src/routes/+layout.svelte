@@ -61,8 +61,8 @@
 <ErrorBoundary>
   <LoadingIndicator {rotatingMessages} />
   <GlobalNavHeader
-    logoUrl={urlFor($page.data.copy.logo).url()}
-    logoLinkDestination={$page.data.copy.logoLinkDestination}
+    logoUrl={urlFor(data.copy.logo).url()}
+    logoLinkDestination={data.copy.logoLinkDestination}
   />
   <slot />
 </ErrorBoundary>
