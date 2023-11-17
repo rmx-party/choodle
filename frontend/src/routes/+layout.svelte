@@ -14,6 +14,8 @@
   import type { LayoutData } from './$types'
   import { writable } from 'svelte/store'
   import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
+  import { handleChoodleUncaughtError } from '$lib/errorHandling'
+  import ErrorBoundary from '../components/ErrorBoundary.svelte'
 
   export let data: LayoutData
 
@@ -47,10 +49,17 @@
   })
 </script>
 
-<svelte:window on:online={() => isOnline.set(true)} on:offline={() => isOnline.set(false)} />
-<LoadingIndicator {rotatingMessages} />
-<GlobalNavHeader
-  logoUrl={urlFor($page.data.copy.logo).url()}
-  logoLinkDestination={$page.data.copy.logoLinkDestination}
+<svelte:window
+  on:error={handleChoodleUncaughtError}
+  on:online={() => isOnline.set(true)}
+  on:offline={() => isOnline.set(false)}
 />
-<slot />
+<svelte:document on:error={handleChoodleUncaughtError} />
+<ErrorBoundary>
+  <LoadingIndicator {rotatingMessages} />
+  <GlobalNavHeader
+    logoUrl={urlFor($page.data.copy.logo).url()}
+    logoLinkDestination={$page.data.copy.logoLinkDestination}
+  />
+  <slot />
+</ErrorBoundary>

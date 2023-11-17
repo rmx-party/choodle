@@ -23,19 +23,15 @@
 
   {#each $uncaughtErrors as oneError}
     <br />
-    {@const { error, message, filename, lineno, colno, target } = oneError}
+    {@const { error, event } = oneError}
     <details>
-      <summary>{message}</summary>
+      <summary>{error.message}</summary>
       <pre>
-      message: {message}
       error msg: {error.message}
       stack:
       {error.stack}
 
-      source: {filename}
-      line: {lineno}
-      col: {colno}
-      {target.toString()}
+      event: {event.toString()}
     </pre>
     </details>
   {/each}
