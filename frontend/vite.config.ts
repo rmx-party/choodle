@@ -11,7 +11,7 @@ export default defineConfig({
       autoUploadSourceMaps: true,
       sourceMapsUploadOptions: {
         org: "rmx-party",
-        project: "javascript-sveltekit",
+        project: "choodle-sveltekit",
       },
       autoInstrument: {
         load: true,
