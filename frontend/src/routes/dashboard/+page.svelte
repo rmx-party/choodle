@@ -37,7 +37,7 @@
   $: console.log(`dashboard page react`, { currentChoodler: $currentChoodler })
 
   let isFirstTime: boolean
-  $: isFirstTime = isEmpty(challenges)
+  $: isFirstTime = !$loading && !$navigating && isEmpty(challenges)
 
   const startGame = async () => {
     await goto(pickPath())
@@ -76,7 +76,7 @@
       ...map((guess) => guess.challenge, myGuesses),
     ] as StreakGuessingGameChallenge[])
   }
-  $: $navigating && $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
+  $: !$navigating && $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
 </script>
 
 <MetaData title={data.copy.defaultPageTitle} bgColor={pageBackgroundDefault} url={$page.url} />
