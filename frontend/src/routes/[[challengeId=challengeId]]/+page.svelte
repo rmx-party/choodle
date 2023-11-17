@@ -81,7 +81,11 @@
   }
 </script>
 
-<MetaData url={$page.url} title={data.copy.defaultPageTitle} themeColor={choodleYellow} />
+<MetaData
+  url={$page.url}
+  title={data.pageContent.pageTitle}
+  description={data.pageContent.pageDescription}
+/>
 
 <LayoutContainer --layout-justify="space-evenly">
   <section class="pickPrompt">
