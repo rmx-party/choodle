@@ -16,7 +16,6 @@ export const closeDialog = (id: string) => switchDialog(id, false);
 
 export const tokenId: Writable<number> = writable(0);
 export const loading: Writable<boolean> = writable(true);
-export const loadingMessage: Writable<string> = writable("");
 export const isOnline: Writable<boolean> = writable(true);
 
 export const filterState: Writable<string> = writable("all");
