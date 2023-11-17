@@ -8,5 +8,5 @@ export const builder = imageUrlBuilder(cachedReadOnlyClient);
 // builder an image and returns the builder for you to specify additional
 // parameters:
 export const urlFor = (source: string) => {
-  return builder.image(source).auto("format").quality(100);
+  return builder.image(source).auto("format");
 };
