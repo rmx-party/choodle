@@ -79,7 +79,7 @@
     guesserId: string | undefined
     challengeId: string | undefined
   }) => {
-    if (!guesserId || !challengeId || choodleOwner) return
+    if (alreadyLookingForGuess || !guesserId || !challengeId || choodleOwner) return
     console.log('locateGuess', { guesserId, challengeId })
     $loading || loading.set(true)
     alreadyLookingForGuess = true
