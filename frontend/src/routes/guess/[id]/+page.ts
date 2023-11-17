@@ -13,7 +13,7 @@ export const config = {
 };
 
 export const load: PageLoad = async ({ params }) => {
-  const challenge = await cachedReadOnlyClient.fetch(
+  const challenge = cachedReadOnlyClient.fetch(
     `*[_type == "challenge" && _id == $challengeId]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
     {
       challengeId: params.id,
