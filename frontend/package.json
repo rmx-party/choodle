@@ -1,6 +1,6 @@
 {
   "name": "choodle",
-  "version": "0.23.11.16",
+  "version": "0.23.11.17",
   "private": true,
   "scripts": {
     "dev": "vite dev",
