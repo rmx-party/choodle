@@ -14,8 +14,5 @@ export const switchDialog = (id: string, open: boolean) => {
 export const openDialog = (id: string) => switchDialog(id, true);
 export const closeDialog = (id: string) => switchDialog(id, false);
 
-export const tokenId: Writable<number> = writable(0);
 export const loading: Writable<boolean> = writable(true);
 export const isOnline: Writable<boolean> = writable(true);
-
-export const filterState: Writable<string> = writable("all");
