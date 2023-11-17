@@ -25,12 +25,14 @@
   setContext('choodler', choodler)
 
   console.log('analytics ID', data.analyticsId)
-  $: if (browser && data.analyticsId) {
-    webVitals({
-      path: $page.url.pathname,
-      params: $page.params,
-      analyticsId: data.analyticsId,
-    })
+  $: {
+    if (browser && data.analyticsId) {
+      webVitals({
+        path: $page.url.pathname,
+        params: $page.params,
+        analyticsId: data.analyticsId,
+      })
+    }
   }
 
   const rotatingMessages = compact([
@@ -55,6 +57,7 @@
   on:offline={() => isOnline.set(false)}
 />
 <svelte:document on:error={handleChoodleUncaughtError} />
+
 <ErrorBoundary>
   <LoadingIndicator {rotatingMessages} />
   <GlobalNavHeader
