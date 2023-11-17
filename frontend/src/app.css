@@ -49,6 +49,9 @@ body {
 
 pre {
   white-space: pre-wrap;
+  text-align: left;
+  overflow: scroll;
+  max-width: 100%;
 }
 
 /* Typography */
