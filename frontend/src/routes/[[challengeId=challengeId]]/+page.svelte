@@ -42,7 +42,7 @@
   })
 
   const rotatePrompts = () => {
-    console.log(prompts.length)
+    console.log(prompts.length, 'prompts left')
     if (prompts.length >= 1) {
       selectedPrompt = prompts.pop()
       return
@@ -68,16 +68,16 @@
     loading.set(true)
 
     await readWriteClient
-      .patch(data.challenge?._id)
+      .patch(data.challenge._id)
       .set({
         gamePrompt: { _ref: gamePrompt._id },
       })
       .commit()
-    preloadData(drawPath(data.challenge?._id))
+    preloadData(drawPath(data.challenge._id))
 
     clearStorage()
 
-    goto(drawPath(data.challenge?._id))
+    goto(drawPath(data.challenge._id))
   }
 </script>
 
