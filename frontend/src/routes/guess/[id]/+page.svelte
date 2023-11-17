@@ -17,7 +17,7 @@
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte'
   import { readOnlyClient, readWriteClient } from '$lib/CMSUtils'
   import Hints from '../../../components/Hints.svelte'
-  import { closeDialog, loading, openDialog } from '$lib/store'
+  import { closeDialog, loading, openDialog, uncaughtErrors } from '$lib/store'
   import type {
     StreakGuessingGameDrawing,
     StreakGuessingGameGuessResult,
@@ -243,7 +243,9 @@
 
   $: {
     if (!guess && $guesser?._id && data.challenge?._id && !choodleOwner) {
-      locateGuess({ guesserId: $guesser._id, challengeId: data.challenge._id })
+      locateGuess({ guesserId: $guesser._id, challengeId: data.challenge._id }).catch((error) => {
+        uncaughtErrors.set([...$uncaughtErrors, { error }])
+      }
     }
   }
 

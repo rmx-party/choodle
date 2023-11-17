@@ -66,7 +66,7 @@
     if (undoStack.current === '') return loading.set(false)
 
     await performSave(undoStack, canvas).catch((error) => {
-      uncaughtErrors.set([...uncaughtErrors, { error }])
+      uncaughtErrors.set([...$uncaughtErrors, { error }])
       loading.set(false)
     })
 
