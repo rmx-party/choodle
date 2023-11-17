@@ -142,8 +142,8 @@
 </script>
 
 <MetaData
-  title={data.copy.defaultPageTitle}
-  themeColor={choodleYellow}
+  title={data.pageContent.pageTitle}
+  description={data.pageContent.pageDescription}
   bgColor={pageBackgroundDefault}
   url={$page.url}
 />
