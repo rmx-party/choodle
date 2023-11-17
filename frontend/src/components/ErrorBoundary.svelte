@@ -29,13 +29,13 @@
         <br />
         {@const { error, event } = oneError}
         <details>
-          <summary>{error.message}</summary>
+          <summary>{error?.message}</summary>
           <pre>
-      error msg: {error.message}
+      error msg: {error?.message}
       stack:
-      {error.stack}
+      {error?.stack}
 
-      event: {event.toString()}
+      event: {event?.toString()}
     </pre>
         </details>
       {/each}
