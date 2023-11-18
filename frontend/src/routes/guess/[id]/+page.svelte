@@ -348,7 +348,8 @@
 
 <MetaData
   url={$page.url}
-  title={data.copy.defaultPageTitle}
+  title={data.pageContent.pageTitle}
+  description={data.pageContent.pageDescription}
   imageUrl={bestImageUrl(data.challenge?.choodle)}
   width="430"
   height="932"

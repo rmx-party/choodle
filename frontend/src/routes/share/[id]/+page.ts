@@ -16,7 +16,7 @@ export const config = {
 const slug = "share";
 
 export const load: PageLoad = async ({ params }) => {
-  const challengeId = params.id;
+  const challengeId = params.id; // TODO: use challengeId with param matcher instead of id
   if (!challengeId) {
     throw error(404, `challengeId is required`);
   }
