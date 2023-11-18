@@ -1,7 +1,7 @@
 export default {
   name: "pageContent",
-  type: "document",
   title: "Page Copy",
+  type: "document",
   fields: [
     {
       name: "pageSlug",

@@ -2,7 +2,8 @@ import {
   PUBLIC_ISR_BYPASS_TOKEN,
   PUBLIC_ISR_EXPIRATION_SECONDS,
 } from "$env/static/public";
-import { readOnlyClient } from "$lib/CMSUtils";
+import { cachedReadOnlyClient, readOnlyClient } from "$lib/CMSUtils";
+import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 
 export const config = {
@@ -12,13 +13,33 @@ export const config = {
   },
 };
 
+const slug = "share";
+
 export const load: PageLoad = async ({ params }) => {
+  const challengeId = params.id;
+  if (!challengeId) {
+    throw error(404, `challengeId is required`);
+  }
+
+  const pageContent = cachedReadOnlyClient.fetch(
+    `*[_type == "pageContent" && pageSlug == $slug][0]`,
+    { slug },
+  ).catch((err) => {
+    console.error(`load failure`, err);
+    throw error(404, `cms load failure for pageContent slug ${slug}`);
+  });
+
+  const challenge = readOnlyClient.fetch(
+    `*[_type == "challenge" && _id == $challengeId]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
+    { challengeId },
+  )
+    .catch((err) => {
+      console.error(`load failure`, err);
+      throw error(404, `cms load failure for challenge id ${challengeId}`);
+    });
+
   return {
-    challenge: readOnlyClient.fetch(
-      `*[_type == "challenge" && _id == "${params.id}"]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
-    ).catch((e) => {
-      console.error(e);
-      throw Error(404);
-    }),
+    pageContent,
+    challenge,
   };
 };
