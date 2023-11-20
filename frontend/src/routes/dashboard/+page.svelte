@@ -125,8 +125,6 @@
 
     <section class="landing-content">
       {@html toHTML(data.copy.landing_content)}
-
-      {@html toHTML(data.copy.landing_content_bottom)}
     </section>
 
     <section class="drawings">
@@ -137,6 +135,10 @@
           linkDestination={shareOrPickPathFor($currentChoodler?._id, challenge)}
         />
       {/each}
+    </section>
+
+    <section class="landing-content">
+      {@html toHTML(data.copy.landing_content_bottom)}
     </section>
   </LayoutContainer>
 {/if}
