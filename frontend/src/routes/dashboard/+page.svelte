@@ -103,17 +103,15 @@
       </section>
     {/if}
 
-    <div class="centre-container">
-      <Button
-        id="dashboard-first-start-game-btn"
-        variant="primary"
-        colour="yellow"
-        on:click={startGame}
-        style="margin: 1rem auto; flex-grow: 0;"
-      >
-        {data.copy.startGameButtonText}
-      </Button>
-    </div>
+    <Button
+      id="dashboard-first-start-game-btn"
+      variant="primary"
+      colour="yellow"
+      on:click={startGame}
+      style="width: 100%; margin: 1rem auto; flex-grow: 0;"
+    >
+      {data.copy.startGameButtonText}
+    </Button>
 
     <section class="landing-content">
       {@html toHTML(data.copy.landing_content_bottom)}
