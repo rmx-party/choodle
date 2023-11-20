@@ -364,7 +364,7 @@
   <LayoutContainer class="no-pan">
     <div class="topBar" slot="topBar">
       <GuessingHUD {guessesRemaining} {guessesLimit}>
-        <div slot="content block-content">
+        <div slot="content">
           {@html toHTML(data.copy.guess_pageTopContent)}
         </div>
       </GuessingHUD>
