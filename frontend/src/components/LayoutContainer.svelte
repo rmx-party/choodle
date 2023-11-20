@@ -37,8 +37,9 @@
 
     padding: 0 1rem;
     width: 100%;
-    height: 100%;
-    max-height: 100%;
+    /* height: 100%; */
+    flex-grow: 1;
+    max-height: calc(100svh - 88px);
     max-width: 720px;
 
     justify-content: var(--layout-justify, flex-start);
