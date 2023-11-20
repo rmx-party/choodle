@@ -93,7 +93,7 @@
   <LayoutContainer>
     <UserWelcomeMessage />
 
-    <section class="landing-content">
+    <section class="block-content">
       {@html toHTML(data.copy.landing_content_first_time)}
     </section>
 
@@ -113,7 +113,7 @@
       {data.copy.startGameButtonText}
     </Button>
 
-    <section class="landing-content">
+    <section class="block-content">
       {@html toHTML(data.copy.landing_content_bottom)}
     </section>
   </LayoutContainer>
@@ -121,7 +121,7 @@
   <LayoutContainer>
     <UserWelcomeMessage />
 
-    <section class="landing-content">
+    <section class="block-content">
       {@html toHTML(data.copy.landing_content)}
     </section>
 
@@ -135,7 +135,7 @@
       {/each}
     </section>
 
-    <section class="landing-content">
+    <section class="block-content">
       {@html toHTML(data.copy.landing_content_bottom)}
     </section>
   </LayoutContainer>
@@ -143,7 +143,7 @@
 
 <style>
   section {
-    margin-top: 1.5rem;
+    margin: 1.5rem auto 0;
   }
 
   .drawings {
@@ -163,11 +163,5 @@
     .drawings {
       --drawing-grid-columns: 3;
     }
-  }
-
-  .centre-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 </style>

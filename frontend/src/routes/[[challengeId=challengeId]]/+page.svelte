@@ -88,7 +88,7 @@
 />
 
 <LayoutContainer --layout-justify="space-evenly">
-  <section class="pickPrompt">
+  <section class="pickPrompt block-content">
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
     <output for="shuffle">{selectedPrompt}</output>

@@ -87,7 +87,7 @@
 />
 
 <LayoutContainer class="no-pan">
-  <section class="top-content">
+  <section class="top-content block-content">
     {@html toHTML(data.copy.guess_pageAuthorTopContent)}
   </section>
 

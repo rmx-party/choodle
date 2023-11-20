@@ -139,6 +139,11 @@ p,
   min-height: 1em;
 }
 
+.block-content {
+  max-width: 72%;
+  text-wrap: balance;
+}
+
 a,
 .link {
   color: var(--color-link);

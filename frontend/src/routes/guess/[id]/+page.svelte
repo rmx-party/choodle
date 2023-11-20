@@ -364,7 +364,7 @@
   <LayoutContainer class="no-pan">
     <div class="topBar" slot="topBar">
       <GuessingHUD {guessesRemaining} {guessesLimit}>
-        <div slot="content">
+        <div slot="content block-content">
           {@html toHTML(data.copy.guess_pageTopContent)}
         </div>
       </GuessingHUD>
@@ -394,7 +394,7 @@
 {:else if guess}
   <LayoutContainer class="no-pan">
     {#if success}
-      <section class="top-content">
+      <section class="top-content block-content">
         {@html toHTML(data.copy.guess_pageTopContentSuccess)}
       </section>
 
