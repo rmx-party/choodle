@@ -1,19 +1,19 @@
 <script lang="ts">
-  import Button from '../../../components/Button.svelte';
-  import MetaData from '../../../components/MetaData.svelte';
-  import Wordmark from '../../../components/Wordmark.svelte';
-  import handDraw from '$lib/assets/hand-draw.svg';
-  import Dialog from '../../../components/Dialog.svelte';
-  import {dialogState, loading} from '$lib/store';
-  import {onMount} from "svelte";
-  import GlobalNavHeader from "../../../components/GlobalNavHeader.svelte";
-  import {page} from '$app/stores';
-  import {urlFor} from '$lib/PersistedImagesUtils';
+  import Button from '../../../components/Button.svelte'
+  import MetaData from '../../../components/MetaData.svelte'
+  import Wordmark from '../../../components/Wordmark.svelte'
+  import handDraw from '$lib/assets/hand-draw.svg'
+  import Dialog from '../../../components/Dialog.svelte'
+  import { dialogState, loading } from '$lib/store'
+  import { onMount } from 'svelte'
+  import GlobalNavHeader from '../../../components/GlobalNavHeader.svelte'
+  import { page } from '$app/stores'
+  import { urlFor } from '$lib/PersistedImagesUtils'
 
   function openTestDialog() {
     dialogState.update((dialogs) => {
-      return {...dialogs, 'test-dialog': true};
-    });
+      return { ...dialogs, 'test-dialog': true }
+    })
   }
 
   onMount(() => {
@@ -21,10 +21,13 @@
   })
 </script>
 
-<MetaData title="Choodle Components" themeColor="#FFFFFF"/>
+<MetaData title="Choodle Components" themeColor="#FFFFFF" />
 
 <div class="container">
-  <GlobalNavHeader logoUrl={urlFor($page.data.copy.logo)} logoLinkDestination={$page.data.copy.logoLinkDestination}/>
+  <GlobalNavHeader
+    logoUrl={urlFor($page.data.copy.logo)}
+    logoLinkDestination={$page.data.copy.logoLinkDestination}
+  />
   <h1>Choodle Design Components</h1>
 
   <Button on:click={openTestDialog}>Open Dialog</Button>
@@ -115,7 +118,7 @@
   <a>Link</a>
 
   <figure>
-    <img src="/choodle-bob-p2.png" width="100"/>
+    <img src="/choodle-bob-p2.png" width="100" />
     <figcaption>
       <strong>Caption-Bold</strong>
       Caption-Reg
@@ -123,7 +126,7 @@
   </figure>
 
   <h2>wordmark</h2>
-  <Wordmark/>
+  <Wordmark />
 
   <h2>Buttons</h2>
   <Button variant="primary" icon={handDraw}>primary</Button>
@@ -144,6 +147,12 @@
   <Button icon={handDraw} variant="secondary yellow">yellow</Button>
   <Button variant="yellow" iconPosition="right">yellow</Button>
   <Button variant="secondary hover yellow" icon={handDraw} iconPosition="right">hover</Button>
+  <Button variant="black" icon={handDraw}>button + icon</Button>
+  <Button variant="black" icon={handDraw} iconPosition="right">right icon</Button>
+  <Button variant="secondary hover black" icon={handDraw} iconPosition="right">hover</Button>
+  <Button variant="secondary press black" icon={handDraw} iconPosition="right">press</Button>
+  <Button variant="secondary focus black" icon={handDraw} iconPosition="right">focus</Button>
+  <Button variant="secondary disabled black" icon={handDraw} iconPosition="right">disabled</Button>
 </div>
 
 <style>

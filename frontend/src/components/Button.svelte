@@ -74,9 +74,15 @@
 
   .black {
     color: var(--colors-brand-white, #fff);
+
+    border-radius: 24px;
+    background: #1d1e23;
+
+    /* btn/raised/black */
+    box-shadow:
+      1px 1px 80px 0px rgba(0, 0, 0, 0.18),
+      4px 4px 3px 0px rgba(255, 255, 255, 0.12) inset;
     border: 1px solid var(--choodle-yellow, #fef40a);
-    background: var(--choodle-black, #141518);
-    box-shadow: 2px 2px 4px 0px #000 inset;
   }
 
   .secondary {
@@ -101,6 +107,21 @@
       -1px -1px 1px 0px rgba(20, 21, 24, 0.09) inset,
       2px 2px 4px 0px rgba(20, 21, 24, 0.16) inset;
     cursor: pointer;
+  }
+
+  .black.btn.hover,
+  .black.btn:hover,
+  .black.btn.press,
+  .black.btn:active,
+  .black.btn.focus,
+  .black.btn:focus {
+    border-radius: 24px;
+    background: var(--choodle-black, #141518);
+
+    /* btn/pressed/black */
+    box-shadow:
+      8px 8px 6px 0px rgba(0, 0, 0, 0.8) inset,
+      -1px -1px 2px 0px #000 inset;
   }
 
   .primary {
@@ -147,6 +168,22 @@
     background: none;
     box-shadow: none;
     border: none;
+  }
+
+  .black.btn.disabled::after {
+    backdrop-filter: none;
+  }
+
+  .black.disabled {
+    background: var(--colors-brand-choodle-black, #141518);
+    color: var(--text-text-secondary, #7c7c77);
+
+    border-radius: 24px;
+
+    /* btn/disabled/black */
+    box-shadow:
+      1px 1px 80px 0px rgba(0, 0, 0, 0.18),
+      4px 4px 3px 0px rgba(255, 255, 255, 0.12) inset;
   }
 
   .primary.disabled {
