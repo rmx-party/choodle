@@ -307,17 +307,18 @@
 
   let shareTextSuccessMessage = ``
   $: {
-    shareTextSuccessMessage = `🏆 I guessed right on the ${shareTextNthTryCopy(
+    shareTextSuccessMessage = `🥳 I guessed ${data.challenge?.gamePrompt?.prompt.toUpperCase()} on the ${shareTextNthTryCopy(
       guessesLimit - guessesRemaining
     )} try!`
   }
-  $: shareTextFailureMessage = `🫣 I couldn’t guess ${data.challenge?.gamePrompt?.prompt}!`
+  $: shareTextFailureMessage = `🫣 I couldn’t guess ${data.challenge?.gamePrompt?.prompt.toUpperCase()}!`
   $: shareTextGuesses = (guess?.guesses || []).map(shareTextNthGuessCopy).join(`\n`)
   let shareTextStats = ``
   $: {
     shareTextStats = `🛟 ${uniq(guess?.hintsUsed || []).length}`
   }
   let newLine = `\n`
+  let finalPrompt = `✍️ Now it’s your turn`
 
   let shareable: Shareable
   $: {
@@ -330,6 +331,8 @@
       newLine,
       newLine,
       shareTextStats,
+      newLine,
+      finalPrompt,
     ].join(``)
     shareable = { text }
   }
