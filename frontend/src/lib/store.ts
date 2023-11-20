@@ -21,6 +21,7 @@ const loadingTimeMax = 15000;
 export const loadingTimeoutId: Writable<string | number | undefined> =
   writable();
 export const loading: Writable<boolean> = writable(true);
+export const loadingOverride: Writable<boolean> = writable(false);
 const expireLoadingState = () => {
   // TODO: this probably indicates some error occurred that was uncaught, user should be given useful feedback
   console.info(`expireLoadingState: ${loadingTimeMax}ms timeout expired`);

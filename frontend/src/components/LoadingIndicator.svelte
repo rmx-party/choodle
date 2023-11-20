@@ -7,6 +7,7 @@
   import { urlFor } from '$lib/PersistedImagesUtils'
   import PixelImage from './PixelImage.svelte'
 
+  export let overrideLoading = false
   export let rotatingMessages: unknown[] = []
 
   // eslint-disable-next-line no-undef
@@ -29,7 +30,7 @@
   })
 </script>
 
-{#if $navigating || $loading}
+{#if $navigating || $loading || overrideLoading}
   <div
     class="LoadingIndicator loading-backdrop no-pan"
     in:fade={{ delay: 30, duration: 300 }}
