@@ -145,6 +145,9 @@
   section {
     margin: 1.5rem auto 0;
   }
+  .block-content:last-child {
+    padding-bottom: 2rem;
+  }
 
   .drawings {
     width: calc(
