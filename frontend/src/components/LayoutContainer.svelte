@@ -37,6 +37,7 @@
 
     padding: 0 1rem;
     width: 100%;
+    height: 100%;
     max-height: 100%;
     max-width: 720px;
 
