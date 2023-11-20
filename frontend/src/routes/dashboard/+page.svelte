@@ -105,6 +105,8 @@
           autoplay
           loop
           muted
+          playsinline
+          disablepictureinpicture
         ></video>
       </section>
     {/if}
