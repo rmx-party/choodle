@@ -5,8 +5,8 @@
 </script>
 
 {#if !$navigating && !$loading}
-  <slot name="topBar" />
   <div id="layoutContainer" transition:fade={{ duration: 300 }} {...$$restProps}>
+    <slot name="topBar" />
     <div id="flexLayout">
       <slot />
     </div>
