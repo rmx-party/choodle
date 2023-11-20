@@ -18,12 +18,13 @@
     console.info(`loading state change: `, value, { navigating: $navigating })
   })
 
+  const messageRotationTimeMs = 6000
   onMount(() => {
     if (rotatingMessages?.length > 0) {
       messageIndex = 0
       interval = setInterval(() => {
         messageIndex = (messageIndex + 1) % rotatingMessages.length
-      }, 6000)
+      }, messageRotationTimeMs)
     }
 
     return () => clearInterval(interval)
