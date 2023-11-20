@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { loading } from '$lib/store'
+  import { loading, loadingOverride } from '$lib/store'
   import { fade } from 'svelte/transition'
   import { onMount } from 'svelte'
   import { toHTML } from '@portabletext/to-html'
@@ -7,7 +7,6 @@
   import { urlFor } from '$lib/PersistedImagesUtils'
   import PixelImage from './PixelImage.svelte'
 
-  export let overrideLoading = false
   export let rotatingMessages: unknown[] = []
 
   // eslint-disable-next-line no-undef
@@ -31,7 +30,7 @@
   })
 </script>
 
-{#if $navigating || $loading || overrideLoading}
+{#if $navigating || $loading || $loadingOverride}
   <div
     class="LoadingIndicator loading-backdrop no-pan"
     in:fade={{ delay: 30, duration: 300 }}

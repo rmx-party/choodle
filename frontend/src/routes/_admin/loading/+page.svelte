@@ -7,8 +7,6 @@
   onMount(() => {
     loadingOverride.set(true)
 
-    return () => {
-      loadingOverride.set(false)
-    }
+    return () => loadingOverride.set(false)
   })
 </script>
