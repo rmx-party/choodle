@@ -179,3 +179,7 @@ figcaption {
   font-weight: 400;
   line-height: 120%; /* 1.05rem */
 }
+
+video {
+  max-width: 100%;
+}

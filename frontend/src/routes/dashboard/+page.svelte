@@ -99,7 +99,13 @@
 
     {#if data.copy.landing_image}
       <section>
-        <img src={urlFor(data.copy.landing_image).url()} alt="" />
+        <!-- <img src={urlFor(data.copy.landing_image).url()} alt="" /> -->
+        <video
+          src={'https://cdn.sanity.io/files/tdnjp9se/staging/e78199ebbe9cbc4e023756ce488c5ddcdf3dec8f.mp4'}
+          autoplay
+          loop
+          muted
+        ></video>
       </section>
     {/if}
 
