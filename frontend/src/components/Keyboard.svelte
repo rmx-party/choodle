@@ -1,52 +1,52 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { browser } from '$app/environment';
+  import { onMount } from 'svelte'
+  import { browser } from '$app/environment'
 
   const keyRows = [
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'BACKSPACE'],
     ['Z', 'X', 'C', 'V', 'B', 'N', 'M', 'ENTER'],
-  ];
+  ]
 
-  export let onKeyPress;
-  export let disableKeyboard;
+  export let onKeyPress
+  export let disableKeyboard
 
   const handleKeyInput = (input) => {
-    onKeyPress(input);
-  };
+    onKeyPress(input)
+  }
 
   const handleKeyPress = (event) => {
-    event.preventDefault();
-    let key = event.target.dataset['key'];
-    handleKeyInput(key);
-  };
+    event.preventDefault()
+    let key = event.target.dataset['key']
+    handleKeyInput(key)
+  }
 
   onMount(() => {
-    if (!browser) return;
+    if (!browser) return
 
     let keyUpListener = (event) => {
-      if (disableKeyboard) return;
-      const validKeys = keyRows.flatMap((key) => key).flatMap((key) => key.toUpperCase());
+      if (disableKeyboard) return
+      const validKeys = keyRows.flatMap((key) => key).flatMap((key) => key.toUpperCase())
       if (validKeys.includes(event.key.toUpperCase())) {
-        event.preventDefault();
-        handleKeyInput(event.key.toUpperCase());
+        event.preventDefault()
+        handleKeyInput(event.key.toUpperCase())
       }
-    };
-    window.addEventListener('keyup', keyUpListener);
+    }
+    window.addEventListener('keyup', keyUpListener)
 
-    document.getElementById('keyboard')?.focus();
+    document.getElementById('keyboard')?.focus()
 
     return () => {
-      if (!browser) return;
-      window.removeEventListener('keyup', keyUpListener);
-    };
-  });
+      if (!browser) return
+      window.removeEventListener('keyup', keyUpListener)
+    }
+  })
 
   const displayKey = (key: string) => {
-    if (key === 'BACKSPACE') return '⌫';
-    if (key === 'ENTER') return 'ENTER';
-    return key;
-  };
+    if (key === 'BACKSPACE') return '⌫'
+    if (key === 'ENTER') return 'ENTER'
+    return key
+  }
 </script>
 
 <div class="keyboard">
@@ -94,7 +94,7 @@
     align-items: center;
     gap: 0.5rem;
 
-    width: 1.8rem;
+    width: 1.9rem;
     height: 2.5rem;
     border: none;
     border-radius: 0.0625rem;
