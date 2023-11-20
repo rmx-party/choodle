@@ -5,8 +5,8 @@
 </script>
 
 {#if !$navigating && !$loading}
+  <slot name="topBar" />
   <div id="layoutContainer" transition:fade={{ duration: 300 }} {...$$restProps}>
-    <slot name="topBar" />
     <div id="flexLayout">
       <slot />
     </div>
@@ -37,10 +37,11 @@
 
     padding: 0 1rem;
     width: 100%;
-    height: 100%;
+    max-height: 100%;
     max-width: 720px;
 
     justify-content: var(--layout-justify, flex-start);
+    /* overflow: hidden; */
   }
 
   .no-pan {
