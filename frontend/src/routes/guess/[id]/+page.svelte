@@ -440,6 +440,7 @@
 
   .failure {
     color: var(--choodle-red);
+    line-height: 1rem;
   }
 
   [slot='between'] {
