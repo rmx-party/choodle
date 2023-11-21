@@ -28,6 +28,7 @@
   import { sharePath } from '$lib/routes'
   import uniq from 'lodash/fp/uniq'
   import UserNameModal from '../../../components/UserNameModal.svelte'
+  import JSConfetti from 'js-confetti'
 
   loading.set(true)
 
@@ -52,6 +53,25 @@
   }
 
   $: success = !!guess?.guessedCorrectly
+
+  $: success && celebrateSuccess()
+  const celebrateSuccess = () => {
+    if (!browser) return
+    if (!success) return
+    const reduceMotion = !!(
+      window.matchMedia(`(prefers-reduced-motion: reduce)`) === true ||
+      window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true
+    )
+    if (reduceMotion) return
+
+    const jsConfetti = new JSConfetti() // FIXME: this adds a canvas element to the DOM, which should only be done once, or else needs teardown
+
+    jsConfetti.addConfetti({
+      emojis: ['🎉', '🎊', '🏆', '🌟', '🦵', '🧚', '💯', '🤩'],
+      confettiNumber: 100,
+      emojiSize: 100,
+    })
+  }
 
   let stillGuessing: boolean = false
   $: stillGuessing = !success && guessesRemaining > 0
