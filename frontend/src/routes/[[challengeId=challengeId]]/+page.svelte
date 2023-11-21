@@ -10,7 +10,7 @@
   import LayoutContainer from '../../components/LayoutContainer.svelte'
   import MetaData from '../../components/MetaData.svelte'
   import { readWriteClient } from '$lib/CMSUtils'
-  import { loading } from '$lib/store'
+  import { loading, uncaughtErrors } from '$lib/store'
   import { clearStorage } from '$lib/StorageStuff'
   import shuffle from 'lodash/fp/shuffle'
   import { drawPath } from '$lib/routes'
@@ -23,6 +23,14 @@
   $: prompts = shuffle(map('prompt')(data.records))
 
   onMount(async () => {
+    if (!window?.crypto?.randomUUID) {
+      uncaughtErrors.set([
+        ...$uncaughtErrors,
+        new Error(
+          `please use a modern browser, not in private mode, crypto.randomUUID is not available`
+        ),
+      ])
+    }
     initialPrompt = prompts[0]
     selectedPrompt = initialPrompt
     loading.set(false)
