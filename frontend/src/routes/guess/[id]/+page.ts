@@ -3,6 +3,7 @@ import {
   PUBLIC_ISR_EXPIRATION_SECONDS,
 } from "$env/static/public";
 import { cachedReadOnlyClient } from "$lib/CMSUtils";
+import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 
 export const config = {
@@ -17,7 +18,7 @@ const slug = "guess";
 export const load: PageLoad = async ({ params }) => {
   const challengeId = params.id; // TODO: use challengeId with param matcher instead of id
   if (!challengeId) {
-    throw new error(404, `challengeId is required`);
+    throw error(404, `challengeId is required`);
   }
 
   const pageContent = cachedReadOnlyClient.fetch(
