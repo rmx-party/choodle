@@ -60,7 +60,7 @@
   const successConfettiConfig = {
     emojis: ['🎉', '🎊', '🏆', '🌟', '🦵', '🧚', '💯', '🤩'],
     confettiNumber: 80,
-    emojiSize: 150,
+    emojiSize: 130,
   }
   const failureConfettiConfig = {
     emojis: ['💀', '💢', '🪑', '⌨️ ', '😭', '💧', '⚔️', '🚫', '🦞'],
@@ -83,7 +83,7 @@
     jsConfetti.addConfetti(confettiConfigs[occasion])
   }
   $: success && celebrate('success')
-  $: !success && !stillGuessing && celebrate('failure')
+  // $: !success && !stillGuessing && celebrate('failure')
 
   let guess: StreakGuessingGameGuessResult
   let disableKeyboard = false
