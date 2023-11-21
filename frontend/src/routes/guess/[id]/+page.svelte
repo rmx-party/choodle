@@ -45,7 +45,7 @@
   $: guessesRemaining = guessesLimit - (guess?.guesses?.length || 0)
 
   let choodleOwner = false
-  $: choodleOwner = data.challenge.challenger._id === $guesser?._id
+  $: choodleOwner = data.challenge?.challenger?._id === $guesser?._id
   $: {
     if (browser && choodleOwner) {
       goto(sharePath(data.challenge._id))
