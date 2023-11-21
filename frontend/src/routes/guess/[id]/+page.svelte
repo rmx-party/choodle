@@ -71,14 +71,18 @@
     success: successConfettiConfig,
     failure: failureConfettiConfig,
   }
-  const celebrate = (occasion: string) => {
+  const reducedMotionPreference = () => {
     if (!browser) return
     const reduceMotion = !!(
       window.matchMedia(`(prefers-reduced-motion: reduce)`) === true ||
       window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true
     )
     console.log({ reduceMotion })
-    if (reduceMotion) return
+    return reduceMotion
+  }
+  const celebrate = (occasion: string) => {
+    if (!browser) return
+    if (reducedMotionPreference()) return
 
     jsConfetti.addConfetti(confettiConfigs[occasion])
   }
