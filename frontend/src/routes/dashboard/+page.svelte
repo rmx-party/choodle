@@ -101,7 +101,7 @@
       <section>
         <!-- <img src={urlFor(data.copy.landing_image).url()} alt="" /> -->
         <video
-          src={'https://cdn.sanity.io/files/tdnjp9se/staging/e78199ebbe9cbc4e023756ce488c5ddcdf3dec8f.mp4'}
+          src={'https://cdn.sanity.io/files/tdnjp9se/staging/99acb9941d7a2a007da516bddb66d0819e753f73.mp4'}
           autoplay
           loop
           muted
