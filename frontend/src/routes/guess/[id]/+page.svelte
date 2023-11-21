@@ -53,28 +53,37 @@
   }
 
   $: success = !!guess?.guessedCorrectly
+  let stillGuessing: boolean = false
+  $: stillGuessing = !success && guessesRemaining > 0
 
-  $: success && celebrateSuccess()
-  const celebrateSuccess = () => {
+  let jsConfetti: JSConfetti
+  const successConfettiConfig = {
+    emojis: ['🎉', '🎊', '🏆', '🌟', '🦵', '🧚', '💯', '🤩'],
+    confettiNumber: 80,
+    emojiSize: 150,
+  }
+  const failureConfettiConfig = {
+    emojis: ['💀', '💢', '🪑', '⌨️ ', '😭', '💧', '⚔️', '🚫', '🦞'],
+    confettiNumber: 30,
+    emojiSize: 100,
+  }
+  const confettiConfigs = {
+    success: successConfettiConfig,
+    failure: failureConfettiConfig,
+  }
+  const celebrate = (occasion: string) => {
     if (!browser) return
-    if (!success) return
     const reduceMotion = !!(
       window.matchMedia(`(prefers-reduced-motion: reduce)`) === true ||
       window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true
     )
+    console.log({ reduceMotion })
     if (reduceMotion) return
 
-    const jsConfetti = new JSConfetti() // FIXME: this adds a canvas element to the DOM, which should only be done once, or else needs teardown
-
-    jsConfetti.addConfetti({
-      emojis: ['🎉', '🎊', '🏆', '🌟', '🦵', '🧚', '💯', '🤩'],
-      confettiNumber: 100,
-      emojiSize: 100,
-    })
+    jsConfetti.addConfetti(confettiConfigs[occasion])
   }
-
-  let stillGuessing: boolean = false
-  $: stillGuessing = !success && guessesRemaining > 0
+  $: success && celebrate('success')
+  $: !success && !stillGuessing && celebrate('failure')
 
   let guess: StreakGuessingGameGuessResult
   let disableKeyboard = false
@@ -287,6 +296,7 @@
 
   onMount(async () => {
     loading.set(false)
+    jsConfetti = new JSConfetti() // FIXME: this adds a canvas element to the DOM, which should only be done once, or else needs teardown
   })
 
   const bestImageUrl = (choodle: StreakGuessingGameDrawing) => {
