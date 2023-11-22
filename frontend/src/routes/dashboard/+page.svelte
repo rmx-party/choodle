@@ -177,6 +177,6 @@
   }
 
   video {
-    max-height: 30svh;
+    max-height: 60svh;
   }
 </style>
