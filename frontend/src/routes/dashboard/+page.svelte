@@ -101,7 +101,7 @@
       <section>
         <!-- <img src={urlFor(data.copy.landing_image).url()} alt="" /> -->
         <video
-          src={'https://cdn.sanity.io/files/tdnjp9se/staging/99acb9941d7a2a007da516bddb66d0819e753f73.mp4'}
+          src={'https://cdn.sanity.io/files/tdnjp9se/staging/72b3d915437456c9640ecdd17bd4662abfd17f52.mp4'}
           autoplay
           loop
           muted
@@ -174,5 +174,9 @@
     .drawings {
       --drawing-grid-columns: 3;
     }
+  }
+
+  video {
+    max-height: 30svh;
   }
 </style>
