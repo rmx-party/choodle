@@ -12,6 +12,7 @@ export default defineConfig({
       sourceMapsUploadOptions: {
         org: "rmx-party",
         project: "choodle-sveltekit",
+        authToken: process.env.SENTRY_AUTH_TOKEN,
       },
       autoInstrument: {
         load: true,
