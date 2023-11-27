@@ -81,9 +81,9 @@
     })
 
     const undoStack = await getUndoStack()
-    if (undoStack.current === '') return loading.set(false)
+    if (undoStack.current === '') throw new Error(`the undo stack is empty`)
 
-    if (!data.challenge || !$deviceId || $challenger) return
+    if (!prerequisitesForSavingMet) throw new Error(`the prereqs for saving failed`)
     loading.set(true)
     if (!childSave) throw new Error(`the child is null`)
     childSave()
