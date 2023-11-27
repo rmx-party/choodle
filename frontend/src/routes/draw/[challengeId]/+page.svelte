@@ -6,19 +6,17 @@
   import { clearStorage, getUndoStack } from '$lib/StorageStuff'
   import { goto, preloadData } from '$app/navigation'
   import { getContext, onMount } from 'svelte'
-  import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
+  import { pageBackgroundDefault } from '$lib/Configuration'
   import Button from '../../../components/Button.svelte'
-  import { loading, isOnline, closeDialog, openDialog, uncaughtErrors } from '$lib/store'
+  import { loading, isOnline } from '$lib/store'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
   import MetaData from '../../../components/MetaData.svelte'
   import { page } from '$app/stores'
   import { guessPath, sharePath } from '$lib/routes'
-  import { readWriteClient } from '$lib/CMSUtils'
   import type { PageData } from './$types'
   import type { Writable } from 'svelte/store'
   import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
-  import UserNameModal from '../../../components/UserNameModal.svelte'
 
   export let data: PageData
 
@@ -27,15 +25,7 @@
 
   const deviceId: Writable<string> = getContext('deviceId')
   const challenger: Writable<StreakGuessingGamePlayer> = getContext('choodler')
-  const usernamePromptId = 'username-prompt'
 
-  let username: string | undefined
-  $: {
-    if ($challenger?.username?.length) {
-      // Assign this once when the user loads, don't fight with the input binding
-      username = $challenger.username
-    }
-  }
   $: console.log(`draw page react`, { challenger: $challenger, deviceId: $deviceId })
 
   const performSave = async (undoStack: UndoStack, canvas: HTMLCanvasElement) => {
@@ -44,7 +34,7 @@
       deviceId: $deviceId,
       challenge: data.challenge,
     })
-    if (!browser || !data.challenge || !$deviceId || !$challenger?.username) return
+    if (!browser || !data.challenge || !$deviceId || !$challenger) return
     loading.set(true)
     const { transaction, choodleId } = await createUncommittedChoodle(
       undoStack,
@@ -79,34 +69,6 @@
   }
 
   $: prerequisitesForSavingMet = !!$deviceId && !!$challenger?._id && !!data.challenge
-  // TODO: switch back for username driven gameplay after prod deploy
-  const usernameRequired = true
-  const attemptToSaveChoodleRequiringUsername = async () => {
-    if (!browser) return
-    if (!data.challenge || !$deviceId || !$challenger?._id) {
-      console.warn(`prerequisite failed`, {
-        challenge: data.challenge,
-        deviceId: $deviceId,
-        challenger: $challenger,
-      })
-      throw new Error(`prerequisite failed in attempt to save choodle`)
-    }
-
-    const undoStack = await getUndoStack()
-    if (undoStack.current === '') return loading.set(false)
-
-    if (username?.length > 0) {
-      loading.set(true)
-      challenger.set(await readWriteClient.patch($challenger._id).set({ username }).commit())
-      closeDialog(usernamePromptId)
-      if (!childSave) throw new Error(`the child is null, requiring username`)
-      childSave()
-      // child.save()
-      return
-    }
-
-    openDialog(usernamePromptId)
-  }
 
   const attemptToSaveChoodle = async () => {
     if (!browser) return
@@ -121,19 +83,10 @@
     const undoStack = await getUndoStack()
     if (undoStack.current === '') return loading.set(false)
 
-    if (usernameRequired) {
-      return await attemptToSaveChoodleRequiringUsername().catch((error) => {
-        console.error(`error in attempt to save choodle`, { error })
-        uncaughtErrors.set([...$uncaughtErrors, { error }])
-        loading.set(false)
-      })
-    } else {
-      if (!data.challenge || !$deviceId || $challenger?.username) return
-      loading.set(true)
-      if (!child?.save) throw new Error(`the child is null, username not required`)
-      child.save()
-      return
-    }
+    if (!data.challenge || !$deviceId || $challenger) return
+    loading.set(true)
+    if (!childSave) throw new Error(`the child is null`)
+    childSave()
   }
 
   onMount(async () => {
@@ -173,14 +126,6 @@
     </ButtonMenu>
   </ChoodleBoard>
 </LayoutContainer>
-
-<UserNameModal
-  headerContent={data.copy.draw_usernameHeader}
-  placeholderContent={data.copy.draw_usernamePlaceholder}
-  saveButtonText={data.copy.draw_usernameSaveButtonText}
-  bind:usernameValue={username}
-  onClick={attemptToSaveChoodle}
-/>
 
 <style>
   .prompt {

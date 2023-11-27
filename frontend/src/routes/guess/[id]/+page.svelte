@@ -17,7 +17,7 @@
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte'
   import { readOnlyClient, readWriteClient } from '$lib/CMSUtils'
   import Hints from '../../../components/Hints.svelte'
-  import { closeDialog, loading, openDialog, uncaughtErrors } from '$lib/store'
+  import { loading, uncaughtErrors } from '$lib/store'
   import type {
     StreakGuessingGameDrawing,
     StreakGuessingGameGuessResult,
@@ -27,7 +27,6 @@
   import TextMessageBubble from '../../../components/TextMessageBubble.svelte'
   import { sharePath } from '$lib/routes'
   import uniq from 'lodash/fp/uniq'
-  import UserNameModal from '../../../components/UserNameModal.svelte'
   import JSConfetti from 'js-confetti'
 
   loading.set(true)
@@ -180,11 +179,6 @@
   const handleCorrectGuess = () => {
     console.log(`right answer, you won the thing`)
 
-    if (usernameRequired && !username?.length) {
-      promptForAndSetUsername()
-      return
-    }
-
     success = true
     createGuess(true)
     guessesRemaining--
@@ -195,11 +189,6 @@
     console.log(`wrong`)
 
     if (guessesRemaining <= 1) {
-      if (usernameRequired && !username?.length) {
-        console.log(`prompting for username`)
-        promptForAndSetUsername()
-        return
-      }
       console.log(`creating final guess`)
       createGuess(false)
     } else {
@@ -213,11 +202,6 @@
   }
 
   const submitGuess = () => {
-    if (1 > username?.length) {
-      openDialog(usernamePromptId)
-      return
-    }
-
     if ($currentGuess?.length < data.challenge?.gamePrompt?.prompt?.length) return
 
     console.log(`checking answer, ${guessesRemaining} guesses left`)
@@ -251,27 +235,6 @@
     return guess.hintsUsed.includes(hintText)
   }
 
-  const usernamePromptId = 'username-prompt'
-
-  const usernameRequired = true
-  const promptForAndSetUsername = async () => {
-    console.log('prompting for username')
-    if (!browser) return
-
-    if (username?.length > 0) {
-      console.log('there was a username, closing the dialog')
-      disableKeyboard = false
-      closeDialog(usernamePromptId)
-      await readWriteClient.patch($guesser._id).set({ username }).commit()
-      submitGuess()
-      return
-    }
-
-    console.log('disable keyboard and open username dialog')
-    disableKeyboard = true
-    openDialog(usernamePromptId)
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const attemptToSubmitGuess = async (_event?: Event) => {
     if (!browser) return
@@ -279,14 +242,6 @@
 
     submitGuess()
     return
-  }
-
-  let username: string | undefined
-  $: {
-    if ($guesser?.username?.length) {
-      // Assign this once when the user loads, don't fight with the input binding
-      username = $guesser.username
-    }
   }
 
   $: {
@@ -454,14 +409,6 @@
     {/if}
   </LayoutContainer>
 {/if}
-
-<UserNameModal
-  headerContent={data.copy.draw_usernameHeader}
-  placeholderContent={data.copy.draw_usernamePlaceholder}
-  saveButtonText={data.copy.draw_usernameSaveButtonText}
-  bind:usernameValue={username}
-  onClick={promptForAndSetUsername}
-/>
 
 <style>
   .topBar {

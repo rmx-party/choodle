@@ -24,8 +24,6 @@
   import flow from 'lodash/fp/flow'
   import uniqBy from 'lodash/fp/uniqBy'
   import reject from 'lodash/fp/reject'
-  import { urlFor } from '$lib/PersistedImagesUtils'
-  import UserWelcomeMessage from '../../components/UserWelcomeMessage.svelte'
 
   loading.set(true)
 
@@ -91,8 +89,6 @@
 
 {#if isFirstTime}
   <LayoutContainer>
-    <UserWelcomeMessage />
-
     <section class="block-content">
       {@html toHTML(data.copy.landing_content_first_time)}
     </section>
@@ -127,8 +123,6 @@
   </LayoutContainer>
 {:else}
   <LayoutContainer>
-    <UserWelcomeMessage />
-
     <section class="block-content">
       {@html toHTML(data.copy.landing_content)}
     </section>
