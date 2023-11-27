@@ -4,7 +4,7 @@ import { handleErrorWithSentry, Replay } from "@sentry/sveltekit";
 import * as Sentry from "@sentry/sveltekit";
 import type { HandleClientError } from "@sveltejs/kit";
 
-console.log(`choodle@${version}`);
+console.log(`client hooks initializing: choodle@${version}`);
 
 Sentry.init({
   release: `choodle@${version}`,
