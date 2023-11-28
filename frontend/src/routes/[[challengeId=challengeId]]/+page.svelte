@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { browser } from '$app/env'
   import { goto, preloadData } from '$app/navigation'
   import find from 'lodash/fp/find'
   import map from 'lodash/fp/map'
   import { onMount } from 'svelte'
   import { toHTML } from '@portabletext/to-html'
-  import { choodleYellow } from '$lib/Configuration'
   import { page } from '$app/stores'
   import Button from '../../components/Button.svelte'
   import LayoutContainer from '../../components/LayoutContainer.svelte'
@@ -64,6 +64,13 @@
     event.preventDefault()
 
     rotatePrompts()
+
+    // add GA event for skipped prompt
+    browser &&
+      window?.gtag?.('event', 'skip_prompt', {
+        event_category: 'engagement',
+        event_label: selectedPrompt,
+      })
   }
 
   const proceed = async () => {
