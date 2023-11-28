@@ -183,6 +183,14 @@
     createGuess(true)
     guessesRemaining--
     cursorLocation.set(-1)
+
+    // send google analytics event 'guess_correct'
+    if (browser && window.gtag) {
+      window.gtag('event', 'guess_correct', {
+        event_category: 'engagement',
+        event_label: data.challenge?.gamePrompt?.prompt,
+      })
+    }
   }
 
   const handleIncorrectGuess = () => {
@@ -199,6 +207,14 @@
     guessesRemaining--
     currentGuess.set([])
     cursorLocation.set(0)
+
+    // send google analytics event 'guess_incorrect'
+    if (browser && window.gtag) {
+      window.gtag('event', 'guess_incorrect', {
+        event_category: 'engagement',
+        event_label: data.challenge?.gamePrompt?.prompt,
+      })
+    }
   }
 
   const submitGuess = () => {
