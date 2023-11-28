@@ -188,7 +188,8 @@
     if (browser && window.gtag) {
       window.gtag('event', 'guess_correct', {
         event_category: 'engagement',
-        event_label: data.challenge?.gamePrompt?.prompt,
+        event_label: 'correct guess',
+        prompt_text: data.challenge?.gamePrompt?.prompt,
       })
     }
   }
@@ -212,7 +213,8 @@
     if (browser && window.gtag) {
       window.gtag('event', 'guess_incorrect', {
         event_category: 'engagement',
-        event_label: data.challenge?.gamePrompt?.prompt,
+        event_label: 'incorrect guess',
+        prompt_text: data.challenge?.gamePrompt?.prompt,
       })
     }
   }
@@ -245,7 +247,9 @@
     if (browser && window.gtag) {
       window.gtag('event', 'hint_click', {
         event_category: 'engagement',
-        event_label: text,
+        event_label: 'hint clicked',
+        prompt_text: data.challenge?.gamePrompt?.prompt,
+        hint_text: text,
       })
     }
   }
