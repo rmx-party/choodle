@@ -92,6 +92,13 @@
 
     clearStorage()
 
+    // add GA event for selected prompt
+    browser &&
+      window?.gtag?.('event', 'select_prompt', {
+        event_category: 'engagement',
+        event_label: selectedPrompt,
+      })
+
     goto(drawPath(data.challenge._id))
   }
 </script>
