@@ -190,6 +190,7 @@
         event_category: 'engagement',
         event_label: 'correct guess',
         prompt_text: data.challenge?.gamePrompt?.prompt,
+        guess_count: guess?.guesses?.length,
       })
     }
   }
@@ -215,6 +216,7 @@
         event_category: 'engagement',
         event_label: 'incorrect guess',
         prompt_text: data.challenge?.gamePrompt?.prompt,
+        guess_count: guess?.guesses?.length,
       })
     }
   }
