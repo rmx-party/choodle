@@ -224,6 +224,14 @@
       .setIfMissing({ hintsUsed: [] })
       .append('hintsUsed', [text])
       .commit()
+
+    // send google analytics event 'hint_click'
+    if (browser && window.gtag) {
+      window.gtag('event', 'hint_click', {
+        event_category: 'engagement',
+        event_label: text,
+      })
+    }
   }
 
   const hintUsedInGuess = (guess: StreakGuessingGameGuessResult, hintText: string) => {
