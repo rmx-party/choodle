@@ -252,6 +252,7 @@
         event_label: 'hint clicked',
         prompt_text: data.challenge?.gamePrompt?.prompt,
         hint_text: text,
+        guess_count: guess?.guesses?.length,
       })
     }
   }
