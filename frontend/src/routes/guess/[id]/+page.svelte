@@ -366,7 +366,7 @@
     share(shareable, (usedClipboard: boolean) => {
       copiedToClipboard = usedClipboard
     })
-      .then(() => {
+      .then((result) => {
         if (browser) {
           window?.gtag('event', 'click', {
             event_category: 'engagement',
@@ -374,8 +374,9 @@
             prompt_text: data.challenge?.gamePrompt?.prompt,
           })
         }
+        console.log(`shared`, { result })
       })
-      .catch(() => {
+      .catch((error) => {
         if (browser) {
           window?.gtag('event', 'click', {
             event_category: 'engagement',
@@ -383,6 +384,7 @@
             prompt_text: data.challenge?.gamePrompt?.prompt,
           })
         }
+        console.error(`error sharing`, error)
       })
   }
 </script>

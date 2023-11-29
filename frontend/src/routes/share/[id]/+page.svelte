@@ -54,7 +54,7 @@
     share(challengeShareable, (usedClipboard) => {
       copiedToClipboard = usedClipboard
     })
-      .then(() => {
+      .then((result) => {
         // send a ga event for share
         if (browser) {
           window?.gtag('event', 'click', {
@@ -64,7 +64,7 @@
           })
         }
 
-        console.log(`shared`)
+        console.log(`shared`, { result })
       })
       .catch((error) => {
         // add ga event for share cancellation
