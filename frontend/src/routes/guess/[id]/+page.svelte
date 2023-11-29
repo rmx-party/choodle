@@ -371,7 +371,7 @@
           window?.gtag('event', 'click', {
             event_category: 'engagement',
             event_label: 'share_guess',
-            prompt: gamePrompt,
+            prompt_text: data.challenge?.gamePrompt?.prompt,
           })
         }
       })
@@ -380,7 +380,7 @@
           window?.gtag('event', 'click', {
             event_category: 'engagement',
             event_label: 'share_guess_cancel',
-            prompt: gamePrompt,
+            prompt_text: data.challenge?.gamePrompt?.prompt,
           })
         }
       })

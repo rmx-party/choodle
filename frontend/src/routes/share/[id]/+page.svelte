@@ -60,7 +60,7 @@
           window?.gtag('event', 'click', {
             event_category: 'engagement',
             event_label: 'share_challenge',
-            prompt: gamePrompt,
+            prompt_text: gamePrompt,
           })
         }
 
@@ -72,7 +72,7 @@
           window?.gtag('event', 'click', {
             event_category: 'engagement',
             event_label: 'share_challenge_cancel',
-            prompt: gamePrompt,
+            prompt_text: gamePrompt,
           })
         }
 
