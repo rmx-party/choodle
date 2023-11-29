@@ -15,28 +15,30 @@
   <link rel="preconnect" href="https://tdnjp9se.api.sanity.io" />
   <link rel="preconnect" href="https://o4506125009813504.ingest.sentry.io" />
   <link rel="preconnect" href="https://www.googletagmanager.com" />
+  <link rel="preconnect" href="https://www.google-analytics.com">
   <link rel="preconnect" href="https://vitals.vercel-analytics.com" />
   <link rel="preconnect" href="https://choodle.typeform.com/beta-test" />
 
   %sveltekit.head%
 </head>
-<!-- Google tag (gtag.js) -->
-<script defer src="https://www.googletagmanager.com/gtag/js?id=G-T2JJPTNKJS"></script>
-<script defer>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-  gtag('js', new Date());
-
-  gtag('config', 'G-T2JJPTNKJS');
-</script>
 
 <body data-sveltekit-preload-data="tap" data-sveltekit-preload-code="eager">
   <noscript>
     <p>This app requires JavaScript to run. Please enable JavaScript and reload the page.</p>
   </noscript>
   <div style="display: contents">%sveltekit.body%</div>
+
+  <!-- Google tag (gtag.js) -->
+  <script defer src="https://www.googletagmanager.com/gtag/js?id=G-T2JJPTNKJS"></script>
+  <script defer>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-T2JJPTNKJS');
+  </script>
 </body>
 
 </html>
