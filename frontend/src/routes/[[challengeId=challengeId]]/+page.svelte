@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { browser } from '$app/env'
+  import { browser } from '$app/environment'
   import { goto, preloadData } from '$app/navigation'
   import find from 'lodash/fp/find'
   import map from 'lodash/fp/map'
