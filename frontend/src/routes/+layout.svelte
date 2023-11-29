@@ -84,6 +84,9 @@
   on:storage={handleStorageEvent}
   on:online={() => isOnline.set(true)}
   on:offline={() => isOnline.set(false)}
+  on:beforeunload={() => {
+    window.gtag('event', 'tab_close')
+  }}
 />
 <svelte:document on:error={handleChoodleUncaughtError} />
 
