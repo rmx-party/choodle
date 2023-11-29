@@ -47,6 +47,11 @@
 
   const handleInitialDeviceId = async () => {
     deviceId.set(await getDeviceId())
+
+    browser &&
+      window?.gtag('config', 'G-T2JJPTNKJS', {
+        user_id: $deviceId,
+      })
   }
   $: browser && !$deviceId && handleInitialDeviceId()
 
