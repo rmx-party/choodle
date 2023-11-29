@@ -366,6 +366,24 @@
     share(shareable, (usedClipboard: boolean) => {
       copiedToClipboard = usedClipboard
     })
+      .then(() => {
+        if (browser) {
+          window?.gtag('event', 'click', {
+            event_category: 'engagement',
+            event_label: 'share_guess',
+            prompt: gamePrompt,
+          })
+        }
+      })
+      .catch(() => {
+        if (browser) {
+          window?.gtag('event', 'click', {
+            event_category: 'engagement',
+            event_label: 'share_guess_cancel',
+            prompt: gamePrompt,
+          })
+        }
+      })
   }
 </script>
 
