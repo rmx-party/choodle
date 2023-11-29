@@ -54,6 +54,30 @@
     share(challengeShareable, (usedClipboard) => {
       copiedToClipboard = usedClipboard
     })
+      .then(() => {
+        // send a ga event for share
+        if (browser) {
+          window?.gtag('event', 'click', {
+            event_category: 'engagement',
+            event_label: 'share_challenge',
+            prompt: gamePrompt,
+          })
+        }
+
+        console.log(`shared`)
+      })
+      .catch((error) => {
+        // add ga event for share cancellation
+        if (browser) {
+          window?.gtag('event', 'click', {
+            event_category: 'engagement',
+            event_label: 'share_challenge_cancel',
+            prompt: gamePrompt,
+          })
+        }
+
+        console.error(`error sharing`, error)
+      })
   }
 
   onMount(async () => {
