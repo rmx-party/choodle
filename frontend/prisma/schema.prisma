@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  email String  @unique
+  name  String?
+
+  drawings     Drawing[]
+  challenges   Challenge[]
+  guessResults GuessResult[]
+}
+
+model Drawing {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  userId   Int
+  User     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  imageUrl String @unique
+
+  challenges Challenge[]
+}
+
+model Challenge {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  promptId   String
+  drawingId  Int
+  drawing    Drawing @relation(fields: [drawingId], references: [id], onDelete: Cascade)
+  userId     Int
+  challenger User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  guessResults GuessResult[]
+
+  @@unique([drawingId, userId])
+}
+
+model GuessResult {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  guesses       String[]
+  wasSuccessful Boolean  @default(false)
+
+  challengeId Int
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  userId      Int
+  guesser     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([challengeId, userId])
+}
