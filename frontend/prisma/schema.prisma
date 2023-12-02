@@ -12,6 +12,7 @@ model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+  sanityId  String?  @unique
 
   email String  @unique
   name  String?
@@ -24,6 +25,7 @@ model User {
 model Drawing {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
+  sanityId  String?  @unique
 
   userId   Int
   User     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -35,6 +37,7 @@ model Drawing {
 model Challenge {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
+  sanityId  String?  @unique
 
   promptId   String
   drawingId  Int
@@ -51,6 +54,7 @@ model GuessResult {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  sanityId  String?  @unique
 
   guesses       String[]
   wasSuccessful Boolean  @default(false)
