@@ -4,7 +4,7 @@ import { error, json } from "@sveltejs/kit";
 
 const prisma = new PrismaClient();
 
-export const POST: RequestHandler = async ({ cookies, request }) => {
+export const POST: RequestHandler = async ({ cookies, locals, request }) => {
   const { deviceId } = await request.json();
 
   let user = null;
@@ -31,6 +31,8 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
     path: "/",
     maxAge: TenYearsInSeconds,
   });
+
+  locals.user = user;
 
   return json(user);
 };
