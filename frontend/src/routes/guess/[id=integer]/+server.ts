@@ -2,6 +2,10 @@ import type { RequestHandler } from "./$types";
 import { error, json } from "@sveltejs/kit";
 import { upsertGuessResult } from "$lib/server/storage";
 
+export const config = {
+  isr: false,
+};
+
 export const PATCH: RequestHandler = async ({ request, locals, params }) => {
   const { user } = locals;
   if (!user) throw error(401);
