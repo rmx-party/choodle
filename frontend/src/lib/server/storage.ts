@@ -19,12 +19,7 @@ export const getChallengesForUser = async ({ user }: { user: User }) => {
   const challenges = await prisma.challenge.findMany({
     where: { userId: user.id },
     include: { drawing: true, guessResults: true },
-  }).catch(
-    (err) => {
-      console.error(`db load failure`, err);
-      throw error(404, `database load failure`);
-    },
-  );
+  });
   return challenges;
 };
 
