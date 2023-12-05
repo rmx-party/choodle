@@ -11,9 +11,11 @@ export const PATCH: RequestHandler = async ({ request, locals, params }) => {
   const { id } = params;
   const values = await request.json(); // TODO: sanitize assignable values
 
+  console.log("update guess result", { id, values });
   const result = await prisma.guessResult.update({
     where: { id: Number(id), userId: user.id },
     data: { ...values, userId: user.id },
   });
+  console.log("updated guess result", { result });
   return json(result);
 };
