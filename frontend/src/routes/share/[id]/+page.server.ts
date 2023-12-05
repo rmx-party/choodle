@@ -4,7 +4,7 @@ import {
 } from "$env/static/public";
 import { cachedReadOnlyClient } from "$lib/CMSUtils";
 import { error } from "@sveltejs/kit";
-import type { PageLoad } from "./$types";
+import type { PageServerLoad } from "./$types";
 import { findChallenge } from "$lib/server/storage";
 
 export const config = {
@@ -16,7 +16,7 @@ export const config = {
 
 const slug = "share";
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params }) => {
   const challengeId = params.id; // TODO: use challengeId with param matcher instead of id
   if (!challengeId) {
     throw error(404, `challengeId is required`);
