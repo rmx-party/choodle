@@ -14,7 +14,6 @@
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte'
-  import { readWriteClient } from '$lib/CMSUtils'
   import Hints from '../../../components/Hints.svelte'
   import { loading, uncaughtErrors } from '$lib/store'
   import type { StreakGuessingGameGuessResult } from '$lib/CWFGame'
@@ -41,11 +40,11 @@
   $: guessesRemaining = guessesLimit - (guessResult?.guesses?.length || 0)
 
   let choodleOwner = false
-  $: choodleOwner = false && data.challenge?.userId === $guesser?.id // TODO: remove short circuit
+  $: choodleOwner = data.challenge?.userId === $guesser?.id // TODO: remove short circuit
   $: {
-    if (browser && $guesser && choodleOwner) {
+    if (browser && data.challenge && $guesser && choodleOwner) {
       console.log(`choodle owner, going to share page`, data, $guesser)
-      // goto(sharePath(data.challenge.id))
+      goto(sharePath(data.challenge.id))
     }
   }
 

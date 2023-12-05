@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment'
-  import { goto, preloadData } from '$app/navigation'
+  import { goto, invalidate, invalidateAll, preloadData } from '$app/navigation'
   import find from 'lodash/fp/find'
   import map from 'lodash/fp/map'
   import { onMount } from 'svelte'
@@ -24,8 +24,7 @@
   let selectedPromptSanityId: string | undefined
   $: {
     selectedPrompt &&
-      (selectedPromptSanityId = find((r) => r.prompt == selectedPrompt, data.records)._id) &&
-      console.log({ selectedPromptSanityId })
+      (selectedPromptSanityId = find((r) => r.prompt == selectedPrompt, data.records)._id)
   }
   $: {
     if ((!data.challenge && selectedPromptSanityId) || data.challenge?.userId !== data.user?.id) {
@@ -34,18 +33,28 @@
   }
 
   const initializeChallenge = async () => {
-    if (!selectedPromptSanityId) return
-    if (!data.user.id) return
+    if (data.challenge) return
+    if (!selectedPromptSanityId || !selectedPrompt) return
+    if (!data.user?.id) return
+    if (data.challenge?.userId == data.user?.id) return
 
-    loading.set(true)
-    console.log(`creating new challenge`)
+    $loading || loading.set(true)
+    console.log(`creating new challenge`, {
+      prompt: selectedPrompt,
+      promptSanityId: selectedPromptSanityId,
+      userId: data.user?.id,
+      challengeId: data.challenge?.id,
+    })
+
     createChallenge({
       prompt: selectedPrompt,
       promptSanityId: selectedPromptSanityId,
     })
       .then((newChallenge) => {
         console.log(`created new challenge, going to it`)
+        data.challenge = newChallenge
         goto(`/${newChallenge.id}`)
+        loading.set(false)
       })
       .catch((err) => {
         console.error(err)
