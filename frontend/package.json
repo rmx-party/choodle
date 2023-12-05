@@ -3,16 +3,16 @@
   "version": "0.23.12.04",
   "private": true,
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "preview": "vite preview",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "dev": "bunx vite dev",
+    "build": "bunx vite build",
+    "preview": "bunx vite preview",
+    "check": "bun svelte-kit sync && bun svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "test": "vitest run",
-    "test:ui": "vitest --ui",
-    "test:watch": "vitest",
-    "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write ."
+    "test": "bunx vitest run",
+    "test:ui": "bunx vitest --ui",
+    "test:watch": "bunx vitest",
+    "lint": "bunx prettier --plugin-search-dir . --check . && bunx eslint .",
+    "format": "bunx prettier --plugin-search-dir . --write ."
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^2.1.1",
