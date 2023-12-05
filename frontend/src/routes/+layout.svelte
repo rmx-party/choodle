@@ -13,7 +13,7 @@
   import compact from 'lodash/fp/compact'
   import type { LayoutData } from './$types'
   import { writable, type Writable } from 'svelte/store'
-  import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
+  import { getDeviceId } from '$lib/CreatorUtils'
   import { handleChoodleUncaughtError } from '$lib/errorHandling'
   import ErrorBoundary from '../components/ErrorBoundary.svelte'
   import { choodleCreatorIdKey } from '$lib/Configuration'
