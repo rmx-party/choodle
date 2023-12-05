@@ -5,7 +5,6 @@ import { version } from "$app/environment";
 import type { Handle, HandleServerError } from "@sveltejs/kit";
 import { ProfilingIntegration } from "@sentry/profiling-node";
 import { prisma } from "$lib/server/storage";
-import { VITE_VERCEL_REGION } from "$env/static/public";
 
 console.log(`server hooks initializing: choodle@${version}`);
 
@@ -20,9 +19,6 @@ Sentry.init({
     new ProfilingIntegration(),
     new Sentry.Integrations.Prisma({ client: prisma }),
   ],
-  _metadata: {
-    vercelRegion: VITE_VERCEL_REGION,
-  },
 });
 
 // handle user session by locating user from id in the session cookie and attaching it to the request
