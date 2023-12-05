@@ -34,8 +34,6 @@ export const locateCreator = async (
     `*[_type == "creator" && deviceIds match $deviceId][0]`,
     { deviceId },
   );
-  console.log(`locatedCreator: ${creator}`);
-
   if (!creator) {
     creator = await readWriteClient.create(
       {
