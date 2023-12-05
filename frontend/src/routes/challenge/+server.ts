@@ -7,12 +7,9 @@ const prisma = new PrismaClient();
 
 export const GET: RequestHandler = async ({ locals }) => {
   const { user } = locals;
+  if (!user) throw error(401);
 
-  let result = null;
-
-  result = await getChallengesForUser({ user });
-
-  if (!result?.length) throw error(404);
+  const result = await getChallengesForUser({ user });
 
   return json(result);
 };
