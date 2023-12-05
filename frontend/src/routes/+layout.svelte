@@ -58,7 +58,6 @@
 
   onMount(async () => {
     preloadCode('/', '/pick/*', '/draw/*', '/share/*', '/guess/*', '/offline')
-    console.log({ user: data.user })
   })
 
   const handleStorageEvent = async (event: StorageEvent) => {

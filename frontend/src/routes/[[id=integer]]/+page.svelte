@@ -3,7 +3,7 @@
   import { goto, preloadData } from '$app/navigation'
   import find from 'lodash/fp/find'
   import map from 'lodash/fp/map'
-  import { onMount } from 'svelte'
+  import { getContext, onMount } from 'svelte'
   import { toHTML } from '@portabletext/to-html'
   import { page } from '$app/stores'
   import Button from '../../components/Button.svelte'
@@ -15,8 +15,12 @@
   import { drawPath } from '$lib/routes'
   import type { PageData } from './$types'
   import { createChallenge, updateChallenge } from '$lib/storage'
+  import type { Writable } from 'svelte/store'
+  import type { User } from '@prisma/client'
 
   export let data: PageData
+  const currentChoodler: Writable<User> = getContext('choodler')
+
   let prompts: string[]
   let initialPrompt: string
   let selectedPrompt: string | undefined
@@ -28,23 +32,25 @@
       console.log({ selectedPromptSanityId })
   }
   $: {
-    if ((!data.challenge && selectedPromptSanityId) || data.challenge?.userId !== data.user?.id) {
+    if (
+      (!data.challenge && selectedPromptSanityId) ||
+      data.challenge?.userId !== $currentChoodler?.id
+    ) {
       initializeChallenge()
     }
   }
 
   const initializeChallenge = async () => {
-    if (data.challenge) return
+    if (!$currentChoodler?.id) return
     if (!selectedPromptSanityId || !selectedPrompt) return
-    if (!data.user?.id) return
-    if (data.challenge?.userId == data.user?.id) return
+    if (data.challenge?.userId == $currentChoodler?.id) return
 
     $loading || loading.set(true)
     console.log(`creating new challenge`, {
       prompt: selectedPrompt,
       promptSanityId: selectedPromptSanityId,
-      userId: data.user?.id,
-      challengeId: data.challenge?.id,
+      userId: $currentChoodler.id,
+      challengeId: data.challenge.id,
     })
 
     createChallenge({
