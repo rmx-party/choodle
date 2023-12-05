@@ -7,7 +7,7 @@
   import '../app.css'
   import LoadingIndicator from '../components/LoadingIndicator.svelte'
   import { page } from '$app/stores'
-  import { preloadCode } from '$app/navigation'
+  import { invalidateAll, preloadCode } from '$app/navigation'
   import { urlFor } from '$lib/PersistedImagesUtils'
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'
   import compact from 'lodash/fp/compact'
@@ -84,6 +84,7 @@
       } else {
         const user = await createSession({ deviceId: idValueChange, sanityId: creator.id })
         choodler.set(user)
+        invalidateAll()
       }
 
       localStorage.setItem(choodleCreatorIdKey, idValueChange)

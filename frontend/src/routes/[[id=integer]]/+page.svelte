@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment'
-  import { goto, invalidate, invalidateAll, preloadData } from '$app/navigation'
+  import { goto, preloadData } from '$app/navigation'
   import find from 'lodash/fp/find'
   import map from 'lodash/fp/map'
   import { onMount } from 'svelte'
@@ -24,7 +24,8 @@
   let selectedPromptSanityId: string | undefined
   $: {
     selectedPrompt &&
-      (selectedPromptSanityId = find((r) => r.prompt == selectedPrompt, data.records)._id)
+      (selectedPromptSanityId = find((r) => r.prompt == selectedPrompt, data.records)._id) &&
+      console.log({ selectedPromptSanityId })
   }
   $: {
     if ((!data.challenge && selectedPromptSanityId) || data.challenge?.userId !== data.user?.id) {
