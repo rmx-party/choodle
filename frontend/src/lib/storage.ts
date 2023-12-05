@@ -42,10 +42,9 @@ export const jsonPOST = async (url: string, data: any) => {
   return jsonFetch({ url, method: "POST", data });
 };
 
-export const createSession = async ({ sanityId, deviceId }) => {
-  console.log(`starting user session`, { sanityId, deviceId });
-  const session = await jsonPOST(`/session?/create`, {
-    sanityId,
+export const createSession = async ({ deviceId }: { deviceId: string }) => {
+  console.log(`starting user session`, { deviceId });
+  const session = await jsonPOST(`/session`, {
     deviceId,
   });
   console.log(`create`, { session });
