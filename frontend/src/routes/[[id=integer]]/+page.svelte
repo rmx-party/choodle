@@ -50,7 +50,7 @@
       prompt: selectedPrompt,
       promptSanityId: selectedPromptSanityId,
       userId: $currentChoodler.id,
-      challengeId: data.challenge.id,
+      challengeId: data.challenge?.id,
     })
 
     createChallenge({
