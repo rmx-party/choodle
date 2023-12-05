@@ -32,12 +32,7 @@ export const getGuessResultsForUser = async ({ user }: { user: User }) => {
   const guessResults = await prisma.guessResult.findMany({
     where: { userId: user.id },
     include: { challenge: { include: { drawing: true } } },
-  }).catch(
-    (err) => {
-      console.error(`db load failure`, err);
-      throw error(404, `database load failure`);
-    },
-  );
+  });
   return guessResults;
 };
 
