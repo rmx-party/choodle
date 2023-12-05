@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "bunx vite dev",
     "build": "bunx vite build",
+    "migrate": "bunx prisma migrate deploy",
+    "postinstall": "bunx prisma generate",
     "preview": "bunx vite preview",
     "check": "bun svelte-kit sync && bun svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
