@@ -40,7 +40,7 @@
   $: guessesRemaining = guessesLimit - (guessResult?.guesses?.length || 0)
 
   let choodleOwner = false
-  $: choodleOwner = data.challenge?.userId === $guesser?.id // TODO: remove short circuit
+  $: choodleOwner = data.challenge?.userId === $guesser?.id
   $: {
     if (browser && data.challenge && $guesser && choodleOwner) {
       console.log(`choodle owner, going to share page`, data, $guesser)
