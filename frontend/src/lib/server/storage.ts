@@ -6,12 +6,7 @@ export const prisma = new PrismaClient();
 export const getAllChallenges = async () => {
   const challenges = await prisma.challenge.findMany({
     include: { drawing: true, guessResults: true },
-  }).catch(
-    (err) => {
-      console.error(`db load failure`, err);
-      throw error(404, `database load failure`);
-    },
-  );
+  });
   return challenges;
 };
 
