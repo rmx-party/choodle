@@ -5,7 +5,7 @@ import { version } from "$app/environment";
 import type { Handle, HandleServerError } from "@sveltejs/kit";
 import { ProfilingIntegration } from "@sentry/profiling-node";
 import { prisma } from "$lib/server/storage";
-import { VERCEL_REGION } from "$env/static/public";
+import { VITE_VERCEL_REGION } from "$env/static/public";
 
 console.log(`server hooks initializing: choodle@${version}`);
 
@@ -21,7 +21,7 @@ Sentry.init({
     new Sentry.Integrations.Prisma({ client: prisma }),
   ],
   _metadata: {
-    vercelRegion: VERCEL_REGION,
+    vercelRegion: VITE_VERCEL_REGION,
   },
 });
 
