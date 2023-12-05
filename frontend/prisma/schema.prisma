@@ -23,7 +23,6 @@ model User {
 model Drawing {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  sanityId  String?  @unique
 
   userId   Int
   User     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -52,7 +51,6 @@ model GuessResult {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  sanityId  String?  @unique
 
   final         Boolean  @default(false)
   wasSuccessful Boolean  @default(false)
