@@ -13,9 +13,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   sanityId  String?  @unique
-
-  email String  @unique
-  name  String?
+  deviceIds String[] @unique
 
   drawings     Drawing[]
   challenges   Challenge[]
@@ -37,13 +35,13 @@ model Drawing {
 model Challenge {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  sanityId  String?  @unique
 
-  promptId   String
-  drawingId  Int
-  drawing    Drawing @relation(fields: [drawingId], references: [id], onDelete: Cascade)
-  userId     Int
-  challenger User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompt         String
+  promptSanityId String
+  drawingId      Int?
+  drawing        Drawing? @relation(fields: [drawingId], references: [id], onDelete: Cascade)
+  userId         Int
+  challenger     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   guessResults GuessResult[]
 
@@ -56,8 +54,10 @@ model GuessResult {
   updatedAt DateTime @updatedAt
   sanityId  String?  @unique
 
-  guesses       String[]
+  final         Boolean  @default(false)
   wasSuccessful Boolean  @default(false)
+  guesses       String[]
+  hintsUsed     String[]
 
   challengeId Int
   challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)

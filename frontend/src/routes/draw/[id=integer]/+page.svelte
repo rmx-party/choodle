@@ -17,6 +17,7 @@
   import type { PageData } from './$types'
   import type { Writable } from 'svelte/store'
   import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
+  import { updateChallenge } from '$lib/storage'
 
   export let data: PageData
 
@@ -36,39 +37,27 @@
     })
     if (!browser || !data.challenge || !$deviceId || !$challenger) return
     loading.set(true)
-    const { transaction, choodleId } = await createUncommittedChoodle(
+
+    // TODO: combine the sequential server calls into a single server transaction
+    const drawing = await createUncommittedChoodle({
       undoStack,
       canvas,
-      {
-        creatorId: $deviceId,
+      extraMetadata: {
+        userId: $challenger.id,
       },
-      $challenger._id
-    )
-
-    console.log(
-      `patching in the choodle ${choodleId} to challenge ${data.challenge._id} with challenger ${$challenger._id}`
-    )
-    transaction.patch(data.challenge._id, (p) =>
-      p.set({
-        choodle: { _ref: choodleId },
-        challenger: { _ref: $challenger._id },
-      })
-    )
-
-    const transactionResult = await transaction.commit({
-      autoGenerateArrayKeys: true,
     })
+    const challenge = await updateChallenge({ id: data.challenge.id, drawingId: drawing.id })
 
-    console.log({ transactionResult })
+    console.log(`created drawing and updated challenge`, { drawing, challenge })
 
-    preloadData(sharePath(data.challenge._id))
-    preloadData(guessPath(data.challenge._id))
+    preloadData(sharePath(challenge.id))
+    preloadData(guessPath(challenge.id))
 
     await clearStorage()
-    await goto(sharePath(data.challenge._id))
+    await goto(sharePath(challenge.id))
   }
 
-  $: prerequisitesForSavingMet = !!$deviceId && !!$challenger?._id && !!data.challenge
+  $: prerequisitesForSavingMet = !!$deviceId && !!$challenger?.id && !!data.challenge
 
   const attemptToSaveChoodle = async () => {
     if (!browser) return
@@ -108,7 +97,7 @@
         <strong>
           {data.copy.draw_topBarInstructionText}
         </strong>
-        {data.challenge?.gamePrompt?.prompt?.toUpperCase()}
+        {data.challenge?.prompt?.toUpperCase()}
       </h3>
     </span>
   </div>

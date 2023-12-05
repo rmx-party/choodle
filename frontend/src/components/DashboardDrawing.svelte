@@ -1,17 +1,16 @@
 <script lang="ts">
-  import type { StreakGuessingGameDrawing } from '$lib/CWFGame'
-  import { urlFor } from '$lib/PersistedImagesUtils'
+  import type { Drawing } from '@prisma/client'
   import { fade } from 'svelte/transition'
 
   export let index: number
-  export let drawing: StreakGuessingGameDrawing
+  export let drawing: Drawing
   export let linkDestination: string
 </script>
 
 <a class="drawing" href={linkDestination} transition:fade={{ duration: 100 }}>
   <img
     loading={index <= 16 ? 'eager' : 'lazy'}
-    src={urlFor(drawing.image).url()}
+    src={drawing.imageUrl}
     alt=""
     width="168"
     height="228"

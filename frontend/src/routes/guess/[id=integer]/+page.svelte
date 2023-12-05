@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { urlFor } from '$lib/PersistedImagesUtils'
   import { share, type Shareable } from '$lib/ShareUtils'
   import { writable, type Writable } from 'svelte/store'
   import GuessingHUD from '../../../components/GuessingHUD.svelte'
@@ -15,23 +14,21 @@
   import { choodleYellow, pageBackgroundDefault } from '$lib/Configuration'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte'
-  import { readOnlyClient, readWriteClient } from '$lib/CMSUtils'
+  import { readWriteClient } from '$lib/CMSUtils'
   import Hints from '../../../components/Hints.svelte'
   import { loading, uncaughtErrors } from '$lib/store'
-  import type {
-    StreakGuessingGameDrawing,
-    StreakGuessingGameGuessResult,
-    StreakGuessingGamePlayer,
-  } from '$lib/CWFGame'
+  import type { StreakGuessingGameGuessResult } from '$lib/CWFGame'
   import type { PageData } from './$types'
   import TextMessageBubble from '../../../components/TextMessageBubble.svelte'
   import { sharePath } from '$lib/routes'
   import uniq from 'lodash/fp/uniq'
   import JSConfetti from 'js-confetti'
+  import type { User } from '@prisma/client'
+  import { findOrCreateGuessResult, updateGuessResult } from '$lib/storage'
 
   loading.set(true)
 
-  const guesser: Writable<StreakGuessingGamePlayer> = getContext('choodler')
+  const guesser: Writable<User> = getContext('choodler')
   $: console.log(`guess page react`, { guesser: $guesser })
 
   export let data: PageData
@@ -41,17 +38,18 @@
   // TODO: CMS manageed
   const guessesLimit = 3
   let guessesRemaining = 3
-  $: guessesRemaining = guessesLimit - (guess?.guesses?.length || 0)
+  $: guessesRemaining = guessesLimit - (guessResult?.guesses?.length || 0)
 
   let choodleOwner = false
-  $: choodleOwner = data.challenge?.challenger?._id === $guesser?._id
+  $: choodleOwner = false && data.challenge?.userId === $guesser?.id // TODO: remove short circuit
   $: {
-    if (browser && choodleOwner) {
-      goto(sharePath(data.challenge._id))
+    if (browser && $guesser && choodleOwner) {
+      console.log(`choodle owner, going to share page`, data, $guesser)
+      // goto(sharePath(data.challenge.id))
     }
   }
 
-  $: success = !!guess?.guessedCorrectly
+  $: success = !!guessResult?.wasSuccessful
   let stillGuessing: boolean = false
   $: stillGuessing = !success && guessesRemaining > 0
 
@@ -88,25 +86,26 @@
   $: success && celebrate('success')
   // $: !success && !stillGuessing && celebrate('failure')
 
-  let guess: StreakGuessingGameGuessResult
+  let guessResult: StreakGuessingGameGuessResult
   let disableKeyboard = false
 
+  // TODO: load game prompt and hints from sanity
   let hints: { text: string; used: boolean }[] = []
   $: {
     hints = filter(
       (hint) => !!hint.text,
       [
         {
-          text: data.challenge?.gamePrompt?.hint,
-          used: hintUsedInGuess(guess, data.challenge?.gamePrompt?.hint),
+          text: data.challengePrompt.hint,
+          used: hintUsedInGuess(guessResult, data.challengePrompt.hint),
         },
         {
-          text: data.challenge?.gamePrompt?.hint_2,
-          used: hintUsedInGuess(guess, data.challenge?.gamePrompt?.hint_2),
+          text: data.challengePrompt.hint_2,
+          used: hintUsedInGuess(guessResult, data.challengePrompt.hint_2),
         },
         {
-          text: data.challenge?.gamePrompt?.hint_3,
-          used: hintUsedInGuess(guess, data.challenge?.gamePrompt?.hint_3),
+          text: data.challengePrompt.hint_3,
+          used: hintUsedInGuess(guessResult, data.challengePrompt.hint_3),
         },
       ]
     )
@@ -125,28 +124,14 @@
     $loading || loading.set(true)
     alreadyLookingForGuess = true
 
-    const query = `*[_type == "guess"][guesser._ref == $guesserId && challenge._ref == $challengeId][0]`
-    guess = await readOnlyClient.fetch(query, { guesserId, challengeId }).catch((error) => {
-      uncaughtErrors.set([...$uncaughtErrors, { error }])
-    })
+    // TODO: figure out if we can load guess in initial page load without breaking ISR caching
+    // TODO: if not, figure out if we can eager-load and memoize the user's data at the layout context level, so that we don't have to do it after page load
 
-    console.log(`locateGuess GET`, { guess })
-    if (!guess?._id) {
-      console.log('no guess found, creating a new guess')
-      guess = await readWriteClient.create(
-        {
-          _type: 'guess',
-          guesser: { _ref: guesserId },
-          challenge: { _ref: data.challenge._id },
-          guesses: [],
-          hintsUsed: [],
-        },
-        { autoGenerateArrayKeys: true }
-      )
-    }
+    guessResult = await findOrCreateGuessResult({ guesserId, challengeId })
+
     loading.set(false)
-    if (!guess) throw new Error(`no guess could be found or created`)
-    console.log(`locateGuess result`, { guess })
+    if (!guessResult) throw new Error(`no guess could be found or created`)
+    console.log(`locateGuess result`, { guess: guessResult })
     alreadyLookingForGuess = false
   }
 
@@ -154,33 +139,25 @@
     return guess.join('').toUpperCase() === answer.toUpperCase()
   }
 
-  const createGuess = async (guessedCorrectly: boolean | undefined) => {
+  const submitGuessAttempt = async (guessedCorrectly: boolean | null) => {
     console.log(`adding guess, resolving result to`, guessedCorrectly)
 
-    // Optimistic local update ahead of the network request
-    guess = {
-      ...guess,
-      guesses: [...(guess.guesses || []), $currentGuess.join('')],
-      guessedCorrectly,
+    guessResult = {
+      ...guessResult,
+      guesses: [...(guessResult.guesses || []), $currentGuess.join('')],
+      final: guessedCorrectly || guessesRemaining <= 1,
+      wasSuccessful: guessedCorrectly,
     }
+    guessResult = await updateGuessResult(guessResult)
 
-    const guessResult = readWriteClient
-      .patch(guess._id)
-      .setIfMissing({ guesses: [] })
-      .append('guesses', [$currentGuess.join('')])
-
-    if (guessedCorrectly !== null) {
-      guessResult.set({ guessedCorrectly })
-    }
-    guess = await guessResult.commit({ autoGenerateArrayKeys: true })
-    console.log({ guess })
+    console.log({ guess: guessResult })
   }
 
   const handleCorrectGuess = () => {
     console.log(`right answer, you won the thing`)
 
     success = true
-    createGuess(true)
+    submitGuessAttempt(true)
     guessesRemaining--
     cursorLocation.set(-1)
 
@@ -189,8 +166,8 @@
       window.gtag('event', 'guess_correct', {
         event_category: 'engagement',
         event_label: 'correct guess',
-        prompt_text: data.challenge?.gamePrompt?.prompt,
-        guess_count: guess?.guesses?.length,
+        prompt_text: data.challenge?.prompt,
+        guess_count: guessResult?.guesses?.length,
       })
     }
   }
@@ -200,10 +177,10 @@
 
     if (guessesRemaining <= 1) {
       console.log(`creating final guess`)
-      createGuess(false)
+      submitGuessAttempt(false)
     } else {
       console.log(`creating non-final guess, ${guessesRemaining} guesses left`)
-      createGuess(null)
+      submitGuessAttempt(null)
     }
 
     guessesRemaining--
@@ -216,43 +193,42 @@
         event_category: 'engagement',
         event_label: 'incorrect guess',
         prompt_text: data.challenge?.gamePrompt?.prompt,
-        guess_count: guess?.guesses?.length,
+        guess_count: guessResult?.guesses?.length,
       })
     }
   }
 
   const submitGuess = () => {
-    if ($currentGuess?.length < data.challenge?.gamePrompt?.prompt?.length) return
+    if ($currentGuess?.length < data.challenge?.prompt?.length) return
 
     console.log(`checking answer, ${guessesRemaining} guesses left`)
 
-    isCorrect($currentGuess, data.challenge?.gamePrompt?.prompt)
-      ? handleCorrectGuess()
-      : handleIncorrectGuess()
+    isCorrect($currentGuess, data.challenge?.prompt) ? handleCorrectGuess() : handleIncorrectGuess()
   }
 
   const afterHint = async ({ text }: { text: string }) => {
-    if (hintUsedInGuess(guess, text)) {
+    if (hintUsedInGuess(guessResult, text)) {
       console.log(`hint already used: \n${text}`)
       return
     }
 
-    console.log(`adding ${text} to the used hints on ${guess._id}`)
-    guess = { ...guess, hintsUsed: [...(guess.hintsUsed || []), text] }
-    guess = await readWriteClient
-      .patch(guess._id)
-      .setIfMissing({ hintsUsed: [] })
-      .append('hintsUsed', [text])
-      .commit()
+    console.log(`adding "${text}" to the used hints on guessResult: ${guessResult.id}`)
+    guessResult = { ...guessResult, hintsUsed: [...(guessResult.hintsUsed || []), text] }
+    guessResult = await updateGuessResult({ id: guessResult.id, hintsUsed: guessResult.hintsUsed })
+    // guessResult = await readWriteClient
+    //   .patch(guessResult.id)
+    //   .setIfMissing({ hintsUsed: [] })
+    //   .append('hintsUsed', [text])
+    //   .commit()
 
     // send google analytics event 'hint_click'
     if (browser && window.gtag) {
       window.gtag('event', 'hint_click', {
         event_category: 'engagement',
         event_label: 'hint clicked',
-        prompt_text: data.challenge?.gamePrompt?.prompt,
+        prompt_text: data.challenge?.prompt,
         hint_text: text,
-        guess_count: guess?.guesses?.length,
+        guess_count: guessResult?.guesses?.length,
       })
     }
   }
@@ -269,16 +245,19 @@
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const attemptToSubmitGuess = async (_event?: Event) => {
     if (!browser) return
-    if ($currentGuess.length !== data.challenge?.gamePrompt?.prompt?.length) return
+    if ($currentGuess.length !== data.challenge?.prompt?.length) return
 
     submitGuess()
     return
   }
 
   $: {
-    if (!guess && $guesser?._id && data.challenge?._id && !choodleOwner) {
+    if (!guessResult && $guesser?.id && data.challenge.id && !choodleOwner) {
       loading.set(true)
-      locateGuess({ guesserId: $guesser._id, challengeId: data.challenge._id }).catch((error) => {
+      console.log(
+        `guess page, loading guess for guesser: ${$guesser.id} and challenge: ${data.challenge.id}`
+      )
+      locateGuess({ guesserId: $guesser.id, challengeId: data.challenge.id }).catch((error) => {
         uncaughtErrors.set([...$uncaughtErrors, { error }])
       })
     }
@@ -288,16 +267,6 @@
     loading.set(false)
     jsConfetti = new JSConfetti() // FIXME: this adds a canvas element to the DOM, which should only be done once, or else needs teardown
   })
-
-  const bestImageUrl = (choodle: StreakGuessingGameDrawing) => {
-    let bestImage = choodle.upScaledImage
-
-    if (!bestImage) {
-      bestImage = choodle.image
-    }
-
-    return urlFor(bestImage).url()
-  }
 
   const shareTextNthTryCopy = (nthTry: number) => {
     switch (nthTry) {
@@ -327,15 +296,15 @@
 
   let shareTextSuccessMessage = ``
   $: {
-    shareTextSuccessMessage = `🥳 I guessed ${data.challenge?.gamePrompt?.prompt.toUpperCase()} on the ${shareTextNthTryCopy(
+    shareTextSuccessMessage = `🥳 I guessed ${data.challenge?.prompt.toUpperCase()} on the ${shareTextNthTryCopy(
       guessesLimit - guessesRemaining
     )} try!`
   }
-  $: shareTextFailureMessage = `🫣 I couldn’t guess ${data.challenge?.gamePrompt?.prompt.toUpperCase()}!`
-  $: shareTextGuesses = (guess?.guesses || []).map(shareTextNthGuessCopy).join(`\n`)
+  $: shareTextFailureMessage = `🫣 I couldn’t guess ${data.challenge?.prompt.toUpperCase()}!`
+  $: shareTextGuesses = (guessResult?.guesses || []).map(shareTextNthGuessCopy).join(`\n`)
   let shareTextStats = ``
   $: {
-    shareTextStats = `🛟 ${uniq(guess?.hintsUsed || []).length}`
+    shareTextStats = `🛟 ${uniq(guessResult?.hintsUsed || []).length}`
   }
   let newLine = `\n`
   let finalPrompt = `✍️ Now it’s your turn`
@@ -371,7 +340,7 @@
           window?.gtag('event', 'click', {
             event_category: 'engagement',
             event_label: 'share_guess',
-            prompt_text: data.challenge?.gamePrompt?.prompt,
+            prompt_text: data.challenge?.prompt,
           })
         }
         console.log(`shared`, { result })
@@ -381,7 +350,7 @@
           window?.gtag('event', 'click', {
             event_category: 'engagement',
             event_label: 'share_guess_cancel',
-            prompt_text: data.challenge?.gamePrompt?.prompt,
+            prompt_text: data.challenge?.prompt,
           })
         }
         console.error(`error sharing`, error)
@@ -393,14 +362,14 @@
   url={$page.url}
   title={data.pageContent.pageTitle}
   description={data.pageContent.pageDescription}
-  imageUrl={bestImageUrl(data.challenge?.choodle)}
+  imageUrl={data.challenge.drawing.imageUrl}
   width="430"
   height="932"
   themeColor={choodleYellow}
   bgColor={pageBackgroundDefault}
 />
 
-{#if guess && stillGuessing}
+{#if guessResult && stillGuessing}
   <LayoutContainer class="no-pan">
     <div class="topBar" slot="topBar">
       <GuessingHUD {guessesRemaining} {guessesLimit}>
@@ -411,7 +380,7 @@
     </div>
 
     <ChoodleContainer --choodle-max-height-offset="26rem">
-      <img src={bestImageUrl(data.challenge?.choodle)} alt="" />
+      <img src={data.challenge.drawing.imageUrl} alt="" />
     </ChoodleContainer>
 
     {#if guessesRemaining < guessesLimit && data.copy.guess_incorrectFeedbackText}
@@ -420,7 +389,7 @@
       <p><!-- layout placeholder --></p>
     {/if}
     <GuessingInterface
-      format={data.challenge?.gamePrompt?.prompt.split('')}
+      format={data.challenge?.prompt.split('')}
       inputDisplay={currentGuess}
       {cursorLocation}
       onEnter={attemptToSubmitGuess}
@@ -431,7 +400,7 @@
       </div>
     </GuessingInterface>
   </LayoutContainer>
-{:else if guess}
+{:else if guessResult}
   <LayoutContainer class="no-pan">
     {#if success}
       <section class="top-content block-content">

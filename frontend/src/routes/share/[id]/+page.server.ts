@@ -2,9 +2,10 @@ import {
   PUBLIC_ISR_BYPASS_TOKEN,
   PUBLIC_ISR_EXPIRATION_SECONDS,
 } from "$env/static/public";
-import { cachedReadOnlyClient, readOnlyClient } from "$lib/CMSUtils";
+import { cachedReadOnlyClient } from "$lib/CMSUtils";
 import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
+import { findChallenge } from "$lib/server/storage";
 
 export const config = {
   isr: {
@@ -29,14 +30,7 @@ export const load: PageLoad = async ({ params }) => {
     throw error(404, `cms load failure for pageContent slug ${slug}`);
   });
 
-  const challenge = readOnlyClient.fetch(
-    `*[_type == "challenge" && _id == $challengeId]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
-    { challengeId },
-  )
-    .catch((err) => {
-      console.error(`load failure`, err);
-      throw error(404, `cms load failure for challenge id ${challengeId}`);
-    });
+  const challenge = findChallenge({ id: Number(challengeId) });
 
   return {
     pageContent,

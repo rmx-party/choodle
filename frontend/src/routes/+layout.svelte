@@ -16,13 +16,14 @@
   import { getDeviceId, locateCreator } from '$lib/CreatorUtils'
   import { handleChoodleUncaughtError } from '$lib/errorHandling'
   import ErrorBoundary from '../components/ErrorBoundary.svelte'
-  import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
   import { choodleCreatorIdKey } from '$lib/Configuration'
+  import type { User } from '@prisma/client'
+  import { createSession } from '$lib/storage'
 
   export let data: LayoutData
 
   const deviceId: Writable<string | undefined> = writable()
-  const choodler: Writable<StreakGuessingGamePlayer | undefined> = writable()
+  const choodler: Writable<User | undefined> = writable()
   setContext('deviceId', deviceId)
   setContext('choodler', choodler)
 
@@ -46,17 +47,18 @@
   ])
 
   const handleInitialDeviceId = async () => {
+    if (!browser) return
     deviceId.set(await getDeviceId())
 
-    browser &&
-      window?.gtag('config', 'G-T2JJPTNKJS', {
-        user_id: $deviceId,
-      })
+    window?.gtag('config', 'G-T2JJPTNKJS', {
+      user_id: $deviceId,
+    })
   }
   $: browser && !$deviceId && handleInitialDeviceId()
 
   onMount(async () => {
     preloadCode('/', '/pick/*', '/draw/*', '/share/*', '/guess/*', '/offline')
+    console.log({ user: data.user })
   })
 
   const handleStorageEvent = async (event: StorageEvent) => {
@@ -67,14 +69,23 @@
     }
   }
   const handleNewDeviceId = async (idValueChange: string | undefined) => {
+    if (!browser) return
     console.log(`new device ID`, idValueChange)
     if (!idValueChange) return
     if (idValueChange !== $deviceId || $choodler === undefined) {
       $loading || loading.set(true)
-      console.log(`getting creator from device ID`, idValueChange)
+
+      console.log(`getting sanity creator from device ID`, idValueChange)
       const creator = await locateCreator({ deviceId: idValueChange })
       console.log(`found creator`, creator)
-      choodler.set(creator)
+
+      if (data.user?.id) {
+        choodler.set(data.user)
+      } else {
+        const user = await createSession({ deviceId: idValueChange, sanityId: creator.id })
+        choodler.set(user)
+      }
+
       localStorage.setItem(choodleCreatorIdKey, idValueChange)
       loading.set(false) // This is only sometimes correct, a push/delete queue or map of pending operations model will be better
     }

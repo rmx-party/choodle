@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { urlFor } from '$lib/PersistedImagesUtils'
   import Button from '../../../components/Button.svelte'
   import { goto, preloadData } from '$app/navigation'
   import { page } from '$app/stores'
@@ -16,25 +15,26 @@
   import type { PageData } from './$types'
   import { guessPath } from '$lib/routes'
   import type { Writable } from 'svelte/store'
-  import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
+  import type { User } from '@prisma/client'
 
   loading.set(true)
 
   export let data: PageData
 
-  const currentChoodler: Writable<StreakGuessingGamePlayer> = getContext('choodler')
+  const currentChoodler: Writable<User> = getContext('choodler')
 
   let choodleOwner = true
-  $: choodleOwner = data.challenge.challenger._id === $currentChoodler?._id
+  $: choodleOwner = data.challenge.userId === $currentChoodler?.id
   $: {
-    if (browser && !choodleOwner) {
-      goto(guessPath(data.challenge._id))
+    if (browser && $currentChoodler && !choodleOwner) {
+      console.log(`not the choodle owner, going to guess page`, data, $currentChoodler)
+      goto(guessPath(data.challenge.id))
     }
   }
 
   let copiedToClipboard = false
 
-  $: gamePrompt = data.challenge?.gamePrompt?.prompt
+  $: gamePrompt = data.challenge?.prompt
   let gamePromptTiles = ''
   $: {
     gamePromptTiles = gamePrompt?.length
@@ -42,7 +42,7 @@
       : ''
   }
 
-  $: shareUrl = browser ? `${window.location.origin}/guess/${data.challenge._id}` : ''
+  $: shareUrl = browser ? `${window.location.origin}/guess/${data.challenge.id}` : ''
   $: challengeShareText = [data.copy.share_messageText, gamePromptTiles, shareUrl].join(`\n`)
   let challengeShareable: Shareable
   $: challengeShareable = { text: challengeShareText }
@@ -85,25 +85,15 @@
     //  - all details we need to draw it here, including the image
 
     loading.set(false)
-    preloadData(guessPath(data.challenge._id))
+    preloadData(guessPath(data.challenge.id))
   })
-
-  const bestImageUrl = (choodle) => {
-    let bestImage = choodle.upScaledImage
-
-    if (!bestImage) {
-      bestImage = choodle.image
-    }
-
-    return urlFor(bestImage).url()
-  }
 </script>
 
 <MetaData
   url={$page.url}
   title={data.pageContent.pageTitle}
   description={data.pageContent.pageDescription}
-  imageUrl={bestImageUrl(data.challenge.choodle)}
+  imageUrl={data.challenge.drawing.imageUrl}
   width="430"
   height="932"
   themeColor={choodleYellow}
@@ -116,7 +106,7 @@
   </section>
 
   <ChoodleContainer --choodle-max-height-offset="27rem">
-    <img src={bestImageUrl(data.challenge.choodle)} alt="" />
+    <img src={data.challenge.drawing.imageUrl} alt="" />
   </ChoodleContainer>
 
   <Button variant="primary" colour="yellow" on:click={handleShare}

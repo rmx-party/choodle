@@ -7,14 +7,9 @@
   import MetaData from '../../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import { loading } from '$lib/store'
-  import type {
-    StreakGuessingGameChallenge,
-    StreakGuessingGameGuessResult,
-    StreakGuessingGamePlayer,
-  } from '$lib/CWFGame'
+  import type { StreakGuessingGameGuessResult, StreakGuessingGamePlayer } from '$lib/CWFGame'
   import { guessPath, pickPath, sharePath } from '$lib/routes'
   import { toHTML } from '@portabletext/to-html'
-  import { readOnlyClient } from '$lib/CMSUtils'
   import map from 'lodash/fp/map'
   import isEmpty from 'lodash/fp/isEmpty'
   import orderBy from 'lodash/fp/orderBy'
@@ -24,12 +19,14 @@
   import flow from 'lodash/fp/flow'
   import uniqBy from 'lodash/fp/uniqBy'
   import reject from 'lodash/fp/reject'
+  import type { Challenge } from '@prisma/client'
+  import { getMyChallenges, getMyGuessResults } from '$lib/storage'
 
   loading.set(true)
 
   export let data: PageData
 
-  let challenges: StreakGuessingGameChallenge[] = []
+  let challenges: Challenge[] = []
 
   const currentChoodler: Writable<StreakGuessingGamePlayer> = getContext('choodler')
   $: console.log(`dashboard page react`, { currentChoodler: $currentChoodler })
@@ -42,41 +39,34 @@
   }
 
   const shareOrPickPathFor = (choodlerId, challenge) => {
-    if (!choodlerId) return guessPath(challenge._id)
+    if (!choodlerId) return guessPath(challenge.id)
 
-    if (choodlerId !== challenge.challenger._id) {
-      return guessPath(challenge._id)
+    if (choodlerId !== challenge.userId) {
+      return guessPath(challenge.id)
     }
-    return sharePath(challenge._id)
+    return sharePath(challenge.id)
   }
 
-  let myChallenges: StreakGuessingGameChallenge[] = []
+  let myChallenges: Challenge[] = []
   let myGuesses: StreakGuessingGameGuessResult[] = []
-  const fetchChoodlerChallenges = async (choodlerId: string) => {
+  const fetchChoodlerChallenges = async (choodlerId: number) => {
     $loading || loading.set(true)
     if (!choodlerId) return
-    myChallenges = (await readOnlyClient.fetch(
-      `*[_type == "challenge" && challenger._ref == $choodlerId]{..., challenger->{...}, choodle->{...}} | order(_createdAt desc)`,
-      { choodlerId }
-    )) as StreakGuessingGameChallenge[]
-    myGuesses = (await readOnlyClient.fetch(
-      `*[_type == "guess" && guesser._ref == $choodlerId]{..., challenge->{..., challenger->{...}, choodle->{...}}} | order(_createdAt desc)`,
-      { choodlerId }
-    )) as StreakGuessingGameGuessResult[]
+
+    myChallenges = await getMyChallenges()
+    myGuesses = await getMyGuessResults()
+    console.log({ myChallenges, myGuesses })
     loading.set(false)
   }
   $: {
     challenges = flow(
-      reject((challenge: StreakGuessingGameChallenge) => !challenge.choodle),
-      orderBy(['_updatedAt'], ['desc']),
-      uniqBy('_id')
-    )([
-      ...myChallenges,
-      ...map((guess) => guess.challenge, myGuesses),
-    ] as StreakGuessingGameChallenge[])
+      reject((challenge: Challenge) => !challenge.drawing),
+      orderBy(['updatedAt'], ['desc']),
+      uniqBy('id')
+    )([...myChallenges, ...map((gr) => gr.challenge, myGuesses)] as Challenge[])
   }
   $: {
-    !$navigating && $currentChoodler?._id && fetchChoodlerChallenges($currentChoodler._id)
+    !$navigating && $currentChoodler?.id && fetchChoodlerChallenges($currentChoodler.id)
   }
 </script>
 
@@ -128,11 +118,11 @@
     </section>
 
     <section class="drawings">
-      {#each challenges as challenge, index (challenge._id)}
+      {#each challenges as challenge, index (challenge.id)}
         <DashboardDrawing
           {index}
-          drawing={challenge.choodle}
-          linkDestination={shareOrPickPathFor($currentChoodler?._id, challenge)}
+          drawing={challenge.drawing}
+          linkDestination={shareOrPickPathFor($currentChoodler?.id, challenge)}
         />
       {/each}
     </section>

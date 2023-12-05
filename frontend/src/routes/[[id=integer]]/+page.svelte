@@ -9,44 +9,54 @@
   import Button from '../../components/Button.svelte'
   import LayoutContainer from '../../components/LayoutContainer.svelte'
   import MetaData from '../../components/MetaData.svelte'
-  import { readWriteClient } from '$lib/CMSUtils'
   import { loading, uncaughtErrors } from '$lib/store'
   import { clearStorage } from '$lib/StorageStuff'
   import shuffle from 'lodash/fp/shuffle'
   import { drawPath } from '$lib/routes'
   import type { PageData } from './$types'
+  import { createChallenge, updateChallenge } from '$lib/storage'
 
   export let data: PageData
   let prompts: string[]
   let initialPrompt: string
   let selectedPrompt: string | undefined
   $: prompts = shuffle(map('prompt')(data.records))
+  let selectedPromptSanityId: string | undefined
+  $: {
+    selectedPrompt &&
+      (selectedPromptSanityId = find((r) => r.prompt == selectedPrompt, data.records)._id) &&
+      console.log({ selectedPromptSanityId })
+  }
+  $: {
+    if ((!data.challenge && selectedPromptSanityId) || data.challenge?.userId !== data.user?.id) {
+      initializeChallenge()
+    }
+  }
+
+  const initializeChallenge = async () => {
+    if (!selectedPromptSanityId) return
+    if (!data.user.id) return
+
+    loading.set(true)
+    console.log(`creating new challenge`)
+    createChallenge({
+      prompt: selectedPrompt,
+      promptSanityId: selectedPromptSanityId,
+    })
+      .then((newChallenge) => {
+        console.log(`created new challenge, going to it`)
+        goto(`/${newChallenge.id}`)
+      })
+      .catch((err) => {
+        console.error(err)
+        uncaughtErrors.set([...$uncaughtErrors, err])
+      })
+  }
 
   onMount(async () => {
-    if (!window?.crypto?.randomUUID) {
-      uncaughtErrors.set([
-        ...$uncaughtErrors,
-        new Error(
-          `please use a modern browser, not in private mode, crypto.randomUUID is not available`
-        ),
-      ])
-    }
     initialPrompt = prompts[0]
     selectedPrompt = initialPrompt
     loading.set(false)
-
-    // TODO: also if the user doesn't own this challenge, we should create a new one instead
-    if (!data.challenge) {
-      data.challenge = await readWriteClient.create(
-        {
-          _id: `challenge-${window.crypto.randomUUID()}`,
-          _type: 'challenge',
-        },
-        {
-          autoGenerateArrayKeys: true,
-        }
-      )
-    }
   })
 
   const rotatePrompts = () => {
@@ -61,34 +71,39 @@
   }
 
   const handleShuffle = (event: Event) => {
+    if (!browser) return
     event.preventDefault()
 
     rotatePrompts()
 
     // add GA event for skipped prompt
-    browser &&
-      window?.gtag?.('event', 'skip_prompt', {
-        event_category: 'engagement',
-        event_label: selectedPrompt,
-      })
+    window?.gtag?.('event', 'skip_prompt', {
+      event_category: 'engagement',
+      event_label: selectedPrompt,
+    })
   }
 
   const proceed = async () => {
     if (!selectedPrompt) return
-    if (!data.challenge?._id) return
+    if (!data.challenge?.id) return
 
-    const gamePrompt = find((p) => p.prompt === selectedPrompt, data.records)
     console.log(`proceeding with prompt ${selectedPrompt}`)
 
     loading.set(true)
 
-    await readWriteClient
-      .patch(data.challenge._id)
-      .set({
-        gamePrompt: { _ref: gamePrompt._id },
-      })
-      .commit()
-    preloadData(drawPath(data.challenge._id))
+    await updateChallenge({
+      id: data.challenge.id,
+      prompt: selectedPrompt,
+      promptSanityId: selectedPromptSanityId,
+    }).then((result) => {
+      preloadData(drawPath(result.id))
+    })
+    // await readWriteClient
+    //   .patch(data.challenge._id)
+    //   .set({
+    //     gamePrompt: { _ref: gamePrompt._id },
+    //   })
+    //   .commit()
 
     clearStorage()
 
@@ -99,7 +114,7 @@
         event_label: selectedPrompt,
       })
 
-    goto(drawPath(data.challenge._id))
+    goto(drawPath(data.challenge.id))
   }
 </script>
 

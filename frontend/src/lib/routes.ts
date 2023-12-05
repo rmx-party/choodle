@@ -1,23 +1,23 @@
 export const dashboardPath = () => {
-  return '/dashboard'
-}
+  return "/dashboard";
+};
 
-export const pickPath = (challengeId?: string) => {
+export const pickPath = (challengeId?: number) => {
   if (challengeId) {
-    return `/${challengeId}`
+    return `/${challengeId}`;
   }
 
-  return '/'
-}
+  return "/";
+};
 
-export const sharePath = (challengeId: string) => {
-  return `/share/${challengeId}`
-}
+export const sharePath = (challengeId: number) => {
+  return `/share/${challengeId}`;
+};
 
-export const drawPath = (challengeId: string) => {
-  return `/draw/${challengeId}`
-}
+export const drawPath = (challengeId: number) => {
+  return `/draw/${challengeId}`;
+};
 
-export const guessPath = (challengeId: string) => {
-  return `/guess/${challengeId}`
-}
+export const guessPath = (challengeId: number) => {
+  return `/guess/${challengeId}`;
+};

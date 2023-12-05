@@ -1,9 +1,10 @@
-import { cachedReadOnlyClient, readOnlyClient } from "$lib/CMSUtils";
-import type { PageLoad } from "./$types";
+import { cachedReadOnlyClient } from "$lib/CMSUtils";
+import type { PageServerLoad } from "./$types";
 import {
   PUBLIC_ISR_BYPASS_TOKEN,
   PUBLIC_ISR_EXPIRATION_SECONDS,
 } from "$env/static/public";
+import { findChallenge } from "$lib/server/storage";
 
 export const config = {
   isr: {
@@ -14,7 +15,7 @@ export const config = {
 
 const slug = "draw";
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params }) => {
   const pageContent = cachedReadOnlyClient.fetch(
     `*[_type == "pageContent" && pageSlug == $slug][0]`,
     { slug },
@@ -23,16 +24,7 @@ export const load: PageLoad = async ({ params }) => {
     throw new error(404, `cms load failure for pageContent slug ${slug}`);
   });
 
-  const challenge = readOnlyClient.fetch(
-    `*[_type == "challenge" && _id == $challengeId]{..., challenger->{...}, choodle->{...}, gamePrompt->{...}} [0]`,
-    { challengeId: params.challengeId },
-  ).catch((error) => {
-    console.error(`load failure`, error);
-    throw new error(
-      404,
-      `cms load failure for challenge id ${params.challengeId}`,
-    );
-  });
+  const challenge = findChallenge({ id: Number(params.id) });
 
   return { pageContent, challenge };
 };

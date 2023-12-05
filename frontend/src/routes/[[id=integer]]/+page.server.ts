@@ -1,8 +1,9 @@
-import { cachedReadOnlyClient, readOnlyClient } from "$lib/CMSUtils";
+import { cachedReadOnlyClient } from "$lib/CMSUtils";
 import { error } from "@sveltejs/kit";
 
 import { PUBLIC_ISR_BYPASS_TOKEN } from "$env/static/public";
-import type { PageLoad } from "./$types";
+import type { PageServerLoad } from "./$types";
+import { findChallenge } from "$lib/server/storage";
 
 export const config = {
   isr: {
@@ -13,18 +14,12 @@ export const config = {
 
 const slug = "pick-challenge";
 
-export const load: PageLoad = async ({ params }) => {
-  const { challengeId } = params;
-  let challenge;
+export const load: PageServerLoad = async ({ params }) => {
+  const { id } = params;
+  let challenge = null;
 
-  if (challengeId) {
-    challenge = readOnlyClient.fetch(
-      `*[_type == "challenge" && _id == $challengeId][0]`,
-      { challengeId },
-    ).catch((err) => {
-      console.error(`load failure`, err);
-      throw error(404, `cms load failure for challenge id ${challengeId}`);
-    });
+  if (id) {
+    challenge = findChallenge({ id: Number(id) });
   }
 
   const pageContent = cachedReadOnlyClient.fetch(
