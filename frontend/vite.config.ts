@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [
     sentrySvelteKit({
       adapter: "vercel",
-      autoUploadSourceMaps: true,
+      autoUploadSourceMaps: false,
       sourceMapsUploadOptions: {
         org: "rmx-party",
         project: "choodle-sveltekit",
