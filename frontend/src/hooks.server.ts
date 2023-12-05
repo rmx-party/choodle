@@ -4,11 +4,9 @@ import * as Sentry from "@sentry/sveltekit";
 import { version } from "$app/environment";
 import type { Handle, HandleServerError } from "@sveltejs/kit";
 import { ProfilingIntegration } from "@sentry/profiling-node";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "$lib/server/storage";
 
 console.log(`server hooks initializing: choodle@${version}`);
-
-const prisma = new PrismaClient();
 
 Sentry.init({
   release: `choodle@${version}`,
