@@ -9,11 +9,7 @@ import {
 export const GET: RequestHandler = async ({ locals }) => {
   const { user } = locals;
 
-  let result = null;
-
-  result = await getGuessResultsForUser({ user });
-
-  if (!result?.length) throw error(404);
+  const result = await getGuessResultsForUser({ user });
 
   return json(result);
 };
