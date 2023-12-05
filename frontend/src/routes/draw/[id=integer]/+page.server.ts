@@ -6,12 +6,12 @@ import {
 } from "$env/static/public";
 import { findChallenge } from "$lib/server/storage";
 
-export const config = {
-  isr: {
-    expiration: PUBLIC_ISR_EXPIRATION_SECONDS || 600,
-    bypassToken: PUBLIC_ISR_BYPASS_TOKEN,
-  },
-};
+// export const config = {
+//   isr: {
+//     expiration: PUBLIC_ISR_EXPIRATION_SECONDS || 600,
+//     bypassToken: PUBLIC_ISR_BYPASS_TOKEN,
+//   },
+// };
 
 const slug = "draw";
 

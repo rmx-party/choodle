@@ -7,12 +7,12 @@ import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { findChallenge } from "$lib/server/storage";
 
-export const config = {
-  isr: {
-    expiration: PUBLIC_ISR_EXPIRATION_SECONDS || 600,
-    bypassToken: PUBLIC_ISR_BYPASS_TOKEN,
-  },
-};
+// export const config = {
+//   isr: {
+//     expiration: PUBLIC_ISR_EXPIRATION_SECONDS || 600,
+//     bypassToken: PUBLIC_ISR_BYPASS_TOKEN,
+//   },
+// };
 
 const slug = "guess";
 

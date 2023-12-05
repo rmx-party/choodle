@@ -5,12 +5,12 @@ import { PUBLIC_ISR_BYPASS_TOKEN } from "$env/static/public";
 import type { PageServerLoad } from "./$types";
 import { findChallenge } from "$lib/server/storage";
 
-export const config = {
-  isr: {
-    expiration: 1440,
-    bypassToken: PUBLIC_ISR_BYPASS_TOKEN,
-  },
-};
+// export const config = {
+//   isr: {
+//     expiration: 1440,
+//     bypassToken: PUBLIC_ISR_BYPASS_TOKEN,
+//   },
+// };
 
 const slug = "pick-challenge";
 
