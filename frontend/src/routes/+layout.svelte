@@ -77,7 +77,6 @@
       console.log(`creating session for device user `, idValueChange)
       const user = await createSession({ deviceId: idValueChange })
       choodler.set(user)
-      invalidateAll()
 
       localStorage.setItem(choodleCreatorIdKey, idValueChange)
       loading.set(false) // This is only sometimes correct, a push/delete queue or map of pending operations model will be better
