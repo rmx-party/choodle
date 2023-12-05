@@ -33,7 +33,7 @@
 {#if $navigating || $loading || $loadingOverride}
   <div
     class="LoadingIndicator loading-backdrop no-pan"
-    in:fade={{ delay: 30, duration: 300 }}
+    in:fade={{ delay: 60, duration: 300 }}
     out:fade={{ duration: 300 }}
   >
     <PixelImage
