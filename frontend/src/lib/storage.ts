@@ -103,19 +103,11 @@ export const createGuessResult = async (
 };
 
 export const updateGuessResult = async (
-  { id, guesses, hintsUsed, guessedCorrectly, final }: {
-    id: number;
-    guesses: string[];
-    hintsUsed: string[];
-    guessedCorrectly: boolean | null;
-    final: boolean;
-  },
+  { challengeId, guesses, hintsUsed }: GuessResult,
 ) => {
-  const guessResult = await jsonPATCH(`/guess/${id}`, {
+  const guessResult = await jsonPATCH(`/guess/${challengeId}`, {
     guesses,
     hintsUsed,
-    guessedCorrectly,
-    final,
   });
   console.log(`update`, { guessResult });
   return guessResult;

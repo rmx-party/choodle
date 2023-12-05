@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import type { RequestHandler } from "./$types";
 import { error, json } from "@sveltejs/kit";
-
-const prisma = new PrismaClient();
+import { upsertGuessResult } from "$lib/server/storage";
 
 export const PATCH: RequestHandler = async ({ request, locals, params }) => {
   const { user } = locals;
@@ -12,9 +10,10 @@ export const PATCH: RequestHandler = async ({ request, locals, params }) => {
   const values = await request.json(); // TODO: sanitize assignable values
 
   console.log("update guess result", { id, values });
-  const result = await prisma.guessResult.update({
-    where: { id: Number(id), userId: user.id },
-    data: { ...values, userId: user.id },
+  const result = await upsertGuessResult({
+    ...values,
+    userId: user.id,
+    challengeId: Number(id),
   });
   console.log("updated guess result", { result });
   return json(result);

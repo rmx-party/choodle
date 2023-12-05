@@ -1,5 +1,6 @@
-import { PrismaClient, type User } from "@prisma/client";
+import { type GuessResult, PrismaClient, type User } from "@prisma/client";
 import { error } from "@sveltejs/kit";
+import map from "lodash/fp/map";
 
 export const prisma = new PrismaClient();
 
@@ -29,7 +30,7 @@ export const getGuessResultsForUser = async ({ user }: { user: User }) => {
 export const findChallenge = async (
   { id }: { id: number },
 ) => {
-  const challenge = await prisma.challenge.findUnique({
+  const challenge = await prisma.challenge.findUniqueOrThrow({
     where: { id },
     include: { drawing: true },
   }).catch(
@@ -43,17 +44,26 @@ export const findChallenge = async (
 
 export const createChallenge = async ({ user, ...values }) => {
   const result = await prisma.challenge.create({
-    data: { ...values, user: { connect: { id: user.id } } },
+    data: { ...values, challenger: { connect: { id: user.id } } },
   });
   return result;
 };
 
-export const upsertGuessResult = async ({ userId, challengeId, ...values }) => {
+export const upsertGuessResult = async (
+  { userId, challengeId, id, ...values }: GuessResult,
+) => {
+  const challenge = await findChallenge({ id: challengeId });
+  const wasSuccessful = (map((g) => g.toUpperCase(), values.guesses) || [])
+    .includes(challenge.prompt.toUpperCase());
+  const final = (values.guesses || []).length >= 3 || wasSuccessful;
+
   const result = await prisma.guessResult.upsert({
     where: { challengeId_userId: { challengeId, userId } },
-    update: { ...values },
+    update: { ...values, wasSuccessful, final },
     create: {
       ...values,
+      wasSuccessful,
+      final,
       challenge: { connect: { id: challengeId } },
       guesser: { connect: { id: userId } },
     },

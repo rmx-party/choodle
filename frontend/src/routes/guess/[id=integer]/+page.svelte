@@ -16,13 +16,12 @@
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte'
   import Hints from '../../../components/Hints.svelte'
   import { loading, uncaughtErrors } from '$lib/store'
-  import type { StreakGuessingGameGuessResult } from '$lib/CWFGame'
   import type { PageData } from './$types'
   import TextMessageBubble from '../../../components/TextMessageBubble.svelte'
   import { sharePath } from '$lib/routes'
   import uniq from 'lodash/fp/uniq'
   import JSConfetti from 'js-confetti'
-  import type { User } from '@prisma/client'
+  import type { GuessResult, User } from '@prisma/client'
   import { findOrCreateGuessResult, updateGuessResult } from '$lib/storage'
 
   loading.set(true)
@@ -85,7 +84,7 @@
   $: success && celebrate('success')
   // $: !success && !stillGuessing && celebrate('failure')
 
-  let guessResult: StreakGuessingGameGuessResult
+  let guessResult: GuessResult
   let disableKeyboard = false
 
   let hints: { text: string; used: boolean }[] = []
@@ -114,8 +113,8 @@
     guesserId,
     challengeId,
   }: {
-    guesserId: string | undefined
-    challengeId: string | undefined
+    guesserId: number | undefined
+    challengeId: number | undefined
   }) => {
     if (alreadyLookingForGuess || !guesserId || !challengeId || choodleOwner) return
     console.log('locateGuess', { guesserId, challengeId })
@@ -125,7 +124,7 @@
     // TODO: figure out if we can load guess in initial page load without breaking ISR caching
     // TODO: if not, figure out if we can eager-load and memoize the user's data at the layout context level, so that we don't have to do it after page load
 
-    guessResult = await findOrCreateGuessResult({ guesserId, challengeId })
+    guessResult = await findOrCreateGuessResult({ challengeId })
 
     loading.set(false)
     if (!guessResult) throw new Error(`no guess could be found or created`)
@@ -212,12 +211,7 @@
 
     console.log(`adding "${text}" to the used hints on guessResult: ${guessResult.id}`)
     guessResult = { ...guessResult, hintsUsed: [...(guessResult.hintsUsed || []), text] }
-    guessResult = await updateGuessResult({ id: guessResult.id, hintsUsed: guessResult.hintsUsed })
-    // guessResult = await readWriteClient
-    //   .patch(guessResult.id)
-    //   .setIfMissing({ hintsUsed: [] })
-    //   .append('hintsUsed', [text])
-    //   .commit()
+    guessResult = await updateGuessResult(guessResult)
 
     // send google analytics event 'hint_click'
     if (browser && window.gtag) {
@@ -231,7 +225,7 @@
     }
   }
 
-  const hintUsedInGuess = (guess: StreakGuessingGameGuessResult, hintText: string) => {
+  const hintUsedInGuess = (guess: GuessResult, hintText: string) => {
     if (!guess) return true // Block hint reveals until a guessResult entity is loaded
     if (!guess?.hintsUsed) {
       return false
