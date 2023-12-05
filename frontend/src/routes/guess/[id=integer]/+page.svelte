@@ -88,7 +88,6 @@
   let guessResult: StreakGuessingGameGuessResult
   let disableKeyboard = false
 
-  // TODO: load game prompt and hints from sanity
   let hints: { text: string; used: boolean }[] = []
   $: {
     hints = filter(

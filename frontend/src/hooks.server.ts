@@ -8,6 +8,8 @@ import { PrismaClient } from "@prisma/client";
 
 console.log(`server hooks initializing: choodle@${version}`);
 
+const prisma = new PrismaClient();
+
 Sentry.init({
   release: `choodle@${version}`,
   dsn:
@@ -17,10 +19,9 @@ Sentry.init({
   integrations: [
     // Add profiling integration to list of integrations
     new ProfilingIntegration(),
+    new Sentry.Integrations.Prisma({ client: prisma }),
   ],
 });
-
-const prisma = new PrismaClient();
 
 // handle user session by locating user from id in the session cookie and attaching it to the request
 export const handleUserSession: Handle = async ({ event, resolve }) => {
