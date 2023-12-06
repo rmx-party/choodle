@@ -4,6 +4,18 @@ import map from "lodash/fp/map";
 
 export const prisma = new PrismaClient();
 
+export const upsertUser = async ({ deviceId }: User) => {
+  return await prisma.user.upsert({
+    where: { deviceId: `${deviceId}` },
+    create: {
+      deviceId,
+    },
+    update: {
+      deviceId,
+    },
+  });
+};
+
 export const getAllChallenges = async () => {
   const challenges = await prisma.challenge.findMany({
     include: { drawing: true, guessResults: true },

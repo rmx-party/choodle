@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import type { RequestHandler } from "./$types";
 import { error, json } from "@sveltejs/kit";
-
-const prisma = new PrismaClient();
+import { upsertUser } from "$lib/server/storage";
 
 export const POST: RequestHandler = async ({ cookies, locals, request }) => {
   const { deviceId } = await request.json();
@@ -19,15 +17,7 @@ export const POST: RequestHandler = async ({ cookies, locals, request }) => {
     });
     return json(user);
   } else if (deviceId) {
-    user = await prisma.user.upsert({
-      where: { deviceId: `${deviceId}` },
-      create: {
-        deviceId,
-      },
-      update: {
-        deviceId,
-      },
-    });
+    user = await upsertUser({ deviceId });
   }
 
   if (!user) throw error(400, `login failed`);
