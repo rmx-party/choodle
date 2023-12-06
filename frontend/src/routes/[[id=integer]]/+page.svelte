@@ -57,10 +57,10 @@
       prompt: selectedPrompt,
       promptSanityId: selectedPromptSanityId,
     })
-      .then((newChallenge) => {
+      .then(async (newChallenge) => {
         console.log(`created new challenge, going to it`)
-        data.challenge = newChallenge
-        goto(`/${newChallenge.id}`)
+        // data.challenge = newChallenge
+        await goto(`/${newChallenge.id}`)
         loading.set(false)
       })
       .catch((err) => {
