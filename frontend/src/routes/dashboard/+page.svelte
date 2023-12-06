@@ -52,8 +52,10 @@
   const fetchChoodlerChallenges = async (choodlerId: number) => {
     if (!choodlerId) return
 
-    myChallenges = await getMyChallenges()
-    myGuesses = await getMyGuessResults()
+    await Promise.allSettled([
+      getMyChallenges().then((challenges) => (myChallenges = challenges)),
+      getMyGuessResults().then((guesses) => (myGuesses = guesses)),
+    ])
     console.log({ myChallenges, myGuesses })
     loading.set(false)
   }
