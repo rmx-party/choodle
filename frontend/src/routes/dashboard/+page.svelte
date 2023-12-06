@@ -6,7 +6,7 @@
   import { navigating, page } from '$app/stores'
   import MetaData from '../../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
-  import { loading } from '$lib/store'
+  import { addLoadingReason } from '$lib/store'
   import { guessPath, pickPath, sharePath } from '$lib/routes'
   import { toHTML } from '@portabletext/to-html'
   import map from 'lodash/fp/map'
@@ -21,8 +21,6 @@
   import type { Challenge, GuessResult, User } from '@prisma/client'
   import { getMyChallenges, getMyGuessResults } from '$lib/storage'
 
-  loading.set(true)
-
   export let data: PageData
 
   let challenges: Challenge[] = []
@@ -30,8 +28,7 @@
   const currentChoodler: Writable<User> = getContext('choodler')
   $: console.log(`dashboard page react`, { currentChoodler: $currentChoodler })
 
-  let isFirstTime: boolean
-  $: isFirstTime = !$loading && !$navigating && isEmpty(challenges)
+  let isFirstTime: boolean = false
 
   const startGame = async () => {
     await goto(pickPath())
@@ -48,15 +45,18 @@
 
   let myChallenges: Challenge[] = []
   let myGuesses: GuessResult[] = []
-  const fetchChoodlerChallenges = async (choodlerId: number) => {
+  const fetchMyChallengesAndGuesses = async (choodlerId: number) => {
     if (!choodlerId) return
 
-    await Promise.allSettled([
+    const pending = Promise.allSettled([
       getMyChallenges().then((challenges) => (myChallenges = challenges || [])),
       getMyGuessResults().then((guesses) => (myGuesses = guesses || [])),
     ])
+    addLoadingReason('fetchMyChallengesAndGuesses', pending)
+    await pending
+
     console.log({ myChallenges, myGuesses })
-    loading.set(false)
+    isFirstTime = isEmpty(challenges)
   }
 
   $: {
@@ -67,7 +67,7 @@
     )([...myChallenges, ...map((gr) => gr.challenge, myGuesses)] as Challenge[])
   }
   $: {
-    !$navigating && $currentChoodler?.id && fetchChoodlerChallenges($currentChoodler.id)
+    !$navigating && $currentChoodler?.id && fetchMyChallengesAndGuesses($currentChoodler.id)
   }
 </script>
 
