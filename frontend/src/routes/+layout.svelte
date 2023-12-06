@@ -103,12 +103,11 @@
 <svelte:document on:error={handleChoodleUncaughtError} />
 
 <ErrorBoundary>
-  {#if $showLoadingIndicator}
-    <LoadingIndicator {rotatingMessages} />
-  {/if}
+  <LoadingIndicator {rotatingMessages} />
   <GlobalNavHeader
     logoUrl={urlFor(data.copy.logo).url()}
     logoLinkDestination={data.copy.logoLinkDestination}
   />
+
   <slot />
 </ErrorBoundary>
