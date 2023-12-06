@@ -7,7 +7,6 @@
   import MetaData from '../../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import { loading } from '$lib/store'
-  import type { StreakGuessingGameGuessResult, StreakGuessingGamePlayer } from '$lib/CWFGame'
   import { guessPath, pickPath, sharePath } from '$lib/routes'
   import { toHTML } from '@portabletext/to-html'
   import map from 'lodash/fp/map'
@@ -19,7 +18,7 @@
   import flow from 'lodash/fp/flow'
   import uniqBy from 'lodash/fp/uniqBy'
   import reject from 'lodash/fp/reject'
-  import type { Challenge } from '@prisma/client'
+  import type { Challenge, GuessResult, User } from '@prisma/client'
   import { getMyChallenges, getMyGuessResults } from '$lib/storage'
 
   loading.set(true)
@@ -28,7 +27,7 @@
 
   let challenges: Challenge[] = []
 
-  const currentChoodler: Writable<StreakGuessingGamePlayer> = getContext('choodler')
+  const currentChoodler: Writable<User> = getContext('choodler')
   $: console.log(`dashboard page react`, { currentChoodler: $currentChoodler })
 
   let isFirstTime: boolean
@@ -48,13 +47,13 @@
   }
 
   let myChallenges: Challenge[] = []
-  let myGuesses: StreakGuessingGameGuessResult[] = []
+  let myGuesses: GuessResult[] = []
   const fetchChoodlerChallenges = async (choodlerId: number) => {
     if (!choodlerId) return
 
     await Promise.allSettled([
-      getMyChallenges().then((challenges) => (myChallenges = challenges)),
-      getMyGuessResults().then((guesses) => (myGuesses = guesses)),
+      getMyChallenges().then((challenges) => (myChallenges = challenges || [])),
+      getMyGuessResults().then((guesses) => (myGuesses = guesses || [])),
     ])
     console.log({ myChallenges, myGuesses })
     loading.set(false)
