@@ -67,7 +67,7 @@
     )([...myChallenges, ...map((gr) => gr.challenge, myGuesses)] as Challenge[])
   }
   $: {
-    !$navigating && $currentChoodler?.id && fetchMyChallengesAndGuesses($currentChoodler.id)
+    $currentChoodler?.id && fetchMyChallengesAndGuesses($currentChoodler.id)
   }
 </script>
 
