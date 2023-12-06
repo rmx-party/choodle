@@ -1,12 +1,12 @@
 <script lang="ts">
   import { browser } from '$app/environment'
-  import { isOnline, loading } from '$lib/store'
+  import { isOnline, loading, loadingOverride } from '$lib/store'
   import { webVitals } from '$lib/vitals'
   import '$lib/assets/fonts.css'
   import { onMount, setContext } from 'svelte'
   import '../app.css'
   import LoadingIndicator from '../components/LoadingIndicator.svelte'
-  import { page } from '$app/stores'
+  import { navigating, page } from '$app/stores'
   import { preloadCode } from '$app/navigation'
   import { urlFor } from '$lib/PersistedImagesUtils'
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'
@@ -61,7 +61,7 @@
       deviceId.set(event.newValue)
     }
   }
-  const handleNewDeviceId = async (idValueChange: string | undefined) => {
+  const handleNewDeviceId = async (idValueChange: string | null) => {
     if (!browser) return
     if (!idValueChange) return // TODO: end session?
     if (idValueChange === $deviceId) return
@@ -77,7 +77,7 @@
       const user = await createSession({ deviceId: idValueChange })
 
       choodler.set(user)
-      loading.set(false) // This is only sometimes correct, a push/delete queue or map of pending operations model will be better
+      // loading.set(false) // This is only sometimes correct, a push/delete queue or map of pending operations model will be better
 
       window?.gtag('config', 'G-T2JJPTNKJS', {
         user_id: $deviceId,
@@ -99,7 +99,9 @@
 <svelte:document on:error={handleChoodleUncaughtError} />
 
 <ErrorBoundary>
-  <LoadingIndicator {rotatingMessages} />
+  {#if $navigating || $loading || $loadingOverride}
+    <LoadingIndicator {rotatingMessages} />
+  {/if}
   <GlobalNavHeader
     logoUrl={urlFor(data.copy.logo).url()}
     logoLinkDestination={data.copy.logoLinkDestination}
