@@ -3,7 +3,7 @@
   import { getContext } from 'svelte'
   import Button from '../../components/Button.svelte'
   import LayoutContainer from '../../components/LayoutContainer.svelte'
-  import { navigating, page } from '$app/stores'
+  import { page } from '$app/stores'
   import MetaData from '../../components/MetaData.svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import { addLoadingReason } from '$lib/store'

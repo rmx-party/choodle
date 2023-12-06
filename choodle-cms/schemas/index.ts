@@ -6,11 +6,13 @@ import challenge from "./challenge";
 import guess from "./guess";
 import cwfgame from "./streak";
 import pageContent from "./pageContent";
+import promptCategory from "./promptCategory";
 
 export const schemaTypes = [
   choodleWithFriendsCopy,
   pageContent,
   gamePrompt,
+  promptCategory,
   choodle,
   creator,
   challenge,
