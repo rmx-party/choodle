@@ -1,6 +1,6 @@
-import { preloadData } from "$app/navigation";
+import { invalidate, preloadData } from "$app/navigation";
 import type { GuessResult } from "@prisma/client";
-import { pickPath } from "./routes";
+import { guessPath, pickPath, sharePath } from "./routes";
 
 type HTTPMethod =
   | "GET"
@@ -78,12 +78,13 @@ export const updateChallenge = async (
   { id, ...values },
 ) => {
   const challenge = await jsonPUT(`/challenge/${id}`, values);
+  invalidate(sharePath(challenge.id));
+  invalidate(guessPath(challenge.id));
   console.log(`update`, { challenge });
   return challenge;
 };
 
 export const createDrawing = async ({ imageUrl }) => {
-  // TODO: use sanity upload urls to create drawing
   const drawing = await jsonPOST(`/drawing`, { imageUrl });
   console.log(`create`, { drawing });
   return drawing;
