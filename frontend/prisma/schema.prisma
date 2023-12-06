@@ -12,8 +12,8 @@ model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+  deviceId  String   @unique
   sanityId  String?  @unique
-  deviceIds String[] @unique
 
   drawings     Drawing[]
   challenges   Challenge[]

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "deviceIds" SET NOT NULL,
+ALTER COLUMN "deviceIds" SET DATA TYPE TEXT;
