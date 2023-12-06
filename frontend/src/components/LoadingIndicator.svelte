@@ -13,9 +13,7 @@
   let interval: string | number | NodeJS.Timeout | undefined
   let messageIndex = -1
 
-  loading.subscribe((value) => {
-    console.info(`loading state change: `, value, { navigating: $navigating })
-  })
+  $: console.log(`loading state`, { loading: $loading, navigating: $navigating, messageIndex })
 
   const messageRotationTimeMs = 6000
   onMount(() => {
@@ -129,10 +127,6 @@
     padding: 2rem 3rem;
     text-align: center;
     width: 100%;
-  }
-
-  .loading-image {
-    margin-top: -75px;
   }
 
   .not-loading {
