@@ -1,6 +1,7 @@
 import { invalidate, preloadData } from "$app/navigation";
 import type { GuessResult } from "@prisma/client";
 import { guessPath, pickPath, sharePath } from "./routes";
+import { browser } from "$app/environment";
 
 type HTTPMethod =
   | "GET"
@@ -93,7 +94,10 @@ export const createDrawing = async ({ imageUrl }) => {
 export const findOrCreateGuessResult = async (
   { challengeId }: { challengeId: number },
 ) => {
-  const guessResult = await jsonPUT(`/guess`, { challengeId });
+  if (!browser) return;
+  const guessResult = await jsonPUT(`/guess`, { challengeId }); // TODO: this should be realtive to challenge id url, and uses user cookie to determine whose guess
+  invalidate(`/guess`);
+  invalidate(guessPath(challengeId));
   console.log(`find or create`, { guessResult });
   return guessResult;
 };
@@ -113,6 +117,10 @@ export const updateGuessResult = async (
     guesses,
     hintsUsed,
   });
+  if (browser) {
+    invalidate(`/guess`);
+    invalidate(guessPath(challengeId));
+  }
   console.log(`update`, { guessResult });
   return guessResult;
 };

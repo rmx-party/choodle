@@ -1,6 +1,6 @@
 import { type GuessResult, PrismaClient, type User } from "@prisma/client";
+import find from "lodash/fp/find";
 import { error } from "@sveltejs/kit";
-import map from "lodash/fp/map";
 
 export const prisma = new PrismaClient();
 
@@ -67,21 +67,31 @@ export const upsertGuessResult = async (
   { userId, challengeId, id, ...values }: GuessResult,
 ) => {
   const challenge = await findChallenge({ id: challengeId });
-  const wasSuccessful = (map((g) => g.toUpperCase(), values.guesses) || [])
-    .includes(challenge.prompt.toUpperCase());
-  const final = (values.guesses || []).length >= 3 || wasSuccessful;
 
+  let resultState = {};
+  if (values.guesses) {
+    const wasSuccessful = !!find(
+      (g) => g.toUpperCase() === challenge.prompt.toUpperCase(),
+      values.guesses || [],
+    );
+    resultState = {
+      wasSuccessful,
+      final: (values.guesses || []).length >= 3 || wasSuccessful,
+    };
+  }
+
+  console.log(`upsert guess input`, { userId, challengeId, id, values });
   const result = await prisma.guessResult.upsert({
     where: { challengeId_userId: { challengeId, userId } },
-    update: { ...values, wasSuccessful, final },
+    update: { ...values, ...resultState },
     create: {
       ...values,
-      wasSuccessful,
-      final,
+      ...resultState,
       challenge: { connect: { id: challengeId } },
       guesser: { connect: { id: userId } },
     },
   });
+  console.log(`upsert guess result`, { result });
   return result;
 };
 

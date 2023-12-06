@@ -3,7 +3,7 @@
   import { writable, type Writable } from 'svelte/store'
   import GuessingHUD from '../../../components/GuessingHUD.svelte'
   import Button from '../../../components/Button.svelte'
-  import { goto } from '$app/navigation'
+  import { goto, invalidate } from '$app/navigation'
   import { page } from '$app/stores'
   import MetaData from '../../../components/MetaData.svelte'
   import { getContext, onMount } from 'svelte'
@@ -18,7 +18,7 @@
   import { loading, uncaughtErrors } from '$lib/store'
   import type { PageData } from './$types'
   import TextMessageBubble from '../../../components/TextMessageBubble.svelte'
-  import { sharePath } from '$lib/routes'
+  import { guessPath, sharePath } from '$lib/routes'
   import uniq from 'lodash/fp/uniq'
   import JSConfetti from 'js-confetti'
   import type { GuessResult, User } from '@prisma/client'
@@ -116,6 +116,7 @@
     guesserId: number | undefined
     challengeId: number | undefined
   }) => {
+    if (!browser) return
     if (alreadyLookingForGuess || !guesserId || !challengeId || choodleOwner) return
     console.log('locateGuess', { guesserId, challengeId })
     $loading || loading.set(true)
@@ -130,6 +131,7 @@
     if (!guessResult) throw new Error(`no guess could be found or created`)
     console.log(`locateGuess result`, { guess: guessResult })
     alreadyLookingForGuess = false
+    invalidate(guessPath(guessResult.challengeId))
   }
 
   const isCorrect = (guess: string[], answer: string): boolean => {
@@ -142,10 +144,11 @@
     guessResult = {
       ...guessResult,
       guesses: [...(guessResult.guesses || []), $currentGuess.join('')],
-      final: guessedCorrectly || guessesRemaining <= 1,
+      final: guessedCorrectly || guessesRemaining < 1,
       wasSuccessful: guessedCorrectly,
     }
     guessResult = await updateGuessResult(guessResult)
+    invalidate(guessPath(guessResult.challengeId))
 
     console.log({ guess: guessResult })
   }
@@ -212,6 +215,7 @@
     console.log(`adding "${text}" to the used hints on guessResult: ${guessResult.id}`)
     guessResult = { ...guessResult, hintsUsed: [...(guessResult.hintsUsed || []), text] }
     guessResult = await updateGuessResult(guessResult)
+    invalidate(guessPath(guessResult.challengeId))
 
     // send google analytics event 'hint_click'
     if (browser && window.gtag) {
@@ -244,7 +248,7 @@
   }
 
   $: {
-    if (!guessResult && $guesser?.id && data.challenge.id && !choodleOwner) {
+    if (browser && !guessResult && $guesser?.id && data.challenge.id && !choodleOwner) {
       loading.set(true)
       console.log(
         `guess page, loading guess for guesser: ${$guesser.id} and challenge: ${data.challenge.id}`
