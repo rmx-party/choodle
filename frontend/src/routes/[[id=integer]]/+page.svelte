@@ -15,8 +15,13 @@
   import { drawPath } from '$lib/routes'
   import type { PageData } from './$types'
   import { createChallenge, updateChallenge } from '$lib/storage'
-  import type { Writable } from 'svelte/store'
+  import { writable, type Writable } from 'svelte/store'
   import type { User } from '@prisma/client'
+  import CategorySelect from '../../components/CategorySelect.svelte'
+  import uniq from 'lodash/fp/uniq'
+  import compact from 'lodash/fp/compact'
+  import flow from 'lodash/fp/flow'
+  import filter from 'lodash/fp/filter'
 
   export let data: PageData
   const currentChoodler: Writable<User> = getContext('choodler')
@@ -24,11 +29,20 @@
   let prompts: string[]
   let initialPrompt: string
   let selectedPrompt: string | undefined
-  $: prompts = shuffle(map('prompt')(data.records))
+  $: {
+    prompts = flow(
+      filter((r) => r.category == selectedCategory),
+      map('prompt'),
+      uniq,
+      compact,
+      shuffle
+    )(data.gamePrompts)
+    console.log({ prompts })
+  }
   let selectedPromptSanityId: string | undefined
   $: {
     selectedPrompt &&
-      (selectedPromptSanityId = find((r) => r.prompt == selectedPrompt, data.records)._id) &&
+      (selectedPromptSanityId = find((r) => r.prompt == selectedPrompt, data.gamePrompts)._id) &&
       console.log({ selectedPromptSanityId })
   }
   $: {
@@ -38,6 +52,13 @@
     ) {
       initializeChallenge()
     }
+  }
+
+  let selectableCategories = []
+  $: {
+    // TODO: categories are only selectable if there are prompt records that reference them
+    selectableCategories = flow(map('category'), uniq, compact)(data.gamePrompts)
+    console.log({ selectableCategories })
   }
 
   const initializeChallenge = async () => {
@@ -85,7 +106,7 @@
     }
 
     console.log(`no more prompts, resetting`)
-    prompts = map('prompt')(data.records)
+    prompts = map('prompt')(data.gamePrompts)
   }
 
   const handleShuffle = (event: Event) => {
@@ -134,6 +155,10 @@
 
     goto(drawPath(data.challenge.id))
   }
+
+  // let selectedCategory: Writable<string | undefined> = writable(undefined)
+  let selectedCategory
+  $: console.log({ selectedCategory })
 </script>
 
 <MetaData
@@ -145,6 +170,14 @@
 <LayoutContainer --layout-justify="space-evenly">
   <section class="pickPrompt block-content">
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
+
+    <CategorySelect
+      categories={selectableCategories}
+      bind:selectedCategory
+      on:change={(event) => {
+        console.log(`page select`, event.detail)
+      }}
+    />
 
     <output for="shuffle">{selectedPrompt}</output>
     <Button id="shuffle" colour="black" on:click={handleShuffle}

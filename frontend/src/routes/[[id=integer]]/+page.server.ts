@@ -30,16 +30,26 @@ export const load: PageServerLoad = async ({ params }) => {
     throw error(404, `cms load failure for pageContent slug ${slug}`);
   });
 
-  const records = cachedReadOnlyClient.fetch(`*[_type == "gamePrompt"]`).catch(
+  const gamePrompts = cachedReadOnlyClient.fetch(
+    `*[_type == "gamePrompt"]{..., category->{...}}`,
+  ).catch(
     (err) => {
       console.error(`load failure`, err);
       throw error(404, `cms load failure for gamePrompt records`);
     },
   );
 
+  const categories = cachedReadOnlyClient.fetch(
+    `*[_type == "promptCategory"]`,
+  ).catch((err) => {
+    console.error(`load failure`, err);
+    throw error(404, `cms load failure for promptCategory records`);
+  });
+
   return {
     pageContent,
-    records,
+    gamePrompts,
+    categories,
     challenge,
   };
 };
