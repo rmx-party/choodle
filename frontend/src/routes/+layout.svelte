@@ -1,12 +1,12 @@
 <script lang="ts">
   import { browser } from '$app/environment'
-  import { isOnline, loading, loadingOverride } from '$lib/store'
+  import { addLoadingReason, isOnline, loading, showLoadingIndicator } from '$lib/store'
   import { webVitals } from '$lib/vitals'
   import '$lib/assets/fonts.css'
   import { onMount, setContext } from 'svelte'
   import '../app.css'
   import LoadingIndicator from '../components/LoadingIndicator.svelte'
-  import { navigating, page } from '$app/stores'
+  import { page } from '$app/stores'
   import { preloadCode } from '$app/navigation'
   import { urlFor } from '$lib/PersistedImagesUtils'
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'
@@ -69,15 +69,15 @@
     localStorage.setItem(choodleCreatorIdKey, idValueChange)
 
     if (!$choodler) {
-      $loading || loading.set(true)
+      console.log(`creating session for user `, idValueChange)
 
       // TODO: try to detect if there's already a session rather than always recreating it
 
-      console.log(`creating session for user `, idValueChange)
-      const user = await createSession({ deviceId: idValueChange })
+      const creatingSession = createSession({ deviceId: idValueChange })
+      addLoadingReason('awaiting user', creatingSession)
+      const user = await creatingSession
 
       choodler.set(user)
-      // loading.set(false) // This is only sometimes correct, a push/delete queue or map of pending operations model will be better
 
       window?.gtag('config', 'G-T2JJPTNKJS', {
         user_id: $deviceId,
@@ -85,6 +85,10 @@
     }
   }
   deviceId.subscribe(handleNewDeviceId)
+
+  showLoadingIndicator.subscribe(async (show) => {
+    console.log(`showLoadingIndicator`, show)
+  })
 </script>
 
 <svelte:window
@@ -99,7 +103,7 @@
 <svelte:document on:error={handleChoodleUncaughtError} />
 
 <ErrorBoundary>
-  {#if $navigating || $loading || $loadingOverride}
+  {#if $showLoadingIndicator}
     <LoadingIndicator {rotatingMessages} />
   {/if}
   <GlobalNavHeader
