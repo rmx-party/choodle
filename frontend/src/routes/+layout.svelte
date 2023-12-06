@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment'
-  import { addLoadingReason, isOnline, loading, showLoadingIndicator } from '$lib/store'
+  import { addLoadingReason, isOnline, showLoadingIndicator } from '$lib/store'
   import { webVitals } from '$lib/vitals'
   import '$lib/assets/fonts.css'
   import { onMount, setContext } from 'svelte'
@@ -22,8 +22,8 @@
 
   export let data: LayoutData
 
-  const deviceId: Writable<string | null> = writable()
-  const choodler: Writable<User | undefined> = writable(data.user)
+  const deviceId: Writable<string | null> = writable(null)
+  const choodler: Writable<User | undefined> = writable(data.user || undefined)
   setContext('deviceId', deviceId)
   setContext('choodler', choodler)
 
@@ -47,11 +47,21 @@
 
   const handleInitialDeviceId = async () => {
     if (!browser) return
+    console.log(`getting device id`)
     deviceId.set(await getDeviceId())
   }
-  $: browser && !$deviceId && handleInitialDeviceId()
 
   onMount(async () => {
+    if (!$deviceId) await handleInitialDeviceId()
+    if (!$choodler) {
+      createSession({ deviceId: $deviceId })
+        .then((user) => choodler.set(user))
+        .catch((error) => {
+          console.error(`error creating session`, error)
+          choodler.set(null)
+        })
+    }
+
     preloadCode('/', '/pick/*', '/draw/*', '/share/*', '/guess/*', '/offline')
   })
 
@@ -65,6 +75,8 @@
     if (!browser) return
     if (!idValueChange) return // TODO: end session?
     if (idValueChange === $deviceId) return
+
+    console.log(`device id changed`, idValueChange, $choodler)
 
     localStorage.setItem(choodleCreatorIdKey, idValueChange)
 
