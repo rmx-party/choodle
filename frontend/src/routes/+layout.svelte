@@ -7,7 +7,7 @@
   import '../app.css'
   import LoadingIndicator from '../components/LoadingIndicator.svelte'
   import { page } from '$app/stores'
-  import { invalidateAll, preloadCode } from '$app/navigation'
+  import { preloadCode } from '$app/navigation'
   import { urlFor } from '$lib/PersistedImagesUtils'
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'
   import compact from 'lodash/fp/compact'
@@ -22,12 +22,11 @@
 
   export let data: LayoutData
 
-  const deviceId: Writable<string | undefined> = writable()
-  const choodler: Writable<User | undefined> = writable()
+  const deviceId: Writable<string | null> = writable()
+  const choodler: Writable<User | undefined> = writable(data.user)
   setContext('deviceId', deviceId)
   setContext('choodler', choodler)
 
-  console.log('analytics ID', data.analyticsId)
   $: {
     if (browser && data.analyticsId) {
       webVitals({
@@ -49,10 +48,6 @@
   const handleInitialDeviceId = async () => {
     if (!browser) return
     deviceId.set(await getDeviceId())
-
-    window?.gtag('config', 'G-T2JJPTNKJS', {
-      user_id: $deviceId,
-    })
   }
   $: browser && !$deviceId && handleInitialDeviceId()
 
@@ -62,29 +57,34 @@
 
   const handleStorageEvent = async (event: StorageEvent) => {
     console.log(`storage event`, event)
-    if (event.key === choodleCreatorIdKey) {
-      const newDeviceId = await getDeviceId()
-      deviceId.set(newDeviceId)
+    if (event.key === choodleCreatorIdKey && event.newValue !== $deviceId) {
+      deviceId.set(event.newValue)
     }
   }
   const handleNewDeviceId = async (idValueChange: string | undefined) => {
     if (!browser) return
-    console.log(`new device ID`, idValueChange)
     if (!idValueChange) return // TODO: end session?
-    if (idValueChange !== $deviceId || $choodler === undefined) {
+    if (idValueChange === $deviceId) return
+
+    localStorage.setItem(choodleCreatorIdKey, idValueChange)
+
+    if (!$choodler) {
       $loading || loading.set(true)
 
-      console.log(`creating session for device user `, idValueChange)
-      const user = await createSession({ deviceId: idValueChange })
-      choodler.set(user)
+      // TODO: try to detect if there's already a session rather than always recreating it
 
-      localStorage.setItem(choodleCreatorIdKey, idValueChange)
+      console.log(`creating session for user `, idValueChange)
+      const user = await createSession({ deviceId: idValueChange })
+
+      choodler.set(user)
       loading.set(false) // This is only sometimes correct, a push/delete queue or map of pending operations model will be better
+
+      window?.gtag('config', 'G-T2JJPTNKJS', {
+        user_id: $deviceId,
+      })
     }
   }
   deviceId.subscribe(handleNewDeviceId)
-
-  $: console.log(`layout context`, { choodler: $choodler, deviceId: $deviceId })
 </script>
 
 <svelte:window

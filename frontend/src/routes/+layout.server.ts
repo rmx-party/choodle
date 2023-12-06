@@ -8,5 +8,6 @@ export const load: LayoutServerLoad = async ({ locals }) => {
     copy: cachedReadOnlyClient.fetch(
       `*[_type == "choodleWithFriendsCopy"] | order(_createdAt) [0]`,
     ),
+    user: locals.user,
   };
 };
