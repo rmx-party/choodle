@@ -50,7 +50,6 @@
   let myChallenges: Challenge[] = []
   let myGuesses: StreakGuessingGameGuessResult[] = []
   const fetchChoodlerChallenges = async (choodlerId: number) => {
-    $loading || loading.set(true)
     if (!choodlerId) return
 
     myChallenges = await getMyChallenges()
@@ -58,6 +57,7 @@
     console.log({ myChallenges, myGuesses })
     loading.set(false)
   }
+
   $: {
     challenges = flow(
       reject((challenge: Challenge) => !challenge?.drawing?.imageUrl),
