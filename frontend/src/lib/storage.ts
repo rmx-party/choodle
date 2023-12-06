@@ -1,4 +1,6 @@
+import { preloadData } from "$app/navigation";
 import type { GuessResult } from "@prisma/client";
+import { pickPath } from "./routes";
 
 type HTTPMethod =
   | "GET"
@@ -67,6 +69,7 @@ export const createChallenge = async (
   { prompt, promptSanityId }: { prompt: string; promptSanityId: string },
 ) => {
   const challenge = await jsonPOST(`/challenge`, { prompt, promptSanityId });
+  preloadData(pickPath(challenge.id));
   console.log(`create`, { challenge });
   return challenge;
 };
