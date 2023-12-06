@@ -4,7 +4,9 @@ import map from "lodash/fp/map";
 
 export const prisma = new PrismaClient();
 
-export const upsertUser = async ({ deviceId }: User) => {
+export const upsertUser = async (
+  { deviceId }: Partial<User> & { deviceId: string },
+) => {
   return await prisma.user.upsert({
     where: { deviceId: `${deviceId}` },
     create: {
