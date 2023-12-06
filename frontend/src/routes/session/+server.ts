@@ -1,20 +1,25 @@
 import type { RequestHandler } from "./$types";
-import { error, json } from "@sveltejs/kit";
+import { type Cookies, error, json } from "@sveltejs/kit";
 import { upsertUser } from "$lib/server/storage";
+
+const setUserIdCookie = (cookies: Cookies, userId: number) => {
+  const TenYearsInSeconds = 60 * 60 * 24 * 365 * 10;
+  cookies.set("userId", `${userId}`, {
+    httpOnly: true,
+    path: "/",
+    maxAge: TenYearsInSeconds,
+  });
+};
 
 export const POST: RequestHandler = async ({ cookies, locals, request }) => {
   const { deviceId } = await request.json();
   let { user } = locals;
-  const TenYearsInSeconds = 60 * 60 * 24 * 365 * 10;
 
   console.log("login data", { deviceId });
 
   if (user?.id) {
-    cookies.set("userId", `${user.id}`, {
-      httpOnly: true,
-      path: "/",
-      maxAge: TenYearsInSeconds,
-    });
+    setUserIdCookie(cookies, user.id);
+
     return json(user);
   } else if (deviceId) {
     user = await upsertUser({ deviceId });
@@ -22,11 +27,7 @@ export const POST: RequestHandler = async ({ cookies, locals, request }) => {
 
   if (!user) throw error(400, `login failed`);
 
-  cookies.set("userId", `${user.id}`, {
-    httpOnly: true,
-    path: "/",
-    maxAge: TenYearsInSeconds,
-  });
+  setUserIdCookie(cookies, user.id);
 
   locals.user = user;
 
