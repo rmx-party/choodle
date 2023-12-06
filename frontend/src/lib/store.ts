@@ -47,10 +47,10 @@ loading.subscribe(async (isLoading) => {
 export const loadingReasons = writable(new Map());
 export const addLoadingReason = async (
   label: string,
-  promise: Promise<unknown>,
+  promise?: Promise<unknown>,
 ) => {
   loadingReasons.update((reasons) => {
-    const wrappedPromise = promise.finally(() => removeLoadingReason(label));
+    const wrappedPromise = promise?.finally(() => removeLoadingReason(label));
     reasons.set(label, wrappedPromise);
     return reasons;
   });
