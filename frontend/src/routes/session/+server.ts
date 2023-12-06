@@ -6,26 +6,32 @@ const prisma = new PrismaClient();
 
 export const POST: RequestHandler = async ({ cookies, locals, request }) => {
   const { deviceId } = await request.json();
+  let { user } = locals;
+  const TenYearsInSeconds = 60 * 60 * 24 * 365 * 10;
 
-  let user = null;
   console.log("login data", { deviceId });
-  if (deviceId) {
-    user = await prisma.user.findFirst({
-      where: { deviceIds: { has: `${deviceId}` } },
-    });
-  }
 
-  if (!user) {
-    user = await prisma.user.create({
-      data: {
-        deviceIds: [deviceId],
+  if (user?.id) {
+    cookies.set("userId", `${user.id}`, {
+      httpOnly: true,
+      path: "/",
+      maxAge: TenYearsInSeconds,
+    });
+    return json(user);
+  } else if (deviceId) {
+    user = await prisma.user.upsert({
+      where: { deviceId: `${deviceId}` },
+      create: {
+        deviceId,
+      },
+      update: {
+        deviceId,
       },
     });
   }
 
   if (!user) throw error(400, `login failed`);
 
-  const TenYearsInSeconds = 60 * 60 * 24 * 365 * 10;
   cookies.set("userId", `${user.id}`, {
     httpOnly: true,
     path: "/",
