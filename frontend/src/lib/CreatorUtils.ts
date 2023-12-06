@@ -4,9 +4,11 @@ import { choodleCreatorIdKey } from "$lib/Configuration";
 import { readOnlyClient, readWriteClient } from "$lib/CMSUtils";
 
 export async function getDeviceId(): Promise<string> {
-  if (!browser) return;
+  if (!browser) return null;
   try {
-    const existingId = await localforage.getItem(choodleCreatorIdKey);
+    const existingId: string | null = await localforage.getItem(
+      choodleCreatorIdKey,
+    );
     if (existingId && existingId.length > 1) {
       return existingId;
     }
