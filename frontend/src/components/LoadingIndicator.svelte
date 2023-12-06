@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { loading, loadingOverride } from '$lib/store'
+  import { loading, loadingOverride, loadingReasons, showLoadingIndicator } from '$lib/store'
   import { fade } from 'svelte/transition'
   import { onMount } from 'svelte'
   import { toHTML } from '@portabletext/to-html'
   import { navigating, page } from '$app/stores'
   import { urlFor } from '$lib/PersistedImagesUtils'
   import PixelImage from './PixelImage.svelte'
+  import { browser } from '$app/environment'
 
   export let rotatingMessages: unknown[] = []
 
@@ -13,7 +14,16 @@
   let interval: string | number | NodeJS.Timeout | undefined
   let messageIndex = -1
 
-  $: console.log(`loading state`, { loading: $loading, navigating: $navigating, messageIndex })
+  $: {
+    browser &&
+      console.log(`loading state`, {
+        loading: $loading,
+        navigating: $navigating,
+        messageIndex,
+        showLoadingIndicator: $showLoadingIndicator,
+        loadingReasons: $loadingReasons,
+      })
+  }
 
   const messageRotationTimeMs = 6000
   onMount(() => {
@@ -28,7 +38,7 @@
   })
 </script>
 
-{#if $navigating || $loading || $loadingOverride}
+{#if $showLoadingIndicator || $loadingOverride}
   <div
     class="LoadingIndicator loading-backdrop no-pan"
     in:fade={{ delay: 60, duration: 300 }}

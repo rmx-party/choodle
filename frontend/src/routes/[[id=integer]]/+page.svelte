@@ -45,6 +45,8 @@
     if (!selectedPromptSanityId || !selectedPrompt) return
     if (data.challenge?.userId == $currentChoodler?.id) return
 
+    // TODO: don't create another empty challenge if user already has an empty one to fill
+
     $loading || loading.set(true)
     console.log(`creating new challenge`, {
       prompt: selectedPrompt,
