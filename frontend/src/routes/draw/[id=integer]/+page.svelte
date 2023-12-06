@@ -1,10 +1,10 @@
 <script lang="ts">
   import ChoodleBoard from '../../../components/ChoodleBoard.svelte'
   import type { UndoStack } from '$lib/UndoStack'
-  import { createUncommittedChoodle } from '$lib/ChoodleStorage'
+  import { createUncommittedChoodle as saveDrawing } from '$lib/ChoodleStorage'
   import { browser } from '$app/environment'
   import { clearStorage, getUndoStack } from '$lib/StorageStuff'
-  import { goto, preloadData } from '$app/navigation'
+  import { goto } from '$app/navigation'
   import { getContext, onMount } from 'svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import Button from '../../../components/Button.svelte'
@@ -13,11 +13,11 @@
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
   import MetaData from '../../../components/MetaData.svelte'
   import { page } from '$app/stores'
-  import { guessPath, sharePath } from '$lib/routes'
+  import { sharePath } from '$lib/routes'
   import type { PageData } from './$types'
   import type { Writable } from 'svelte/store'
-  import type { StreakGuessingGamePlayer } from '$lib/CWFGame'
   import { updateChallenge } from '$lib/storage'
+  import type { User } from '@prisma/client'
 
   export let data: PageData
 
@@ -25,21 +25,18 @@
   let childSave: () => Promise<void> | undefined
 
   const deviceId: Writable<string> = getContext('deviceId')
-  const challenger: Writable<StreakGuessingGamePlayer> = getContext('choodler')
+  const challenger: Writable<User> = getContext('choodler')
 
   $: console.log(`draw page react`, { challenger: $challenger, deviceId: $deviceId })
 
+  $: prerequisitesForSavingMet = browser && !!$deviceId && !!$challenger?.id && !!data.challenge
+
   const performSave = async (undoStack: UndoStack, canvas: HTMLCanvasElement) => {
-    console.log(`performSave called`, {
-      challenger: $challenger,
-      deviceId: $deviceId,
-      challenge: data.challenge,
-    })
-    if (!browser || !data.challenge || !$deviceId || !$challenger) return
+    if (!prerequisitesForSavingMet) throw new Error(`the prereqs for saving failed`)
     loading.set(true)
 
     // TODO: combine the sequential server calls into a single server transaction
-    const drawing = await createUncommittedChoodle({
+    const drawing = await saveDrawing({
       undoStack,
       canvas,
       extraMetadata: {
@@ -50,30 +47,18 @@
 
     console.log(`created drawing and updated challenge`, { drawing, challenge })
 
-    preloadData(sharePath(challenge.id))
-    preloadData(guessPath(challenge.id))
-
     await clearStorage()
     await goto(sharePath(challenge.id))
   }
 
-  $: prerequisitesForSavingMet = !!$deviceId && !!$challenger?.id && !!data.challenge
-
   const attemptToSaveChoodle = async () => {
-    if (!browser) return
-    console.log(`attempting to save, debug state: `, {
-      challenger: $challenger,
-      challenge: data.challenge,
-      deviceId: $deviceId,
-      child,
-      childSave,
-    })
+    if (!prerequisitesForSavingMet) throw new Error(`the prereqs for saving failed`)
+
+    loading.set(true)
 
     const undoStack = await getUndoStack()
-    if (undoStack.current === '') throw new Error(`the undo stack is empty`)
+    if (!undoStack?.current?.length) throw new Error(`the undo stack is empty`)
 
-    if (!prerequisitesForSavingMet) throw new Error(`the prereqs for saving failed`)
-    loading.set(true)
     if (!childSave) throw new Error(`the child is null`)
     childSave()
   }
