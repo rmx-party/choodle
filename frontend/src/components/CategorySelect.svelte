@@ -10,36 +10,37 @@
 </select>
 
 <style>
-  select,
-  option {
+  select {
     /* appearance: none; */
     color: #141518;
-    font-size: 16px;
     font-family: DejaVu Sans;
-    font-weight: 400;
-    line-height: 19.2px;
-    word-wrap: break-word;
-    color: #141518;
     font-size: 17px;
-    font-family: SF Pro;
     font-weight: 590;
     line-height: 22px;
     word-wrap: break-word;
-
-    background: #fcfcfc;
-  }
-
-  select {
+    border-radius: 0.75rem;
+    background: var(--colors-brand-white, #fff);
+    box-shadow: 0px 0px 32px 0px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(75px);
+    height: 3.5rem;
+    padding: 0rem 1rem;
+    align-items: center;
+    gap: 0.0625rem;
+    align-self: stretch;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     flex-wrap: nowrap;
-    width: 100%;
-    height: 100%;
-    padding-left: 16px;
-    padding-right: 16px;
-    gap: 1px;
+  }
+  select:after {
+    background: blue;
+    display: block;
+    width: 24px;
+    height: 24px;
+    content: '⯆';
+    font-size: 24px;
+    outline: 5px solid black;
   }
   option {
     flex: 1 1 0;
