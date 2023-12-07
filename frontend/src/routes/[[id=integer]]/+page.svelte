@@ -15,13 +15,14 @@
   import { drawPath } from '$lib/routes'
   import type { PageData } from './$types'
   import { createChallenge, updateChallenge } from '$lib/storage'
-  import { writable, type Writable } from 'svelte/store'
+  import type { Writable } from 'svelte/store'
   import type { User } from '@prisma/client'
   import CategorySelect from '../../components/CategorySelect.svelte'
   import uniq from 'lodash/fp/uniq'
   import compact from 'lodash/fp/compact'
   import flow from 'lodash/fp/flow'
   import filter from 'lodash/fp/filter'
+  import uniqBy from 'lodash/fp/uniqBy'
 
   export let data: PageData
   const currentChoodler: Writable<User> = getContext('choodler')
@@ -30,14 +31,16 @@
   let initialPrompt: string
   let selectedPrompt: string | undefined
   $: {
-    prompts = flow(
-      filter((r) => r.category == selectedCategory),
-      map('prompt'),
-      uniq,
-      compact,
-      shuffle
-    )(data.gamePrompts)
-    console.log({ prompts })
+    if (selectedCategory?._id) {
+      prompts = flow(
+        compact,
+        filter((r) => r.category?._id === selectedCategory?._id),
+        map('prompt'),
+        uniq,
+        shuffle
+      )(data.gamePrompts)
+      console.log({ prompts })
+    }
   }
   let selectedPromptSanityId: string | undefined
   $: {
@@ -57,9 +60,10 @@
   let selectableCategories = []
   $: {
     // TODO: categories are only selectable if there are prompt records that reference them
-    selectableCategories = flow(map('category'), uniq, compact)(data.gamePrompts)
+    selectableCategories = flow(map('category'), uniqBy('_id'), compact)(data.gamePrompts)
     console.log({ selectableCategories })
   }
+  $: selectedCategory && (selectedPrompt = prompts[0])
 
   const initializeChallenge = async () => {
     if (!$currentChoodler?.id) return
@@ -93,6 +97,7 @@
   }
 
   onMount(async () => {
+    selectedCategory = selectableCategories[0]
     initialPrompt = prompts[0]
     selectedPrompt = initialPrompt
     loading.set(false)
@@ -156,8 +161,7 @@
     goto(drawPath(data.challenge.id))
   }
 
-  // let selectedCategory: Writable<string | undefined> = writable(undefined)
-  let selectedCategory
+  let selectedCategory = undefined
   $: console.log({ selectedCategory })
 </script>
 
