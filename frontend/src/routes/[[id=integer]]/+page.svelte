@@ -102,8 +102,15 @@
 
   onMount(async () => {
     selectedCategory = selectableCategories[0]
-    initialPrompt = prompts[0]
+    initialPrompt = prompts[0] // TODO: ensure this works or remove if unneeded
     selectedPrompt = initialPrompt
+
+    // TODO: initialize selected prompt and category from stored challenge when present
+    if (data.challenge?.prompt) {
+      selectedPrompt = data.challenge.prompt
+      selectedPromptSanityId = data.challenge.promptSanityId
+    }
+
     loading.set(false)
   })
 
@@ -139,6 +146,7 @@
 
     loading.set(true)
 
+    // TODO: update eagerly when rotating prompts, then skip the update here if the prompt hasn't changed since the last save completed
     await updateChallenge({
       id: data.challenge.id,
       prompt: selectedPrompt,
