@@ -14,15 +14,19 @@
   let interval: string | number | NodeJS.Timeout | undefined
   let messageIndex = -1
 
+  const logLoadingStateDebug = () => {
+    console.log(`loading state`, {
+      loading: $loading,
+      navigating: $navigating,
+      showLoadingIndicator: $showLoadingIndicator,
+      loadingReasons: $loadingReasons,
+      interval,
+      messageIndex,
+    })
+  }
   $: {
-    browser &&
-      console.log(`loading state`, {
-        loading: $loading,
-        navigating: $navigating,
-        messageIndex,
-        showLoadingIndicator: $showLoadingIndicator,
-        loadingReasons: $loadingReasons,
-      })
+    browser && [$loading, $navigating, $loadingReasons, $loadingOverride, $showLoadingIndicator] &&
+      logLoadingStateDebug()
   }
 
   const messageRotationTimeMs = 6000
