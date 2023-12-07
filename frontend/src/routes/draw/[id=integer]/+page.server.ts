@@ -1,22 +1,13 @@
 import { cachedReadOnlyClient } from "$lib/CMSUtils";
-import type { PageServerLoad } from "./$types";
-import {
-  PUBLIC_ISR_BYPASS_TOKEN,
-  PUBLIC_ISR_EXPIRATION_SECONDS,
-} from "$env/static/public";
 import { findChallenge } from "$lib/server/storage";
-
-// export const config = {
-//   isr: {
-//     expiration: PUBLIC_ISR_EXPIRATION_SECONDS || 600,
-//     bypassToken: PUBLIC_ISR_BYPASS_TOKEN,
-//   },
-// };
+import type { PageServerLoad } from "./$types";
+import type { Challenge } from "@prisma/client";
+import type { SanityDocument } from "@sanity/client";
 
 const slug = "draw";
 
 export const load: PageServerLoad = async ({ params }) => {
-  const pageContent = cachedReadOnlyClient.fetch(
+  const pageContent: Promise<SanityDocument> = cachedReadOnlyClient.fetch(
     `*[_type == "pageContent" && pageSlug == $slug][0]`,
     { slug },
   ).catch((error) => {
@@ -24,7 +15,9 @@ export const load: PageServerLoad = async ({ params }) => {
     throw new error(404, `cms load failure for pageContent slug ${slug}`);
   });
 
-  const challenge = findChallenge({ id: Number(params.id) });
+  const challenge: Promise<Challenge> = findChallenge({
+    id: Number(params.id),
+  });
 
   return { pageContent, challenge };
 };
