@@ -23,7 +23,10 @@
   export let data: LayoutData
 
   const deviceId: Writable<string | null> = writable(null)
-  const choodler: Writable<User | undefined> = writable(data.user || undefined)
+  const choodler: Writable<User | undefined> = writable(undefined)
+  if (browser) {
+    choodler.set(data.user)
+  }
   setContext('deviceId', deviceId)
   setContext('choodler', choodler)
 
