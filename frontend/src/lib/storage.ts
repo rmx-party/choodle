@@ -46,6 +46,7 @@ export const jsonPOST = async (url: string, data: any) => {
 };
 
 export const createSession = async ({ deviceId }: { deviceId: string }) => {
+  if (!browser) return;
   console.log(`starting user session`, { deviceId });
   const session = await jsonPOST(`/session`, {
     deviceId,
@@ -55,12 +56,14 @@ export const createSession = async ({ deviceId }: { deviceId: string }) => {
 };
 
 export const getMyChallenges = async () => {
+  if (!browser) return;
   const challenges = await jsonGET(`/challenge`);
   console.log(`get`, { challenges });
   return challenges;
 };
 
 export const getMyGuessResults = async () => {
+  if (!browser) return;
   const guessResults = await jsonGET(`/guess`);
   console.log(`get`, { guessResults });
   return guessResults;
@@ -69,6 +72,7 @@ export const getMyGuessResults = async () => {
 export const createChallenge = async (
   { prompt, promptSanityId }: { prompt: string; promptSanityId: string },
 ) => {
+  if (!browser) return;
   const challenge = await jsonPOST(`/challenge`, { prompt, promptSanityId });
   preloadData(pickPath(challenge.id));
   console.log(`create`, { challenge });
@@ -78,14 +82,18 @@ export const createChallenge = async (
 export const updateChallenge = async (
   { id, ...values },
 ) => {
+  if (!browser) return;
   const challenge = await jsonPUT(`/challenge/${id}`, values);
-  invalidate(sharePath(challenge.id));
-  invalidate(guessPath(challenge.id));
+  if (browser) {
+    invalidate(sharePath(challenge.id));
+    invalidate(guessPath(challenge.id));
+  }
   console.log(`update`, { challenge });
   return challenge;
 };
 
 export const createDrawing = async ({ imageUrl }) => {
+  if (!browser) return;
   const drawing = await jsonPOST(`/drawing`, { imageUrl });
   console.log(`create`, { drawing });
   return drawing;
@@ -105,6 +113,7 @@ export const findOrCreateGuessResult = async (
 export const createGuessResult = async (
   { challengeId }: { challengeId: number },
 ) => {
+  if (!browser) return;
   const guessResult = await jsonPOST(`/guess`, { challengeId });
   console.log(`create`, { guessResult });
   return guessResult;
@@ -113,14 +122,13 @@ export const createGuessResult = async (
 export const updateGuessResult = async (
   { challengeId, guesses, hintsUsed }: GuessResult,
 ) => {
+  if (!browser) return;
   const guessResult = await jsonPATCH(`/guess/${challengeId}`, {
     guesses,
     hintsUsed,
   });
-  if (browser) {
-    invalidate(`/guess`);
-    invalidate(guessPath(challengeId));
-  }
+  invalidate(`/guess`);
+  invalidate(guessPath(challengeId));
   console.log(`update`, { guessResult });
   return guessResult;
 };
