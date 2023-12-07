@@ -30,6 +30,18 @@
   let prompts: string[]
   let initialPrompt: string
   let selectedPrompt: string | undefined
+  let selectedPromptSanityId: string | undefined
+  let selectableCategories = []
+  let selectedCategory = undefined
+
+  $: console.log({ selectableCategories })
+  $: console.log({ selectedCategory })
+  $: console.log({ prompts })
+
+  $: {
+    selectableCategories = flow(map('category'), uniqBy('_id'), compact)(data.gamePrompts)
+  }
+
   $: {
     if (selectedCategory?._id) {
       prompts = flow(
@@ -39,10 +51,10 @@
         uniq,
         shuffle
       )(data.gamePrompts)
-      console.log({ prompts })
     }
   }
-  let selectedPromptSanityId: string | undefined
+  $: selectedCategory && (selectedPrompt = prompts[0])
+
   $: {
     selectedPrompt &&
       (selectedPromptSanityId = find((r) => r.prompt == selectedPrompt, data.gamePrompts)._id) &&
@@ -56,14 +68,6 @@
       initializeChallenge()
     }
   }
-
-  let selectableCategories = []
-  $: {
-    // TODO: categories are only selectable if there are prompt records that reference them
-    selectableCategories = flow(map('category'), uniqBy('_id'), compact)(data.gamePrompts)
-    console.log({ selectableCategories })
-  }
-  $: selectedCategory && (selectedPrompt = prompts[0])
 
   const initializeChallenge = async () => {
     if (!$currentChoodler?.id) return
@@ -118,13 +122,13 @@
     if (!browser) return
     event.preventDefault()
 
-    rotatePrompts()
-
     // add GA event for skipped prompt
     window?.gtag?.('event', 'skip_prompt', {
       event_category: 'engagement',
       event_label: selectedPrompt,
     })
+
+    rotatePrompts()
   }
 
   const proceed = async () => {
@@ -160,9 +164,6 @@
 
     goto(drawPath(data.challenge.id))
   }
-
-  let selectedCategory = undefined
-  $: console.log({ selectedCategory })
 </script>
 
 <MetaData
