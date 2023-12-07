@@ -101,10 +101,7 @@
   }
   deviceId.subscribe(handleNewDeviceId)
 
-  showLoadingIndicator.subscribe(async (show) => {
-    if (!browser) return
-    console.log(`showLoadingIndicator`, show)
-  })
+  $: browser && console.log(`showLoadingIndicator`, $showLoadingIndicator)
 </script>
 
 <svelte:window
