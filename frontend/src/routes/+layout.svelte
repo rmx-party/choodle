@@ -102,6 +102,7 @@
   deviceId.subscribe(handleNewDeviceId)
 
   showLoadingIndicator.subscribe(async (show) => {
+    if (!browser) return
     console.log(`showLoadingIndicator`, show)
   })
 </script>
