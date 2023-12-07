@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment'
-  import { goto, preloadData } from '$app/navigation'
+  import { goto, invalidate, preloadData } from '$app/navigation'
   import find from 'lodash/fp/find'
   import map from 'lodash/fp/map'
   import { getContext, onMount } from 'svelte'
@@ -23,43 +23,29 @@
   import flow from 'lodash/fp/flow'
   import filter from 'lodash/fp/filter'
   import uniqBy from 'lodash/fp/uniqBy'
+  import type { SanityDocument } from '@sanity/client'
+
+  type PromptCategory = SanityDocument & {
+    label: string
+  }
 
   export let data: PageData
   const currentChoodler: Writable<User> = getContext('choodler')
 
+  let mounted = false
   let prompts: string[]
-  let initialPrompt: string
   let selectedPrompt: string | undefined
   let selectedPromptSanityId: string | undefined
-  let selectableCategories = []
-  let selectedCategory = undefined
+  let selectableCategories: PromptCategory[] = []
+  let selectedCategory: PromptCategory | undefined = undefined
 
   $: console.log({ selectableCategories })
   $: console.log({ selectedCategory })
   $: console.log({ prompts })
+  $: console.log({ selectedPrompt })
 
-  $: {
-    selectableCategories = flow(map('category'), uniqBy('_id'), compact)(data.gamePrompts)
-  }
-
-  $: {
-    if (selectedCategory?._id) {
-      prompts = flow(
-        compact,
-        filter((r) => r.category?._id === selectedCategory?._id),
-        map('prompt'),
-        uniq,
-        shuffle
-      )(data.gamePrompts)
-    }
-  }
-  $: selectedCategory && (selectedPrompt = prompts[0])
-
-  $: {
-    selectedPrompt &&
-      (selectedPromptSanityId = find((r) => r.prompt == selectedPrompt, data.gamePrompts)._id) &&
-      console.log({ selectedPromptSanityId })
-  }
+  $: selectableCategories = flow(map('category'), uniqBy('_id'), compact)(data.gamePrompts)
+  $: selectedCategory?._id && (prompts = resetActivePrompts(data.gamePrompts, selectedCategory))
   $: {
     if (
       (!data.challenge && selectedPromptSanityId) ||
@@ -67,6 +53,16 @@
     ) {
       initializeChallenge()
     }
+  }
+
+  const resetActivePrompts = (gamePrompts: SanityDocument[], category: SanityDocument) => {
+    return flow(
+      compact,
+      filter((r: PromptCategory) => r.category?._id === category?._id),
+      map('prompt'),
+      uniq,
+      shuffle
+    )(gamePrompts)
   }
 
   const initializeChallenge = async () => {
@@ -90,9 +86,9 @@
     })
       .then(async (newChallenge) => {
         console.log(`created new challenge, going to it`)
-        // data.challenge = newChallenge
         await goto(`/${newChallenge.id}`)
         loading.set(false)
+        preloadData(drawPath(newChallenge.id))
       })
       .catch((err) => {
         console.error(err)
@@ -101,16 +97,21 @@
   }
 
   onMount(async () => {
-    selectedCategory = selectableCategories[0]
-    initialPrompt = prompts[0] // TODO: ensure this works or remove if unneeded
-    selectedPrompt = initialPrompt
-
-    // TODO: initialize selected prompt and category from stored challenge when present
-    if (data.challenge?.prompt) {
+    if (data.challenge?.promptSanityId) {
+      console.log(`challenge has a prompt sanity id`, data.challenge?.promptSanityId)
+      const savedCategory = find(
+        (r) => r._id == data.challenge?.promptSanityId,
+        data.gamePrompts
+      ).category
+      console.log(`saved prompt category`, savedCategory)
+      selectedCategory = find((r) => r._id == savedCategory._id, selectableCategories)
       selectedPrompt = data.challenge.prompt
-      selectedPromptSanityId = data.challenge.promptSanityId
+      console.log(`selected initial prompt`, selectedPrompt)
     }
+    selectedCategory ||= selectableCategories[0]
+    console.log(`selected initial category`, selectedCategory)
 
+    mounted = true
     loading.set(false)
   })
 
@@ -138,28 +139,24 @@
     rotatePrompts()
   }
 
+  const updateChallengePrompt = async (prompt: string) => {
+    const id = data.challenge?.id
+    if (!id) return
+
+    console.log(`updating challenge prompt to ${prompt}`)
+    await updateChallenge({
+      id,
+      prompt,
+      promptSanityId: selectedPromptSanityId,
+    })
+    invalidate(drawPath(id))
+  }
+
   const proceed = async () => {
     if (!selectedPrompt) return
     if (!data.challenge?.id) return
 
     console.log(`proceeding with prompt ${selectedPrompt}`)
-
-    loading.set(true)
-
-    // TODO: update eagerly when rotating prompts, then skip the update here if the prompt hasn't changed since the last save completed
-    await updateChallenge({
-      id: data.challenge.id,
-      prompt: selectedPrompt,
-      promptSanityId: selectedPromptSanityId,
-    }).then((result) => {
-      preloadData(drawPath(result.id))
-    })
-    // await readWriteClient
-    //   .patch(data.challenge._id)
-    //   .set({
-    //     gamePrompt: { _ref: gamePrompt._id },
-    //   })
-    //   .commit()
 
     clearStorage()
 
@@ -171,6 +168,14 @@
       })
 
     goto(drawPath(data.challenge.id))
+  }
+
+  $: mounted && selectedCategory && (selectedPrompt = prompts[0]) // this reaction needs to be defined after initialization settles to avoid overriding the saved selection
+  $: {
+    if (mounted && selectedPrompt) {
+      selectedPromptSanityId = find((r) => r.prompt == selectedPrompt, data.gamePrompts)._id
+      updateChallengePrompt(selectedPrompt)
+    }
   }
 </script>
 
@@ -184,13 +189,7 @@
   <section class="pickPrompt block-content">
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
-    <CategorySelect
-      categories={selectableCategories}
-      bind:selectedCategory
-      on:change={(event) => {
-        console.log(`page select`, event.detail)
-      }}
-    />
+    <CategorySelect categories={selectableCategories} bind:selectedCategory />
 
     <output for="shuffle">{selectedPrompt}</output>
     <Button id="shuffle" colour="black" on:click={handleShuffle}
@@ -199,8 +198,10 @@
   </section>
 
   <div id="cta">
-    <Button variant="primary" online={data.challenge} on:click={proceed} offline={!data.challenge}
-      >{data.copy.pick_doneButtonText}</Button
+    <Button
+      variant="primary"
+      online={data.challenge?.id && data.challenge.prompt}
+      on:click={proceed}>{data.copy.pick_doneButtonText}</Button
     >
   </div>
   <section class="content">

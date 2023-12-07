@@ -1,6 +1,12 @@
 <script lang="ts">
-  export let categories = []
-  export let selectedCategory = undefined
+  import type { SanityDocument } from '@sanity/client'
+
+  type PromptCategory = SanityDocument & {
+    label: string
+  }
+
+  export let categories: PromptCategory[] = []
+  export let selectedCategory: PromptCategory | undefined = undefined
 </script>
 
 <select bind:value={selectedCategory}>
