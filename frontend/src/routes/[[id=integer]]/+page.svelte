@@ -9,7 +9,7 @@
   import Button from '../../components/Button.svelte'
   import LayoutContainer from '../../components/LayoutContainer.svelte'
   import MetaData from '../../components/MetaData.svelte'
-  import { loading, uncaughtErrors } from '$lib/store'
+  import { addLoadingReason, uncaughtErrors } from '$lib/store'
   import { clearStorage } from '$lib/StorageStuff'
   import shuffle from 'lodash/fp/shuffle'
   import { drawPath } from '$lib/routes'
@@ -51,7 +51,7 @@
       (!data.challenge && selectedPromptSanityId) ||
       data.challenge?.userId !== $currentChoodler?.id
     ) {
-      initializeChallenge()
+      addLoadingReason('initializeChallenge', initializeChallenge())
     }
   }
 
@@ -72,7 +72,6 @@
 
     // TODO: don't create another empty challenge if user already has an empty one to fill
 
-    $loading || loading.set(true)
     console.log(`creating new challenge`, {
       prompt: selectedPrompt,
       promptSanityId: selectedPromptSanityId,
@@ -80,14 +79,13 @@
       challengeId: data.challenge?.id,
     })
 
-    createChallenge({
+    await createChallenge({
       prompt: selectedPrompt,
       promptSanityId: selectedPromptSanityId,
     })
       .then(async (newChallenge) => {
         console.log(`created new challenge, going to it`)
         await goto(`/${newChallenge.id}`)
-        loading.set(false)
         preloadData(drawPath(newChallenge.id))
       })
       .catch((err) => {
@@ -112,7 +110,6 @@
     console.log(`selected initial category`, selectedCategory)
 
     mounted = true
-    loading.set(false)
   })
 
   const rotatePrompts = () => {
