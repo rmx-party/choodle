@@ -65,6 +65,12 @@ export default {
       of: [{ type: "block" }],
     },
     {
+      name: "pick_promptSelectionPageMiddleContent",
+      title: "Prompt Pick Page Middle Content",
+      type: "array",
+      of: [{ type: "block" }],
+    },
+    {
       name: "pick_shuffleButtonText",
       type: "string",
       title: "Prompt Pick Page Shuffle Button Text",
