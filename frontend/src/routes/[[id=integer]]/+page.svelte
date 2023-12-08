@@ -247,6 +247,7 @@
     align-items: center;
     justify-content: center;
     gap: 2rem;
+    width: 100%;
   }
   section > section {
     gap: 0.75rem;
@@ -255,11 +256,18 @@
   .pickPrompt,
   .pickCategory,
   .block-content {
-    width: 20rem;
+    margin: 0;
+    width: 100%;
+    padding: 0;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+  .pickPrompt,
+  .pickCategory {
+    width: 20rem;
   }
 
   #cta {
