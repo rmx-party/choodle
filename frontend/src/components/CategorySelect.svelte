@@ -6,12 +6,12 @@
   }
 
   export let categories: PromptCategory[] = []
-  export let selectedCategory: PromptCategory | undefined = undefined
+  export let selectedCategoryId: string | undefined = categories[0]?._id
 </script>
 
-<select bind:value={selectedCategory}>
-  {#each categories as category, i (category._id)}
-    <option value={category}>{category.label}</option>
+<select bind:value={selectedCategoryId}>
+  {#each categories as category (category._id)}
+    <option value={category._id}>{category.label}</option>
   {/each}
 </select>
 

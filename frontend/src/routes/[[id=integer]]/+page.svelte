@@ -39,28 +39,28 @@
   let selectedPromptSanityId: string | undefined
   let selectableCategories: PromptCategory[] = []
   let selectedCategory: PromptCategory | undefined = undefined
+  let selectedCategoryId: string | undefined = undefined
 
   $: selectableCategories = flow(map('category'), uniqBy('_id'), compact)(data.gamePrompts)
+  $: selectedCategory = find((r) => r._id == selectedCategoryId, selectableCategories)
+  $: prompts = selectablePrompts(data.gamePrompts, selectedCategoryId)
+
   $: {
     if (data.challenge?.promptSanityId) {
-      setCategoryFromPromptId(data.challenge.promptSanityId)
-      prompts = selectablePrompts(data.gamePrompts, selectedCategory)
-      selectedPrompt = findPromptById(data.challenge.promptSanityId)
+      initializeFromSavedChallenge()
     } else {
-      prompts = selectablePrompts(data.gamePrompts, selectedCategory)
-      selectedPrompt = prompts.pop()
-      setCategoryFromPromptId(selectedPrompt?.promptSanityId)
+      rotatePrompts()
     }
-    console.log({
-      challenge: data.challenge,
-      selectedPrompt: selectedPrompt?.prompt,
-      selectedCategory: selectedCategory?.label,
-    })
   }
+  const initializeFromSavedChallenge = () => {
+    if (!data.challenge?.promptSanityId) return
+    setCategoryFromPromptId(data.challenge.promptSanityId)
+    selectedPrompt = findPromptById(data.challenge.promptSanityId)
+  }
+  $: respondToSelectedCategory(selectedCategory)
   $: selectedPromptSanityId = selectedPrompt?._id
 
   $: data.challenge?.prompt && updateChallengePrompt(selectedPrompt)
-  $: respondToSelectedCategory(selectedCategory)
 
   $: {
     if (
@@ -106,14 +106,17 @@
   }
 
   const setCategoryFromPromptId = (promptSanityId: string) => {
-    if (!promptSanityId) return
-
     if (!selectableCategories.length) throw new Error(`no category found`)
-    const category =
-      find((r) => r._id == promptSanityId, data.gamePrompts).category || selectableCategories[0]
+    let category = selectableCategories[0]
+
+    const promptById = find((r) => r._id == promptSanityId, data.gamePrompts)
+    category = promptById?.category || selectableCategories[0]
     if (!category) throw new Error(`no category found`)
 
-    if (selectedCategory?._id === category._id) return
+    if (selectedCategoryId === category._id) return
+
+    console.log(`setting category to ${category.label}`, promptById?.prompt)
+    selectedCategoryId = category._id
     selectedCategory = category
   }
 
@@ -130,7 +133,8 @@
     }
 
     console.log(`no more prompts, resetting`)
-    prompts = selectablePrompts(data.gamePrompts, selectedCategory)
+    prompts = selectablePrompts(data.gamePrompts, selectedCategoryId)
+    selectedPrompt = prompts.pop()
   }
 
   const handleShuffle = (event: Event) => {
@@ -187,7 +191,7 @@
   const respondToSelectedCategory = (category: PromptCategory | undefined) => {
     if (!category?._id) return
     console.log(`responding to selected category`, category)
-    prompts = selectablePrompts(data.gamePrompts, category)
+    prompts = selectablePrompts(data.gamePrompts, category._id)
     // TODO: if the new prompts list contains the selected prompt, don't update it
     if (!selectedPrompt) return
     if (!prompts.includes(selectedPrompt)) {
@@ -198,11 +202,11 @@
 
   const selectablePrompts = (
     gamePrompts: StreakGuessingGamePrompt[],
-    category: PromptCategory | undefined
+    categoryId: string | undefined
   ) => {
     return flow(
       compact,
-      filter((r: PromptCategory) => (category ? r.category?._id === category?._id : true)),
+      filter((r: PromptCategory) => (categoryId ? r.category?._id === categoryId : true)),
       uniq,
       shuffle
     )(gamePrompts)
@@ -219,9 +223,11 @@
   <section class="pickPrompt block-content">
     {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
 
-    <CategorySelect categories={selectableCategories} bind:selectedCategory />
+    {#if selectableCategories.length > 1 && selectedCategoryId}
+      <CategorySelect categories={selectableCategories} bind:selectedCategoryId />
+    {/if}
 
-    <output for="shuffle">{selectedPrompt?.prompt}</output>
+    <output for="shuffle">{selectedPrompt?.prompt || ''}</output>
     <Button id="shuffle" colour="black" on:click={handleShuffle}
       >{data.copy.pick_shuffleButtonText}</Button
     >
