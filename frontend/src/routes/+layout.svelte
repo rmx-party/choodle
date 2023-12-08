@@ -1,12 +1,10 @@
 <script lang="ts">
   import { browser } from '$app/environment'
   import { addLoadingReason, isOnline, showLoadingIndicator } from '$lib/store'
-  import { webVitals } from '$lib/vitals'
   import '$lib/assets/fonts.css'
   import { onMount, setContext } from 'svelte'
   import '../app.css'
   import LoadingIndicator from '../components/LoadingIndicator.svelte'
-  import { page } from '$app/stores'
   import { preloadCode } from '$app/navigation'
   import { urlFor } from '$lib/PersistedImagesUtils'
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'
@@ -19,6 +17,9 @@
   import { choodleCreatorIdKey } from '$lib/Configuration'
   import type { User } from '@prisma/client'
   import { createSession } from '$lib/storage'
+  import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
+
+  injectSpeedInsights()
 
   export let data: LayoutData
 
@@ -29,16 +30,6 @@
   }
   setContext('deviceId', deviceId)
   setContext('choodler', choodler)
-
-  $: {
-    if (browser && data.analyticsId) {
-      webVitals({
-        path: $page.url.pathname,
-        params: $page.params,
-        analyticsId: data.analyticsId,
-      })
-    }
-  }
 
   const rotatingMessages = compact([
     data.copy?.loadingMessage1,
