@@ -62,8 +62,8 @@
   $: {
     challenges = flow(
       reject((challenge: Challenge) => !challenge?.drawing?.imageUrl),
-      orderBy(['updatedAt'], ['desc']),
-      uniqBy('id')
+      uniqBy('id'),
+      orderBy(['updatedAt', 'createdAt'], ['desc', 'desc'])
     )([...myChallenges, ...map((gr) => gr.challenge, myGuesses)] as Challenge[])
   }
   $: {
