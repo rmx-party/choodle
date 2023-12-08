@@ -4,7 +4,7 @@
   import { createUncommittedChoodle as saveDrawing } from '$lib/ChoodleStorage'
   import { browser } from '$app/environment'
   import { clearStorage, getUndoStack } from '$lib/StorageStuff'
-  import { goto } from '$app/navigation'
+  import { goto, invalidate, preloadData } from '$app/navigation'
   import { getContext } from 'svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import Button from '../../../components/Button.svelte'
@@ -13,11 +13,11 @@
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
   import MetaData from '../../../components/MetaData.svelte'
   import { page } from '$app/stores'
-  import { sharePath } from '$lib/routes'
+  import { dashboardPath, guessPath, sharePath } from '$lib/routes'
   import type { PageData } from './$types'
   import type { Writable } from 'svelte/store'
   import { updateChallenge } from '$lib/storage'
-  import type { User } from '@prisma/client'
+  import type { Drawing, User } from '@prisma/client'
 
   export let data: PageData
 
@@ -39,7 +39,7 @@
     if (!prerequisitesForSavingMet) throw new Error(`the prereqs for saving failed`)
 
     // TODO: combine the sequential server calls into a single server transaction
-    const drawing = await addLoadingReason(
+    const drawing = (await addLoadingReason(
       'savingDrawing',
       saveDrawing({
         undoStack,
@@ -48,11 +48,12 @@
           userId: $challenger.id,
         },
       })
-    )
+    )) as Drawing
     const challenge = await addLoadingReason(
       'updateChallenge',
       updateChallenge({ id: data.challenge.id, drawingId: drawing.id })
     )
+    preloadData(dashboardPath())
 
     console.log(`created drawing and updated challenge`, { drawing, challenge })
     addLoadingReason('clearStorage', clearStorage())

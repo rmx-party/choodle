@@ -49,6 +49,7 @@ export const addLoadingReason = async (
   label: string,
   promise?: Promise<unknown>,
 ) => {
+  console.log(`addLoadingReason`, { label, promise });
   loadingReasons.update((reasons) => {
     const wrappedPromise = promise?.catch((err) => {
       uncaughtErrors.update((errors) => [...errors, err]);

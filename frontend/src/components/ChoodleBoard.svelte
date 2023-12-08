@@ -1,7 +1,7 @@
 <svelte:options accessors />
 
 <script lang="ts">
-  import { loading, uncaughtErrors } from '$lib/store'
+  import { addLoadingReason, loading, uncaughtErrors } from '$lib/store'
   import { browser } from '$app/environment'
   import { getUndoStack, setUndoStack } from '$lib/StorageStuff'
   import { onMount } from 'svelte'
@@ -60,18 +60,21 @@
   export const save = async () => {
     if (!browser) return
     console.log(`choodleboard save called`)
-    loading.set(true)
 
-    const undoStack = await getUndoStack()
-    if (undoStack.current === '') return loading.set(false)
+    const undoStack: UndoStack = (await addLoadingReason(
+      'getUndoStack',
+      getUndoStack()
+    )) as UndoStack
+    if (undoStack?.current === '') return
 
-    await performSave(undoStack, canvas).catch((error) => {
-      uncaughtErrors.set([...$uncaughtErrors, { error }])
-      loading.set(false)
-    })
+    await addLoadingReason(
+      'choodleboard performSave',
+      performSave(undoStack, canvas).catch((error) => {
+        uncaughtErrors.update((errors) => [...errors, error])
+      })
+    )
 
     clearCanvas(id)
-    loading.set(false)
   }
 
   /* Canvas Resizing */
@@ -220,7 +223,6 @@
 
     await resetViewportUnit()
     await resizeCanvas()
-    loading.set(false)
   })
 </script>
 
