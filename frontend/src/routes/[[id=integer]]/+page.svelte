@@ -3,7 +3,7 @@
   import { goto, invalidate, preloadData } from '$app/navigation'
   import find from 'lodash/fp/find'
   import map from 'lodash/fp/map'
-  import { getContext, onMount } from 'svelte'
+  import { getContext } from 'svelte'
   import { toHTML } from '@portabletext/to-html'
   import { page } from '$app/stores'
   import Button from '../../components/Button.svelte'
@@ -33,7 +33,7 @@
   export let data: PageData
   const currentChoodler: Writable<User> = getContext('choodler')
 
-  let mounted = false
+  // let mounted = false
   let prompts: StreakGuessingGamePrompt[]
   let selectedPrompt: StreakGuessingGamePrompt | undefined
   let selectedPromptSanityId: string | undefined
@@ -42,6 +42,27 @@
 
   $: selectableCategories = flow(map('category'), uniqBy('_id'), compact)(data.gamePrompts)
   $: {
+    if (data.challenge?.promptSanityId) {
+      setCategoryFromPromptId(data.challenge.promptSanityId)
+      prompts = selectablePrompts(data.gamePrompts, selectedCategory)
+      selectedPrompt = findPromptById(data.challenge?.promptSanityId)
+    } else {
+      prompts = selectablePrompts(data.gamePrompts, selectedCategory)
+      selectedPrompt = prompts.pop()
+      setCategoryFromPromptId(data.challenge.promptSanityId)
+    }
+    console.log({
+      challenge: data.challenge,
+      selectedPrompt: selectedPrompt?.prompt,
+      selectedCategory: selectedCategory?.label,
+    })
+  }
+  $: selectedPromptSanityId = selectedPrompt?._id
+
+  $: data.challenge?.prompt && updateChallengePrompt(selectedPrompt)
+  $: respondToSelectedCategory(selectedCategory)
+
+  $: {
     if (
       (!data.challenge && selectedPromptSanityId) ||
       data.challenge?.userId !== $currentChoodler?.id
@@ -49,10 +70,6 @@
       addLoadingReason('initializeChallenge', initializeChallenge())
     }
   }
-  $: selectedPromptSanityId = selectedPrompt?._id
-
-  $: data.challenge?.prompt && updateChallengePrompt(selectedPrompt)
-  $: respondToSelectedCategory(selectedCategory)
 
   $: console.log({ selectableCategories })
   $: console.log({ selectedCategory })
@@ -61,8 +78,8 @@
 
   const initializeChallenge = async () => {
     if (!$currentChoodler?.id) return
-    if (!selectedPromptSanityId || !selectedPrompt) return
     if (data.challenge?.userId == $currentChoodler?.id) return
+    if (!selectedPromptSanityId || !selectedPrompt) return
 
     // TODO: don't create another empty challenge if user already has an empty one to fill
 
@@ -91,33 +108,19 @@
   const setCategoryFromPromptId = (promptSanityId: string) => {
     if (!promptSanityId) return
 
-    const category = find((r) => r._id == promptSanityId, data.gamePrompts).category
-    if (!category || !selectableCategories.length) return
+    if (!selectableCategories.length) throw new Error(`no category found`)
+    const category =
+      find((r) => r._id == promptSanityId, data.gamePrompts).category || selectableCategories[0]
+    if (!category) throw new Error(`no category found`)
 
-    const matchingSelectableCategory = find((r) => r._id == category._id, selectableCategories)
-    if (!matchingSelectableCategory) return selectableCategories[0]
-    if (selectedCategory?._id === matchingSelectableCategory._id) return
-    selectedCategory = matchingSelectableCategory
+    if (selectedCategory?._id === category._id) return
+    selectedCategory = category
   }
 
   const findPromptById = (promptSanityId: string) => {
     if (!promptSanityId) return
     return find((r) => r._id == promptSanityId, data.gamePrompts)
   }
-
-  onMount(async () => {
-    if (data.challenge?.promptSanityId) {
-      console.log(`challenge has a prompt`, data.challenge?.promptSanityId, data.challenge?.prompt)
-
-      selectedPrompt = findPromptById(data.challenge?.promptSanityId)
-
-      setCategoryFromPromptId(data.challenge?.promptSanityId)
-      console.log(`selected initial prompt`, selectedPrompt)
-    }
-    console.log(`selected initial category`, selectedCategory)
-
-    mounted = true
-  })
 
   const rotatePrompts = () => {
     console.log(prompts.length, 'prompts left')
@@ -147,7 +150,6 @@
     const id = data.challenge?.id
     if (!id) return
     if (!gamePrompt?._id) return
-    if (!mounted) return
     if (
       data.challenge?.promptSanityId === gamePrompt._id &&
       data.challenge.prompt === gamePrompt.prompt
@@ -187,9 +189,9 @@
     console.log(`responding to selected category`, category)
     prompts = selectablePrompts(data.gamePrompts, category)
     // TODO: if the new prompts list contains the selected prompt, don't update it
-    if (!mounted || !selectedPrompt) return
+    if (!selectedPrompt) return
     if (!prompts.includes(selectedPrompt)) {
-      console.log(`mounted, selecting prompt from new category list`)
+      console.log(`selecting prompt from new category list`)
       selectedPrompt = prompts.pop()
     }
   }
