@@ -82,10 +82,11 @@
     flex-grow: 1;
     display: flex;
     padding: 1rem 0.5rem;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: 0.5rem;
-    text-align: center;
+    text-align: left;
+    padding: 1rem;
 
     text-transform: uppercase;
   }
