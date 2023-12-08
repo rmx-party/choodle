@@ -12,7 +12,7 @@
   import { addLoadingReason, uncaughtErrors } from '$lib/store'
   import { clearStorage } from '$lib/StorageStuff'
   import shuffle from 'lodash/fp/shuffle'
-  import { drawPath } from '$lib/routes'
+  import { drawPath, pickPath } from '$lib/routes'
   import type { PageData } from './$types'
   import { createChallenge, updateChallenge } from '$lib/storage'
   import type { Writable } from 'svelte/store'
@@ -24,6 +24,7 @@
   import filter from 'lodash/fp/filter'
   import uniqBy from 'lodash/fp/uniqBy'
   import type { SanityDocument } from '@sanity/client'
+  import type { StreakGuessingGamePrompt } from '$lib/CWFGame'
 
   type PromptCategory = SanityDocument & {
     label: string
@@ -33,19 +34,13 @@
   const currentChoodler: Writable<User> = getContext('choodler')
 
   let mounted = false
-  let prompts: string[]
-  let selectedPrompt: string | undefined
+  let prompts: StreakGuessingGamePrompt[]
+  let selectedPrompt: StreakGuessingGamePrompt | undefined
   let selectedPromptSanityId: string | undefined
   let selectableCategories: PromptCategory[] = []
   let selectedCategory: PromptCategory | undefined = undefined
 
-  $: console.log({ selectableCategories })
-  $: console.log({ selectedCategory })
-  $: console.log({ prompts })
-  $: console.log({ selectedPrompt })
-
   $: selectableCategories = flow(map('category'), uniqBy('_id'), compact)(data.gamePrompts)
-  $: selectedCategory?._id && (prompts = resetActivePrompts(data.gamePrompts, selectedCategory))
   $: {
     if (
       (!data.challenge && selectedPromptSanityId) ||
@@ -54,16 +49,15 @@
       addLoadingReason('initializeChallenge', initializeChallenge())
     }
   }
+  $: selectedPromptSanityId = selectedPrompt?._id
 
-  const resetActivePrompts = (gamePrompts: SanityDocument[], category: SanityDocument) => {
-    return flow(
-      compact,
-      filter((r: PromptCategory) => r.category?._id === category?._id),
-      map('prompt'),
-      uniq,
-      shuffle
-    )(gamePrompts)
-  }
+  $: data.challenge?.prompt && updateChallengePrompt(selectedPrompt)
+  $: respondToSelectedCategory(selectedCategory)
+
+  $: console.log({ selectableCategories })
+  $: console.log({ selectedCategory })
+  $: console.log({ prompts })
+  $: console.log({ selectedPrompt })
 
   const initializeChallenge = async () => {
     if (!$currentChoodler?.id) return
@@ -73,14 +67,14 @@
     // TODO: don't create another empty challenge if user already has an empty one to fill
 
     console.log(`creating new challenge`, {
-      prompt: selectedPrompt,
+      prompt: selectedPrompt.prompt,
       promptSanityId: selectedPromptSanityId,
       userId: $currentChoodler.id,
       challengeId: data.challenge?.id,
     })
 
     await createChallenge({
-      prompt: selectedPrompt,
+      prompt: selectedPrompt.prompt,
       promptSanityId: selectedPromptSanityId,
     })
       .then(async (newChallenge) => {
@@ -94,19 +88,32 @@
       })
   }
 
+  const setCategoryFromPromptId = (promptSanityId: string) => {
+    if (!promptSanityId) return
+
+    const category = find((r) => r._id == promptSanityId, data.gamePrompts).category
+    if (!category || !selectableCategories.length) return
+
+    const matchingSelectableCategory = find((r) => r._id == category._id, selectableCategories)
+    if (!matchingSelectableCategory) return selectableCategories[0]
+    if (selectedCategory?._id === matchingSelectableCategory._id) return
+    selectedCategory = matchingSelectableCategory
+  }
+
+  const findPromptById = (promptSanityId: string) => {
+    if (!promptSanityId) return
+    return find((r) => r._id == promptSanityId, data.gamePrompts)
+  }
+
   onMount(async () => {
     if (data.challenge?.promptSanityId) {
-      console.log(`challenge has a prompt sanity id`, data.challenge?.promptSanityId)
-      const savedCategory = find(
-        (r) => r._id == data.challenge?.promptSanityId,
-        data.gamePrompts
-      ).category
-      console.log(`saved prompt category`, savedCategory)
-      selectedCategory = find((r) => r._id == savedCategory._id, selectableCategories)
-      selectedPrompt = data.challenge.prompt
+      console.log(`challenge has a prompt`, data.challenge?.promptSanityId, data.challenge?.prompt)
+
+      selectedPrompt = findPromptById(data.challenge?.promptSanityId)
+
+      setCategoryFromPromptId(data.challenge?.promptSanityId)
       console.log(`selected initial prompt`, selectedPrompt)
     }
-    selectedCategory ||= selectableCategories[0]
     console.log(`selected initial category`, selectedCategory)
 
     mounted = true
@@ -120,7 +127,7 @@
     }
 
     console.log(`no more prompts, resetting`)
-    prompts = map('prompt')(data.gamePrompts)
+    prompts = selectablePrompts(data.gamePrompts, selectedCategory)
   }
 
   const handleShuffle = (event: Event) => {
@@ -130,22 +137,30 @@
     // add GA event for skipped prompt
     window?.gtag?.('event', 'skip_prompt', {
       event_category: 'engagement',
-      event_label: selectedPrompt,
+      event_label: selectedPrompt?.prompt,
     })
 
     rotatePrompts()
   }
 
-  const updateChallengePrompt = async (prompt: string) => {
+  const updateChallengePrompt = async (gamePrompt: StreakGuessingGamePrompt | undefined) => {
     const id = data.challenge?.id
     if (!id) return
+    if (!gamePrompt?._id) return
+    if (!mounted) return
+    if (
+      data.challenge?.promptSanityId === gamePrompt._id &&
+      data.challenge.prompt === gamePrompt.prompt
+    )
+      return
 
-    console.log(`updating challenge prompt to ${prompt}`)
+    console.log(`updating challenge prompt to ${gamePrompt.prompt}`)
     await updateChallenge({
       id,
-      prompt,
-      promptSanityId: selectedPromptSanityId,
+      prompt: gamePrompt.prompt,
+      promptSanityId: gamePrompt._id,
     })
+    invalidate(pickPath(id))
     invalidate(drawPath(id))
   }
 
@@ -153,7 +168,7 @@
     if (!selectedPrompt) return
     if (!data.challenge?.id) return
 
-    console.log(`proceeding with prompt ${selectedPrompt}`)
+    console.log(`proceeding with prompt ${selectedPrompt.prompt}`)
 
     clearStorage()
 
@@ -161,18 +176,31 @@
     browser &&
       window?.gtag?.('event', 'select_prompt', {
         event_category: 'engagement',
-        event_label: selectedPrompt,
+        event_label: selectedPrompt.prompt,
       })
 
     goto(drawPath(data.challenge.id))
   }
 
-  $: mounted && selectedCategory && (selectedPrompt = prompts[0]) // this reaction needs to be defined after initialization settles to avoid overriding the saved selection
-  $: {
-    if (mounted && selectedPrompt) {
-      selectedPromptSanityId = find((r) => r.prompt == selectedPrompt, data.gamePrompts)._id
-      updateChallengePrompt(selectedPrompt)
+  const respondToSelectedCategory = (category: PromptCategory | undefined) => {
+    if (!category?._id) return
+    console.log(`responding to selected category`, category)
+    prompts = selectablePrompts(data.gamePrompts, category)
+    // TODO: if the new prompts list contains the selected prompt, don't update it
+    if (!mounted || !selectedPrompt) return
+    if (!prompts.includes(selectedPrompt)) {
+      console.log(`mounted, selecting prompt from new category list`)
+      selectedPrompt = prompts.pop()
     }
+  }
+
+  const selectablePrompts = (gamePrompts: StreakGuessingGamePrompt[], category: PromptCategory) => {
+    return flow(
+      compact,
+      filter((r: PromptCategory) => r.category?._id === category?._id),
+      uniq,
+      shuffle
+    )(gamePrompts)
   }
 </script>
 
@@ -188,7 +216,7 @@
 
     <CategorySelect categories={selectableCategories} bind:selectedCategory />
 
-    <output for="shuffle">{selectedPrompt}</output>
+    <output for="shuffle">{selectedPrompt?.prompt}</output>
     <Button id="shuffle" colour="black" on:click={handleShuffle}
       >{data.copy.pick_shuffleButtonText}</Button
     >
