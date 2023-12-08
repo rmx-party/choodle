@@ -92,11 +92,11 @@
     text-transform: uppercase;
   }
 
-  .shuffle-select :global(.btn),
-  .shuffle-select :global(.btn:disabled),
-  .shuffle-select :global(.btn:hover),
-  .shuffle-select :global(.btn:focus),
-  .shuffle-select :global(.btn:active) {
+  .shuffle-select :global(.btn.black),
+  .shuffle-select :global(.btn.black:disabled),
+  .shuffle-select :global(.btn.black:hover),
+  .shuffle-select :global(.btn.black:focus),
+  .shuffle-select :global(.btn.black:active) {
     flex-grow: 0;
     flex-shrink: 0;
     width: 3.5rem !important;
