@@ -45,11 +45,11 @@
     if (data.challenge?.promptSanityId) {
       setCategoryFromPromptId(data.challenge.promptSanityId)
       prompts = selectablePrompts(data.gamePrompts, selectedCategory)
-      selectedPrompt = findPromptById(data.challenge?.promptSanityId)
+      selectedPrompt = findPromptById(data.challenge.promptSanityId)
     } else {
       prompts = selectablePrompts(data.gamePrompts, selectedCategory)
       selectedPrompt = prompts.pop()
-      setCategoryFromPromptId(data.challenge.promptSanityId)
+      setCategoryFromPromptId(selectedPrompt?.promptSanityId)
     }
     console.log({
       challenge: data.challenge,
@@ -196,10 +196,13 @@
     }
   }
 
-  const selectablePrompts = (gamePrompts: StreakGuessingGamePrompt[], category: PromptCategory) => {
+  const selectablePrompts = (
+    gamePrompts: StreakGuessingGamePrompt[],
+    category: PromptCategory | undefined
+  ) => {
     return flow(
       compact,
-      filter((r: PromptCategory) => r.category?._id === category?._id),
+      filter((r: PromptCategory) => (category ? r.category?._id === category?._id : true)),
       uniq,
       shuffle
     )(gamePrompts)
