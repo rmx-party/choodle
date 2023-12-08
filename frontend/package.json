@@ -1,6 +1,6 @@
 {
   "name": "choodle",
-  "version": "0.23.12.04",
+  "version": "0.23.12.07",
   "private": true,
   "scripts": {
     "dev": "bunx vite dev",
