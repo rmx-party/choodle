@@ -5,10 +5,10 @@
   import { browser } from '$app/environment'
   import { clearStorage, getUndoStack } from '$lib/StorageStuff'
   import { goto } from '$app/navigation'
-  import { getContext, onMount } from 'svelte'
+  import { getContext } from 'svelte'
   import { pageBackgroundDefault } from '$lib/Configuration'
   import Button from '../../../components/Button.svelte'
-  import { loading, isOnline } from '$lib/store'
+  import { isOnline, addLoadingReason } from '$lib/store'
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
   import MetaData from '../../../components/MetaData.svelte'
@@ -29,43 +29,46 @@
 
   $: console.log(`draw page react`, { challenger: $challenger, deviceId: $deviceId })
 
-  $: prerequisitesForSavingMet = browser && !!$deviceId && !!$challenger?.id && !!data.challenge
+  let prerequisitesForSavingMet = false
+  $: {
+    prerequisitesForSavingMet =
+      browser && !!$deviceId && !!$challenger?.id && !!data.challenge && $isOnline
+  }
 
   const performSave = async (undoStack: UndoStack, canvas: HTMLCanvasElement) => {
     if (!prerequisitesForSavingMet) throw new Error(`the prereqs for saving failed`)
-    loading.set(true)
 
     // TODO: combine the sequential server calls into a single server transaction
-    const drawing = await saveDrawing({
-      undoStack,
-      canvas,
-      extraMetadata: {
-        userId: $challenger.id,
-      },
-    })
-    const challenge = await updateChallenge({ id: data.challenge.id, drawingId: drawing.id })
+    const drawing = await addLoadingReason(
+      'savingDrawing',
+      saveDrawing({
+        undoStack,
+        canvas,
+        extraMetadata: {
+          userId: $challenger.id,
+        },
+      })
+    )
+    const challenge = await addLoadingReason(
+      'updateChallenge',
+      updateChallenge({ id: data.challenge.id, drawingId: drawing.id })
+    )
 
     console.log(`created drawing and updated challenge`, { drawing, challenge })
+    addLoadingReason('clearStorage', clearStorage())
 
-    await clearStorage()
     await goto(sharePath(challenge.id))
   }
 
   const attemptToSaveChoodle = async () => {
     if (!prerequisitesForSavingMet) throw new Error(`the prereqs for saving failed`)
 
-    loading.set(true)
-
     const undoStack = await getUndoStack()
     if (!undoStack?.current?.length) throw new Error(`the undo stack is empty`)
 
     if (!childSave) throw new Error(`the child is null`)
-    childSave()
+    addLoadingReason('childSave', childSave())
   }
-
-  onMount(async () => {
-    loading.set(false)
-  })
 </script>
 
 <MetaData
@@ -94,7 +97,7 @@
       <Button
         id="draw-save-button"
         on:click={attemptToSaveChoodle}
-        isOnline={$isOnline && prerequisitesForSavingMet}
+        isOnline={prerequisitesForSavingMet}
         colour="yellow">{data.copy.draw_doneButtonText}</Button
       >
     </ButtonMenu>
