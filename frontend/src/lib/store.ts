@@ -56,7 +56,7 @@ export const addLoadingReason = async (
     reasons.set(label, wrappedPromise);
     return reasons;
   });
-  return promise;
+  return await promise;
 };
 export const removeLoadingReason = async (label) => {
   loadingReasons.update((reasons) => {
