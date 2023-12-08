@@ -200,18 +200,31 @@
 />
 
 <LayoutContainer --layout-justify="space-evenly">
-  <section class="pickPrompt block-content">
-    {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
+  <section>
+    <section>
+      <div class="block-content">
+        {@html toHTML(data.copy.pick_promptSelectionPageTopContent)}
+      </div>
+      <div class="pickCategory">
+        {#if selectableCategories.length > 1 && selectedCategoryId}
+          <CategorySelect categories={selectableCategories} bind:selectedCategoryId />
+        {/if}
+      </div>
+    </section>
 
-    {#if selectableCategories.length > 1 && selectedCategoryId}
-      <CategorySelect categories={selectableCategories} bind:selectedCategoryId />
-    {/if}
+    <section>
+      <div class="block-content">
+        {@html toHTML(data.copy.pick_promptSelectionPageMiddleContent)}
+      </div>
 
-    <ShuffleSelect options={prompts} bind:selectedOption={selectedPrompt}>
-      <span slot="button">
-        <img src={shuffleIcon} alt="shuffle" />
-      </span>
-    </ShuffleSelect>
+      <div class="pickPrompt">
+        <ShuffleSelect options={prompts} bind:selectedOption={selectedPrompt}>
+          <span slot="button">
+            <img src={shuffleIcon} alt="shuffle" />
+          </span>
+        </ShuffleSelect>
+      </div>
+    </section>
   </section>
 
   <div id="cta">
@@ -221,16 +234,32 @@
       on:click={proceed}>{data.copy.pick_doneButtonText}</Button
     >
   </div>
-  <section class="content">
+
+  <section class="block-content">
     {@html toHTML(data.copy.landing_content_bottom)}
   </section>
 </LayoutContainer>
 
 <style>
-  .pickPrompt {
+  section {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    gap: 2rem;
+  }
+  section > section {
+    gap: 0.75rem;
+  }
+
+  .pickPrompt,
+  .pickCategory,
+  .block-content {
+    width: 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   #cta {

@@ -77,8 +77,6 @@
     font-style: normal;
     font-weight: 400;
     line-height: 120%; /* 1.2rem */
-
-    margin: 1rem 0;
   }
   output {
     flex-grow: 1;
