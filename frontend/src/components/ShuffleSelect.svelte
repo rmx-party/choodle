@@ -88,6 +88,8 @@
     align-items: center;
     gap: 0.5rem;
     text-align: center;
+    width: 100%;
+    height: 100%;
 
     text-transform: uppercase;
   }
