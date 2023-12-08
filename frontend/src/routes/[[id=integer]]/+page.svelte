@@ -25,6 +25,8 @@
   import uniqBy from 'lodash/fp/uniqBy'
   import type { SanityDocument } from '@sanity/client'
   import type { StreakGuessingGamePrompt } from '$lib/CWFGame'
+  import ShuffleSelect from '../../components/ShuffleSelect.svelte'
+  import shuffleIcon from '$lib/assets/shuffle.svg'
 
   type PromptCategory = SanityDocument & {
     label: string
@@ -47,9 +49,10 @@
 
   $: {
     if (data.challenge?.promptSanityId) {
+      console.log(`initializing from saved challenge`, data.challenge)
       initializeFromSavedChallenge()
     } else {
-      rotatePrompts()
+      // rotatePrompts()
     }
   }
   const initializeFromSavedChallenge = () => {
@@ -106,6 +109,7 @@
   }
 
   const setCategoryFromPromptId = (promptSanityId: string) => {
+    console.log(`setting category from prompt id`, promptSanityId)
     if (!selectableCategories.length) throw new Error(`no category found`)
     let category = selectableCategories[0]
 
@@ -123,31 +127,6 @@
   const findPromptById = (promptSanityId: string) => {
     if (!promptSanityId) return
     return find((r) => r._id == promptSanityId, data.gamePrompts)
-  }
-
-  const rotatePrompts = () => {
-    console.log(prompts.length, 'prompts left')
-    if (prompts.length >= 1) {
-      selectedPrompt = prompts.pop()
-      return
-    }
-
-    console.log(`no more prompts, resetting`)
-    prompts = selectablePrompts(data.gamePrompts, selectedCategoryId)
-    selectedPrompt = prompts.pop()
-  }
-
-  const handleShuffle = (event: Event) => {
-    if (!browser) return
-    event.preventDefault()
-
-    // add GA event for skipped prompt
-    window?.gtag?.('event', 'skip_prompt', {
-      event_category: 'engagement',
-      event_label: selectedPrompt?.prompt,
-    })
-
-    rotatePrompts()
   }
 
   const updateChallengePrompt = async (gamePrompt: StreakGuessingGamePrompt | undefined) => {
@@ -196,7 +175,7 @@
     if (!selectedPrompt) return
     if (!prompts.includes(selectedPrompt)) {
       console.log(`selecting prompt from new category list`)
-      selectedPrompt = prompts.pop()
+      selectedPrompt = prompts[0]
     }
   }
 
@@ -204,6 +183,7 @@
     gamePrompts: StreakGuessingGamePrompt[],
     categoryId: string | undefined
   ) => {
+    console.log(`selectablePrompts`, { gamePrompts, categoryId })
     return flow(
       compact,
       filter((r: PromptCategory) => (categoryId ? r.category?._id === categoryId : true)),
@@ -227,10 +207,11 @@
       <CategorySelect categories={selectableCategories} bind:selectedCategoryId />
     {/if}
 
-    <output for="shuffle">{selectedPrompt?.prompt || ''}</output>
-    <Button id="shuffle" colour="black" on:click={handleShuffle}
-      >{data.copy.pick_shuffleButtonText}</Button
-    >
+    <ShuffleSelect options={prompts} bind:selectedOption={selectedPrompt}>
+      <span slot="button">
+        <img src={shuffleIcon} alt="shuffle" />
+      </span>
+    </ShuffleSelect>
   </section>
 
   <div id="cta">
@@ -250,27 +231,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  output {
-    display: flex;
-    padding: 1rem 0.5rem;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    text-align: center;
-
-    margin: 1rem 0;
-    width: 100%;
-    max-width: 15rem;
-
-    font-size: 1.5rem;
-    text-transform: uppercase;
-    color: var(--choodle-black);
-
-    border-radius: 0.25rem;
-    border: 1px solid var(--choodle-black, #141518);
-    background: var(--colors-greyscale-1, #fcfcfc);
   }
 
   #cta {
