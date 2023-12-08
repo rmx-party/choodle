@@ -50,10 +50,13 @@ export const addLoadingReason = async (
   promise?: Promise<unknown>,
 ) => {
   loadingReasons.update((reasons) => {
-    const wrappedPromise = promise?.finally(() => removeLoadingReason(label));
+    const wrappedPromise = promise?.catch((err) => {
+      uncaughtErrors.update((errors) => [...errors, err]);
+    }).finally(() => removeLoadingReason(label));
     reasons.set(label, wrappedPromise);
     return reasons;
   });
+  return promise;
 };
 export const removeLoadingReason = async (label) => {
   loadingReasons.update((reasons) => {
