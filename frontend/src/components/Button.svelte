@@ -100,9 +100,7 @@
   .btn.hover,
   .btn:hover,
   .btn.press,
-  .btn:active,
-  .btn.focus,
-  .btn:focus {
+  .btn:active {
     box-shadow:
       -1px -1px 1px 0px rgba(20, 21, 24, 0.09) inset,
       2px 2px 4px 0px rgba(20, 21, 24, 0.16) inset;
@@ -112,9 +110,7 @@
   .black.btn.hover,
   .black.btn:hover,
   .black.btn.press,
-  .black.btn:active,
-  .black.btn.focus,
-  .black.btn:focus {
+  .black.btn:active {
     border-radius: 24px;
     background: var(--choodle-black, #141518);
 
@@ -155,9 +151,7 @@
   .primary.hover,
   .primary:hover,
   .primary.press,
-  .primary:active,
-  .primary.focus,
-  .primary:focus {
+  .primary:active {
     box-shadow:
       -1px -1px 1px 0px rgba(20, 21, 24, 0.09) inset,
       2px 2px 4px 0px rgba(20, 21, 24, 0.16) inset;
