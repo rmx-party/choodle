@@ -15,7 +15,7 @@
   import LayoutContainer from '../../../components/LayoutContainer.svelte'
   import ChoodleContainer from '../../../components/ChoodleContainer.svelte'
   import Hints from '../../../components/Hints.svelte'
-  import { loading, uncaughtErrors } from '$lib/store'
+  import { addLoadingReason, uncaughtErrors } from '$lib/store'
   import type { PageData } from './$types'
   import TextMessageBubble from '../../../components/TextMessageBubble.svelte'
   import { guessPath, sharePath } from '$lib/routes'
@@ -23,8 +23,6 @@
   import JSConfetti from 'js-confetti'
   import type { GuessResult, User } from '@prisma/client'
   import { findOrCreateGuessResult, updateGuessResult } from '$lib/storage'
-
-  loading.set(true)
 
   const guesser: Writable<User> = getContext('choodler')
   $: console.log(`guess page react`, { guesser: $guesser })
@@ -75,7 +73,7 @@
     console.log({ reduceMotion })
     return reduceMotion
   }
-  const celebrate = (occasion: string) => {
+  const celebrate = (occasion: 'success' | 'failure') => {
     if (!browser) return
     if (reducedMotionPreference()) return
 
@@ -108,7 +106,7 @@
     )
   }
 
-  let alreadyLookingForGuess = false
+  let alreadyLookingForGuess: Promise<GuessResult> | null = null
   export const locateGuess = async ({
     guesserId,
     challengeId,
@@ -119,18 +117,17 @@
     if (!browser) return
     if (alreadyLookingForGuess || !guesserId || !challengeId || choodleOwner) return
     console.log('locateGuess', { guesserId, challengeId })
-    $loading || loading.set(true)
-    alreadyLookingForGuess = true
 
     // TODO: figure out if we can load guess in initial page load without breaking ISR caching
     // TODO: if not, figure out if we can eager-load and memoize the user's data at the layout context level, so that we don't have to do it after page load
 
-    guessResult = await findOrCreateGuessResult({ challengeId })
+    alreadyLookingForGuess = findOrCreateGuessResult({ challengeId })
+    addLoadingReason('findOrCreateGuessResult', alreadyLookingForGuess)
+    guessResult = await alreadyLookingForGuess
 
-    loading.set(false)
     if (!guessResult) throw new Error(`no guess could be found or created`)
     console.log(`locateGuess result`, { guess: guessResult })
-    alreadyLookingForGuess = false
+    alreadyLookingForGuess = null
     invalidate(guessPath(guessResult.challengeId))
   }
 
@@ -249,7 +246,6 @@
 
   $: {
     if (browser && !guessResult && $guesser?.id && data.challenge.id && !choodleOwner) {
-      loading.set(true)
       console.log(
         `guess page, loading guess for guesser: ${$guesser.id} and challenge: ${data.challenge.id}`
       )
@@ -260,7 +256,6 @@
   }
 
   onMount(async () => {
-    loading.set(false)
     jsConfetti = new JSConfetti() // FIXME: this adds a canvas element to the DOM, which should only be done once, or else needs teardown
   })
 
