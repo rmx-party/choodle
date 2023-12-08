@@ -88,8 +88,6 @@
     align-items: center;
     gap: 0.5rem;
     text-align: center;
-    width: 100%;
-    height: 100%;
 
     text-transform: uppercase;
   }
@@ -101,8 +99,8 @@
   .shuffle-select :global(.btn:active) {
     flex-grow: 0;
     flex-shrink: 0;
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 3.5rem !important;
+    height: 3.5rem !important;
     padding: 0;
     border: none;
     font-size: 1.5rem;
