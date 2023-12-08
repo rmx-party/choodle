@@ -17,6 +17,7 @@
 
 <style>
   select {
+    border: none;
     /* appearance: none; */
     color: #141518;
     font-family: DejaVu Sans;
