@@ -18,6 +18,8 @@ model User {
   drawings     Drawing[]
   challenges   Challenge[]
   guessResults GuessResult[]
+
+  defaultCategorySlug String?
 }
 
 model Drawing {
