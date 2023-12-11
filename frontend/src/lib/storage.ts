@@ -55,6 +55,16 @@ export const createSession = async ({ deviceId }: { deviceId: string }) => {
   return session;
 };
 
+export const updateMyCategory = async ({ slug }: { slug: string }) => {
+  if (!browser) return;
+
+  const user = await jsonPATCH(`/me`, {
+    categorySlug: slug,
+  });
+  console.log(`update`, { user });
+  return user;
+};
+
 export const getMyChallenges = async () => {
   if (!browser) return;
   const challenges = await jsonGET(`/challenge`);

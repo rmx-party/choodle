@@ -18,6 +18,16 @@ export const upsertUser = async (
   });
 };
 
+export const setUserDefaultCategory = async (
+  { user, categorySlug }: { user: User; categorySlug: string },
+) => {
+  const result = await prisma.user.update({
+    where: { id: user.id },
+    data: { defaultCategorySlug: categorySlug },
+  });
+  return result;
+};
+
 export const getAllChallenges = async () => {
   const challenges = await prisma.challenge.findMany({
     include: { drawing: true, guessResults: true },
