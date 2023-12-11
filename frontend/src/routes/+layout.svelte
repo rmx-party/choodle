@@ -46,14 +46,17 @@
   }
 
   onMount(async () => {
-    if (!$deviceId) await handleInitialDeviceId()
+    if (!$deviceId) await addLoadingReason('handleInitialDeviceId', handleInitialDeviceId())
     if (!$choodler) {
-      createSession({ deviceId: $deviceId })
-        .then((user) => choodler.set(user))
-        .catch((error) => {
-          console.error(`error creating session`, error)
-          choodler.set(null)
-        })
+      addLoadingReason(
+        'createSession',
+        createSession({ deviceId: $deviceId })
+          .then((user) => choodler.set(user))
+          .catch((error) => {
+            console.error(`error creating session`, error)
+            choodler.set(null)
+          })
+      )
     }
 
     preloadCode('/', '/pick/*', '/draw/*', '/share/*', '/guess/*', '/offline')

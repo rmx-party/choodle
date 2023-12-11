@@ -84,7 +84,7 @@
       (!data.challenge && selectedPromptSanityId) ||
       data.challenge?.userId !== $currentChoodler?.id
     ) {
-      addLoadingReason('initializeChallenge', initializeChallenge())
+      initializeChallenge()
     }
   }
 
@@ -100,7 +100,7 @@
 
     // TODO: don't create another empty challenge if user already has an empty one to fill
 
-    console.log(`creating new challenge`, {
+    console.log(`creating new challenge debug state`, {
       prompt: selectedPrompt.prompt,
       promptSanityId: selectedPromptSanityId,
       userId: $currentChoodler.id,
@@ -109,19 +109,22 @@
       category: selectedCategory?.label,
     })
 
-    return await createChallenge({
-      prompt: selectedPrompt.prompt,
-      promptSanityId: selectedPromptSanityId,
-    })
-      .then(async (newChallenge) => {
-        console.log(`created new challenge, going to it`)
-        await goto(`/${newChallenge.id}`)
-        preloadData(drawPath(newChallenge.id))
+    return await addLoadingReason(
+      'createChallenge',
+      createChallenge({
+        prompt: selectedPrompt.prompt,
+        promptSanityId: selectedPromptSanityId,
       })
-      .catch((err) => {
-        console.error(err)
-        uncaughtErrors.set([...$uncaughtErrors, err])
-      })
+        .then(async (newChallenge) => {
+          console.log(`created new challenge, going to it`)
+          await goto(`/${newChallenge.id}`)
+          preloadData(drawPath(newChallenge.id))
+        })
+        .catch((err) => {
+          console.error(err)
+          uncaughtErrors.set([...$uncaughtErrors, err])
+        })
+    )
   }
 
   const setCategoryFromPromptId = (promptSanityId: string) => {
