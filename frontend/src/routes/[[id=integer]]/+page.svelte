@@ -104,10 +104,12 @@
       prompt: selectedPrompt.prompt,
       promptSanityId: selectedPromptSanityId,
       userId: $currentChoodler.id,
+      userCategory: $currentChoodler.defaultCategorySlug,
       challengeId: data.challenge?.id,
+      category: selectedCategory?.label,
     })
 
-    await createChallenge({
+    return await createChallenge({
       prompt: selectedPrompt.prompt,
       promptSanityId: selectedPromptSanityId,
     })
@@ -226,7 +228,11 @@
       </div>
       <div class="pickCategory">
         {#if selectableCategories.length > 1 && selectedCategoryId}
-          <CategorySelect categories={selectableCategories} bind:selectedCategoryId />
+          <CategorySelect
+            categories={selectableCategories}
+            bind:selectedCategoryId
+            disabled={!selectableCategories.length}
+          />
         {/if}
       </div>
     </section>
@@ -237,7 +243,11 @@
       </div>
 
       <div class="pickPrompt">
-        <ShuffleSelect options={prompts} bind:selectedOption={selectedPrompt}>
+        <ShuffleSelect
+          options={prompts}
+          bind:selectedOption={selectedPrompt}
+          disabled={!data.challenge?.prompt || !selectedCategoryId}
+        >
           <span slot="button">
             <img src={shuffleIcon} alt="shuffle" />
           </span>
