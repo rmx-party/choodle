@@ -6,10 +6,11 @@
   }
 
   export let categories: PromptCategory[] = []
+  export let disabled: boolean = !categories.length
   export let selectedCategoryId: string | undefined = categories[0]?._id
 </script>
 
-<select bind:value={selectedCategoryId}>
+<select bind:value={selectedCategoryId} {disabled} {...$$restProps}>
   {#each categories as category (category._id)}
     <option value={category._id}>{category.label}</option>
   {/each}

@@ -2,6 +2,7 @@
   import { browser } from '$app/environment'
   import Button from './Button.svelte'
 
+  export let disabled: boolean = false
   export let options = []
   $: initialOptions = [...options]
   $: unUsedOptions = [...initialOptions]
@@ -40,13 +41,13 @@
   }
 </script>
 
-<div class="shuffle-select">
+<div class="shuffle-select" {...$$restProps}>
   <output for="shuffle">
     <slot name="output">
-      {selectedOption?.prompt}
+      {disabled ? '' : selectedOption?.prompt}
     </slot>
   </output>
-  <Button id="shuffle" colour="black" on:click={handleClick}>
+  <Button id="shuffle" colour="black" on:click={handleClick} online={disabled}>
     <slot name="button" />
   </Button>
 </div>
