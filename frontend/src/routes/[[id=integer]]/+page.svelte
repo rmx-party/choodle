@@ -14,9 +14,9 @@
   import shuffle from 'lodash/fp/shuffle'
   import { drawPath, pickPath } from '$lib/routes'
   import type { PageData } from './$types'
-  import { createChallenge, updateChallenge } from '$lib/storage'
+  import { createChallenge, updateChallenge, updateMyCategory } from '$lib/storage'
   import type { Writable } from 'svelte/store'
-  import type { User } from '@prisma/client'
+  import type { Challenge, User } from '@prisma/client'
   import CategorySelect from '../../components/CategorySelect.svelte'
   import uniq from 'lodash/fp/uniq'
   import compact from 'lodash/fp/compact'
@@ -30,36 +30,50 @@
 
   type PromptCategory = SanityDocument & {
     label: string
+    slug: string
   }
 
   export let data: PageData
   const currentChoodler: Writable<User> = getContext('choodler')
 
   // let mounted = false
-  let prompts: StreakGuessingGamePrompt[]
-  let selectedPrompt: StreakGuessingGamePrompt | undefined
-  let selectedPromptSanityId: string | undefined
   let selectableCategories: PromptCategory[] = []
   let selectedCategory: PromptCategory | undefined = undefined
   let selectedCategoryId: string | undefined = undefined
 
+  let prompts: StreakGuessingGamePrompt[]
+  let selectedPrompt: StreakGuessingGamePrompt | undefined
+  let selectedPromptSanityId: string | undefined
+
   $: selectableCategories = flow(map('category'), uniqBy('_id'), compact)(data.gamePrompts)
+
+  $: initializeFromUser($currentChoodler)
+
   $: selectedCategory = find((r) => r._id == selectedCategoryId, selectableCategories)
   $: prompts = selectablePrompts(data.gamePrompts, selectedCategoryId)
 
-  $: {
-    if (data.challenge?.promptSanityId) {
-      console.log(`initializing from saved challenge`, data.challenge)
-      initializeFromSavedChallenge()
-    } else {
-      // rotatePrompts()
-    }
+  $: initializeFromSavedChallenge(data.challenge)
+
+  const initializeFromSavedChallenge = (challenge: Challenge | null) => {
+    if (!$currentChoodler || !challenge?.promptSanityId) return
+
+    console.log(`initializing from saved challenge`, data.challenge)
+
+    setCategoryFromPromptId(challenge.promptSanityId)
+
+    selectedPrompt = findPromptById(challenge.promptSanityId)
   }
-  const initializeFromSavedChallenge = () => {
-    if (!data.challenge?.promptSanityId) return
-    setCategoryFromPromptId(data.challenge.promptSanityId)
-    selectedPrompt = findPromptById(data.challenge.promptSanityId)
+  const initializeFromUser = (user: User | undefined) => {
+    if (!user) return
+    if (!user.defaultCategorySlug) return
+    const category = find((r) => r.slug == user.defaultCategorySlug, selectableCategories)
+    if (!category) return
+    if (category._id === selectedCategoryId) return
+
+    console.log(`initializing selected category from user:`, category.slug)
+    selectedCategoryId = category._id
   }
+
   $: respondToSelectedCategory(selectedCategory)
   $: selectedPromptSanityId = selectedPrompt?._id
 
@@ -171,7 +185,12 @@
     if (!category?._id) return
     console.log(`responding to selected category`, category)
     prompts = selectablePrompts(data.gamePrompts, category._id)
-    // TODO: if the new prompts list contains the selected prompt, don't update it
+
+    // TODO: save category slug to user's defaultCategorySlug
+    if ($currentChoodler && $currentChoodler?.defaultCategorySlug !== category.slug) {
+      updateMyCategory(category)
+    }
+
     if (!selectedPrompt) return
     if (!prompts.includes(selectedPrompt)) {
       console.log(`selecting prompt from new category list`)
