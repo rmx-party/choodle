@@ -28,6 +28,7 @@
         })
       ),
       map(mapKeys((key) => headersMap[key]['updated'])),
+      map(generateHint2),
       map(generateHint3),
       map((row) => {
         if (!validForSanity(row)) return null
@@ -106,6 +107,13 @@
     }
   }
 
+  const generateHint2 = (row) => {
+    const prompt = row['prompt']
+    if (!prompt) return row
+
+    row['hint_2'] = `The theme is: ${row['hint_2']}`
+    return row
+  }
   const generateHint3 = (row) => {
     const prompt = row['prompt']
     if (!prompt) return row
