@@ -43,7 +43,7 @@
   }
 
   $: shareUrl = browser ? `${window.location.origin}/guess/${data.challenge.id}` : ''
-  $: challengeShareText = [data.copy.share_messageText, gamePromptTiles, shareUrl].join(`\n`)
+  $: challengeShareText = [data.copy.share_messageText, shareUrl].join(`\n`)
   let challengeShareable: Shareable
   $: challengeShareable = { text: challengeShareText }
 
