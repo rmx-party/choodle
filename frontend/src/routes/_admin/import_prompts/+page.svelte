@@ -58,6 +58,7 @@
 
   const handleFileSelect = (event: Event) => {
     csvFile = event?.target?.files[0]
+    if (!csvFile) return
     Papa.parse(csvFile, {
       header: true,
       skipEmptyLines: true,
