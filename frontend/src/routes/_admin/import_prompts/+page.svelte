@@ -5,6 +5,9 @@
   import pickBy from 'lodash/fp/pickBy'
   import flow from 'lodash/fp/flow'
   import mapKeys from 'lodash/fp/mapKeys'
+  import reject from 'lodash/fp/reject'
+  import filter from 'lodash/fp/filter'
+  import compact from 'lodash/fp/compact'
 
   let csvFile
   let parsedData: Record<string, string>[] = []
@@ -25,18 +28,31 @@
         })
       ),
       map(mapKeys((key) => headersMap[key]['updated'])),
+      map(generateHint3),
       map((row) => {
-        return {
+        if (!validForSanity(row)) return null
+
+        const sanityDoc = {
           ...row,
-          _id: row['id'],
           _type: 'gamePrompt',
           category: {
             _type: 'reference',
             _ref: categoryRef,
           },
         }
+        const excludeKeys = ['invalid_reason']
+
+        return pickBy((_value, key) => !excludeKeys.includes(key))(sanityDoc)
       })
     )(parsedData)
+  }
+
+  const validForSanity = (row) => {
+    if (!row['prompt']?.trim().length) return false
+
+    if (row['invalid_reason']?.trim().length) return false
+
+    return true
   }
 
   const handleFileSelect = (event: Event) => {
@@ -46,10 +62,11 @@
       skipEmptyLines: true,
       transformHeader,
       transform,
-      preview: 10,
       complete: (results) => {
         console.log({ results })
-        parsedData = results.data
+        parsedData = reject((row) => {
+          return Object.values(row).every((value) => value.trim() === '')
+        })(results.data)
       },
     })
   }
@@ -66,28 +83,49 @@
     return value
   }
 
-  // Import CSV data to Sanity
   async function importToSanity() {
-    return null // TODO: test this out before running it
-    // TODO: observe included headers
-    // TODO: ensure stable IDs
-    // parsedData.forEach(async (doc) => {
-    //   await readWriteClient.createOrReplace(doc)
-    // })
+    console.log(`importing ${includedData.length} prompts to Sanity`)
+    for (const doc of compact(includedData)) {
+      await updateOrCreateInSanity(doc)
+    }
+    console.log('all done')
+  }
+
+  const updateOrCreateInSanity = async (doc) => {
+    console.log(`querying for ${doc.prompt}`)
+    const existing = await readWriteClient.fetch(
+      `*[_type == "gamePrompt" && prompt == "${doc.prompt.trim()}"]`
+    )
+
+    if (existing.length) {
+      console.log(`updating ${existing[0]._id}`, existing)
+      return await readWriteClient.patch(existing[0]._id).set(doc).commit()
+    } else {
+      console.log(`creating ${doc.prompt}`)
+      return await readWriteClient.create(doc)
+    }
+  }
+
+  const generateHint3 = (row) => {
+    const prompt = row['prompt']
+    if (!prompt) return row
+
+    row['hint_3'] = prompt[0]?.toUpperCase()
+    return row
   }
 </script>
 
-<h1>Import CSV Prompts to Sanity</h1>
+<header>
+  <h1>Import CSV Prompts to Sanity</h1>
 
-<input type="file" on:change={handleFileSelect} />
-<label>
-  Category Ref:
-  <input type="text" bind:value={categoryRef} />
-</label>
+  <input type="file" on:change={handleFileSelect} />
+  <label>
+    Category Ref:
+    <input type="text" bind:value={categoryRef} />
+  </label>
 
-<button on:click={importToSanity}>Import to Sanity</button>
-
-<hr />
+  <button on:click={importToSanity}>Import to Sanity</button>
+</header>
 
 {#if parsedData.length > 0}
   <table>
@@ -121,9 +159,13 @@
             >
           {/each}
           <td>
-            <pre>
+            <details>
+              <summary>{includedData[i]?.['prompt']}</summary>
+
+              <pre>
               {JSON.stringify(includedData[i], null, 2)}
             </pre>
+            </details>
           </td>
         </tr>
       {/each}
@@ -132,33 +174,51 @@
 {/if}
 
 <style>
+  header,
+  table {
+    text-align: left;
+  }
+
   table {
     border-collapse: collapse;
     width: 100%;
+    overflow: auto;
     font-size: 0.75rem;
     letter-spacing: -0.05rem;
   }
 
   thead {
     border-bottom: 2px solid black;
+    position: sticky;
+    top: 0;
   }
 
   input {
     width: 100%;
+    max-width: 100%;
     font-size: 0.75rem;
   }
 
   th,
   td {
-    padding: 0.2rem;
+    padding: 0.2rem 0.5rem;
+    overflow: scroll-x;
+    max-width: 30ch;
+    max-height: 2em;
+  }
+  th,
+  td {
+    background: hsla(120, 75%, 60%, 0.9);
+    color: black;
   }
   th.excluded,
   td.excluded {
-    background: #eee;
+    background: hsla(320, 0%, 70%, 0.8);
+    color: hsla(320, 0%, 20%, 0.8);
   }
 
   td pre {
-    max-height: 10rem;
+    max-height: 8rem;
     overflow: auto;
     font-size: 0.5rem;
     line-height: 0.6rem;
