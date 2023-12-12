@@ -39,13 +39,5 @@ export default {
       validation: (Rule) => Rule.max(60),
       description: "Max 60 characters.",
     },
-    {
-      name: "promptType",
-      type: "string",
-      title: "Prompt Type",
-      validation: (Rule) => Rule.max(60),
-      description: "Max 60 characters.",
-      initialValue: "choodle-with-friends-word",
-    },
   ],
 };
