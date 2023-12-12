@@ -110,7 +110,7 @@
     const prompt = row['prompt']
     if (!prompt) return row
 
-    row['hint_3'] = prompt[0]?.toUpperCase()
+    row['hint_3'] = `The first letter is: ${prompt[0]?.toUpperCase()}`
     return row
   }
 </script>
