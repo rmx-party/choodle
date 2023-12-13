@@ -27,6 +27,10 @@
   const choodler: Writable<User | undefined> = writable(undefined)
   if (browser) {
     choodler.set(data.user)
+
+    if (data.user && !$deviceId) {
+      deviceId.set(data.user.deviceId)
+    }
   }
   setContext('deviceId', deviceId)
   setContext('choodler', choodler)

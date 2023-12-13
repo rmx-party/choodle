@@ -8,6 +8,7 @@ import type { Challenge } from "@prisma/client";
 import { pickPath } from "$lib/routes";
 import { createChallenge } from "$lib/server/storage";
 import type { StreakGuessingGamePrompt } from "$lib/CWFGame";
+import { randomUUID } from "crypto";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   const { category } = params;
@@ -16,7 +17,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
   let selectedCategory: SanityDocument | undefined;
 
   if (!user) {
-    throw error(401, `unauthorized`);
+    user = await upsertUser({ deviceId: randomUUID() });
   }
 
   const categories: SanityDocument[] = await cachedReadOnlyClient.fetch(
