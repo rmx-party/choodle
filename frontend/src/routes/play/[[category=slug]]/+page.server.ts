@@ -12,13 +12,9 @@ import { randomUUID } from "crypto";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   const { category } = params;
-  const { user } = locals;
+  const { user }: { user: User | undefined } = locals;
   let challenge: Challenge | null = null;
   let selectedCategory: SanityDocument | undefined;
-
-  if (!user) {
-    user = await upsertUser({ deviceId: randomUUID() });
-  }
 
   const categories: SanityDocument[] = await cachedReadOnlyClient.fetch(
     `*[_type == "promptCategory"]`,
@@ -47,6 +43,13 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
   if (!selectedCategory) {
     selectedCategory = shuffle(selectableCategories)[0];
+  }
+
+  if (!user) {
+    user = await upsertUser({
+      deviceId: randomUUID(),
+      defaultCategorySlug: selectedCategory?.slug,
+    });
   }
 
   // TODO: select a random prompt that references the category
