@@ -12,7 +12,7 @@ import { randomUUID } from "crypto";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   const { category } = params;
-  const { user }: { user: User | undefined } = locals;
+  let { user }: { user: User | undefined } = locals;
   let challenge: Challenge | null = null;
   let selectedCategory: SanityDocument | undefined;
 
