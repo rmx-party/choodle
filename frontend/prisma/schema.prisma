@@ -15,11 +15,29 @@ model User {
   deviceId  String   @unique
   sanityId  String?  @unique
 
-  drawings     Drawing[]
-  challenges   Challenge[]
-  guessResults GuessResult[]
+  fidoAuthenticators fidoAuthenticators[]
+  drawings           Drawing[]
+  challenges         Challenge[]
+  guessResults       GuessResult[]
 
-  defaultCategorySlug String?
+  defaultCategorySlug            String?
+  currentAuthenticationChallenge String?
+}
+
+model fidoAuthenticators {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  credentialID         String   @unique
+  credentialPublicKey  String
+  counter              BigInt
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String[]
 }
 
 model Drawing {
