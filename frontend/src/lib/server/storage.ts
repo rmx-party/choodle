@@ -18,6 +18,23 @@ export const upsertUser = async (
   });
 };
 
+export const getUserAuthenticators = async (user: User) => {
+  return await prisma.fidoAuthenticators.findMany({
+    where: { userId: user.id },
+  });
+};
+export const setUserCurrentChallenge = async (
+  { user, registrationChallenge }: {
+    user: User;
+    registrationChallenge: string;
+  },
+) => {
+  return await prisma.user.update({
+    where: { id: user.id },
+    data: { currentAuthenticationChallenge: registrationChallenge },
+  });
+};
+
 export const setUserDefaultCategory = async (
   { user, categorySlug }: { user: User; categorySlug: string },
 ) => {
