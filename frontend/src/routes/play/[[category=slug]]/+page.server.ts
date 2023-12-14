@@ -4,9 +4,9 @@ import shuffle from "lodash/fp/shuffle";
 
 import type { PageServerLoad } from "./$types";
 import type { SanityDocument } from "@sanity/client";
-import type { Challenge } from "@prisma/client";
+import type { Challenge, User } from "@prisma/client";
 import { pickPath } from "$lib/routes";
-import { createChallenge } from "$lib/server/storage";
+import { createChallenge, upsertUser } from "$lib/server/storage";
 import type { StreakGuessingGamePrompt } from "$lib/CWFGame";
 import { randomUUID } from "crypto";
 
