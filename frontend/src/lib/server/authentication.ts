@@ -3,7 +3,10 @@ import {
   PUBLIC_PASSKEY_APP_NAME,
   PUBLIC_PASSKEY_ORIGIN,
 } from "$env/static/public";
-import type { CredentialDeviceType } from "@simplewebauthn/typescript-types";
+import type {
+  CredentialDeviceType,
+  UserVerificationRequirement,
+} from "@simplewebauthn/typescript-types";
 
 // Human-readable title for your website
 export const rpName = PUBLIC_PASSKEY_APP_NAME;
@@ -11,6 +14,9 @@ export const rpName = PUBLIC_PASSKEY_APP_NAME;
 export const rpID = PUBLIC_PASSKEY_APP_ID;
 // The URL at which registrations and authentications should occur
 export const origin = PUBLIC_PASSKEY_ORIGIN;
+
+export const residentKey: ResidentKeyRequirement = "preferred";
+export const userVerification: UserVerificationRequirement = "discouraged";
 
 // if origin is not secure, throw a warning
 if (!origin.startsWith("https://")) {
