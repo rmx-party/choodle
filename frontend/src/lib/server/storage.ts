@@ -9,6 +9,13 @@ import { error } from "@sveltejs/kit";
 
 export const prisma = new PrismaClient();
 
+export const getUser = async (id: number) => {
+  const user = await prisma.user.findUnique({
+    where: { id },
+  });
+  return user;
+};
+
 export const upsertUser = async (
   { deviceId }: Partial<User> & { deviceId: string },
 ) => {
@@ -30,23 +37,15 @@ export const getUserAuthenticators = async (user: User) => {
 };
 
 export const setUserCurrentChallenge = async (
-  { user, registrationChallenge }: {
+  { user, challenge: currentAuthenticationChallenge }: {
     user: User;
-    registrationChallenge: string;
+    challenge: string;
   },
 ) => {
   return await prisma.user.update({
     where: { id: user.id },
-    data: { currentAuthenticationChallenge: registrationChallenge },
+    data: { currentAuthenticationChallenge },
   });
-};
-
-export const getUserCurrentChallenge = async (user: User) => {
-  const { currentAuthenticationChallenge } = (await prisma.user.findUnique({
-    where: { id: user.id },
-    select: { currentAuthenticationChallenge: true },
-  })) || { currentAuthenticationChallenge: null };
-  return currentAuthenticationChallenge || ``;
 };
 
 export const addUserAuthenticator = async (
@@ -54,6 +53,28 @@ export const addUserAuthenticator = async (
 ) => {
   const result = await prisma.fidoAuthenticator.create({
     data: { ...values, user: { connect: { id: user.id } } },
+  });
+  return result;
+};
+
+export const getUserAuthenticator = async (
+  { user, credentialID }: { user: User; credentialID: string },
+) => {
+  const result = await prisma.fidoAuthenticator.findUnique({
+    where: { credentialID, userId: user.id },
+  });
+  return result;
+};
+
+export const saveUpdatedAuthenticatorCounter = async (
+  { authenticator, newCounter }: {
+    authenticator: FidoAuthenticator;
+    newCounter: number;
+  },
+) => {
+  const result = await prisma.fidoAuthenticator.update({
+    where: { id: authenticator.id },
+    data: { counter: newCounter },
   });
   return result;
 };

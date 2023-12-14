@@ -6,11 +6,16 @@ import {
   type VerifiedRegistrationResponse,
   verifyRegistrationResponse,
 } from "@simplewebauthn/server";
-import { origin, rpID, rpName } from "$lib/server/authentication";
+import {
+  origin,
+  residentKey,
+  rpID,
+  rpName,
+  userVerification,
+} from "$lib/server/authentication";
 import {
   addUserAuthenticator,
   getUserAuthenticators,
-  getUserCurrentChallenge,
   setUserCurrentChallenge,
   upsertUser,
 } from "$lib/server/storage";
@@ -27,18 +32,21 @@ export const GET: RequestHandler = async ({ params, locals }) => {
     user = await upsertUser({
       deviceId,
     });
+    locals.user = user;
+
+    // TODO: also set session cookie?
   }
 
   // Get user's existing authenticators
-  const authenticators = await getUserAuthenticators(user);
+  const authenticators: FidoAuthenticator[] = await getUserAuthenticators(user);
 
   // Generate registration options
   const options = await generateRegistrationOptions({
     rpName,
     rpID,
     userID: `${user.id}`,
-    userName: user.deviceId,
-    userDisplayName: `Choodle account ${user.deviceId}`,
+    userName: `Choodle account ${user.deviceId}`,
+    userDisplayName: `Choodle account ${user.deviceId}`, // TODO: figure out where these appear and offer user customization
     attestationType: "none",
     excludeCredentials: authenticators.map((auth) => ({
       id: auth.credentialID,
@@ -46,13 +54,13 @@ export const GET: RequestHandler = async ({ params, locals }) => {
       transports: auth.transports,
     })),
     authenticatorSelection: {
-      residentKey: "preferred",
-      userVerification: "discouraged",
+      residentKey,
+      userVerification,
     },
   });
 
   // Save challenge
-  setUserCurrentChallenge({ user, registrationChallenge: options.challenge });
+  setUserCurrentChallenge({ user, challenge: options.challenge });
 
   return json(options);
 };
@@ -63,10 +71,14 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
   let { user } = locals;
 
   if (!user) {
-    user = await upsertUser({ deviceId });
+    throw error(400, "Registration failed, no user session");
   }
 
-  const expectedChallenge = await getUserCurrentChallenge(user);
+  const expectedChallenge = user.currentAuthenticationChallenge;
+
+  if (!expectedChallenge?.length) {
+    throw error(400, "Registration failed, no challenge expected");
+  }
 
   const verification: VerifiedRegistrationResponse =
     await verifyRegistrationResponse({
@@ -103,9 +115,8 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
     ),
   };
 
-  // (Pseudocode) Save the authenticator info so that we can
-  // get it by user ID later
   await addUserAuthenticator({ user, ...newAuthenticator });
+  setUserCurrentChallenge({ user, challenge: "" });
 
   return json({ success: true });
 };

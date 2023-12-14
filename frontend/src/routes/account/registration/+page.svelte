@@ -1,8 +1,8 @@
 <script lang="ts">
+  import map from 'lodash/fp/map'
   import { startRegistration } from '@simplewebauthn/browser'
   import type { RegistrationResponseJSON } from '@simplewebauthn/typescript-types'
   import type { PageData } from './$types'
-  import map from 'lodash/fp/map'
 
   export let data: PageData
   const { user, authenticators, registrationOptions } = data
@@ -47,20 +47,34 @@
 
 <button on:click={handleRegister}>Register with a Passkey</button>
 
-<pre>
-User
+<details>
+  <summary>User</summary>
+  <pre>
 {JSON.stringify(user, null, 2)}
+</pre>
+</details>
 
-Authenticators
+<details>
+  <summary>Authenticators</summary>
+  <pre>
 {JSON.stringify(
-    map((fido) => ({ ...fido, counter: fido.counter.toString() }), authenticators),
-    null,
-    2
-  )}
+      map((fido) => ({ ...fido, counter: fido.counter.toString() }), authenticators),
+      null,
+      2
+    )}
+</pre>
+</details>
 
-Registration Request Options
+<details>
+  <summary>Registration Request Options</summary>
+  <pre>
 {JSON.stringify(registrationOptions, null, 2)}
+</pre>
+</details>
 
-Registration Details
+<details>
+  <summary>Registration Details</summary>
+  <pre>
 {JSON.stringify(registrationDetails, null, 2)}
 </pre>
+</details>

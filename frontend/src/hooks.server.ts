@@ -4,7 +4,7 @@ import * as Sentry from "@sentry/sveltekit";
 import { version } from "$app/environment";
 import type { Handle, HandleServerError } from "@sveltejs/kit";
 import { ProfilingIntegration } from "@sentry/profiling-node";
-import { prisma } from "$lib/server/storage";
+import { getUser, prisma } from "$lib/server/storage";
 import type { User } from "@prisma/client";
 
 console.log(`server hooks initializing: choodle@${version}`);
@@ -26,10 +26,9 @@ Sentry.init({
 export const handleUserSession: Handle = async ({ event, resolve }) => {
   let user: User | null = null;
   const userId = Number(event.cookies?.get("userId"));
+
   if (userId) {
-    user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
+    user = await getUser(userId);
   }
   event.locals.user = user;
   return resolve(event);
