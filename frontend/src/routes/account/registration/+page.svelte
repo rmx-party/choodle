@@ -2,6 +2,7 @@
   import { startRegistration } from '@simplewebauthn/browser'
   import type { RegistrationResponseJSON } from '@simplewebauthn/typescript-types'
   import type { PageData } from './$types'
+  import map from 'lodash/fp/map'
 
   export let data: PageData
   const { user, authenticators, registrationOptions } = data
@@ -51,7 +52,11 @@ User
 {JSON.stringify(user, null, 2)}
 
 Authenticators
-{JSON.stringify(authenticators, null, 2)}
+{JSON.stringify(
+    map((fido) => ({ ...fido, counter: fido.counter.toString() }), authenticators),
+    null,
+    2
+  )}
 
 Registration Request Options
 {JSON.stringify(registrationOptions, null, 2)}
