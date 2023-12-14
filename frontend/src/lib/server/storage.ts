@@ -1,4 +1,9 @@
-import { type GuessResult, PrismaClient, type User } from "@prisma/client";
+import {
+  type FidoAuthenticator,
+  type GuessResult,
+  PrismaClient,
+  type User,
+} from "@prisma/client";
 import find from "lodash/fp/find";
 import { error } from "@sveltejs/kit";
 
@@ -19,10 +24,11 @@ export const upsertUser = async (
 };
 
 export const getUserAuthenticators = async (user: User) => {
-  return await prisma.fidoAuthenticators.findMany({
+  return await prisma.fidoAuthenticator.findMany({
     where: { userId: user.id },
   });
 };
+
 export const setUserCurrentChallenge = async (
   { user, registrationChallenge }: {
     user: User;
@@ -33,6 +39,23 @@ export const setUserCurrentChallenge = async (
     where: { id: user.id },
     data: { currentAuthenticationChallenge: registrationChallenge },
   });
+};
+
+export const getUserCurrentChallenge = async (user: User) => {
+  const { currentAuthenticationChallenge } = (await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { currentAuthenticationChallenge: true },
+  })) || { currentAuthenticationChallenge: null };
+  return currentAuthenticationChallenge || ``;
+};
+
+export const addUserAuthenticator = async (
+  { user, ...values }: { user: User } & Partial<FidoAuthenticator>,
+) => {
+  const result = await prisma.fidoAuthenticator.create({
+    data: { ...values, user: { connect: { id: user.id } } },
+  });
+  return result;
 };
 
 export const setUserDefaultCategory = async (

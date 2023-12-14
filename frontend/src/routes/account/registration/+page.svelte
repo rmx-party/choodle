@@ -21,7 +21,7 @@
 
     if (!registrationDetails) return
 
-    const verificationResp = await fetch('/registration', {
+    const verificationResp = await fetch('/account/registration', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

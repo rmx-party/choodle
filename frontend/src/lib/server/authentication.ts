@@ -21,7 +21,7 @@ if (!origin.startsWith("https://")) {
   console.log(`SimpleWebAuthnServer initializing: ${rpName} ${rpID} ${origin}`);
 }
 
-export type FidoAuthenticator = {
+export type FidoAuthenticatorRaw = {
   // SQL: Encode to base64url then store as `TEXT`. Index this column
   credentialID: Uint8Array;
   // SQL: Store raw bytes as `BYTEA`/`BLOB`/etc...

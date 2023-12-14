@@ -15,7 +15,7 @@ model User {
   deviceId  String   @unique
   sanityId  String?  @unique
 
-  fidoAuthenticators fidoAuthenticators[]
+  fidoAuthenticators FidoAuthenticator[]
   drawings           Drawing[]
   challenges         Challenge[]
   guessResults       GuessResult[]
@@ -24,7 +24,7 @@ model User {
   currentAuthenticationChallenge String?
 }
 
-model fidoAuthenticators {
+model FidoAuthenticator {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -33,7 +33,7 @@ model fidoAuthenticators {
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   credentialID         String   @unique
-  credentialPublicKey  String
+  credentialPublicKey  Bytes
   counter              BigInt
   credentialDeviceType String
   credentialBackedUp   Boolean
