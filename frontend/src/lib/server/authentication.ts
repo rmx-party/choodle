@@ -1,3 +1,5 @@
+import pick from "lodash/fp/pick";
+
 import {
   PUBLIC_PASSKEY_APP_ID,
   PUBLIC_PASSKEY_APP_NAME,
@@ -42,4 +44,44 @@ export type FidoAuthenticatorRaw = {
   // SQL: `VARCHAR(255)` and store string array as a CSV string
   // Ex: ['usb' | 'ble' | 'nfc' | 'internal']
   transports?: AuthenticatorTransport[];
+};
+
+export const serializeAuthenticator = (
+  authenticator:
+    | FidoAuthenticator
+    | VerifiedRegistrationResponse["registrationInfo"],
+) => {
+  if (!authenticator) return null;
+  let credentialID: string | undefined;
+  let credentialPublicKey: string | undefined;
+
+  if (authenticator.credentialID) {
+    credentialID = Buffer.from(authenticator.credentialID).toString(
+      "base64url",
+    );
+  }
+  if (authenticator.credentialPublicKey) {
+    credentialPublicKey = Buffer.from(authenticator.credentialPublicKey)
+      .toString("base64url");
+  }
+
+  const newAuthenticator = {
+    ...pick(
+      [
+        "credentialID",
+        "credentialPublicKey",
+        "counter",
+        "credentialDeviceType",
+        "credentialBackedUp",
+        "createdAt",
+        "updatedAt",
+      ],
+      authenticator,
+    ),
+    ...{
+      credentialID,
+      credentialPublicKey,
+    },
+  };
+  return newAuthenticator;
 };

@@ -12,6 +12,15 @@ export const prisma = new PrismaClient();
 export const getUser = async (id: number) => {
   const user = await prisma.user.findUnique({
     where: { id },
+    include: { fidoAuthenticators: true },
+  });
+  return user;
+};
+
+export const getUserByDeviceId = async (deviceId: string) => {
+  const user = await prisma.user.findUnique({
+    where: { deviceId },
+    include: { fidoAuthenticators: true },
   });
   return user;
 };

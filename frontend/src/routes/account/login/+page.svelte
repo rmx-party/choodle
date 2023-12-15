@@ -1,8 +1,10 @@
 <script lang="ts">
-  import map from 'lodash/fp/map'
   import { startAuthentication } from '@simplewebauthn/browser'
   import type { AuthenticationResponseJSON } from '@simplewebauthn/typescript-types'
   import type { PageData } from './$types'
+  import { goto, invalidate } from '$app/navigation'
+  import localforage from 'localforage'
+  import type { User } from '@prisma/client'
 
   export let data: PageData
   const { user, authenticationOptions } = data
@@ -10,6 +12,9 @@
   let authenticatorResponse: undefined | AuthenticationResponseJSON
   let verificationJSON: undefined | Record<string, unknown>
 
+  const isUserRegistered = (user: User) => {
+    return user?.fidoAuthenticators?.length > 0
+  }
   const handleLogin = async () => {
     // TODO: if user has no registered passkeys, prompt them to register instead of proceeding
     try {
@@ -40,23 +45,46 @@
 
     // Show UI appropriate for the `verified` status
     if (verificationJSON && verificationJSON.verified) {
+      invalidate('/account/login')
       // TODO: report event to GA
       // TODO: congrats, now what?
       // TODO: update the user store
       // TODO: derive from the user store whether it's anonymous or authenticated
     } else {
+      invalidate('/account/login')
       // TODO: report event to GA
       // TODO: bummer, now what? maybe start over?
     }
   }
+
+  const handleLogout = async () => {
+    const response = await fetch('/session', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    const { success } = await response.json()
+
+    if (!success) throw new Error(`error logging out`)
+
+    localforage.removeItem('deviceId')
+    goto('/', { invalidateAll: true })
+  }
 </script>
 
-<button on:click={handleLogin}>Login</button>
+{#if isUserRegistered(user)}
+  <p>signed in as user {user.id} with passkey</p>
+  <button on:click={handleLogout}>Logout</button>
+{:else}
+  <p>anonymous session</p>
+  <button on:click={handleLogin}>Login</button>
+{/if}
 
 <details>
   <summary>User</summary>
   <pre>
-{JSON.stringify(user, null, 2)}
+{JSON.stringify(user.id, null, 2)}
 </pre>
 </details>
 
