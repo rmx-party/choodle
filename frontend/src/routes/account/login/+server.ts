@@ -2,7 +2,7 @@ import {
   generateAuthenticationOptions,
   verifyAuthenticationResponse,
 } from "@simplewebauthn/server";
-import { error, json } from "@sveltejs/kit";
+import { type Cookies, error, json } from "@sveltejs/kit";
 import {
   getUserAuthenticator,
   getUserAuthenticators,
@@ -18,14 +18,23 @@ import {
 import type { RequestHandler } from "./$types";
 import type { AuthenticatorTransportFuture } from "@simplewebauthn/typescript-types";
 
+const setUserIdCookie = (cookies: Cookies, userId: number) => {
+  const TenYearsInSeconds = 60 * 60 * 24 * 365 * 10;
+  cookies.set("userId", `${userId}`, {
+    secure: true,
+    httpOnly: true,
+    path: "/",
+    maxAge: TenYearsInSeconds,
+  });
+};
+
 export const GET: RequestHandler = async ({ locals }) => {
-  // Get logged in user
   const { user } = locals;
 
-  // Get user's registered authenticators
   const authenticators = await getUserAuthenticators(user);
 
-  // Generate auth options
+  if (!authenticators.length) throw error(400, "No authenticators found");
+
   const options = await generateAuthenticationOptions({
     rpID,
     userVerification,
@@ -38,8 +47,7 @@ export const GET: RequestHandler = async ({ locals }) => {
     },
   });
 
-  // Save challenge
-  locals.user = await setUserCurrentChallenge({
+  await setUserCurrentChallenge({
     user,
     challenge: options.challenge,
   });
@@ -47,8 +55,7 @@ export const GET: RequestHandler = async ({ locals }) => {
   return json(options);
 };
 
-// routes/auth.js
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({ cookies, request, locals }) => {
   const { user } = locals;
 
   const authenticatorResponse = await request.json();
@@ -71,7 +78,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   if (!authenticator) {
     throw error(400, "Authenticator not found");
   }
-  if (!expectedChallenge) {
+  if (!expectedChallenge?.length) {
     throw error(400, "Challenge not found");
   }
 
@@ -86,6 +93,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   });
 
   if (!result.verified) {
+    cookies.delete("userId");
+    locals.user = null;
     throw error(400, "Auth failed");
   }
 
@@ -95,14 +104,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   saveUpdatedAuthenticatorCounter({ authenticator, newCounter });
   setUserCurrentChallenge({ user, challenge: "" });
 
+  setUserIdCookie(cookies, user.id);
+  locals.user = user; // TODO: ensure this user data is consistent with db if it matters
   return json(result);
   // WIP TODO
 
   // Merge anonymous session data
-  mergeAnonAccount(result.userHandle);
+  // mergeAnonAccount(result.userHandle);
 
   // update the request locals
-  locals.user = user.reload();
 
   return json({ success: true });
 };
