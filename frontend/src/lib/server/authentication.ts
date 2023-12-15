@@ -9,6 +9,8 @@ import type {
   CredentialDeviceType,
   UserVerificationRequirement,
 } from "@simplewebauthn/typescript-types";
+import type { FidoAuthenticator } from "@prisma/client";
+import type { VerifiedRegistrationResponse } from "@simplewebauthn/server";
 
 // Human-readable title for your website
 export const rpName = PUBLIC_PASSKEY_APP_NAME;
@@ -49,6 +51,7 @@ export type FidoAuthenticatorRaw = {
 export const serializeAuthenticator = (
   authenticator:
     | FidoAuthenticator
+    | FidoAuthenticatorRaw
     | VerifiedRegistrationResponse["registrationInfo"],
 ) => {
   if (!authenticator) return null;
