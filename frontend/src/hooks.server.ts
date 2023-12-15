@@ -6,6 +6,8 @@ import type { Handle, HandleServerError } from "@sveltejs/kit";
 import { ProfilingIntegration } from "@sentry/profiling-node";
 import { getUser, prisma } from "$lib/server/storage";
 import type { User } from "@prisma/client";
+import { serializeAuthenticator } from "$lib/server/authentication";
+import map from "lodash/fp/map";
 
 console.log(`server hooks initializing: choodle@${version}`);
 
@@ -29,6 +31,12 @@ export const handleUserSession: Handle = async ({ event, resolve }) => {
 
   if (userId) {
     user = await getUser(userId);
+  }
+  if (user?.fidoAuthenticators.length) {
+    user.fidoAuthenticators = map(
+      serializeAuthenticator,
+      user.fidoAuthenticators,
+    );
   }
   event.locals.user = user;
   return resolve(event);
