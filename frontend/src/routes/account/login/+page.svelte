@@ -1,13 +1,17 @@
 <script lang="ts">
   import { startAuthentication } from '@simplewebauthn/browser'
-  import type { AuthenticationResponseJSON } from '@simplewebauthn/typescript-types'
-  import type { PageData } from './$types'
-  import { goto, invalidate } from '$app/navigation'
   import localforage from 'localforage'
+  import { getContext } from 'svelte'
+  import { goto, invalidate } from '$app/navigation'
+  import type { AuthenticationResponseJSON } from '@simplewebauthn/typescript-types'
   import type { User } from '@prisma/client'
+  import type { PageData } from './$types'
+  import { dashboardPath } from '$lib/routes'
 
   export let data: PageData
   const { user, authenticationOptions } = data
+
+  const choodler = getContext('choodler')
 
   let authenticatorResponse: undefined | AuthenticationResponseJSON
   let verificationJSON: undefined | Record<string, unknown>
@@ -53,7 +57,8 @@
 
     // Show UI appropriate for the `verified` status
     if (verificationJSON && verificationJSON.verified) {
-      invalidate('/account/login')
+      choodler.set(verificationJSON.user)
+      goto(dashboardPath())
       // TODO: report event to GA
       // TODO: congrats, now what?
       // TODO: update the user store
@@ -71,6 +76,7 @@
       headers: {
         'Content-Type': 'application/json',
       },
+      body: {},
     })
     const { success } = await response.json()
 

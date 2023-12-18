@@ -50,10 +50,10 @@ const setUserIdCookie = (cookies: Cookies, userId: number) => {
 //
 //   return json(user);
 // };
-//
-// export const DELETE: RequestHandler = async ({ cookies, locals }) => {
-//   cookies.delete("userId");
-//   locals.user = null;
-//
-//   return json({ success: true });
-// };
+
+export const DELETE: RequestHandler = async ({ cookies, locals }) => {
+  cookies.delete("userId");
+  locals.user = null;
+
+  return json({ success: true });
+};

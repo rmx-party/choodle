@@ -89,23 +89,8 @@ export const POST: RequestHandler = async ({ cookies, request, locals }) => {
   if (!authenticator?.user) throw error(400, "Authenticator not found");
 
   const user = authenticator.user;
-  const expectedChallenge = user.currentAuthenticationChallenge;
-
-  // TODO: there's an issue here when we want to transition from anonymous session
-  // to a registered user. the challenge being responded to is from a
-  // separate account from the stored authenticator
-  // we strongly associate a user with a passkey, but we don't have a way to
-  // strongly ensure that the requested challenge is valid for the user.
-  // storing challenge in the authenticator won't work because we are sending it to the client
-  // before the account/device is identified.
-  // maybe it's acceptable to store pending challenges in their own table or ephemeral data store,
-  // rather than associating them with a user or device.
-  //
-  // the lib suggests putting challenges in redis by 'sessionId' which identifies a session cookie generated
-  // at page load time, without any database association.
-  // we still want to associate anon sessions with their data, so maybe this is a separate cookie from the user id cookie.
-  // or maybe we keep using the user id, and locate the anon account challenge from that, and treat it as valid
-  // for any other account, just one time use. this might allow weird race conditions across accounts active on multiple devices
+  const sessionUser = locals.user;
+  const expectedChallenge = sessionUser.currentAuthenticationChallenge;
 
   console.log({
     user,
@@ -142,7 +127,7 @@ export const POST: RequestHandler = async ({ cookies, request, locals }) => {
 
   setUserIdCookie(cookies, user.id);
   locals.user = user; // TODO: ensure this user data is consistent with db if it matters
-  return json(result);
+  return json({ ...result, user });
   // WIP TODO
 
   // Merge anonymous session data
