@@ -45,12 +45,12 @@
   }
 </script>
 
-<button on:click={handleRegister}>Register with a Passkey</button>
+<button on:click={handleRegister}>Register a Passkey</button>
 
 <details>
   <summary>User</summary>
   <pre>
-{JSON.stringify(user, null, 2)}
+{JSON.stringify({ id: user.id, category: user.defaultCategorySlug }, null, 2)}
 </pre>
 </details>
 

@@ -15,10 +15,18 @@
   const isUserRegistered = (user: User) => {
     return user?.fidoAuthenticators?.length > 0
   }
+
   const handleLogin = async () => {
     // TODO: if user has no registered passkeys, prompt them to register instead of proceeding
+    let useBrowserAutofill = false
+    console.log({ authenticationOptions })
     try {
-      const useBrowserAutofill = false
+      if (!data.authenticationOptions?.challenge?.length) {
+        await invalidate('/account/login')
+      }
+      if (data.authenticationOptions?.allowCredentials?.length) {
+        useBrowserAutofill = true
+      }
       authenticatorResponse = await startAuthentication(authenticationOptions, useBrowserAutofill)
       // TODO: report event to GA
     } catch (err) {
@@ -78,6 +86,8 @@
   <button on:click={handleLogout}>Logout</button>
 {:else}
   <p>anonymous session</p>
+  <label for="username">Username:</label>
+  <input name="username" id="loginform.username" autocomplete="webauthn" />
   <button on:click={handleLogin}>Login</button>
 {/if}
 

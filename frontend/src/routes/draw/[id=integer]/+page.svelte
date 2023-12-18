@@ -24,15 +24,13 @@
   let child: ChoodleBoard | undefined
   let childSave: () => Promise<void> | undefined
 
-  const deviceId: Writable<string> = getContext('deviceId')
   const challenger: Writable<User> = getContext('choodler')
 
-  $: console.log(`draw page react`, { challenger: $challenger, deviceId: $deviceId })
+  $: console.log(`draw page react`, { challenger: $challenger })
 
   let prerequisitesForSavingMet = false
   $: {
-    prerequisitesForSavingMet =
-      browser && !!$deviceId && !!$challenger?.id && !!data.challenge && $isOnline
+    prerequisitesForSavingMet = browser && !!$challenger?.id && !!data.challenge && $isOnline
   }
 
   const performSave = async (undoStack: UndoStack, canvas: HTMLCanvasElement) => {

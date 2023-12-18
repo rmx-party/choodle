@@ -8,7 +8,6 @@ import type { Challenge, User } from "@prisma/client";
 import { pickPath } from "$lib/routes";
 import { createChallenge, upsertUser } from "$lib/server/storage";
 import type { StreakGuessingGamePrompt } from "$lib/CWFGame";
-import { randomUUID } from "crypto";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   const { category } = params;
@@ -47,7 +46,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
   if (!user) {
     user = await upsertUser({
-      deviceId: randomUUID(),
       defaultCategorySlug: selectedCategory?.slug,
     });
   }

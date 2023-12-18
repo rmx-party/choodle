@@ -17,26 +17,8 @@ export const getUser = async (id: number) => {
   return user;
 };
 
-export const getUserByDeviceId = async (deviceId: string) => {
-  const user = await prisma.user.findUnique({
-    where: { deviceId },
-    include: { fidoAuthenticators: true },
-  });
-  return user;
-};
-
-export const upsertUser = async (
-  { deviceId }: Partial<User> & { deviceId: string },
-) => {
-  return await prisma.user.upsert({
-    where: { deviceId: `${deviceId}` },
-    create: {
-      deviceId,
-    },
-    update: {
-      deviceId,
-    },
-  });
+export const createUser = async (values: Partial<User>) => {
+  return await prisma.user.create({ data: values });
 };
 
 export const getUserAuthenticators = async (user: User) => {
@@ -67,10 +49,13 @@ export const addUserAuthenticator = async (
 };
 
 export const getUserAuthenticator = async (
-  { user, credentialID }: { user: User; credentialID: string },
+  { credentialID }: { credentialID: string },
 ) => {
+  if (!credentialID?.length) return null;
+
   const result = await prisma.fidoAuthenticator.findUnique({
-    where: { credentialID, userId: user.id },
+    where: { credentialID },
+    include: { user: true },
   });
   return result;
 };

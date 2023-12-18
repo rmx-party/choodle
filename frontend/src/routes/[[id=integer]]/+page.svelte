@@ -88,10 +88,10 @@
     }
   }
 
-  $: console.log({ selectableCategories })
-  $: console.log({ selectedCategory })
-  $: console.log({ prompts })
-  $: console.log({ selectedPrompt })
+  // $: console.log({ selectableCategories })
+  // $: console.log({ selectedCategory })
+  // $: console.log({ prompts })
+  // $: console.log({ selectedPrompt })
 
   const initializeChallenge = async () => {
     if (!$currentChoodler?.id) return

@@ -15,9 +15,9 @@ import {
 } from "$lib/server/authentication";
 import {
   addUserAuthenticator,
+  createUser,
   getUserAuthenticators,
   setUserCurrentChallenge,
-  upsertUser,
 } from "$lib/server/storage";
 import type { FidoAuthenticator, User } from "@prisma/client";
 import type { RequestHandler } from "./$types";
@@ -25,28 +25,25 @@ import type { RequestHandler } from "./$types";
 export const GET: RequestHandler = async ({ params, locals }) => {
   let user: User | undefined;
   user = locals.user;
-  let { deviceId } = params; // TODO: add support for optional deviceId param
 
   if (!user) {
-    deviceId ||= randomUUID();
-    user = await upsertUser({
-      deviceId,
-    });
+    user = await createUser({});
     locals.user = user;
 
     // TODO: also set session cookie?
   }
 
   // Get user's existing authenticators
-  const authenticators: FidoAuthenticator[] = await getUserAuthenticators(user);
+  const authenticators: FidoAuthenticator[] =
+    (await getUserAuthenticators(user)) || [];
 
   // Generate registration options
   const options = await generateRegistrationOptions({
     rpName,
     rpID,
     userID: `${user.id}`,
-    userName: `Choodle account ${user.deviceId}`,
-    userDisplayName: `Choodle account ${user.deviceId}`, // TODO: figure out where these appear and offer user customization
+    userName: `Choodle account ${user.id}`,
+    userDisplayName: `Choodle account ${user.id}`, // TODO: figure out where these appear and offer user customization
     attestationType: "none",
     excludeCredentials: authenticators.map((auth) => ({
       id: auth.credentialID,
@@ -66,7 +63,6 @@ export const GET: RequestHandler = async ({ params, locals }) => {
 };
 
 export const POST: RequestHandler = async ({ params, locals, request }) => {
-  const { deviceId } = params;
   const body = await request.json();
   let { user } = locals;
 
@@ -113,6 +109,8 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
     credentialID: Buffer.from(registrationInfo.credentialID).toString(
       "base64url",
     ),
+    credentialPublicKey: Buffer.from(registrationInfo.credentialPublicKey),
+    counter: BigInt(registrationInfo.counter),
   };
 
   await addUserAuthenticator({ user, ...newAuthenticator });

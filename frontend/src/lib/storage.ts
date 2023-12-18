@@ -45,12 +45,10 @@ export const jsonPOST = async (url: string, data: any) => {
   return jsonFetch({ url, method: "POST", data });
 };
 
-export const createSession = async ({ deviceId }: { deviceId: string }) => {
+export const createAnonymousSession = async () => {
   if (!browser) return;
-  console.log(`starting user session`, { deviceId });
-  const session = await jsonPOST(`/session`, {
-    deviceId,
-  });
+  console.log(`starting anonymous user session`);
+  const session = await jsonGET(`/account/login`);
   console.log(`create`, { session });
   return session;
 };

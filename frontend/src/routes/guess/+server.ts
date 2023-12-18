@@ -9,6 +9,8 @@ import {
 export const GET: RequestHandler = async ({ locals }) => {
   const { user } = locals;
 
+  if (!user) throw error(401);
+
   const result = await getGuessResultsForUser({ user });
 
   return json(result);
