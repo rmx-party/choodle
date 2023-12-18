@@ -61,7 +61,6 @@
       goto(dashboardPath())
       // TODO: report event to GA
       // TODO: congrats, now what?
-      // TODO: update the user store
       // TODO: derive from the user store whether it's anonymous or authenticated
     } else {
       invalidate('/account/login')
@@ -76,7 +75,7 @@
       headers: {
         'Content-Type': 'application/json',
       },
-      body: {},
+      body: { logout: true },
     })
     const { success } = await response.json()
 
