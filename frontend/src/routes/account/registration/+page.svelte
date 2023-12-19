@@ -1,7 +1,11 @@
 <script lang="ts">
   import map from 'lodash/fp/map'
   import { startRegistration } from '@simplewebauthn/browser'
-  import type { RegistrationResponseJSON } from '@simplewebauthn/typescript-types'
+  import AuthenticationButtons from '../../../components/AuthenticationButtons.svelte'
+  import type {
+    PublicKeyCredentialCreationOptionsJSON,
+    RegistrationResponseJSON,
+  } from '@simplewebauthn/typescript-types'
   import type { PageData } from './$types'
 
   export let data: PageData
@@ -9,6 +13,10 @@
   let registrationDetails: undefined | RegistrationResponseJSON
 
   const handleRegister = async () => {
+    const registrationOptions: PublicKeyCredentialCreationOptionsJSON = (
+      await fetch('/account/registration')
+    ).json()
+
     try {
       registrationDetails = await startRegistration(registrationOptions)
       // TODO: report event to GA
@@ -46,6 +54,7 @@
 </script>
 
 <button on:click={handleRegister}>Register a Passkey</button>
+<AuthenticationButtons />
 
 <details>
   <summary>User</summary>
