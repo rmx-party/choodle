@@ -20,6 +20,7 @@
   import reject from 'lodash/fp/reject'
   import type { Challenge, GuessResult, User } from '@prisma/client'
   import { getMyChallenges, getMyGuessResults } from '$lib/storage'
+  import AuthenticationButtons from '../../components/AuthenticationButtons.svelte'
 
   export let data: PageData
 
@@ -108,6 +109,10 @@
       {data.copy.startGameButtonText}
     </Button>
 
+    <section>
+      <AuthenticationButtons />
+    </section>
+
     <section class="block-content">
       {@html toHTML(data.copy.landing_content_bottom)}
     </section>
@@ -126,6 +131,10 @@
           linkDestination={shareOrPickPathFor($currentChoodler?.id, challenge)}
         />
       {/each}
+    </section>
+
+    <section>
+      <AuthenticationButtons />
     </section>
 
     <section class="block-content">
