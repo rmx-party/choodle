@@ -35,11 +35,11 @@ const setUserIdCookie = (cookies: Cookies, userId: number) => {
 };
 
 export const GET: RequestHandler = async ({ cookies, locals }) => {
-  let { user } = locals;
+  let { user } = locals; // TODO: might want to let the client send a user id / handle to get their authenticators
   let allowCredentials: PublicKeyCredentialDescriptorFuture[] | undefined;
   let authenticators: FidoAuthenticator[] | undefined;
 
-  if (!user?.id) { // TODO: Maybe this belongs in a separate  endpoint
+  if (!user?.id) { // TODO: Maybe this edge case belongs in a separate  endpoint
     user = await createUser({});
     locals.user = user;
     setUserIdCookie(cookies, user.id);
