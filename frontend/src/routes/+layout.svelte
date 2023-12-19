@@ -1,29 +1,28 @@
 <script lang="ts">
+  import compact from 'lodash/fp/compact'
+  import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
   import { browser } from '$app/environment'
-  import { addLoadingReason, isOnline, showLoadingIndicator } from '$lib/store'
-  import '$lib/assets/fonts.css'
   import { onMount, setContext } from 'svelte'
+  import { preloadCode } from '$app/navigation'
+  import { writable, type Writable } from 'svelte/store'
+  import { addLoadingReason, isOnline, showLoadingIndicator } from '$lib/store'
+  import { handleChoodleUncaughtError } from '$lib/errorHandling'
+  import { createAnonymousSession } from '$lib/storage'
+  import { urlFor } from '$lib/PersistedImagesUtils'
+  import '$lib/assets/fonts.css'
   import '../app.css'
   import LoadingIndicator from '../components/LoadingIndicator.svelte'
-  import { preloadCode } from '$app/navigation'
-  import { urlFor } from '$lib/PersistedImagesUtils'
   import GlobalNavHeader from '../components/GlobalNavHeader.svelte'
-  import compact from 'lodash/fp/compact'
-  import type { LayoutData } from './$types'
-  import { writable, type Writable } from 'svelte/store'
-  import { handleChoodleUncaughtError } from '$lib/errorHandling'
   import ErrorBoundary from '../components/ErrorBoundary.svelte'
-  import { choodleCreatorIdKey } from '$lib/Configuration'
   import type { User } from '@prisma/client'
-  import { createAnonymousSession } from '$lib/storage'
-  import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
+  import type { LayoutData } from './$types'
 
   injectSpeedInsights()
 
   export let data: LayoutData
 
   const choodler: Writable<User | undefined> = writable(undefined)
-  if (browser) {
+  if (browser && data.user) {
     choodler.set(data.user)
   }
   setContext('choodler', choodler)
