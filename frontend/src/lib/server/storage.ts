@@ -27,6 +27,16 @@ export const getUserAuthenticators = async (user: User) => {
   });
 };
 
+export const setUserAuthenticatedState = async (user: User) => {
+  return await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      lastAuthenticatedAt: new Date(),
+      currentAuthenticationChallenge: null,
+    },
+  });
+};
+
 export const setUserCurrentChallenge = async (
   { user, challenge: currentAuthenticationChallenge }: {
     user: User;

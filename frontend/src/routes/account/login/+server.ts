@@ -8,6 +8,7 @@ import {
   getUserAuthenticator,
   getUserAuthenticators,
   saveUpdatedAuthenticatorCounter,
+  setUserAuthenticatedState,
   setUserCurrentChallenge,
 } from "$lib/server/storage";
 import {
@@ -88,7 +89,7 @@ export const POST: RequestHandler = async ({ cookies, request, locals }) => {
 
   if (!authenticator?.user) throw error(400, "Authenticator not found");
 
-  const user = authenticator.user;
+  let user = authenticator.user;
   const sessionUser = locals.user;
   const expectedChallenge = sessionUser.currentAuthenticationChallenge;
 
@@ -123,7 +124,7 @@ export const POST: RequestHandler = async ({ cookies, request, locals }) => {
   const { newCounter } = authenticationInfo;
 
   saveUpdatedAuthenticatorCounter({ authenticator, newCounter });
-  setUserCurrentChallenge({ user, challenge: "" });
+  user = await setUserAuthenticatedState(user);
 
   setUserIdCookie(cookies, user.id);
   locals.user = user; // TODO: ensure this user data is consistent with db if it matters

@@ -17,6 +17,7 @@ import {
   addUserAuthenticator,
   createUser,
   getUserAuthenticators,
+  setUserAuthenticatedState,
   setUserCurrentChallenge,
 } from "$lib/server/storage";
 import type { FidoAuthenticator, User } from "@prisma/client";
@@ -64,7 +65,7 @@ export const GET: RequestHandler = async ({ params, locals }) => {
 
 export const POST: RequestHandler = async ({ params, locals, request }) => {
   const body = await request.json();
-  let { user } = locals;
+  const { user } = locals;
 
   if (!user) {
     throw error(400, "Registration failed, no user session");
@@ -114,7 +115,7 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
   };
 
   await addUserAuthenticator({ user, ...newAuthenticator });
-  setUserCurrentChallenge({ user, challenge: "" });
+  setUserAuthenticatedState(user);
 
   return json({ success: true });
 };
