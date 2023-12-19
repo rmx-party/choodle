@@ -35,16 +35,9 @@ const setUserIdCookie = (cookies: Cookies, userId: number) => {
   });
 };
 
-export const GET: RequestHandler = async ({ cookies, locals }) => {
+export const GET: RequestHandler = async ({ locals }) => {
   let { user } = locals; // TODO: might want to let the client send a user id / handle to get their authenticators
   let allowCredentials: PublicKeyCredentialDescriptorFuture[] | undefined;
-
-  if (!user?.id) { // TODO: Maybe this edge case belongs in a separate  endpoint
-    user = await createUser({});
-    locals.user = user;
-    setUserIdCookie(cookies, user.id);
-    return json(user);
-  }
 
   // at this point, if we have a user from locals, they should be an anonymous user.
   // for someone with existing credentials, we should have a way to locate them by their credentials
