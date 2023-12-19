@@ -1,8 +1,9 @@
-import { goto, invalidate, preloadData } from "$app/navigation";
-import type { GuessResult } from "@prisma/client";
-import { guessPath, pickPath, sharePath } from "./routes";
 import { browser } from "$app/environment";
-import localforage from "localforage";
+import { goto, invalidate, preloadData } from "$app/navigation";
+import { startAuthentication } from "@simplewebauthn/browser";
+import { guessPath, pickPath, sharePath } from "./routes";
+import type { AuthenticationResponseJSON } from "@simplewebauthn/typescript-types";
+import type { GuessResult } from "@prisma/client";
 
 type HTTPMethod =
   | "GET"
@@ -60,9 +61,53 @@ export const createAnonymousSession = async () => {
 
 export const endSession = async () => {
   const response = await jsonDELETE(`/session`, { logout: true });
-  const { success } = await response.json();
+  const { success } = response;
 
   if (!success) throw new Error(`error logging out`);
+};
+
+export const createPasskeySession = async () => {
+  if (!browser) return;
+
+  // TODO: determine whether we need a loading indicator during this process
+  const authenticationOptions = await jsonGET("/account/login");
+  console.log({ authenticationOptions });
+
+  let authenticatorResponse: undefined | AuthenticationResponseJSON;
+  let useBrowserAutofill = false;
+  try {
+    if (!authenticationOptions?.challenge?.length) {
+      await invalidate("/account/login");
+    }
+    if (authenticationOptions?.allowCredentials?.length) {
+      useBrowserAutofill = true;
+    }
+    authenticatorResponse = await startAuthentication(
+      authenticationOptions,
+      useBrowserAutofill,
+    );
+    // TODO: report event to GA
+  } catch (err) {
+    console.warn(`error registering`, err);
+    // TODO: report event to GA
+  }
+  console.log({ authenticatorResponse });
+
+  if (!authenticatorResponse) return;
+
+  const verificationJSON: undefined | Record<string, unknown> = await jsonPOST(
+    "/account/login",
+    authenticatorResponse,
+  );
+
+  console.log({ verificationJSON });
+
+  // Show UI appropriate for the `verified` status
+  if (verificationJSON && verificationJSON.verified && verificationJSON.user) {
+    return verificationJSON.user;
+  } else {
+    // TODO: decide how to handle login failure modes
+  }
 };
 
 export const updateMyCategory = async ({ slug }: { slug: string }) => {

@@ -1,79 +1,46 @@
 <script lang="ts">
-  import { startAuthentication } from '@simplewebauthn/browser'
   import localforage from 'localforage'
   import { getContext } from 'svelte'
-  import { goto, invalidate } from '$app/navigation'
+  import { goto } from '$app/navigation'
+  import { createAnonymousSession, createPasskeySession, endSession } from '$lib/storage'
   import { dashboardPath } from '$lib/routes'
-  import { endSession } from '$lib/storage'
-  import type { AuthenticationResponseJSON } from '@simplewebauthn/typescript-types'
+  import type { Writable } from 'svelte/store'
   import type { User } from '@prisma/client'
   import type { PageData } from './$types'
+  import { addLoadingReason } from '$lib/store'
 
   export let data: PageData
   const { user, authenticationOptions } = data
 
-  const choodler = getContext('choodler')
-
-  let authenticatorResponse: undefined | AuthenticationResponseJSON
-  let verificationJSON: undefined | Record<string, unknown>
+  const choodler: Writable<User> = getContext('choodler')
 
   const isUserRegistered = (user: User) => {
     return user?.fidoAuthenticators?.length > 0
   }
 
   const handleLogin = async () => {
-    // TODO: if user has no registered passkeys, prompt them to register instead of proceeding
-    let useBrowserAutofill = false
-    console.log({ authenticationOptions })
-    try {
-      if (!data.authenticationOptions?.challenge?.length) {
-        await invalidate('/account/login')
-      }
-      if (data.authenticationOptions?.allowCredentials?.length) {
-        useBrowserAutofill = true
-      }
-      authenticatorResponse = await startAuthentication(authenticationOptions, useBrowserAutofill)
-      // TODO: report event to GA
-    } catch (err) {
-      console.warn(`error registering`, err)
-      // TODO: fail gracefully
-      // TODO: try to select user cancellation vs timeout vs other errors
-      // TODO: report event to GA
-    }
-    console.log({ authenticatorResponse })
-
-    if (!authenticatorResponse) return
-
-    const verificationResp = await fetch('/account/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(authenticatorResponse),
-    })
-
-    // Wait for the results of verification
-    verificationJSON = await verificationResp.json()
-    console.log({ verificationJSON })
-
-    // Show UI appropriate for the `verified` status
-    if (verificationJSON && verificationJSON.verified) {
-      choodler.set(verificationJSON.user)
-      goto(dashboardPath())
-      // TODO: report event to GA
-      // TODO: congrats, now what?
-      // TODO: derive from the user store whether it's anonymous or authenticated
-    } else {
-      invalidate('/account/login')
-      // TODO: report event to GA
-      // TODO: bummer, now what? maybe start over?
+    const user = await createPasskeySession()
+    console.log('handleLogin', { user })
+    if (user?.id) {
+      choodler.set(user)
+      goto(dashboardPath(), { invalidateAll: true })
     }
   }
 
   const handleLogout = async () => {
     await endSession()
 
+    choodler.set(null)
     await localforage.removeItem('deviceId')
+    addLoadingReason(
+      'createAnonymousSession',
+      createAnonymousSession()
+        .then((user) => choodler.set(user))
+        .catch((error) => {
+          console.error(`error creating session`, error)
+          choodler.set(null)
+        })
+    )
     goto('/', { invalidateAll: true })
   }
 </script>
@@ -104,7 +71,5 @@
 
 <details>
   <summary>Login Details</summary>
-  <pre>
-{JSON.stringify(verificationJSON, null, 2)}
-</pre>
+  <pre></pre>
 </details>

@@ -37,7 +37,6 @@ const setUserIdCookie = (cookies: Cookies, userId: number) => {
 export const GET: RequestHandler = async ({ cookies, locals }) => {
   let { user } = locals; // TODO: might want to let the client send a user id / handle to get their authenticators
   let allowCredentials: PublicKeyCredentialDescriptorFuture[] | undefined;
-  let authenticators: FidoAuthenticator[] | undefined;
 
   if (!user?.id) { // TODO: Maybe this edge case belongs in a separate  endpoint
     user = await createUser({});
@@ -50,7 +49,8 @@ export const GET: RequestHandler = async ({ cookies, locals }) => {
   // for someone with existing credentials, we should have a way to locate them by their credentials
   // which can be populated client side
 
-  authenticators = await getUserAuthenticators(user);
+  const authenticators: FidoAuthenticator[] | undefined =
+    await getUserAuthenticators(user);
 
   if (authenticators.length) {
     allowCredentials = authenticators.map((auth) => ({

@@ -47,7 +47,7 @@
 
   $: selectableCategories = flow(map('category'), uniqBy('_id'), compact)(data.gamePrompts)
 
-  $: initializeFromUser($currentChoodler)
+  $: $currentChoodler?.defaultCategorySlug && initializeFromUser($currentChoodler)
 
   $: selectedCategory = find((r) => r._id == selectedCategoryId, selectableCategories)
   $: prompts = selectablePrompts(data.gamePrompts, selectedCategoryId)
@@ -81,17 +81,12 @@
 
   $: {
     if (
-      (!data.challenge && selectedPromptSanityId) ||
+      (!data.challenge && selectedPromptSanityId && $currentChoodler?.id) ||
       data.challenge?.userId !== $currentChoodler?.id
     ) {
       initializeChallenge()
     }
   }
-
-  // $: console.log({ selectableCategories })
-  // $: console.log({ selectedCategory })
-  // $: console.log({ prompts })
-  // $: console.log({ selectedPrompt })
 
   const initializeChallenge = async () => {
     if (!$currentChoodler?.id) return
@@ -196,8 +191,7 @@
       updateMyCategory(category)
     }
 
-    if (!selectedPrompt) return
-    if (!prompts.includes(selectedPrompt)) {
+    if (!selectedPrompt || !prompts.includes(selectedPrompt)) {
       console.log(`selecting prompt from new category list`)
       selectedPrompt = prompts[0]
     }
