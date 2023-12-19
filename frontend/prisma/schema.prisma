@@ -12,12 +12,14 @@ model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-  deviceId  String?  @unique
+  deviceId  String?  @unique // TODO: drop this
 
-  fidoAuthenticators FidoAuthenticator[]
-  drawings           Drawing[]
-  challenges         Challenge[]
-  guessResults       GuessResult[]
+  fidoAuthenticators  FidoAuthenticator[]
+  lastAuthenticatedAt DateTime?
+
+  drawings     Drawing[]
+  challenges   Challenge[]
+  guessResults GuessResult[]
 
   defaultCategorySlug            String?
   currentAuthenticationChallenge String?
