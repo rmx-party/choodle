@@ -77,11 +77,13 @@ export const createPasskeySession = async () => {
   let useBrowserAutofill = false;
   try {
     if (!authenticationOptions?.challenge?.length) {
-      await invalidate("/account/login");
+      throw new Error(`no challenge found`);
     }
-    if (authenticationOptions?.allowCredentials?.length) {
-      useBrowserAutofill = true;
-    }
+
+    // if (authenticationOptions?.allowCredentials?.length) {
+    //   useBrowserAutofill = true; // Only usable when we have a username input to trigger autofill
+    // }
+
     authenticatorResponse = await startAuthentication(
       authenticationOptions,
       useBrowserAutofill,
