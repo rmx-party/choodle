@@ -36,17 +36,19 @@ const setUserIdCookie = (cookies: Cookies, userId: number) => {
 };
 
 export const GET: RequestHandler = async ({ locals }) => {
-  let { user } = locals; // TODO: might want to let the client send a user id / handle to get their authenticators
+  const { user } = locals; // TODO: might want to let the client send a user id / handle to get their authenticators
   let allowCredentials: PublicKeyCredentialDescriptorFuture[] | undefined;
+  let authenticators: FidoAuthenticator[] | undefined = undefined;
 
   // at this point, if we have a user from locals, they should be an anonymous user.
   // for someone with existing credentials, we should have a way to locate them by their credentials
   // which can be populated client side
 
-  const authenticators: FidoAuthenticator[] | undefined =
-    await getUserAuthenticators(user);
+  if (user?.id) {
+    authenticators = await getUserAuthenticators(user);
+  }
 
-  if (authenticators.length) {
+  if (authenticators?.length) {
     allowCredentials = authenticators.map((auth) => ({
       id: Buffer.from(auth.credentialID, "base64"),
       type: "public-key",
