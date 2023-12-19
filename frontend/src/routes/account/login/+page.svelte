@@ -3,10 +3,11 @@
   import localforage from 'localforage'
   import { getContext } from 'svelte'
   import { goto, invalidate } from '$app/navigation'
+  import { dashboardPath } from '$lib/routes'
+  import { endSession } from '$lib/storage'
   import type { AuthenticationResponseJSON } from '@simplewebauthn/typescript-types'
   import type { User } from '@prisma/client'
   import type { PageData } from './$types'
-  import { dashboardPath } from '$lib/routes'
 
   export let data: PageData
   const { user, authenticationOptions } = data
@@ -70,18 +71,9 @@
   }
 
   const handleLogout = async () => {
-    const response = await fetch('/session', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: { logout: true },
-    })
-    const { success } = await response.json()
+    await endSession()
 
-    if (!success) throw new Error(`error logging out`)
-
-    localforage.removeItem('deviceId')
+    await localforage.removeItem('deviceId')
     goto('/', { invalidateAll: true })
   }
 </script>

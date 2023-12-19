@@ -1,7 +1,8 @@
-import { invalidate, preloadData } from "$app/navigation";
+import { goto, invalidate, preloadData } from "$app/navigation";
 import type { GuessResult } from "@prisma/client";
 import { guessPath, pickPath, sharePath } from "./routes";
 import { browser } from "$app/environment";
+import localforage from "localforage";
 
 type HTTPMethod =
   | "GET"
@@ -45,12 +46,23 @@ export const jsonPOST = async (url: string, data: any) => {
   return jsonFetch({ url, method: "POST", data });
 };
 
+export const jsonDELETE = async (url: string, data: any) => {
+  return jsonFetch({ url, method: "DELETE", data });
+};
+
 export const createAnonymousSession = async () => {
   if (!browser) return;
   console.log(`starting anonymous user session`);
   const session = await jsonGET(`/account/login`);
   console.log(`create`, { session });
   return session;
+};
+
+export const endSession = async () => {
+  const response = await jsonDELETE(`/session`, { logout: true });
+  const { success } = await response.json();
+
+  if (!success) throw new Error(`error logging out`);
 };
 
 export const updateMyCategory = async ({ slug }: { slug: string }) => {
