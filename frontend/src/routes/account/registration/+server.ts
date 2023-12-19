@@ -117,5 +117,5 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
   await addUserAuthenticator({ user, ...newAuthenticator });
   setUserAuthenticatedState(user);
 
-  return json({ success: true });
+  return json({ user, ...verification });
 };
