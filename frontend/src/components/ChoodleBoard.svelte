@@ -11,6 +11,7 @@
   import { crunchCanvasToUrl, applyCrunchToCanvas } from '$lib/ImageUtils'
   import debounce from 'lodash/fp/debounce'
   import type { UndoStack } from '$lib/UndoStack'
+  import ChoodleBoardInstruction from '~/components/ChoodleBoardInstruction.svelte'
 
   export let id: string
 
@@ -227,6 +228,7 @@
 </script>
 
 <div class="canvas-container">
+  <ChoodleBoardInstruction instructionText="Static Text" />
   <canvas
     {id}
     on:mousedown={startDrawing}
@@ -251,6 +253,7 @@
 
 <style>
   .canvas-container {
+    position: relative;
     flex-grow: 1;
     aspect-ratio: 3 / 4;
     display: flex;
