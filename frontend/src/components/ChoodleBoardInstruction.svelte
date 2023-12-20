@@ -1,9 +1,11 @@
 <script lang="ts">
   import overlayImage from '$lib/assets/overlay-hand-draw.svg'
+  import { fade } from 'svelte/transition'
+
   export let instructionText = 'default instruction'
 </script>
 
-<div class="overlay">
+<div class="overlay" out:fade={{ duration: 200 }}>
   <h2 class="instruction">{instructionText}</h2>
   <img height="243" width="164" src={overlayImage} alt="grey hand pointing" />
 </div>
