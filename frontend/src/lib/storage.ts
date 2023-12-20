@@ -1,8 +1,15 @@
 import { browser } from "$app/environment";
 import { goto, invalidate, preloadData } from "$app/navigation";
-import { startAuthentication } from "@simplewebauthn/browser";
+import {
+  startAuthentication,
+  startRegistration,
+} from "@simplewebauthn/browser";
 import { guessPath, pickPath, sharePath } from "./routes";
-import type { AuthenticationResponseJSON } from "@simplewebauthn/typescript-types";
+import type {
+  AuthenticationResponseJSON,
+  PublicKeyCredentialCreationOptionsJSON,
+  RegistrationResponseJSON,
+} from "@simplewebauthn/typescript-types";
 import type { GuessResult } from "@prisma/client";
 
 type HTTPMethod =
@@ -74,7 +81,7 @@ export const createPasskeySession = async () => {
   console.log({ authenticationOptions });
 
   let authenticatorResponse: undefined | AuthenticationResponseJSON;
-  let useBrowserAutofill = false;
+  const useBrowserAutofill = false;
   try {
     if (!authenticationOptions?.challenge?.length) {
       throw new Error(`no challenge found`);
@@ -110,6 +117,37 @@ export const createPasskeySession = async () => {
   } else {
     // TODO: decide how to handle login failure modes
   }
+};
+
+export const createPasskeyRegistration = async () => {
+  if (!browser) return;
+  let registrationDetails: RegistrationResponseJSON | undefined = undefined;
+
+  const registrationOptions: PublicKeyCredentialCreationOptionsJSON =
+    await jsonGET("/account/registration");
+
+  try {
+    registrationDetails = await startRegistration(registrationOptions);
+    console.log({ registrationDetails });
+    // TODO: report event to GA
+  } catch (err) {
+    console.warn(`error registering`, err);
+    // TODO: fail gracefully
+    // TODO: try to select user cancellation vs timeout vs other errors
+    // TODO: report event to GA
+    throw err;
+  }
+
+  if (!registrationDetails) throw new Error(`error registering`);
+
+  const verificationJSON = await jsonPOST(
+    "/account/registration",
+    registrationDetails,
+  );
+
+  // Wait for the results of verification
+  console.log({ verificationJSON });
+  return verificationJSON;
 };
 
 export const updateMyCategory = async ({ slug }: { slug: string }) => {
