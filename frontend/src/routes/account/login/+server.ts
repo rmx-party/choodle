@@ -2,7 +2,7 @@ import {
   generateAuthenticationOptions,
   verifyAuthenticationResponse,
 } from "@simplewebauthn/server";
-import { type Cookies, error, json } from "@sveltejs/kit";
+import { error, json } from "@sveltejs/kit";
 import {
   createUser,
   getUserAuthenticator,
@@ -14,7 +14,7 @@ import {
 import {
   origin,
   rpID,
-  rpName,
+  setUserIdCookie,
   userVerification,
 } from "$lib/server/authentication";
 import type { RequestHandler } from "./$types";
@@ -24,16 +24,6 @@ import type {
   PublicKeyCredentialDescriptorFuture,
 } from "@simplewebauthn/typescript-types";
 import type { FidoAuthenticator } from "@prisma/client";
-
-const setUserIdCookie = (cookies: Cookies, userId: number) => {
-  const TenYearsInSeconds = 60 * 60 * 24 * 365 * 10;
-  cookies.set("userId", `${userId}`, {
-    secure: true,
-    httpOnly: true,
-    path: "/",
-    maxAge: TenYearsInSeconds,
-  });
-};
 
 export const GET: RequestHandler = async ({ cookies, locals }) => {
   let { user } = locals; // TODO: might want to let the client send a user id / handle to get their authenticators

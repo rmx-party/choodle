@@ -11,6 +11,7 @@ import {
   residentKey,
   rpID,
   rpName,
+  setUserIdCookie,
   userVerification,
 } from "$lib/server/authentication";
 import {
@@ -63,9 +64,9 @@ export const GET: RequestHandler = async ({ params, locals }) => {
   return json(options);
 };
 
-export const POST: RequestHandler = async ({ params, locals, request }) => {
+export const POST: RequestHandler = async ({ cookies, locals, request }) => {
   const body = await request.json();
-  const { user } = locals;
+  let { user } = locals;
 
   if (!user) {
     throw error(400, "Registration failed, no user session");
@@ -115,7 +116,10 @@ export const POST: RequestHandler = async ({ params, locals, request }) => {
   };
 
   await addUserAuthenticator({ user, ...newAuthenticator });
-  setUserAuthenticatedState(user);
+  user = await setUserAuthenticatedState(user);
+
+  setUserIdCookie(cookies, user.id);
+  locals.user = user; // TODO: ensure this user data is consistent with db if it matters
 
   return json({ user, ...verification });
 };

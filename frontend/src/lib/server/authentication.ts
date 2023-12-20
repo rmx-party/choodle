@@ -11,6 +11,7 @@ import type {
 } from "@simplewebauthn/typescript-types";
 import type { FidoAuthenticator } from "@prisma/client";
 import type { VerifiedRegistrationResponse } from "@simplewebauthn/server";
+import type { Cookies } from "@sveltejs/kit";
 
 // Human-readable title for your website
 export const rpName = PUBLIC_PASSKEY_APP_NAME;
@@ -30,6 +31,16 @@ if (!origin.startsWith("https://")) {
 } else {
   console.log(`SimpleWebAuthnServer initializing: ${rpName} ${rpID} ${origin}`);
 }
+
+export const setUserIdCookie = (cookies: Cookies, userId: number) => {
+  const TenYearsInSeconds = 60 * 60 * 24 * 365 * 10;
+  cookies.set("userId", `${userId}`, {
+    secure: true,
+    httpOnly: true,
+    path: "/",
+    maxAge: TenYearsInSeconds,
+  });
+};
 
 export type FidoAuthenticatorRaw = {
   // SQL: Encode to base64url then store as `TEXT`. Index this column
