@@ -16,4 +16,4 @@ export const upScaledImageRatio = 8
 
 // feature flags
 
-export const featureAuthentication = PUBLIC_FEATURE_AUTHENTICATION
+export const featureAuthentication = PUBLIC_FEATURE_AUTHENTICATION.toLowerCase() === 'true'
