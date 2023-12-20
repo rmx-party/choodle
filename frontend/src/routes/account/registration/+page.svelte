@@ -7,6 +7,7 @@
     RegistrationResponseJSON,
   } from '@simplewebauthn/typescript-types'
   import type { PageData } from './$types'
+  import { featureAuthentication } from '$lib/Configuration'
 
   export let data: PageData
   const { user, authenticators, registrationOptions } = data
@@ -53,8 +54,10 @@
   }
 </script>
 
-<button on:click={handleRegister}>Register a Passkey</button>
-<AuthenticationButtons />
+{#if featureAuthentication}
+  <button on:click={handleRegister}>Register a Passkey</button>
+  <AuthenticationButtons />
+{/if}
 
 <details>
   <summary>User</summary>

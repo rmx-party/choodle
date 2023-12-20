@@ -5,7 +5,7 @@
   import LayoutContainer from '../../components/LayoutContainer.svelte'
   import { page } from '$app/stores'
   import MetaData from '../../components/MetaData.svelte'
-  import { pageBackgroundDefault } from '$lib/Configuration'
+  import { featureAuthentication, pageBackgroundDefault } from '$lib/Configuration'
   import { addLoadingReason } from '$lib/store'
   import { guessPath, pickPath, sharePath } from '$lib/routes'
   import { toHTML } from '@portabletext/to-html'
@@ -109,9 +109,11 @@
       {data.copy.startGameButtonText}
     </Button>
 
-    <section>
-      <AuthenticationButtons />
-    </section>
+    {#if featureAuthentication}
+      <section>
+        <AuthenticationButtons />
+      </section>
+    {/if}
 
     <section class="block-content">
       {@html toHTML(data.copy.landing_content_bottom)}
@@ -133,9 +135,11 @@
       {/each}
     </section>
 
-    <section>
-      <AuthenticationButtons />
-    </section>
+    {#if featureAuthentication}
+      <section>
+        <AuthenticationButtons />
+      </section>
+    {/if}
 
     <section class="block-content">
       {@html toHTML(data.copy.landing_content_bottom)}

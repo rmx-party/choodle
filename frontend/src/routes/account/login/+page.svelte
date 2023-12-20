@@ -1,12 +1,15 @@
 <script lang="ts">
   import type { PageData } from './$types'
   import AuthenticationButtons from '../../../components/AuthenticationButtons.svelte'
+  import { featureAuthentication } from '$lib/Configuration'
 
   export let data: PageData
   const { user, authenticationOptions } = data
 </script>
 
-<AuthenticationButtons />
+{#if featureAuthentication}
+  <AuthenticationButtons />
+{/if}
 
 <details>
   <summary>User</summary>
