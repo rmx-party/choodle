@@ -26,6 +26,7 @@
   let canvas: HTMLCanvasElement
   let ctx: CanvasRenderingContext2D
   let lastTouchedPoint: Dimensiony | null
+  let showOverlay = false
 
   /* Actions */
   const load = async () => {
@@ -103,6 +104,7 @@
   function startDrawing(event: MouseEvent | TouchEvent) {
     if (!browser) return
     isDrawing = true
+    showOverlay = false
     event.preventDefault()
     const [newX, newY] = canvasCoordsFromEvent(event)
     lastTouchedPoint = { x: newX, y: newY }
@@ -224,11 +226,17 @@
 
     await resetViewportUnit()
     await resizeCanvas()
+
+    if ((await getUndoStack()).current === '') {
+      showOverlay = true
+    }
   })
 </script>
 
 <div class="canvas-container">
-  <ChoodleBoardInstruction instructionText="Static Text" />
+  {#if showOverlay}
+    <ChoodleBoardInstruction instructionText="Static Text" />
+  {/if}
   <canvas
     {id}
     on:mousedown={startDrawing}

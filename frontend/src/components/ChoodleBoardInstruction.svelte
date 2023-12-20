@@ -10,6 +10,7 @@
 
 <style>
   .overlay {
+    pointer-events: none;
     position: absolute;
     z-index: 1000;
     display: flex;
