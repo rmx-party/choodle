@@ -1,4 +1,5 @@
 import type { Dimensiony } from '$lib/Calculations'
+import { PUBLIC_FEATURE_AUTHENTICATION } from '$env/static/public'
 
 export const lineWidth = 1
 export const targetMaxSize: Dimensiony = { x: 195, y: 260 }
@@ -15,4 +16,4 @@ export const upScaledImageRatio = 8
 
 // feature flags
 
-export const featureAuthentication = true
+export const featureAuthentication = PUBLIC_FEATURE_AUTHENTICATION
