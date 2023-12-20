@@ -14,7 +14,7 @@
   import type { Writable } from 'svelte/store'
   import type { User } from '@prisma/client'
 
-  let userStore: Writable<User> = getContext('choodler')
+  const userStore: Writable<User> = getContext('choodler')
 
   const isUserRegistered = (user: User) => user?.lastAuthenticatedAt !== null
 
@@ -38,9 +38,12 @@
 
   const handleLogin = async (event: Event) => {
     event.preventDefault()
-    const { user } = await addLoadingReason('createPasskeySession', createPasskeySession())
+    const { verified, user } = await addLoadingReason(
+      'createPasskeySession',
+      createPasskeySession()
+    )
     console.log('handleLogin', { user })
-    if (user?.id) {
+    if (verified && user?.id) {
       userStore.set(user)
       goto(dashboardPath(), { invalidateAll: true })
     }
