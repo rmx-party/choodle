@@ -111,12 +111,7 @@ export const createPasskeySession = async () => {
 
   console.log({ verificationJSON });
 
-  // Show UI appropriate for the `verified` status
-  if (verificationJSON && verificationJSON.verified && verificationJSON.user) {
-    return verificationJSON.user;
-  } else {
-    // TODO: decide how to handle login failure modes
-  }
+  return verificationJSON;
 };
 
 export const createPasskeyRegistration = async () => {
