@@ -36,13 +36,7 @@
     />
     <div class="loading" transition:fade={{ duration: 300 }}>
       <div class="group">
-        <PixelImage
-          class="loading-image"
-          height={134}
-          width={161}
-          src={interstitialImage}
-          alt="A doodle of the painter Bob Ross, slightly smiling"
-        />
+        <PixelImage class="loading-image" height={134} width={161} src={interstitialImage} alt="" />
       </div>
     </div>
   </div>
