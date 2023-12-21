@@ -53,21 +53,22 @@
 <style>
   :root {
     text-align: center;
-    position: relative;
   }
 
   .loading-backdrop {
     z-index: 9999;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     height: 100vh;
     width: 100vw;
     margin: 0;
     padding: 0;
 
     background: var(--choodle-yellow);
-    overflow: hidden;
+    overflow: clip;
   }
 
   /* loading element style */
