@@ -111,7 +111,12 @@
 
     {#if featureAuthentication}
       <section>
-        <AuthenticationButtons />
+        <AuthenticationButtons
+          loginButtonText={data.copy.auth_loginButtonText}
+          logoutButtonText={data.copy.auth_logoutButtonText}
+          registerButtonText={data.copy.auth_registerButtonText}
+          changeAccountButtonText={data.copy.auth_changeAccountButtonText}
+        />
       </section>
     {/if}
 
@@ -137,7 +142,12 @@
 
     {#if featureAuthentication}
       <section>
-        <AuthenticationButtons />
+        <AuthenticationButtons
+          loginButtonText={data.copy.auth_loginButtonText}
+          logoutButtonText={data.copy.auth_logoutButtonText}
+          registerButtonText={data.copy.auth_registerButtonText}
+          changeAccountButtonText={data.copy.auth_changeAccountButtonText}
+        />
       </section>
     {/if}
 
