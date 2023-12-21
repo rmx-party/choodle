@@ -18,7 +18,7 @@
 
   const userStore: Writable<User> = getContext('choodler')
 
-  const passkeyCompatible = false && browser && browserSupportsWebAuthn()
+  const passkeyCompatible = browser && browserSupportsWebAuthn()
 
   const isUserRegistered = (user: User) => user?.lastAuthenticatedAt !== null
 
