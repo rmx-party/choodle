@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { loading, loadingOverride, loadingReasons, showLoadingIndicator } from '$lib/store'
   import { fade } from 'svelte/transition'
-  import { navigating, page } from '$app/stores'
-  import { urlFor } from '$lib/PersistedImagesUtils'
-  import PixelImage from './PixelImage.svelte'
   import { browser } from '$app/environment'
+  import { navigating, page } from '$app/stores'
+  import { loading, loadingOverride, loadingReasons, showLoadingIndicator } from '$lib/store'
+  import { urlFor } from '$lib/PersistedImagesUtils'
   import interstitialImage from '$lib/assets/interstitial-smiley-l.png'
+  import PixelImage from './PixelImage.svelte'
 
   const logLoadingStateDebug = () => {
     console.log(`loading state`, {
