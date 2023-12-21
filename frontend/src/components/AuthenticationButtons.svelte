@@ -1,7 +1,9 @@
 <script lang="ts">
   import localforage from 'localforage'
+  import { browserSupportsWebAuthn } from '@simplewebauthn/browser'
   import { getContext } from 'svelte'
   import { goto } from '$app/navigation'
+  import { browser } from '$app/environment'
   import {
     createAnonymousSession,
     createPasskeySession,
@@ -15,6 +17,8 @@
   import type { User } from '@prisma/client'
 
   const userStore: Writable<User> = getContext('choodler')
+
+  const passkeyCompatible = false && browser && browserSupportsWebAuthn()
 
   const isUserRegistered = (user: User) => user?.lastAuthenticatedAt !== null
 
@@ -70,15 +74,31 @@
   }
 </script>
 
-<div class="login-controls">
-  {#if isUserRegistered($userStore)}
-    <Button colour="black" on:click={handleLogout}>Logout</Button>
-    <a href="" on:click={handleLogin}>Use Another Account</a>
-  {:else}
-    <Button colour="black" on:click={handleLogin}>Login</Button>
-    <a href="" on:click={handleRegister}>Create an Account</a>
-  {/if}
-</div>
+{#if passkeyCompatible}
+  <div class="login-controls">
+    {#if isUserRegistered($userStore)}
+      <Button colour="black" on:click={handleLogout}>Logout</Button>
+      <a href="" on:click={handleLogin}>Use Another Account</a>
+    {:else}
+      <Button colour="black" on:click={handleLogin}>Login</Button>
+      <a href="" on:click={handleRegister}>Create an Account</a>
+    {/if}
+  </div>
+{:else}
+  <div class="not-supported">
+    <p>
+      This browser does not support Passkey login yet. To use a Passkey account, please try a
+      <a target="_blank" href="https://passkeys.dev/device-support/#matrix"
+        >browser that supports Passkeys</a
+      >, and enable Passkeys in your system settings.
+    </p>
+    <p>
+      <a target="_blank" href="https://www.corbado.com/blog/passkey-troubleshooting-solutions"
+        >Here's a troubleshooting guide</a
+      >
+    </p>
+  </div>
+{/if}
 
 <style>
   .login-controls {
@@ -87,5 +107,17 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
+  }
+
+  .not-supported {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    border: 1px solid var(--choodle-black, #000);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-wrap: balance;
   }
 </style>
