@@ -16,6 +16,11 @@
   import type { Writable } from 'svelte/store'
   import type { User } from '@prisma/client'
 
+  export let loginButtonText = 'Login'
+  export let logoutButtonText = 'Logout'
+  export let registerButtonText = 'Create an Account'
+  export let changeAccountButtonText = 'Use Another Account'
+
   const userStore: Writable<User> = getContext('choodler')
 
   const passkeyCompatible = browser && browserSupportsWebAuthn()
@@ -97,11 +102,11 @@
 {#if passkeyCompatible}
   <div class="login-controls">
     {#if isUserRegistered($userStore)}
-      <Button colour="black" on:click={handleLogout}>Logout</Button>
-      <a href="" on:click={handleLogin}>Use Another Account</a>
+      <Button colour="black" on:click={handleLogout}>{logoutButtonText}</Button>
+      <a href="" on:click={handleLogin}>{changeAccountButtonText}</a>
     {:else}
-      <Button colour="black" on:click={handleLogin}>Login</Button>
-      <a href="" on:click={handleRegister}>Create an Account</a>
+      <Button colour="black" on:click={handleLogin}>{loginButtonText}</Button>
+      <a href="" on:click={handleRegister}>{registerButtonText}</a>
     {/if}
   </div>
 {:else}
