@@ -24,11 +24,19 @@
 
   const handleRegister = async (event: Event) => {
     event.preventDefault()
-    // Show UI appropriate for the `verified` status
+
     const { verified, user } = await addLoadingReason(
       'createPasskeyRegistration',
-      createPasskeyRegistration()
+      createPasskeyRegistration().catch((error) => {
+        console.error(`error registering`, error)
+        if (error?.name === 'NotAllowedError') {
+          console.log(`user cancelled registration`)
+          // TODO: report event to GA
+        }
+        return { verified: false, user: null }
+      })
     )
+
     if (verified && user?.id) {
       // TODO: report event to GA
       // TODO: congrats, now what?
