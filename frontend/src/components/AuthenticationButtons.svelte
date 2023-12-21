@@ -52,7 +52,14 @@
     event.preventDefault()
     const { verified, user } = await addLoadingReason(
       'createPasskeySession',
-      createPasskeySession()
+      createPasskeySession().catch((error) => {
+        console.error(`error logging in`, error)
+        if (error?.name === 'NotAllowedError') {
+          console.log(`user cancelled login`)
+          // TODO: report event to GA
+        }
+        return { verified: false, user: null }
+      })
     )
     console.log('handleLogin', { user })
     if (verified && user?.id) {
