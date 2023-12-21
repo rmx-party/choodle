@@ -25,7 +25,7 @@
   const handleRegister = async (event: Event) => {
     event.preventDefault()
 
-    const { verified, user } = await addLoadingReason(
+    const createRegistrationResult = await addLoadingReason(
       'createPasskeyRegistration',
       createPasskeyRegistration().catch((error) => {
         console.error(`error registering`, error)
@@ -36,6 +36,8 @@
         return { verified: false, user: null }
       })
     )
+    const verified = createRegistrationResult?.verified
+    const user = createRegistrationResult?.user
 
     if (verified && user?.id) {
       // TODO: report event to GA
@@ -50,7 +52,7 @@
 
   const handleLogin = async (event: Event) => {
     event.preventDefault()
-    const { verified, user } = await addLoadingReason(
+    const createSessionResult = await addLoadingReason(
       'createPasskeySession',
       createPasskeySession().catch((error) => {
         console.error(`error logging in`, error)
@@ -61,6 +63,9 @@
         return { verified: false, user: null }
       })
     )
+    const verified = createSessionResult?.verified
+    const user = createSessionResult?.user
+
     console.log('handleLogin', { user })
     if (verified && user?.id) {
       userStore.set(user)
