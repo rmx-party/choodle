@@ -14,6 +14,7 @@
   import ChoodleBoardInstruction from '~/components/ChoodleBoardInstruction.svelte'
 
   export let id: string
+  export let instructionText
 
   export let performSave: (
     undoStack: UndoStack,
@@ -235,7 +236,7 @@
 
 <div class="canvas-container">
   {#if showOverlay}
-    <ChoodleBoardInstruction instructionText="Static Text" />
+    <ChoodleBoardInstruction {instructionText} />
   {/if}
   <canvas
     {id}

@@ -88,7 +88,13 @@
       </h3>
     </span>
   </div>
-  <ChoodleBoard id="cwf-canvas" bind:this={child} bind:save={childSave} {performSave}>
+  <ChoodleBoard
+    id="cwf-canvas"
+    bind:this={child}
+    bind:save={childSave}
+    {performSave}
+    instructionText={data.copy.draw_instruction}
+  >
     <ButtonMenu slot="buttons">
       <Button id="draw-undo-button" on:click={child.undo} colour="yellow"
         >{data.copy.draw_undoButtonText}</Button
