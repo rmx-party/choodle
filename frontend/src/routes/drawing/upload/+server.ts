@@ -14,9 +14,9 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
   );
   const contentHash = Array.from(new Uint8Array(contentHashBuffer))
     .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+    .join("").slice(0, 16);
 
-  const pathname = `/${user.id}/${contentHash}.png`;
+  const pathname = `${user.id}/${contentHash}.png`;
   const result = await put(pathname, blob, { access: "public" });
 
   if (!result?.url) throw error(400, `failed to upload image`);
