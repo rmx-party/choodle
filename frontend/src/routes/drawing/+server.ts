@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import type { RequestHandler } from "./$types";
 import { error, json } from "@sveltejs/kit";
-
-const prisma = new PrismaClient();
+import { createDrawing } from "$lib/server/storage";
+import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ request, locals }) => {
   const { user } = locals;
@@ -10,11 +8,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
   const { imageUrl } = await request.json();
 
-  const result = await prisma.drawing.create({
-    data: { imageUrl, userId: user.id },
-  });
-  // TODO: after creating a challenge, invalidate the challenge list ISR cache
-  // TODO: after creating a challenge, invalidate the challenge specific ISR caches
+  const result = await createDrawing({ user, imageUrl });
 
   return json(result);
 };

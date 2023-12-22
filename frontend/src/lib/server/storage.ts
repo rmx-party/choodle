@@ -138,6 +138,13 @@ export const createChallenge = async ({ user, ...values }) => {
   return result;
 };
 
+export const createDrawing = async ({ user, imageUrl }) => {
+  const result = await prisma.drawing.create({
+    data: { imageUrl, userId: user.id },
+  });
+  return result;
+};
+
 export const upsertGuessResult = async (
   { userId, challengeId, id, ...values }: GuessResult,
 ) => {
