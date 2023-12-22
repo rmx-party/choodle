@@ -8,7 +8,6 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 
   const blob = await request.clone().blob();
 
-  console.log(`PUT`, { blob });
   const contentHashBuffer = await crypto.subtle.digest(
     "SHA-256",
     await request.clone().arrayBuffer(),
@@ -18,10 +17,7 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
     .join("");
 
   const pathname = `/${user.id}/${contentHash}.png`;
-  console.log(`PUT`, { contentHash, pathname });
   const result = await put(pathname, blob, { access: "public" });
-
-  console.log(`PUT`, { pathname, result });
 
   if (!result?.url) throw error(400, `failed to upload image`);
   return json(result);
