@@ -21,6 +21,16 @@ type HTTPMethod =
   | "HEAD"
   | "OPTIONS";
 
+export const imagePUT = async (
+  { url, imageBlob }: { url: string; imageBlob: Blob },
+) => {
+  const response = await fetch(url, {
+    method: "PUT",
+    body: imageBlob,
+  });
+  return response.json();
+};
+
 export const jsonFetch = async (
   { url, method, data }: { url: string; method: HTTPMethod; data: any },
 ) => {
