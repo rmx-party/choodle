@@ -99,12 +99,25 @@
       `*[_type == "gamePrompt" && prompt == "${doc.prompt.trim()}"]`
     )
 
+    const { cut, ...restDoc } = doc
+
     if (existing.length) {
       console.log(`updating ${existing[0]._id}`, existing)
-      return await readWriteClient.patch(existing[0]._id).set(doc).commit()
+
+      if (cut === '✂️ Cut') {
+        console.log(`deleting ${existing[0]._id} ${doc.prompt}`)
+        return await readWriteClient.delete(existing[0]._id)
+      }
+
+      return await readWriteClient.patch(existing[0]._id).set(restDoc).commit()
     } else {
+      if (doc['cut'] === '✂️ Cut') {
+        console.log(`skipping ${doc.prompt}`)
+        return
+      }
+
       console.log(`creating ${doc.prompt}`)
-      return await readWriteClient.create(doc)
+      return await readWriteClient.create(restDoc)
     }
   }
 
