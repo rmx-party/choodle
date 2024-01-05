@@ -12,6 +12,7 @@
     challenge: `*[_type == "challenge"]`,
     guess: `*[_type == "guess"]`,
     creator: `*[_type == "creator"]`,
+    category: `*[_type == "promptCategory"]`,
   }
   const records = {
     choodle: [],
@@ -19,6 +20,7 @@
     challenge: [],
     guess: [],
     creator: [],
+    category: [],
   }
 
   const deleteAll = async (type) => {
@@ -52,6 +54,7 @@
             'choodle',
             'player1',
             'player2',
+            'category',
           ])
           .commit()
       })
@@ -61,7 +64,7 @@
   }
 
   onMount(async () => {
-    ;['challenge', 'choodle', 'cwfgame', 'guess', 'creator'].forEach(async (type) => {
+    ;['challenge', 'choodle', 'cwfgame', 'guess', 'creator', 'category'].forEach(async (type) => {
       await readWriteClient.fetch(queries[type]).then((items) => (records[type] = items))
       readWriteClient
         .listen(queries[type], {}, { includePreviousRevision: true })
@@ -95,4 +98,16 @@
   <Button on:click={() => deleteAll('creator')}
     >Delete All {records['creator']?.length || 0} Creators</Button
   >
+</div>
+
+<div>
+  <h3>categories</h3>
+  <ul>
+    {#each records['category'] as { _id, label }}
+      <li>
+        <Button variant="secondary" on:click={() => deleteOne(_id)}>delete</Button>
+        {label}
+      </li>
+    {/each}
+  </ul>
 </div>
